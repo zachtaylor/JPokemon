@@ -17,20 +17,21 @@ import jpkmn.Player;
 public class GameWindow extends JFrame {
   public Player player;
 
-  private GodWindow gwin;
-  private MessageWindow mwin;
-
+  private JPanel root;
+  private JPanel main;
+  private MessageView mview;
   private BattleView bwin;
-  private JPanel main = new JPanel();
-  private JRootPane root;
+  private GodWindow gwin;
 
   private static final long serialVersionUID = 1L;
 
   public GameWindow(Player p) {
     try {
       player = p;
-      root = this.getRootPane();
-      Tools.window = this;
+      root = new JPanel();
+      add(root);
+      main = new JPanel();
+      
 
       construct();
 
@@ -39,11 +40,13 @@ public class GameWindow extends JFrame {
         gwin.setLocationRelativeTo(this);
       }
       if (Driver.message) {
-        mwin = new MessageWindow();
-        mwin.setLocationRelativeTo(this);
+        mview = new MessageView();
+        Tools.messages = mview;
+        mview.setLocationRelativeTo(this);
       }
 
       showMain();
+      setLocationRelativeTo(null);
       setVisible(true);
     } catch (Exception e) {
       e.printStackTrace();
@@ -54,6 +57,7 @@ public class GameWindow extends JFrame {
   private void construct() {
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setLocationRelativeTo(null);
+    setIconImage(Tools.findImage("main-icon"));
     root.setLayout(new FlowLayout());
     main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
     main.add(new BattleButton());
@@ -64,14 +68,14 @@ public class GameWindow extends JFrame {
   private void destruct() {
     if (gwin != null)
       gwin.dispose();
-    if (mwin != null)
-      mwin.dispose();
+    if (mview != null)
+      mview.destruct();
     super.dispose();
   }
 
   public void showMain() {
     setTitle("Main Menu");
-    this.setSize(120, 120);
+    this.setSize(420, 420);
     root.removeAll();
     root.add(main);
   }
@@ -87,10 +91,6 @@ public class GameWindow extends JFrame {
       bwin.load(b);
 
     root.add(bwin);
-  }
-
-  public void showMessage(Image icon, String title, String message) {
-    mwin.addMessage(title, message);
   }
 
   private class BattleButton extends JButton implements ActionListener {
@@ -161,8 +161,7 @@ public class GameWindow extends JFrame {
     }
 
     public void actionPerformed(ActionEvent arg0) {
-      mwin.addMessage("title", "message");
-      //destruct();
+      destruct();
     }
   }
 

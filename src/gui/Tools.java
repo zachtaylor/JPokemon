@@ -5,23 +5,14 @@ import java.net.URL;
 
 import javax.swing.*;
 
+import jpkmn.Driver;
+
 import item.*;
 import pokemon.*;
 import pokemon.move.Move;
 
 public class Tools {
-  static GameWindow window;
-
-  /**
-   * Generates a notify window, with the specified Pokemon as an icon.
-   * 
-   * @param icon The pokemon whose icon will be used
-   * @param title Title of the window
-   * @param message Message of the window
-   */
-  public static void notify(Pokemon icon, String title, String message) {
-    notify(getImage(icon), title, message);
-  }
+  static MessageView messages;
 
   /**
    * Generates a notify window, with the specified icon
@@ -30,10 +21,17 @@ public class Tools {
    * @param title Title of the window
    * @param message Message of the window
    */
-  public static void notify(Image icon, String title, String message) {
-    window.showMessage(icon, title, message);
-    /*
-    if (message_center == null || !message_center.isVisible()) {
+  public static void notify(Object icon, String title, String message) {
+    if (icon instanceof Image)
+      throw new RuntimeException();
+    notify(findImage(icon), title, message);
+  }
+
+  private static void notify(Image icon, String title, String message) {
+    if (Driver.message && messages != null && messages.isVisible()) {
+      messages.addMessage(icon, title, message);
+    }
+    else {
       try {
         JOptionPane.showMessageDialog(null, message, title,
             JOptionPane.INFORMATION_MESSAGE, new ImageIcon(icon));
@@ -42,14 +40,15 @@ public class Tools {
             JOptionPane.INFORMATION_MESSAGE);
       }
     }
-    else {
-      message_center.getRootPane().removeAll();
-      message_center.add(new JLabel(title+"\n"+message));
-    }
-    */
   }
 
-  public static Image getImage(Object o) {
+  /**
+   * Retrieves the Image to be used for an object
+   * 
+   * @param o Object to get the image of.
+   * @return Image for that object
+   */
+  public static Image findImage(Object o) {
     if (o instanceof Pokemon)
       return getImage((Pokemon) o);
     else if (o instanceof Item)
@@ -162,4 +161,4 @@ public class Tools {
         + "\ninstall directory for the game, named \"log.log\"", "CRASH",
         JOptionPane.ERROR_MESSAGE);
   }
-}
+} 

@@ -31,7 +31,7 @@ public class Splash extends JFrame {
 
   private void construct() {
     setTitle("JPokemon (ver 0.1)");
-    setIconImage(Tools.getImage("main-icon"));
+    setIconImage(Tools.findImage("main-icon"));
     setSize(720, 457); // WIDTH, HEIGHT
     setUndecorated(true);
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -41,9 +41,9 @@ public class Splash extends JFrame {
     ImageIcon bg;
     // Add Splash
     if (pref.getBoolean("beat", false))
-      bg = new ImageIcon(Tools.getImage("splashalt"));
+      bg = new ImageIcon(Tools.findImage("splashalt"));
     else
-      bg = new ImageIcon(Tools.getImage("splash"));
+      bg = new ImageIcon(Tools.findImage("splash"));
     s.setIcon(bg);
     s.setBounds(10, 10, 700, 437);
     p.add(s, new Integer(-1));
@@ -201,7 +201,7 @@ public class Splash extends JFrame {
         System.out.println("Remove preferences from splash fail");
       }
 
-      s.setIcon(new ImageIcon(Tools.getImage("splash")));
+      s.setIcon(new ImageIcon(Tools.findImage("splash")));
       p.remove(r);
     }
 

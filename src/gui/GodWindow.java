@@ -1,17 +1,11 @@
 package gui;
 
-import item.Bag;
-
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import jpkmn.Driver;
-import jpkmn.Player;
+import item.Bag;
+import jpkmn.*;
 import pokemon.Pokemon;
 
 public class GodWindow extends JFrame {
@@ -29,7 +23,7 @@ public class GodWindow extends JFrame {
 
   private void construct() {
     setTitle("");
-    setIconImage(Tools.getImage("main-icon"));
+    setIconImage(Tools.findImage("main-icon"));
     setSize(150, 110);
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setLocationRelativeTo(null);

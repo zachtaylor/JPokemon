@@ -155,13 +155,13 @@ public class Battle {
       if (i instanceof Stone || i instanceof Machine) {
         Driver.log(Battle.class, i.getClass().toString()
             + "s cannot be used in battle.");
-        Tools.notify(Tools.getImage(i), i.name(), i.getClass().toString()
+        Tools.notify(Tools.findImage(i), i.name(), i.getClass().toString()
             + "s cannot be used in battle!");
         return;
       }
 
       // Select target pokemon
-      Tools.notify(Tools.getImage(i.name()), i.name(),
+      Tools.notify(Tools.findImage(i.name()), i.name(),
           "Who do you want to use this on?");
       int target = Tools.selectFromParty(user.party);
 
@@ -240,7 +240,6 @@ public class Battle {
    */
   public void run() throws BattleEndException {
     Driver.log(Battle.class, "Run selected");
-    Tools.notify(user.leader, "title", "message");
     double chance = user.leader.speed.cur * 32;
     chance /= enemy.leader.speed.cur;
     chance += 30;

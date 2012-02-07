@@ -43,14 +43,14 @@ public class BattleView extends JPanel {
 					uparty.setPreferredSize(new Dimension(40, 50));
 					for (int i=0; i<6; i++) {
 						if (battle.user.party.pkmn[i] != null && battle.user.party.pkmn[i].awake)
-							uparty.add(new JLabel(new ImageIcon(Tools.getImage("active"))));
+							uparty.add(new JLabel(new ImageIcon(Tools.findImage("active"))));
 						else {
-							uparty.add(new JLabel(new ImageIcon(Tools.getImage("inactive"))));
+							uparty.add(new JLabel(new ImageIcon(Tools.findImage("inactive"))));
 						}
 					}
 				userpane.add(uparty);
 					// Picture
-					userpic = new JLabel(new ImageIcon(Tools.getImage(battle.user.leader)));
+					userpic = new JLabel(new ImageIcon(Tools.findImage(battle.user.leader)));
 				userpane.add(userpic);
 					// Info
 					JPanel userinfo = new JPanel();
@@ -101,16 +101,16 @@ public class BattleView extends JPanel {
 					enemyinfo.add(enemystatus);
 				enemypane.add(enemyinfo);
 					// Picture
-					enemypic = new JLabel(new ImageIcon(Tools.getImage(battle.enemy.leader)));
+					enemypic = new JLabel(new ImageIcon(Tools.findImage(battle.enemy.leader)));
 				enemypane.add(enemypic);
 					// Party Info
 					oparty = new JPanel();
 					oparty.setPreferredSize(new Dimension(40, 50));
 					for (int i=0; i<6; i++) {
 						if (battle.enemy.party.pkmn[i] != null && battle.enemy.party.pkmn[i].awake)
-							oparty.add(new JLabel(new ImageIcon(Tools.getImage("active"))));
+							oparty.add(new JLabel(new ImageIcon(Tools.findImage("active"))));
 						else {
-							oparty.add(new JLabel(new ImageIcon(Tools.getImage("inactive"))));
+							oparty.add(new JLabel(new ImageIcon(Tools.findImage("inactive"))));
 						}
 					}
 				enemypane.add(oparty);
@@ -150,9 +150,6 @@ public class BattleView extends JPanel {
   }
 
   private class FightButton extends JButton implements ActionListener {
-    /**
-     * Keep eclipse happy
-     */
     private static final long serialVersionUID = 1L;
 
     public FightButton() {
@@ -171,6 +168,8 @@ public class BattleView extends JPanel {
   }
 
   private class ItemButton extends JButton implements ActionListener {
+    private static final long serialVersionUID = 1L;
+
     public ItemButton() {
       super("ITEM");
       addActionListener(this);
@@ -186,6 +185,8 @@ public class BattleView extends JPanel {
   }
 
   private class SwapButton extends JButton implements ActionListener {
+    private static final long serialVersionUID = 1L;
+
     public SwapButton() {
       super("SWAP");
       addActionListener(this);
@@ -201,6 +202,8 @@ public class BattleView extends JPanel {
   }
 
   private class RunButton extends JButton implements ActionListener {
+    private static final long serialVersionUID = 1L;
+
     public RunButton() {
       super("RUN");
       addActionListener(this);
@@ -215,8 +218,5 @@ public class BattleView extends JPanel {
     }
   }
 
-  /**
-   * keep eclipse happy
-   */
   private static final long serialVersionUID = 1L;
 }
