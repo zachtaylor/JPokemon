@@ -4,39 +4,31 @@ import battle.Target;
 import pokemon.*;
 
 public abstract class Item {
-  int power, quantity;
-  String name;
-  public Target target;
   
   public Item(int power, int quantity, String name) {
-    this.power = power;
-    this.quantity = quantity;
-    this.name = name;
-  }
-  
-  public Item(int power, int quantity) {
-    this.power = power;
-    this.quantity = quantity;
+    _power = power;
+    _quantity = quantity;
+    _name = name;
   }
   
   public void add(int quantity) {
-    this.quantity += quantity;
+    _quantity += quantity;
   }
   
   public String getName() {
-    return name;
+    return _name;
   }
   
-  public int amount() {
-    return quantity;
+  public int getQuantity() {
+    return _quantity;
   }
   
-  public int power() {
-    return power;
+  public int getPower() {
+    return _power;
   }
   
   public String name() {
-    return name;
+    return _name;
   }
   
   public abstract boolean effect(Pokemon p);
@@ -46,6 +38,11 @@ public abstract class Item {
    * @return True if quantity was at least 1
    */
   protected boolean reduce() {
-    return quantity-- > 0;
+    return _quantity-- > 0;
   }
+  
+  public Target target;
+  private int _quantity;
+  private final String _name;
+  private final int _power;
 }

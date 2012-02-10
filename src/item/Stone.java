@@ -25,7 +25,7 @@ public class Stone extends Item {
     @Override
     public boolean effect(Pokemon p) {
         if (!reduce()) {
-            Driver.log(Stone.class, "Not enough to use type " + name);
+            Driver.log(Stone.class, "Not enough to use type " + getName());
             return false;
         }
 
@@ -99,7 +99,7 @@ public class Stone extends Item {
      */
     private boolean report(Pokemon p, boolean b) {
         if (b) {
-            Driver.log(Stone.class, name + " is effectively used on : " + p.name);
+            Driver.log(Stone.class, getName() + " is effectively used on : " + p.name);
 
             if (p.number < 133 || p.number > 136) {
                 b = p.changeSpecies();
@@ -111,8 +111,8 @@ public class Stone extends Item {
             else if (this.type == Type.WATER) b = p.changeSpecies(134);
         } 
         else {
-                gui.Tools.notify(p, "ERROR", name + " does not work on :" + p.name);
-                Driver.log(Stone.class, name + " does not work on : " + p.name);
+                gui.Tools.notify(p, "ERROR", getName() + " does not work on :" + p.name);
+                Driver.log(Stone.class, getName() + " does not work on : " + p.name);
         }
         return b;
     }

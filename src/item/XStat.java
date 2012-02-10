@@ -30,7 +30,7 @@ public class XStat extends Item {
   @Override
   public boolean effect(Pokemon p) {
     if (!reduce()) {
-      Driver.log(XStat.class, "Not enough to use type "+name);
+      Driver.log(XStat.class, "Not enough to use type " + getName());
       return false;
     }
     
