@@ -6,6 +6,7 @@ import pokemon.Pokemon;
 import pokemon.move.Move;
 
 public class Machine extends Item {
+  private int a;
   
   public Machine(int move, int quantity) {
     super(move, quantity, "TM-" + 3); // MoveBase.getBaseForNumber(move).getName());
