@@ -6,7 +6,6 @@ import pokemon.Pokemon;
 import pokemon.move.Move;
 
 public class Machine extends Item {
-  private int a;
   
   public Machine(int move, int quantity) {
     super(move, quantity, "TM-" + 3); // MoveBase.getBaseForNumber(move).getName());
@@ -16,11 +15,11 @@ public class Machine extends Item {
   @Override
   public boolean effect(Pokemon p) {
     if (!reduce()) {
-      Driver.log(Machine.class, "Not enough to use type "+name);
+      Driver.log(Machine.class, "Not enough to use type " + getName());
       return false;
     }
     
-    Move m = new Move(power, p);
+    Move m = new Move(getPower(), p);
     
     if (p.type1 != m.type && p.type2 != m.type) {
       Driver.log(Machine.class, p.name + " cannot learn move "+m.name);
