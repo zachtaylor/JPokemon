@@ -12,7 +12,7 @@ public class Ball extends Item {
   @Override
   public boolean effect(Pokemon p) {
     if (!reduce()) {
-      Driver.log(Ball.class, "Not enough to use type "+name);
+      Driver.log(Ball.class, "Not enough to use type " + getName());
       return false;
     }
 	
@@ -20,7 +20,7 @@ public class Ball extends Item {
 	
 	HPmax = p.health.max;
 	HPcur = p.health.cur;
-	BALL = power;
+	BALL = getPower();
 	STAT = p.status.catchBonus();
 	
 	q = BALL*4*STAT;

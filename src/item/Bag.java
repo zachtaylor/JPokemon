@@ -91,12 +91,12 @@ public class Bag {
   public void toFile(PrintWriter p) {
     p.println();
     for (int i = 0; i < 4; i++) {
-      p.print(potions[i].quantity + " ");
-      p.print(balls[i].quantity + " ");
+      p.print(potions[i].getQuantity() + " ");
+      p.print(balls[i].getQuantity() + " ");
     }
     for (int i = 0; i < 5; i++) {
-      p.print(xstat[i].quantity + " ");
-      p.print(stone[i].quantity + " ");
+      p.print(xstat[i].getQuantity()+ " ");
+      p.print(stone[i].getQuantity() + " ");
     }
     p.println();
   }

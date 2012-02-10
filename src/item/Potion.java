@@ -12,11 +12,11 @@ public class Potion extends Item {
   @Override
   public boolean effect(Pokemon p) {
     if (!reduce()) {
-      Driver.log(Potion.class, "Not enough to use type "+name);
+      Driver.log(Potion.class, "Not enough to use type " + getName());
       return false;
     }
     
-    p.healDamage(power);
+    p.healDamage(getPower());
     return true;
   }
 }
