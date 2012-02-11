@@ -21,7 +21,7 @@ public class GameWindow extends JFrame {
   private JPanel main;
   private MessageView mview;
   private BattleView bwin;
-  private GodWindow gwin;
+  private Console console;
 
   private static final long serialVersionUID = 1L;
 
@@ -29,16 +29,24 @@ public class GameWindow extends JFrame {
     try {
       player = p;
       root = new JPanel();
-      add(root);
       main = new JPanel();
+      
+      if (Driver.console) {
+        console = new Console(player);
+        JPanel blah = new JPanel();
+        blah.setLayout(new FlowLayout());
+        add(blah);
+        blah.add(root);
+        blah.add(console);
+      }
+      else {
+        add(root);
+      }
       
 
       construct();
 
-      if (Driver.god) {
-        gwin = new GodWindow(player);
-        gwin.setLocationRelativeTo(this);
-      }
+      
       if (Driver.message) {
         mview = new MessageView();
         Tools.messages = mview;
@@ -66,8 +74,6 @@ public class GameWindow extends JFrame {
   }
 
   private void destruct() {
-    if (gwin != null)
-      gwin.dispose();
     if (mview != null)
       mview.destruct();
     super.dispose();

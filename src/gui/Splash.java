@@ -89,7 +89,6 @@ public class Splash extends JFrame {
       this.setFocusable(false);
     }
 
-    @SuppressWarnings("static-access")
     @Override
     public void actionPerformed(ActionEvent arg0) {
 

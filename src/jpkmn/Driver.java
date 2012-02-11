@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 
 public class Driver {
   public static Preferences prefs;
-  public static boolean debug, god, message;
+  public static boolean debug, console, message;
 
   private static StringBuilder log = new StringBuilder();
   public static String officialSerial = "HELLOWORLD";
@@ -26,8 +26,8 @@ public class Driver {
       System.out.println("Arguments specified: " + args.toString());
       if (args[0].contains("d"))
         debug = true;
-      if (args[0].contains("g"))
-        god = true;
+      if (args[0].contains("c"))
+        console = true;
       if (args[0].contains("m"))
         message = true;
     }
@@ -59,11 +59,11 @@ public class Driver {
     log.append(c.toString() + " : " + s + "\n");
   }
 
-  public static void logGodEvent(String s) {
+  public static void logConsoleEvent(String s) {
     if (debug)
-      System.out.println("God Event : " + s);
+      System.out.println("Console Event : " + s);
 
-    log.append("God Event : " + s + "\n");
+    log.append("Console Event : " + s + "\n");
   }
 
   public static <T> void crash(Class<T> c, String s) {
