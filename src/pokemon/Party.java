@@ -143,11 +143,26 @@ public class Party {
     return -1;
   }
 
+  /**
+   * Calls resetTempStats on each pokemon in the party
+   */
   public void resetTempStats() {
     for (int i = 0; i < amount; i++) {
       if (pkmn[i] != null)
         pkmn[i].resetTempStats();
     }
+  }
+
+  public String getNameList() {
+    String response = "[";
+
+    for (int i = 0; i < 6; ++i) {
+      if (pkmn[i] != null)
+        response += pkmn[i].name;
+      if (i != 5) response += ", ";
+    }
+
+    return (response + "]");
   }
 
   /**
