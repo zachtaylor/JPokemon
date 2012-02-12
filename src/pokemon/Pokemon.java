@@ -1,14 +1,12 @@
 package pokemon;
 
-import pokemon.stat.*;
-import pokemon.move.*;
-import gui.*;
-
 import java.util.*;
 import java.io.PrintWriter;
 
+import gui.*;
 import jpkmn.Driver;
-
+import pokemon.stat.*;
+import pokemon.move.*;
 import lib.PokemonBase;
 
 public class Pokemon {
@@ -118,7 +116,7 @@ public class Pokemon {
    */
   public int xpNeeded() {
     double l = level;
-    double factor = 4/5;
+    double factor = 4 / 5;
     return (int) (factor * l * l * l);
   }
 
@@ -197,8 +195,7 @@ public class Pokemon {
     specdefense = new SpecDefStat(level, base.getSpecdefense());
     speed = new SpeedStat(level, base.getSpeed());
     health = new HPStat(level, base.getHealth());
-    evolutionlevel = 100; // base.getEvolutionlevel();
-                          // TODO - take out the comment
+    evolutionlevel = base.getEvolutionlevel();
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
     xp = 0;
@@ -233,21 +230,36 @@ public class Pokemon {
   private void setDefaultMoves() {
     int move_num = 0;
     ArrayList<Move> moves = new ArrayList<Move>();
-    
+
     for (int l = level; l > 0; --l) {
       Move m = Move.getNewMove(this, l);
-      if (m != null) moves.add(m);
+      if (m != null)
+        moves.add(m);
     }
-    Driver.log(Pokemon.class, name+" is selecting default moves from "+moves.toString());
-    
+    Driver.log(Pokemon.class, name + " is selecting default moves from "
+        + moves.toString());
+
     while (!moves.isEmpty() && move_num != 4) {
       int r = (int) (Math.random() * moves.size());
       move[move_num] = moves.get(r);
       moves.remove(r);
     }
-    Driver.log(Pokemon.class, name+" selected default moves: "+move.toString());
+    Driver.log(Pokemon.class,
+        name + " selected default moves: " + move.toString());
   }
 
+  public String getMoveList() {
+    String response = "[";
+
+    for (int i = 0; i < 4; ++i) {
+      if (move[i] != null)
+        response += move[i].name;
+      if (i != 3) response += ", ";
+    }
+
+    return (response + "]");
+  }
+  
   public boolean canAttack() {
     return status.canAttack();
   }
@@ -330,8 +342,7 @@ public class Pokemon {
     if (p.name.indexOf("|") == -1)
       Splash.showFatalErrorMessage("naming error");
     p.name = p.name.substring(1, p.name.indexOf("|") - 1);
-    
-    
+
     return p;
   }
 
@@ -366,17 +377,8 @@ public class Pokemon {
 
   @Override
   public String toString() {
-    String answer = "";
-    answer += "(" + number + "," + level + ") |";
-    answer += name + "| " + attack.max + " " + specattack.max + " "
-        + defense.max;
-    answer += " " + specdefense.max + " " + speed.max + " " + health.max
-        + " ( ";
-    for (int i = 0; i < move.length && move[i] != null; i++) {
-      answer += move[i].number + " ";
-    }
-    answer += ") ";
-    return answer;
+    return name + "(LVL. " + level + ") HP: " + health.cur + "/"
+        + health.max;
   }
 
   @Override
