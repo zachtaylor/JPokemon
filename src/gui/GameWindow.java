@@ -2,24 +2,19 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.Scanner;
-
+import java.io.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import battle.Battle;
 import pokemon.Pokemon;
-import jpkmn.Driver;
-import jpkmn.Player;
+import jpkmn.*;
 
 public class GameWindow extends JFrame {
   public Player player;
 
   private JPanel root;
   private JPanel main;
-  private MessageView mview;
   private BattleView bwin;
   private Console console;
 
@@ -30,7 +25,7 @@ public class GameWindow extends JFrame {
       player = p;
       root = new JPanel();
       main = new JPanel();
-      
+
       if (Driver.console) {
         console = new Console(player);
         JPanel blah = new JPanel();
@@ -42,27 +37,24 @@ public class GameWindow extends JFrame {
       else {
         add(root);
       }
-      
 
       construct();
-
-      
-      if (Driver.message) {
-        mview = new MessageView();
-        Tools.messages = mview;
-        mview.setLocationRelativeTo(this);
-      }
 
       showMain();
       setLocationRelativeTo(null);
       setVisible(true);
+
+      if (Driver.message)
+        Tools.createMessageWindow();
+
     } catch (Exception e) {
       e.printStackTrace();
-      destruct();
+      dispose();
     }
   }
 
   private void construct() {
+    Tools.game = this;
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setLocationRelativeTo(null);
     setIconImage(Tools.findImage("main-icon"));
@@ -71,12 +63,6 @@ public class GameWindow extends JFrame {
     main.add(new BattleButton());
     main.add(new SaveButton());
     main.add(new QuitButton());
-  }
-
-  private void destruct() {
-    if (mview != null)
-      mview.destruct();
-    super.dispose();
   }
 
   public void showMain() {
@@ -161,13 +147,15 @@ public class GameWindow extends JFrame {
   }
 
   private class QuitButton extends JButton implements ActionListener {
+    private static final long serialVersionUID = 1L;
+
     public QuitButton() {
       super("Quit Game");
       addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent arg0) {
-      destruct();
+      dispose();
     }
   }
 

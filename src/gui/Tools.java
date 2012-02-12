@@ -12,7 +12,9 @@ import pokemon.*;
 import pokemon.move.Move;
 
 public class Tools {
-  static MessageView messages;
+  static GameWindow game;
+  
+  private static MessageView messages;
 
   /**
    * Generates a notify window, with the specified icon
@@ -28,7 +30,7 @@ public class Tools {
   }
 
   private static void notify(Image icon, String title, String message) {
-    if (Driver.message && messages != null && messages.isVisible()) {
+    if (Driver.message) {
       messages.addMessage(icon, title, message);
     }
     else {
@@ -92,6 +94,11 @@ public class Tools {
     return getImage(dest);
   }
 
+  public static void createMessageWindow() {
+    messages = new MessageView();
+    messages.setLocationRelativeTo(game);
+  }
+  
   /**
    * Asks the user if they want Pokemon p to evolve.
    * 
