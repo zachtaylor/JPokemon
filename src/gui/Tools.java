@@ -147,8 +147,10 @@ public class Tools {
   }
 
   /**
-   * Asks the user to pick a move position. If m != null, displays a message
-   * about learning m.
+   * Asks the user to pick a move to use. If m != null, displays a message
+   * about learning m, in place of whichever move is picked. If m != null and
+   * there are less than 4 learned moves, returns the position of the first
+   * null.
    * 
    * @param pokemon Pokemon to learn move
    * @param m Move to be learned
