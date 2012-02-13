@@ -162,6 +162,48 @@ public class Tools {
   }
 
   /**
+   * Allows a user to select which move they would like to use
+   * @param p The active Pokemon
+   * @return The selected move index
+   */
+  public static int selectMove(Pokemon p) {
+      StringBuilder message = new StringBuilder("Move List:\n");
+      String expectedOption = "0|1|2|3";
+      int moveCount = 0;
+
+      // We have to build the message to vary depending on
+      // how many moves the active Pokemon has
+      for (int i = 0; i < p.move.length; i++) {
+          if (p.move[i] != null) {
+              moveCount++;
+              message.append(i + ": " + p.move[i].name + "\n");
+          }
+      }
+
+      return Integer.parseInt(Tools.askForInput("Select Move",
+              message.toString(),
+              // From 0 to 2 x The number of moves, - 1 to drop last |
+              expectedOption.substring(0, moveCount * 2 - 1)));
+  }
+
+  /**
+   * Continually asks a user for input until they enter a valid pattern
+   * @param title Message box title
+   * @param message Message for the message box
+   * @param expectedPattern A regular expression with the expected input pattern
+   * @return A string containing valid input
+   */
+  public static String askForInput(String title, String message, String expectedPattern) {
+      String input = "";
+
+      while (input == null || input == "" || !input.matches(expectedPattern)) {
+          input = JOptionPane.showInputDialog(null, message, title, JOptionPane.QUESTION_MESSAGE);
+      }
+
+      return input;
+  }
+
+  /**
    * Generates a window which says "OOPS. I broke"
    */
   public static void crashReport() {

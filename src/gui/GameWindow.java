@@ -87,6 +87,8 @@ public class GameWindow extends JFrame {
 
   private class BattleButton extends JButton implements ActionListener {
 
+    private static final long serialVersionUID = 1L;
+
     public BattleButton() {
       super("Fight something");
       addActionListener(this);
@@ -94,17 +96,20 @@ public class GameWindow extends JFrame {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-      Pokemon e = new Pokemon(Integer.parseInt(JOptionPane.showInputDialog(
-          null, "LVL", "What level?")), Integer.parseInt(JOptionPane
-          .showInputDialog(null, "NUM", "What number?")));
+      
+      int num = Integer.parseInt(Tools.askForInput("Number", "Which Number?", "\\d{1,3}"));
+      int lvl = Integer.parseInt(Tools.askForInput("LVL", "What level?", "\\d{1,3}"));
+      Pokemon e = new Pokemon(num, lvl);
 
       Battle b = new Battle(player, e);
       showBattle(b);
     }
-
   }
 
   private class SaveButton extends JButton implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+
     public SaveButton() {
       super("Save game");
       addActionListener(this);

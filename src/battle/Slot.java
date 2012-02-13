@@ -47,7 +47,7 @@ public class Slot {
     }
 
     if (human) {
-      int a = Tools.askMove(leader, null);
+      int a = Tools.selectMove(leader);
       if (a == -1) return false;
 
       move = leader.move[a];

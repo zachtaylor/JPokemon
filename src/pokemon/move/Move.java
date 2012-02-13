@@ -120,11 +120,8 @@ public class Move {
   public static Move getNewMove(Pokemon p, int level) {
      MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(p.number, level);
      
-     // If we got a map back, construct the move
-     if (m != null) return new Move(m.getMove_number(), p);
-     
-    // Otherwise, return null
-    return null;
+     // Return null if there isn't a move for this level, or construct the move
+     return m == null ? null : new Move(m.getMove_number(), p);
   }
 
   public static class Library {
