@@ -140,7 +140,7 @@ public class BattleView extends JPanel {
     enemyhp.setValue(battle.enemy.leader.health.cur);
     userxp.setMaximum(battle.user.leader.xpNeeded());
     userxp.setValue(battle.user.leader.xp);
-    super.repaint();
+    Tools.game.repaint();
   }
 
   private void exit(BattleEndException e) {
@@ -164,6 +164,7 @@ public class BattleView extends JPanel {
       } catch (BattleEndException e) {
         exit(e);
       }
+      reload();
     }
   }
 
@@ -181,6 +182,7 @@ public class BattleView extends JPanel {
       } catch (BattleEndException e) {
         exit(e);
       }
+      reload();
     }
   }
 
@@ -198,6 +200,7 @@ public class BattleView extends JPanel {
       } catch (BattleEndException e) {
         exit(e);
       }
+      reload();
     }
   }
 
@@ -215,6 +218,7 @@ public class BattleView extends JPanel {
       } catch (BattleEndException e) {
         exit(e);
       }
+      reload();
     }
   }
 

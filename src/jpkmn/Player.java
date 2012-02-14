@@ -67,14 +67,8 @@ public class Player {
   }
 
   public static Player fromFile(Scanner s) {
-    if (!isCurrent(s.next())) {
-      Splash.showFatalErrorMessage("Incorrect file version");
-      return null;
-    }
-    else
-      s.nextLine();
-
     Player p = new Player(s.nextLine());
+    p.name = s.nextLine();
     p.party = new Party();
     p.party.fromFile(s);
 
@@ -90,8 +84,8 @@ public class Player {
     return p;
   }
 
-  public static boolean isCurrent(String test) {
-    return test.equals(serial);
+  public static boolean isCurrent() {
+    return serial.equals(Driver.officialSerial);
   }
 
 }

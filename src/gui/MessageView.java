@@ -16,7 +16,7 @@ public class MessageView extends JPanel {
     frame = new MyFrame();
     JScrollPane scroll = new JScrollPane(this);
     frame.getContentPane().add(scroll, BorderLayout.CENTER);
-    frame.setSize(new Dimension(350, 200));
+    frame.setSize(new Dimension(450, 200));
     frame.setResizable(false);
     frame.setIconImage(Tools.findImage("mail"));
     frame.setTitle("Message Center");

@@ -228,9 +228,9 @@ public class Slot {
         d *= 2;
     }
 
+    reportDamage(null, d);
     leader.takeDamage(d);
 
-    reportDamage(null, d);
     field.rollDownDuration();
   }
 

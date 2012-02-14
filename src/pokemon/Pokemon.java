@@ -14,11 +14,14 @@ public class Pokemon {
   public int number, level, points, xp;
   public Stat attack, specattack, defense, specdefense, speed, health;
   public String name;
-  public boolean awake;
+  public boolean awake = true;
   public Status status;
   public Move[] move = new Move[4];
   private int evolutionlevel;
   private int a;
+  private int unique_id;
+  
+  private static int CURRENT_ID = 0;
 
   /**
    * Makes a new Pokemon of the specified number. All stats are stock.
@@ -27,6 +30,7 @@ public class Pokemon {
    * @param lvl level of the pokemon
    */
   public Pokemon(int num, int lvl) {
+    this();
     number = num;
     level = lvl;
     points = 0;
@@ -40,9 +44,10 @@ public class Pokemon {
 
     setDefaultMoves();
   }
-
+  
   private Pokemon() {
-  } // Used for creating from file
+    unique_id = CURRENT_ID++;
+  }
 
   /**
    * Resets temporary stats to their maximum values. Does NOT reset health.
@@ -66,13 +71,12 @@ public class Pokemon {
    * @param damage The amount of damage to be taken
    * @return the awake state of the Pokemon
    */
-  public boolean takeDamage(int damage) {
+  public void takeDamage(int damage) {
     health.cur -= damage;
     if (health.cur <= 0) {
       health.cur = 0;
       awake = false;
     }
-    return awake;
   }
 
   /**
@@ -233,7 +237,7 @@ public class Pokemon {
 
     for (int l = level; l > 0; --l) {
       Move m = Move.getNewMove(this, l);
-      if (m != null)
+      if (m != null && !moves.contains(m))
         moves.add(m);
     }
     Driver.log(Pokemon.class, name + " is selecting default moves from "
@@ -241,11 +245,11 @@ public class Pokemon {
 
     while (!moves.isEmpty() && move_num != 4) {
       int r = (int) (Math.random() * moves.size());
-      move[move_num] = moves.get(r);
+      move[move_num++] = moves.get(r);
       moves.remove(r);
     }
     Driver.log(Pokemon.class,
-        name + " selected default moves: " + move.toString());
+        name + " selected default moves: " + getMoveList());
   }
 
   public String getMoveList() {
@@ -304,7 +308,6 @@ public class Pokemon {
     p.points = s.nextInt();
     p.xp = s.nextInt();
     p.status = new Status(p);
-    p.awake = true;
 
     if (!(s.next().equals(")")))
       Splash.showFatalErrorMessage("Insufficient basic data");
@@ -331,11 +334,11 @@ public class Pokemon {
       Splash.showFatalErrorMessage("excessive stat values");
 
     int i = 0;
-    for (String next = s.next(); !next.equals(")"); next = s.next()) {
-      if (next.equals(""))
+    for (String next = s.next(); !next.equals(")"); next = s.next(), ++i) {
+      if (next.equals("0"))
         p.move[i] = null;
-      p.move[i] = new Move(Integer.parseInt((next)), p);
-      ++i;
+      else 
+        p.move[i] = new Move(Integer.parseInt((next)), p);
     }
 
     p.name = s.nextLine();
@@ -377,14 +380,13 @@ public class Pokemon {
 
   @Override
   public String toString() {
-    return name + "(LVL. " + level + ") HP: " + health.cur + "/"
+    return name + "("+unique_id+") LVL. " + level + " HP: " + health.cur + "/"
         + health.max;
   }
 
   @Override
   public boolean equals(Object o) {
-    // This must strictly equal the object
-    // Pokemon can never be "equivalent."
-    return this == o;
+    if (!(o instanceof Pokemon)) return false;
+    else return ((Pokemon) o).unique_id == this.unique_id;
   }
 }

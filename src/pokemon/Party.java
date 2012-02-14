@@ -137,7 +137,7 @@ public class Party {
    */
   public int indexOf(Pokemon p) {
     for (int i = 0; i < amount; i++) {
-      if (pkmn[i] == p)
+      if (pkmn[i].equals(p))
         return i;
     }
     return -1;
