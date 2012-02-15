@@ -18,7 +18,6 @@ public class Driver {
   public static String officialSerial = "HELLOWORLD";
 
   public static void main(String[] args) {
-    debug = true; // TODO : remove this
     prefs = Preferences.systemNodeForPackage(Driver.class);
 
     // Special mode

@@ -3,9 +3,11 @@ package pokemon.move;
 public enum MoveStyle {
     PHYSICAL, SPECIAL, OHKO, EFFECT, REPEAT, DELAY, MISC;
 
-    public int repeatmin, repeatabovemin, delay;
+    public int delay;
 
     public boolean attackAfterDelay = true;
+    
+    public static final int REPEAT_MIN = 2, REPEAT_EXTRA = 3;
 
     public static MoveStyle valueOf(int style) {
         if (style == -1)

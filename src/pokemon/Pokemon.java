@@ -30,23 +30,18 @@ public class Pokemon {
    * @param lvl level of the pokemon
    */
   public Pokemon(int num, int lvl) {
-    this();
     number = num;
     level = lvl;
     points = 0;
     xp = 0;
     status = new Status(this);
-
-    // Set base stats
+    
+    unique_id = CURRENT_ID++;
     PokemonBase base = PokemonBase.getBaseForNumber(number);
     name = base.getName();
     resetBase(base);
-
+    
     setDefaultMoves();
-  }
-  
-  private Pokemon() {
-    unique_id = CURRENT_ID++;
   }
 
   /**
@@ -291,23 +286,16 @@ public class Pokemon {
    * @return A new Pokemon as described by the file
    */
   public static Pokemon fromFile(Scanner s) {
-    if (s == null)
+    if (s == null || !s.hasNextLine())
       return null;
-    if (!s.hasNextLine()) {
-      return null;
-    }
 
     if (!(s.next().equals("("))) {
       Splash.showFatalErrorMessage("pokemon load fail");
     }
-    Pokemon p = new Pokemon();
-    p.number = s.nextInt();
-    PokemonBase base = PokemonBase.getBaseForNumber(p.number);
-    p.resetBase(base);
-    p.level = s.nextInt();
+    
+    Pokemon p = new Pokemon(s.nextInt(), s.nextInt());
     p.points = s.nextInt();
     p.xp = s.nextInt();
-    p.status = new Status(p);
 
     if (!(s.next().equals(")")))
       Splash.showFatalErrorMessage("Insufficient basic data");
@@ -335,10 +323,7 @@ public class Pokemon {
 
     int i = 0;
     for (String next = s.next(); !next.equals(")"); next = s.next(), ++i) {
-      if (next.equals("0"))
-        p.move[i] = null;
-      else 
-        p.move[i] = new Move(Integer.parseInt((next)), p);
+        p.move[i] = new Move(Integer.parseInt(next), p);
     }
 
     p.name = s.nextLine();
@@ -367,9 +352,7 @@ public class Pokemon {
     p.print("( ");
     try {
       for (int i = 0; i < 4; i++) {
-        if (move[i] == null)
-          p.print("0 ");
-        else
+        if (move[i] != null)
           p.print(move[i].number + " ");
       }
     } catch (Exception e) {

@@ -58,9 +58,10 @@ public class Battle {
     user.set();
     enemy.set();
 
-    if (!participants.contains(user.leader))
+    if (!participants.contains(user.leader)) {
       Driver.log(Battle.class, user.leader.name + " added to participants.");
-    participants.add(user.leader);
+      participants.add(user.leader);
+    }
 
     if (window != null)
       window.reload();

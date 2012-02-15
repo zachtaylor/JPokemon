@@ -170,8 +170,9 @@ public class Slot {
     }
     else if (move.style == MoveStyle.REPEAT) {
       int damage = Battle.computeDamage(move, leader, enemy.leader);
-      int repeatnum = (int) (move.style.repeatmin
-          + (Math.random() * move.style.repeatabovemin) + .35);
+      int repeatnum = (int) (MoveStyle.REPEAT_MIN
+          + (Math.random() * MoveStyle.REPEAT_EXTRA + .35));
+      System.out.println("REPEAT NUM = "+repeatnum);
       for (int i = 0; i < repeatnum; ++i)
         enemy.takeDamage(damage);
     }

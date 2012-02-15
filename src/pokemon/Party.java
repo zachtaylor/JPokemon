@@ -110,7 +110,7 @@ public class Party {
    * @return True if this party contains p
    */
   public boolean contains(Pokemon p) {
-    return indexOf(p) > 0;
+    return indexOf(p) >= 0;
   }
 
   /**
