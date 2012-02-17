@@ -114,9 +114,7 @@ public class Pokemon {
    * @return The amount of XP needed to gain a level
    */
   public int xpNeeded() {
-    double l = level;
-    double factor = 4 / 5;
-    return (int) (factor * l * l * l);
+    return (int) (Math.log((double) level)*level*level*.35);
   }
 
   /**
@@ -125,12 +123,8 @@ public class Pokemon {
    * @return
    */
   public int xpGiven() {
-    double xpwon = level;
-    xpwon *= xpwon;
-    xpwon *= xpwon;
-    xpwon *= Math.random() * 0.65 + .3;
-    xpwon /= 7;
-    return (int) xpwon;
+    double factor = (Math.random()*.5+2);
+    return (int) (factor * level);
   }
 
   /**
