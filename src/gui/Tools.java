@@ -5,16 +5,13 @@ import java.net.URL;
 
 import javax.swing.*;
 
-import jpkmn.Driver;
-
 import item.*;
 import pokemon.*;
 import pokemon.move.Move;
 
 public class Tools {
   static GameWindow game;
-
-  private static MessageView messages;
+  static MessageView messages;
 
   /**
    * Generates a notify window, with the specified icon

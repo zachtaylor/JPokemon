@@ -73,6 +73,11 @@ public class GameWindow extends JFrame {
     root.add(main);
   }
 
+  public void dispose() {
+    Tools.messages.dispose();
+    super.dispose();
+  }
+  
   public void showBattle(Battle b) {
     setTitle("Battle!");
     setSize(620, Driver.console ? 210 : 190);

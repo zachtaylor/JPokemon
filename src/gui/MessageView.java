@@ -36,6 +36,10 @@ public class MessageView extends JPanel {
     frame.setLocationRelativeTo(c);
   }
   
+  public void dispose() {
+    frame.dispose();
+  }
+  
   public void destruct() {
     frame.dispose();
   }
