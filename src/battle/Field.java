@@ -11,7 +11,7 @@ public class Field {
 
     public int duration;
     public double shielding;
-    
+
     public ArrayList<String> exceptions;
   }
 
@@ -25,6 +25,7 @@ public class Field {
 
   /**
    * Adds an Effect to this Field. Use this version for simple effects.
+   * 
    * @param e Field.Effect to be added
    * @param d Duration of the effect in turns
    * @param exceptions Names of attacks that are exempt from invulnerable
@@ -35,6 +36,7 @@ public class Field {
 
   /**
    * Adds an Effect to this Field. Use this version for Shields.
+   * 
    * @param e Field.Effect to be added
    * @param d Duration of the effect in turns
    * @param s Value between 0 and 1 representing damage reduction
@@ -53,7 +55,7 @@ public class Field {
     e.shielding = s;
     effects.add(e);
   }
-  
+
   /**
    * Makes sure that the slot leader is properly seeded/seeduser
    */
@@ -70,14 +72,14 @@ public class Field {
       // Phys and Spec Shield are Field-specific. don't apply to Pokemon.
     }
   }
-  
+
   private void verifyEffects() {
     for (Effect e : effects) {
       if (e.duration <= 0)
         effects.remove(e);
     }
   }
-  
+
   public void rollDownDuration() {
     for (Effect e : effects) {
       // Seed status doesn't ever wear off
@@ -86,20 +88,32 @@ public class Field {
     }
     verifyEffects();
   }
-  
+
+  /**
+   * Tells if the field contains the specified effect
+   * 
+   * @param e Effect to check for
+   * @return True if the field contains that effect
+   */
   public boolean contains(Effect e) {
     return effects.contains(e);
   }
-  
+
   /**
    * Reports whether immunity is given from the move name.
+   * 
    * @param s Name of the move
    * @return True if immunity is given
    */
   public boolean isImmune(String s) {
+
+    /*
+     * If there exists an effect that is invulnerability and there is not an
+     * exception for it, user is invulnerable
+     */
+
     for (Effect e : effects) {
-      if (e == Effect.INVULNERABLE &&
-          !e.exceptions.contains(s))
+      if (e == Effect.INVULNERABLE && !e.exceptions.contains(s))
         return true;
     }
     return false;

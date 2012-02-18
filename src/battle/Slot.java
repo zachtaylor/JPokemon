@@ -83,58 +83,54 @@ public class Slot {
    * Launches an attack on the enemy slot.
    */
   public void attack() {
+    ArrayList<String> text = new ArrayList<String>();
+    int damage;
 
     // Move # 9 (Bide) special handling
     if (bide) {
-      enemy.takeDamageAbsolute("Bide damage is constant.", bidedamage * 2);
+      enemy.takeDamageAbsolute(bidedamage * 2);
       bide = false;
       bidedamage = 0;
       return;
     }
 
-    // 1. Measure PP for validity
-    // 2. Measure if the user can attack
-    // 3. Reduce PP
-    // 4. Measure accuracy
     // Don't perform any if they didn't choose this move
     if (canChooseMove()) {
-      // 1
+      // 1 Measure PP for validity
       if (move.pp <= 0) {
-        Tools.notify(leader, "CANNOT ATTACK", move.name
-            + " does not have enough PP!");
-        Driver.log(Slot.class, leader.name + " cannot attack. No PP.");
+        text.add("CANNOT ATTACK");
+        text.add(move.name + " does not have enough PP!");
+        reportDamage(leader, text);
         return;
       }
 
-      // 2
+      // 2 Measure if the user can attack
       if (!leader.canAttack()) {
-        Tools.notify(leader, "CANNOT ATTACK", leader.name
-            + " cannot attack because of " + leader.status.effectsToString());
-        Driver.log(
-            Slot.class,
-            leader.name + " cannot perform attack. Causes = "
-                + leader.status.effectsToString());
+        text.add("CANNOT ATTACK");
+        text.add(leader.name + " cannot attack because of "
+            + leader.status.effectsToString());
+        reportDamage(leader, text);
         return;
       }
 
-      // 3
+      // 3 Reduce PP
       if (human)
         move.enabled = --move.pp == 0;
 
-      // 4
+      // 4 Measure accuracy
       if (!move.hits(enemy.leader)) {
-        Driver.log(Slot.class, move.name + " missed target: "
-            + enemy.leader.name);
+        text.add("MISS");
+        text.add(leader.name+" used "+move.name+", but it missed!");
 
-        // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick)
-        // Reduce user health by 1/2 if the attack misses
+        // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (move.number == 60 || move.number == 69) {
-          int d = (Battle.computeDamage(move, leader, enemy.leader) / 8);
-          takeDamageAbsolute(move.name + " failure hurts the user", d);
-          Driver.log(Slot.class, leader.name + " received recoil damage (" + d
-              + "). Move was : " + move.name);
+          damage = (Battle.computeDamage(move, leader, enemy.leader) / 8);
+          takeDamageAbsolute(damage);
+          text.add(leader.name + " received " + damage + " recoil damage from "
+              + move.name);
         }
 
+        reportDamage(leader, text);
         return;
       }
     }
@@ -143,60 +139,95 @@ public class Slot {
           + leader.name + " did not choose move : " + move.name);
     }
 
-    // Now comes the fun part
     if (move.style == MoveStyle.PHYSICAL || move.style == MoveStyle.SPECIAL
         || move.style == MoveStyle.OHKO) {
-      enemy.takeDamage(Battle.computeDamage(move, leader, enemy.leader));
+      damage = Battle.computeDamage(move, leader, enemy.leader);
+      enemy.takeDamage(damage);
     }
+
     else if (move.style == MoveStyle.DELAY) {
       if (leader.status.contains(Effect.WAIT)) {
-        leader.status.remove(Effect.WAIT);
-        if (!leader.status.contains(Effect.WAIT) && move.style.attackAfterDelay)
-          enemy.takeDamage(Battle.computeDamage(move, leader, enemy.leader));
+
+        leader.status.remove(Effect.WAIT); // take away 1 wait
+
+        if (!leader.status.contains(Effect.WAIT) && move.style.attackAfterDelay) {
+          damage = Battle.computeDamage(move, leader, enemy.leader);
+          enemy.takeDamage(damage);
+        }
+        else { // Already attacked before delay || resting this turn
+          text.add("WAITING");
+          text.add(leader.name + " used " + move.name + "!");
+          text.add(leader.name + " is resting this turn.");
+          reportDamage(leader, text);
+        }
+
       }
       else {
-        for (int i = 0; i < move.style.delay; ++i) {
-          leader.status.addEffect(Effect.WAIT);
+
+        for (int i = 0; i < move.style.delay; ++i)
+          leader.status.addEffect(Effect.WAIT); // add all the waits
+
+        if (!move.style.attackAfterDelay) {
+          damage = Battle.computeDamage(move, leader, enemy.leader);
+          enemy.takeDamage(damage);
         }
-        if (!move.style.attackAfterDelay)
-          enemy.takeDamage(Battle.computeDamage(move, leader, enemy.leader));
+        else { // attack after delay. resting this turn
+          text.add("WAITING");
+          text.add(leader.name + " used " + move.name + "!");
+          text.add(leader.name + " is waiting this turn.");
+          reportDamage(leader, text);
+        }
       }
     }
+
     else if (move.style == MoveStyle.REPEAT) {
-      int damage = Battle.computeDamage(move, leader, enemy.leader);
+      damage = Battle.computeDamage(move, leader, enemy.leader);
       int repeatnum = (int) (MoveStyle.REPEAT_MIN + (Math.random()
           * MoveStyle.REPEAT_EXTRA + .35));
-      for (int i = 0; i < repeatnum; ++i)
-        enemy.takeDamage(damage);
+      enemy.takeDamage(damage * repeatnum);
     }
-    else if (move.style == MoveStyle.EFFECT) {
-      for (BonusEffect be : move.be) {
 
+    else if (move.style == MoveStyle.EFFECT) {
+      text.add("EFFECTS");
+      text.add(leader.name + " used " + move.name + "!");
+
+      for (BonusEffect be : move.be) {
         // Move # 73 (Leech Seed) fix cause it targets both user and enemy
         if (be == BonusEffect.LEECH) {
           enemy.leader.status.addEffect(Status.Effect.SEEDED);
           leader.status.addEffect(Status.Effect.SEEDUSR);
         }
         else if (be.target == Target.SELF) {
+          text.add(leader.name + " is now " + be.toString());
           be.effect(leader);
         }
         else {
+          text.add(enemy.leader.name + " is now " + be.toString());
           be.effect(enemy.leader);
         }
       }
+
+      reportDamage(leader, text);
     }
+
     else { // Misc
       // TODO : This crap
       System.out.println("hello world.");
     }
-
   }
 
   /**
-   * Works in tandem with attack to distribute damage to the leader.
+   * Works in tandem with attack to distribute damage to the leader. Reports
+   * what happened.
+   * 
+   * @param d Damage taken
    */
   private void takeDamage(int d) {
 
+    ArrayList<String> text = new ArrayList<String>();
+    text.add("DAMAGE");
+    text.add(enemy.leader.name+" used "+enemy.move.name+"!");
+    
     // If measuring bide damage, record it
     if (bide)
       bidedamage += d;
@@ -213,29 +244,31 @@ public class Slot {
     else if (field.contains(Field.Effect.INVULNERABLE)) {
       if (field.isImmune(enemy.move.name)) {
         d = 0;
-        reportDamage(leader.name + " is invulnerable!", d);
         field.rollDownDuration();
-        return; // reportDamage is special. don't keep going
+        text.add(leader.name+" is invulnerable to "+enemy.move.name);
       }
       else
         // Have immunity, but not to the move name
         // E.g. Dig/Rollout
         d *= 2;
+      text.add(leader.name+" took "+d+" damage.");
     }
 
-    takeDamageAbsolute(null, d);
+    text.add(leader.name+" took "+d+" damage.");
+    reportDamage(enemy.leader, text);
+    takeDamageAbsolute(d);
   }
 
   /**
    * Works in tandem with attack to distribute damage to the leader. Ignores
-   * shields and immunities. E.g. Bide/Dragon Rage/Immunity
+   * shields and immunities. E.g. Bide/Dragon Rage/Immunity. Does not report
+   * anything.
    * 
-   * @param s Additional text for reportDamage
    * @param d Damage taken
    */
-  private void takeDamageAbsolute(String s, int d) {
+  private void takeDamageAbsolute(int d) {
     leader.takeDamage(d);
-    reportDamage(s, d);
+
     field.rollDownDuration();
   }
 
@@ -281,26 +314,18 @@ public class Slot {
    * @param s (Optional) for takeDamageAbsolute, specify special message
    * @param d Damage taken by this.leader
    */
-  private void reportDamage(String s, int d) {
-    ArrayList<String> text = new ArrayList<String>();
-    text.add("DAMAGE");
-    text.add(enemy.leader.name + " used " + enemy.move.name + "!");
-    if (s == null) {
-      if (enemy.move.effectiveness(leader) > 1.0)
-        text.add("It's super effective!");
-      else if (enemy.move.effectiveness(leader) == 0)
-        text.add("It failed!");
-      else if (enemy.move.effectiveness(leader) < 1)
-        text.add("It's not very effective...");
-      text.add(leader.name + " took " + d + " damage!");
-    }
-    else {
-      text.add(s);
-    }
+  private void reportDamage(Pokemon p, ArrayList<String> text) {
+    Tools.notify(p, text.toArray(new String[text.size()]));
+    Driver.log(Slot.class, text.toString() + " " + p.name + ": " + p.health.cur
+        + "/" + p.health.max);
+  }
 
-    Tools.notify(enemy.leader, text.toArray(new String[text.size()]));
-    text.add(human ? "user" : "enemy");
-    Driver.log(Slot.class, text.toString() + " " + leader.name + ": "
-        + leader.health.cur + "/" + leader.health.max);
+  private void addEffectivenessMessage(ArrayList<String> text) {
+    if (enemy.move.effectiveness(leader) > 1.0)
+      text.add("It's super effective!");
+    else if (enemy.move.effectiveness(leader) == 0)
+      text.add("It failed!");
+    else if (enemy.move.effectiveness(leader) < 1)
+      text.add("It's not very effective...");
   }
 }
