@@ -244,6 +244,7 @@ public class Battle {
     chance += 30;
     if (chance > 255 || chance > Math.random() * 255) {
       Tools.notify(user.leader, "SUCCESS", "Ran away successfully!");
+      clear();
       throw new BattleEndException(0);
     }
     else {
@@ -316,13 +317,14 @@ public class Battle {
     int xpwon = enemy.leader.xpGiven();
     if (!wild)
       xpwon *= 1.5;
-    
+
     Driver.log(Battle.class, xpwon + "xp per " + participants.countAwake()
         + " participants = " + (xpwon /= participants.countAwake()));
 
     for (Pokemon p : participants.pkmn) {
       if (p != null && p.awake) {
-        Driver.log(Battle.class, "xp payed to : " + p.name + (p.awake ? " awake" : " asleep"));
+        Driver.log(Battle.class, "xp payed to : " + p.name
+            + (p.awake ? " awake" : " asleep"));
         p.gainExperience(xpwon);
       }
     }
@@ -345,13 +347,23 @@ public class Battle {
 
     }
 
+    clear();
     throw new BattleEndException(101);
-
   }
 
   private void lose() throws BattleEndException {
     player.cash /= 2;
+    clear();
     throw new BattleEndException(110);
+  }
+
+  private void clear() {
+    for (Pokemon p : user.party.pkmn) {
+      if (p == null)
+        continue;
+      p.status.remove(Effect.SEEDED);
+      p.status.remove(Effect.SEEDUSR);
+    }
   }
 
   /**

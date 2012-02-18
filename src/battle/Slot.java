@@ -255,7 +255,16 @@ public class Slot {
     }
 
     text.add(leader.name+" took "+d+" damage.");
+    
+    if (enemy.move.effectiveness(leader) > 1.0)
+      text.add("It's super effective!");
+    else if (enemy.move.effectiveness(leader) == 0)
+      text.add("It failed!");
+    else if (enemy.move.effectiveness(leader) < 1)
+      text.add("It's not very effective...");
+    
     reportDamage(enemy.leader, text);
+    
     takeDamageAbsolute(d);
   }
 
@@ -320,12 +329,4 @@ public class Slot {
         + "/" + p.health.max);
   }
 
-  private void addEffectivenessMessage(ArrayList<String> text) {
-    if (enemy.move.effectiveness(leader) > 1.0)
-      text.add("It's super effective!");
-    else if (enemy.move.effectiveness(leader) == 0)
-      text.add("It failed!");
-    else if (enemy.move.effectiveness(leader) < 1)
-      text.add("It's not very effective...");
-  }
 }
