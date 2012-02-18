@@ -128,7 +128,6 @@ public class BattleView extends JPanel {
 
   public void load(Battle b) {
     battle = b;
-    Driver.log(BattleView.class, "battleview loaded");
     reload();
   }
 

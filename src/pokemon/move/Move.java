@@ -460,15 +460,6 @@ public class Move {
         break;
       case 73: // Leech Seed
         current = BonusEffect.LEECH;
-        current.target = Target.SELF;
-        current.chance = 1.0;
-        current.percent = .2;
-        bonuseffects.add(current);
-        current = null;
-        current = BonusEffect.LEECH;
-        current.target = Target.ENEMY;
-        current.chance = 1.0;
-        current.percent = .2;
         bonuseffects.add(current);
         current = null;
         break;

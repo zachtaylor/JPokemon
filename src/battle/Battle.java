@@ -46,7 +46,7 @@ public class Battle {
 
     // Verify that everyone is awake
     checkAwake();
-    
+
     // tie goes to the enemy for speed
     if (user.leader.speed.cur > enemy.leader.speed.cur) {
       fast = user;
@@ -291,8 +291,7 @@ public class Battle {
 
   private boolean checkAwake() throws BattleEndException {
     if (!user.leader.awake) {
-      Driver.log(Battle.class, user.leader.name + " is unconscious at hp = "
-          + user.leader.health.cur);
+      Driver.log(Battle.class, user.leader.name + " is unconscious.");
       if (user.party.countAwake() == 0)
         lose();
       else
@@ -300,8 +299,7 @@ public class Battle {
     }
 
     if (!enemy.leader.awake) {
-      Driver.log(Battle.class, enemy.leader.name + " is defeated at hp = "
-          + enemy.leader.health.cur);
+      Driver.log(Battle.class, enemy.leader.name + " is defeated.");
       payxp();
       if (enemy.party.countAwake() == 0)
         win();
@@ -318,17 +316,14 @@ public class Battle {
     int xpwon = enemy.leader.xpGiven();
     if (!wild)
       xpwon *= 1.5;
-
-    Driver.log(Battle.class, "xp total = " + xpwon);
-
-    xpwon /= participants.countAwake();
-    Driver.log(Battle.class, "xp per " + participants.countAwake()
-        + " participants = " + xpwon);
+    
+    Driver.log(Battle.class, xpwon + "xp per " + participants.countAwake()
+        + " participants = " + (xpwon /= participants.countAwake()));
 
     for (Pokemon p : participants.pkmn) {
       if (p != null && p.awake) {
-        Driver.log(Battle.class, "xp payed to : " + p.name);
-        p.gainExperience((int) xpwon);
+        Driver.log(Battle.class, "xp payed to : " + p.name + (p.awake ? " awake" : " asleep"));
+        p.gainExperience(xpwon);
       }
     }
 
