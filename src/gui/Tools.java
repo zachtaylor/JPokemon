@@ -145,8 +145,30 @@ public class Tools {
    * @return position for the move
    */
   public static int askMove(Pokemon p, Move m) {
-    return Integer.parseInt(JOptionPane.showInputDialog(null,
-        p.move.toString(), "What Move?", JOptionPane.QUESTION_MESSAGE));
+    if (p.numMoves() < 4) {
+      String[] crap = { "New Move", p.name + " learned " + m.name + "!" };
+      notify(p, crap);
+      return p.numMoves();
+    }
+
+    StringBuilder message = new StringBuilder(p.name + "can learn" + m.name
+        + "!\n");
+    message.append("Enter 0, 1, 2, or 3 to replace a move.\n");
+    message.append("Enter 5 to cancel\n");
+    String expectedOption = "0|1|2|3|5";
+    int moveCount = 0;
+
+    // We have to build the message to vary depending on
+    // how many moves the active Pokemon has
+    for (int i = 0; i < p.move.length; i++) {
+      if (p.move[i] != null) {
+        moveCount++;
+        message.append(i + ": " + p.move[i].toString() + "\n");
+      }
+    }
+
+    return Integer.parseInt(Tools.askForInput("Select Move",
+        message.toString(), expectedOption));
   }
 
   /**

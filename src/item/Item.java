@@ -41,6 +41,10 @@ public abstract class Item {
     return _quantity-- > 0;
   }
   
+  public String toString() {
+    return _name + " "+_quantity;
+  }
+  
   public Target target;
   private int _quantity;
   private final String _name;

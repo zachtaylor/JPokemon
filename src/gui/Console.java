@@ -59,7 +59,7 @@ public class Console extends JTextField implements ActionListener {
         }
         if (string.size() == 2) {
           Tools.notify(target, "Pokemon Lookup", target.toString());
-          Driver.logConsoleEvent("Looking up pokemon\n"+target.toString());
+          Driver.logConsoleEvent("Looking up pokemon\n" + target.toString());
           return;
         }
 
@@ -77,7 +77,8 @@ public class Console extends JTextField implements ActionListener {
         }
         else if (string.get(2).equals("move")) {
           Tools.notify(target, "Pokemon Lookup", target.getMoveList());
-          Driver.logConsoleEvent("Looking up move list\n"+target.getMoveList());
+          Driver.logConsoleEvent("Looking up move list\n"
+              + target.getMoveList());
           return;
         }
         else if (string.get(2).equals("lead") && !box) {
@@ -91,30 +92,96 @@ public class Console extends JTextField implements ActionListener {
       }
 
       else if (string.get(0).equals("bag")) {
-        Item target;
+        Item target = null;
         int pos;
+
+        // 1-argument flavor
+        if (string.size() == 1) {
+          ArrayList<String> contents = new ArrayList<String>();
+          contents.add("Bag Contents");
+          contents.addAll(player.bag.toStringArray());
+          Tools.notify("err", contents.toArray(new String[contents.size()]));
+          Driver.logConsoleEvent("Listing bag contents"
+              + contents.toArray(new String[contents.size()]));
+          return;
+        }
+
+        // 2/3-argument flavor
         if (string.get(1).equals("potion")) {
-          target = player.bag.potion(Integer.parseInt(string.get(2)));
-          target.add(Integer.parseInt(string.get(3)));
+
+          if (string.size() == 2) {
+            Tools.notify("err", "Item Lookup", player.bag.toStringArray()
+                .get(1));
+            Driver.logConsoleEvent("Listing potion pocket contents: "
+                + player.bag.toStringArray().get(1));
+            return;
+          }
+          else
+            target = player.bag.potion(Integer.parseInt(string.get(2)));
         }
         else if (string.get(1).equals("ball")) {
-          target = player.bag.ball(Integer.parseInt(string.get(2)));
-          target.add(Integer.parseInt(string.get(3)));
+
+          if (string.size() == 2) {
+            Tools.notify("err", "Item Lookup", player.bag.toStringArray()
+                .get(0));
+            Driver.logConsoleEvent("Listing ball pocket contents: "
+                + player.bag.toStringArray().get(1));
+            return;
+          }
+          else
+            target = player.bag.ball(Integer.parseInt(string.get(2)));
         }
         else if (string.get(1).equals("stone")) {
-          target = player.bag.stone(string.get(2));
-          target.add(Integer.parseInt(string.get(3)));
+
+          if (string.size() == 2) {
+            Tools.notify("err", "Item Lookup", player.bag.toStringArray()
+                .get(2));
+            Driver.logConsoleEvent("Listing stone pocket contents: "
+                + player.bag.toStringArray().get(1));
+            return;
+          }
+          else
+            target = player.bag.stone(string.get(2));
         }
         else if (string.get(1).charAt(0) == 'x') {
-          target = player.bag.xstat(string.get(1).substring(1));
-          target.add(Integer.parseInt(string.get(2)));
+
+          if (string.size() == 2) {
+            Tools.notify("err", "Item Lookup", player.bag.toStringArray()
+                .get(3));
+            Driver.logConsoleEvent("Listing xstat pocket contents: "
+                + player.bag.toStringArray().get(1));
+            return;
+          }
+          else
+            target = player.bag.xstat(string.get(1).substring(1));
         }
         else {
           printError(s);
         }
+        if (string.size() == 3) {
+          Tools.notify("err", "Item Lookup", target.toString());
+          Driver.logConsoleEvent("Describing item: " + target.toString());
+          return;
+        }
+        else {
+          target.add(Integer.parseInt(string.get(3)));
+          Tools.notify("err", "Populating Item", target.toString());
+          Driver.logConsoleEvent("Populating item: " + target.toString());
+        }
+        
+
       }
 
       else if (string.get(0).equals("player")) {
+
+        // 1-argument flavor
+        if (string.size() == 1) {
+          Tools.notify("err", "All Pokemon", player.party.getNameList());
+          Driver.logConsoleEvent("Listing all pokemon\n"
+              + player.party.getNameList());
+          return;
+        }
+
         if (string.get(1).equals("cash")) {
           player.bag.cash += Integer.parseInt(string.get(2));
         }

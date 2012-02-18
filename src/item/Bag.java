@@ -4,6 +4,7 @@ package item;
 
 import battle.Target;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import jpkmn.Driver;
 
@@ -53,8 +54,6 @@ public class Bag {
   }
 
   public XStat xstat(String kind) {
-    Driver.log(Bag.class, "XStat wanted. Target = " + kind);
-
     if (kind.equalsIgnoreCase("attack"))
       return xstat[0];
     else if (kind.equalsIgnoreCase("sattack"))
@@ -65,14 +64,10 @@ public class Bag {
       return xstat[3];
     else if (kind.equalsIgnoreCase("speed"))
       return xstat[4];
-    else
-      Driver.log(Bag.class, "Kind (" + kind + ") was not detected.");
     return null;
   }
 
   public Stone stone(String kind) {
-    Driver.log(Bag.class, "Stone wanted. Target = " + kind);
-
     if (kind.equalsIgnoreCase("fire"))
       return stone[0];
     else if (kind.equalsIgnoreCase("water"))
@@ -83,9 +78,38 @@ public class Bag {
       return stone[3];
     else if (kind.equalsIgnoreCase("leaf"))
       return stone[4];
-    else 
-      Driver.log(Bag.class, "Kind (" + kind + ") was not detected.");
     return null;
+  }
+
+  public ArrayList<String> toStringArray() {
+    ArrayList<String> response = new ArrayList<String>();
+
+    String cur = "balls: ";
+    for (int i = 0; i < 4; ++i)
+      cur += balls[i].getQuantity() + " ";
+    response.add(cur);
+
+    cur = "potions: ";
+    for (int i = 0; i < 4; ++i)
+      cur += potions[i].getQuantity() + " ";
+    response.add(cur);
+
+    cur = "";
+    int i = 0;
+    for (Stone.Type t : Stone.Type.values()) {
+      cur += t.name().charAt(0) + ": " + stone[i].getQuantity() + " ";
+      ++i;
+    }
+    response.add(cur);
+
+    cur = "a: " + xstat[0].getQuantity() + " ";
+    cur += "sa: " + xstat[1].getQuantity() + " ";
+    cur += "d: " + xstat[2].getQuantity() + " ";
+    cur += "sd: " + xstat[3].getQuantity() + " ";
+    cur += "sp: " + xstat[4].getQuantity() + " ";
+    response.add(cur);
+
+    return response;
   }
 
   public void toFile(PrintWriter p) {
@@ -95,7 +119,7 @@ public class Bag {
       p.print(balls[i].getQuantity() + " ");
     }
     for (int i = 0; i < 5; i++) {
-      p.print(xstat[i].getQuantity()+ " ");
+      p.print(xstat[i].getQuantity() + " ");
       p.print(stone[i].getQuantity() + " ");
     }
     p.println();
