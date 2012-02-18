@@ -21,7 +21,6 @@ public class BattleView extends JPanel {
     game = g;
     battle = b;
     construct();
-    Driver.log(BattleView.class, "battleview loaded");
     reload();
   }
 
@@ -136,8 +135,12 @@ public class BattleView extends JPanel {
   public void reload() {
     userhp.setMaximum(battle.user.leader.health.max);
     userhp.setValue(battle.user.leader.health.cur);
+    userhp.setToolTipText(battle.user.leader.health.cur + "/"+battle.user.leader.health.max);
     enemyhp.setMaximum(battle.enemy.leader.health.max);
     enemyhp.setValue(battle.enemy.leader.health.cur);
+    enemyhp.setToolTipText(battle.enemy.leader.health.cur + "/"+battle.enemy.leader.health.max);
+    userstatus.setText(battle.user.leader.status.toString());
+    enemystatus.setText(battle.enemy.leader.status.toString());
     userxp.setMaximum(battle.user.leader.xpNeeded());
     userxp.setValue(battle.user.leader.xp);
     Tools.game.repaint();

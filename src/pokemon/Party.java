@@ -37,6 +37,15 @@ public class Party {
   public Pokemon leader() {
     return pkmn[0];
   }
+  
+  /**
+   * Gets the number of pokemon currently in the party
+   * 
+   * @return the amount of pokemon
+   */
+  public int size() {
+    return amount;
+  }
 
   /**
    * Swaps pokemon in this party. Forces leader to be awake.
@@ -49,7 +58,7 @@ public class Party {
   }
 
   private boolean doSwap(Pokemon origLeader) {
-    int lead = Tools.selectFromParty(this);
+    int lead = Tools.selectFromParty("Select a new leader", this);
 
     if (lead <= 0 && pkmn[0].awake)
       return false;

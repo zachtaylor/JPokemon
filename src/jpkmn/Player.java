@@ -1,6 +1,5 @@
 package jpkmn;
 
-import gui.Splash;
 import item.*;
 import pokemon.*;
 
@@ -31,7 +30,7 @@ public class Player {
     starters.add(new Pokemon(1, 5));
     starters.add(new Pokemon(4, 5));
     starters.add(new Pokemon(7, 5));
-    int pos = gui.Tools.selectStarter(starters);
+    int pos = gui.Tools.selectFromParty("Select your starter!",starters);
     if (pos == -1)
       return;
 

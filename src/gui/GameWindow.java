@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import battle.Battle;
+import battle.BattleEndException;
 import pokemon.Pokemon;
 import jpkmn.*;
 
@@ -44,8 +45,7 @@ public class GameWindow extends JFrame {
       setLocationRelativeTo(null);
       setVisible(true);
 
-      if (Driver.message)
-        Tools.createMessageWindow();
+      Tools.createMessageWindow();
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -58,6 +58,7 @@ public class GameWindow extends JFrame {
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setLocationRelativeTo(null);
     setIconImage(Tools.findImage("main-icon"));
+    setResizable(false);
     root.setLayout(new FlowLayout());
     main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
     main.add(new BattleButton());
@@ -67,14 +68,14 @@ public class GameWindow extends JFrame {
 
   public void showMain() {
     setTitle("Main Menu");
-    this.setSize(420, 420);
+    this.setSize(420, Driver.console ? 420 : 400);
     root.removeAll();
     root.add(main);
   }
 
   public void showBattle(Battle b) {
     setTitle("Battle!");
-    setSize(600, 250);
+    setSize(620, Driver.console ? 210 : 190);
     root.removeAll();
 
     if (bwin == null)
@@ -96,13 +97,20 @@ public class GameWindow extends JFrame {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-      
-      int num = Integer.parseInt(Tools.askForInput("Number", "Which Number?", "\\d{1,3}"));
-      int lvl = Integer.parseInt(Tools.askForInput("LVL", "What level?", "\\d{1,3}"));
+
+      int num = Integer.parseInt(Tools.askForInput("Number", "Which Number?",
+          "\\d{1,3}"));
+      int lvl = Integer.parseInt(Tools.askForInput("Level", "What level?",
+          "\\d{1,3}"));
       Pokemon e = new Pokemon(num, lvl);
 
-      Battle b = new Battle(player, e);
-      showBattle(b);
+      try {
+        Battle b = new Battle(player, e);
+        showBattle(b);
+      } catch (BattleEndException bee) {
+        Driver.log(BattleView.class, "Battle ended code=" + bee.getExitStatus()
+            + ". " + bee.getExitDescription());
+      }
     }
   }
 

@@ -13,7 +13,7 @@ import battle.Target;
 public class Move {
   public Type type;
   public Pokemon pkmn;
-  public int number, power, pp;
+  public int number, power, pp, ppmax;
   public double accuracy;
   public String name;
   public MoveStyle style;
@@ -57,7 +57,8 @@ public class Move {
     accuracy = base.getAccuracy();
     name = base.getName();
     power = base.getPower();
-    pp = base.getPp();
+    ppmax = base.getPp();
+    pp = ppmax;
     style = MoveStyle.valueOf(base.getStyle());
     type = Type.valueOf(base.getType());
   }
@@ -114,14 +115,14 @@ public class Move {
 
   @Override
   public String toString() {
-    return this.name;
+    return name + " (" + pp + "/" + ppmax + ")";
   }
 
   public static Move getNewMove(Pokemon p, int level) {
-     MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(p.number, level);
-     
-     // Return null if there isn't a move for this level, or construct the move
-     return m == null ? null : new Move(m.getMove_number(), p);
+    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(p.number, level);
+
+    // Return null if there isn't a move for this level, or construct the move
+    return m == null ? null : new Move(m.getMove_number(), p);
   }
 
   public static class Library {

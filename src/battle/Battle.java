@@ -24,7 +24,7 @@ public class Battle {
   private Slot slow;
   private Party participants;
 
-  public Battle(Player p, Party e) {
+  public Battle(Player p, Party e) throws BattleEndException {
     player = p;
     user = new Slot(player.party, true);
     enemy = new Slot(e, false);
@@ -34,7 +34,7 @@ public class Battle {
     set();
   }
 
-  public Battle(Player p, Pokemon pkmn) {
+  public Battle(Player p, Pokemon pkmn) throws BattleEndException {
     this(p, new Party(pkmn));
   }
 
@@ -42,9 +42,11 @@ public class Battle {
    * Sets up crucial aspects of the battle. Must be called after participants
    * are set up or change, after speed changes, etc.
    */
-  public void set() {
-    Driver.log(Battle.class, "Battle set");
+  public void set() throws BattleEndException {
 
+    // Verify that everyone is awake
+    checkAwake();
+    
     // tie goes to the enemy for speed
     if (user.leader.speed.cur > enemy.leader.speed.cur) {
       fast = user;
@@ -104,11 +106,6 @@ public class Battle {
 
     applyEffects();
 
-    Driver.log(Battle.class, "Leader hp : " + user.leader.health.cur + "/"
-        + user.leader.health.max);
-    Driver.log(Battle.class, "Enemy hp : " + enemy.leader.health.cur + "/"
-        + enemy.leader.health.max);
-
     if (user.leader.status.contains(Effect.WAIT)) {
       Driver.log(Battle.class, "Leader (" + user.leader.name
           + ") contains wait effect in " + user.leader.status.toString()
@@ -129,7 +126,7 @@ public class Battle {
     set();
   }
 
-  public void addEnemy(Pokemon p) {
+  public void addEnemy(Pokemon p) throws BattleEndException {
     if (!enemy.party.add(p))
       Driver.crash(Battle.class,
           "More than 6 Pokemon attempted added to enemy party : " + p.name);
@@ -164,7 +161,8 @@ public class Battle {
       // Select target pokemon
       Tools.notify(Tools.findImage(i.name()), i.name(),
           "Who do you want to use this on?");
-      int target = Tools.selectFromParty(user.party);
+      int target = Tools.selectFromParty("Who do you want to use this on?",
+          user.party);
 
       // If they cancelled, exit
       if (target == -1) {
@@ -250,6 +248,7 @@ public class Battle {
     }
     else {
       Tools.notify(user.leader, "FAIL", "You didn't escape...");
+      enemy.chooseMove();
       enemy.attack();
       checkAwake();
       applyEffects();

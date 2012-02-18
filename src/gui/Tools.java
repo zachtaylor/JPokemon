@@ -13,7 +13,7 @@ import pokemon.move.Move;
 
 public class Tools {
   static GameWindow game;
-  
+
   private static MessageView messages;
 
   /**
@@ -23,25 +23,14 @@ public class Tools {
    * @param title Title of the window
    * @param message Message of the window
    */
-  public static void notify(Object icon, String title, String message) {
+  public static void notify(Object icon, String... message) {
     if (icon instanceof Image)
       throw new RuntimeException();
-    notify(findImage(icon), title, message);
+    notify(findImage(icon), message);
   }
 
-  private static void notify(Image icon, String title, String message) {
-    if (Driver.message) {
-      messages.addMessage(icon, title, message);
-    }
-    else {
-      try {
-        JOptionPane.showMessageDialog(null, message, title,
-            JOptionPane.INFORMATION_MESSAGE, new ImageIcon(icon));
-      } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, message, title,
-            JOptionPane.INFORMATION_MESSAGE);
-      }
-    }
+  private static void notify(Image icon, String... message) {
+    messages.addMessage(icon, message);
   }
 
   /**
@@ -98,7 +87,7 @@ public class Tools {
     messages = new MessageView();
     messages.setLocationRelativeTo(game);
   }
-  
+
   /**
    * Asks the user if they want Pokemon p to evolve.
    * 
@@ -118,21 +107,23 @@ public class Tools {
    * @param userparty The party to survey
    * @return Position of Pokemon in party (0-5). -1 if cancel.
    */
-  public static int selectFromParty(Party userparty) {
-    // TODO: figure this out
+  public static int selectFromParty(String message, Party userparty) {
+    StringBuilder list = new StringBuilder("Party List:\n");
+    String expectedOption = "0|1|2|3|4|5|6";
+    int partyCount = 0;
 
-    return 0;
-  }
+    // We have to build the message to vary depending on
+    // how many moves the active Pokemon has
+    for (int i = 0; i < userparty.size(); ++i) {
+      if (userparty.pkmn[i] != null) {
+        partyCount++;
+        list.append(i + ": " + userparty.pkmn[i].toString() + "\n");
+      }
+    }
 
-  /**
-   * Essentially the same as selectFromParty. Maybe some different text.
-   * 
-   * @param starters The party of starter Pokemon
-   * @return Position of Pokemon in party (0-2). -1 if cancel
-   */
-  public static int selectStarter(Party starters) {
-    // TODO Auto-generated method stub
-    return 0;
+    return Integer.parseInt(Tools.askForInput(message, list.toString(),
+    // From 0 to 2 x The number of moves, - 1 to drop last |
+        expectedOption.substring(0, partyCount * 2 - 1)));
   }
 
   /**
@@ -163,44 +154,49 @@ public class Tools {
 
   /**
    * Allows a user to select which move they would like to use
+   * 
    * @param p The active Pokemon
    * @return The selected move index
    */
   public static int selectMove(Pokemon p) {
-      StringBuilder message = new StringBuilder("Move List:\n");
-      String expectedOption = "0|1|2|3";
-      int moveCount = 0;
+    StringBuilder message = new StringBuilder("Move List:\n");
+    String expectedOption = "0|1|2|3";
+    int moveCount = 0;
 
-      // We have to build the message to vary depending on
-      // how many moves the active Pokemon has
-      for (int i = 0; i < p.move.length; i++) {
-          if (p.move[i] != null) {
-              moveCount++;
-              message.append(i + ": " + p.move[i].name + "\n");
-          }
+    // We have to build the message to vary depending on
+    // how many moves the active Pokemon has
+    for (int i = 0; i < p.move.length; i++) {
+      if (p.move[i] != null) {
+        moveCount++;
+        message.append(i + ": " + p.move[i].toString() + "\n");
       }
+    }
 
-      return Integer.parseInt(Tools.askForInput("Select Move",
-              message.toString(),
-              // From 0 to 2 x The number of moves, - 1 to drop last |
-              expectedOption.substring(0, moveCount * 2 - 1)));
+    return Integer.parseInt(Tools.askForInput("Select Move",
+        message.toString(),
+        // From 0 to 2 x The number of moves, - 1 to drop last |
+        expectedOption.substring(0, moveCount * 2 - 1)));
   }
 
   /**
    * Continually asks a user for input until they enter a valid pattern
+   * 
    * @param title Message box title
    * @param message Message for the message box
-   * @param expectedPattern A regular expression with the expected input pattern
+   * @param expectedPattern A regular expression with the expected input
+   *          pattern
    * @return A string containing valid input
    */
-  public static String askForInput(String title, String message, String expectedPattern) {
-      String input = "";
+  public static String askForInput(String title, String message,
+      String expectedPattern) {
+    String input = "";
 
-      while (input == null || input == "" || !input.matches(expectedPattern)) {
-          input = JOptionPane.showInputDialog(null, message, title, JOptionPane.QUESTION_MESSAGE);
-      }
+    while (input == null || input == "" || !input.matches(expectedPattern)) {
+      input = JOptionPane.showInputDialog(null, message, title,
+          JOptionPane.QUESTION_MESSAGE);
+    }
 
-      return input;
+    return input;
   }
 
   /**
@@ -212,4 +208,4 @@ public class Tools {
         + "\ninstall directory for the game, named \"log.log\"", "CRASH",
         JOptionPane.ERROR_MESSAGE);
   }
-} 
+}

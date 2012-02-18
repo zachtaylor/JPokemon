@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 
 public class Driver {
   public static Preferences prefs;
-  public static boolean debug, console, message;
+  public static boolean debug, console;
 
   private static StringBuilder log = new StringBuilder();
   public static String officialSerial = "HELLOWORLD";
@@ -27,8 +27,6 @@ public class Driver {
         debug = true;
       if (args[0].contains("c"))
         console = true;
-      if (args[0].contains("m"))
-        message = true;
     }
 
     // Crash recovery

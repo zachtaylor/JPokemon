@@ -1,5 +1,7 @@
 package battle;
 
+import java.util.ArrayList;
+
 import gui.Tools;
 import jpkmn.Driver;
 import pokemon.*;
@@ -10,8 +12,8 @@ import pokemon.Status.Effect;
  * A slot in a battle. Abstracts the difference between a user-controlled party
  * and an AI controlled party. Slot implements the specifics of a battle. Many
  * methods here go by the same name as others whose classes have a field in
- * Slot. Use Slot's version to abstract the difference between human and AI, and
- * maintain important data inside the Slot class.
+ * Slot. Use Slot's version to abstract the difference between human and AI,
+ * and maintain important data inside the Slot class.
  */
 public class Slot {
   public Pokemon leader;
@@ -48,19 +50,21 @@ public class Slot {
 
     if (human) {
       int a = Tools.selectMove(leader);
-      if (a == -1) return false;
+      if (a == -1)
+        return false;
 
       move = leader.move[a];
 
-      Driver.log(Slot.class, "User selected move to be : " + move.name);
+      Driver.log(Slot.class, "User " + leader.name + " selected move to be : "
+          + move.toString());
 
       return true;
     }
     else {
       move = leader.move[(int) (Math.random() * leader.numMoves())];
 
-      Driver.log(Slot.class, "Enemy move selected randomly to be : "
-          + move.name);
+      Driver.log(Slot.class, "Enemy " + leader.name
+          + " move selected randomly to be : " + move.toString());
 
       return true;
     }
@@ -79,8 +83,6 @@ public class Slot {
    * Launches an attack on the enemy slot.
    */
   public void attack() {
-    Driver.log(Slot.class, leader.name + " beginning attack. Move = "
-        + move.name);
 
     // Move # 9 (Bide) special handling
     if (bide) {
@@ -116,15 +118,8 @@ public class Slot {
       }
 
       // 3
-      if (human) {
-        Driver.log(Slot.class, "Human controlled. PP reduced on move : "
-            + move.name);
-        move.enabled = move.pp-- == 1;
-      }
-      else {
-        Driver.log(Slot.class, "!Human controlled. PP not reduced on move : "
-            + move.name);
-      }
+      if (human)
+        move.enabled = --move.pp == 0;
 
       // 4
       if (!move.hits(enemy.leader)) {
@@ -156,8 +151,7 @@ public class Slot {
     else if (move.style == MoveStyle.DELAY) {
       if (leader.status.contains(Effect.WAIT)) {
         leader.status.remove(Effect.WAIT);
-        if (!leader.status.contains(Effect.WAIT)
-            && move.style.attackAfterDelay)
+        if (!leader.status.contains(Effect.WAIT) && move.style.attackAfterDelay)
           enemy.takeDamage(Battle.computeDamage(move, leader, enemy.leader));
       }
       else {
@@ -170,16 +164,15 @@ public class Slot {
     }
     else if (move.style == MoveStyle.REPEAT) {
       int damage = Battle.computeDamage(move, leader, enemy.leader);
-      int repeatnum = (int) (MoveStyle.REPEAT_MIN
-          + (Math.random() * MoveStyle.REPEAT_EXTRA + .35));
-      System.out.println("REPEAT NUM = "+repeatnum);
+      int repeatnum = (int) (MoveStyle.REPEAT_MIN + (Math.random()
+          * MoveStyle.REPEAT_EXTRA + .35));
       for (int i = 0; i < repeatnum; ++i)
         enemy.takeDamage(damage);
     }
     else if (move.style == MoveStyle.EFFECT) {
       for (BonusEffect be : move.be) {
 
-        // Move # 73 (Leech Seed) fix
+        // Move # 73 (Leech Seed) fix cause it targets both user and enemy
         if (be == BonusEffect.LEECH) {
           enemy.leader.status.addEffect(Status.Effect.SEEDED);
           leader.status.addEffect(Status.Effect.SEEDUSR);
@@ -205,7 +198,8 @@ public class Slot {
   private void takeDamage(int d) {
 
     // If measuring bide damage, record it
-    if (bide) bidedamage += d;
+    if (bide)
+      bidedamage += d;
 
     // Account for shielding
     if (field.contains(Field.Effect.PHYSSHIELD)
@@ -229,10 +223,7 @@ public class Slot {
         d *= 2;
     }
 
-    reportDamage(null, d);
-    leader.takeDamage(d);
-
-    field.rollDownDuration();
+    takeDamageAbsolute(null, d);
   }
 
   /**
@@ -243,9 +234,7 @@ public class Slot {
    * @param d Damage taken
    */
   private void takeDamageAbsolute(String s, int d) {
-
     leader.takeDamage(d);
-
     reportDamage(s, d);
     field.rollDownDuration();
   }
@@ -256,8 +245,8 @@ public class Slot {
   }
 
   /**
-   * Calls party.doSwap(). Necessary to abstract human/AI. For AI, steps through
-   * to find the first awake Pokemon, and switches with the leader.
+   * Calls party.doSwap(). Necessary to abstract human/AI. For AI, steps
+   * through to find the first awake Pokemon, and switches with the leader.
    * 
    * @return True if a swap was made
    */
@@ -293,20 +282,25 @@ public class Slot {
    * @param d Damage taken by this.leader
    */
   private void reportDamage(String s, int d) {
-    String text = enemy.leader.name + " used " + enemy.move.name + "!\n";
+    ArrayList<String> text = new ArrayList<String>();
+    text.add("DAMAGE");
+    text.add(enemy.leader.name + " used " + enemy.move.name + "!");
     if (s == null) {
       if (enemy.move.effectiveness(leader) > 1.0)
-        text += "It's super effective!\n";
+        text.add("It's super effective!");
       else if (enemy.move.effectiveness(leader) == 0)
-        text += "It failed!\n";
+        text.add("It failed!");
       else if (enemy.move.effectiveness(leader) < 1)
-        text += "It's not very effective...\n";
-      text += leader.name + " took " + d + " damage!";
+        text.add("It's not very effective...");
+      text.add(leader.name + " took " + d + " damage!");
     }
     else {
-      text += s;
+      text.add(s);
     }
 
-    Tools.notify(leader, "DAMAGE", text);
+    Tools.notify(enemy.leader, text.toArray(new String[text.size()]));
+    text.add(human ? "user" : "enemy");
+    Driver.log(Slot.class, text.toString() + " " + leader.name + ": "
+        + leader.health.cur + "/" + leader.health.max);
   }
 }
