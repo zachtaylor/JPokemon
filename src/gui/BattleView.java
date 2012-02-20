@@ -138,10 +138,14 @@ public class BattleView extends JPanel {
     enemyhp.setMaximum(battle.enemy.leader.health.max);
     enemyhp.setValue(battle.enemy.leader.health.cur);
     enemyhp.setToolTipText(battle.enemy.leader.health.cur + "/"+battle.enemy.leader.health.max);
-    userstatus.setText(battle.user.leader.status.toString());
-    enemystatus.setText(battle.enemy.leader.status.toString());
     userxp.setMaximum(battle.user.leader.xpNeeded());
     userxp.setValue(battle.user.leader.xp);
+    userpic.setIcon(new ImageIcon(Tools.findImage(battle.user.leader)));
+    enemypic.setIcon(new ImageIcon(Tools.findImage(battle.enemy.leader)));
+    username.setText(battle.user.party.leader().name+" Lvl."+battle.user.leader.level);
+    enemyname.setText(battle.enemy.leader.name+" Lvl."+battle.enemy.leader.level);
+    userstatus.setText(battle.user.leader.status.toString());
+    enemystatus.setText(battle.enemy.leader.status.toString());
     Tools.game.repaint();
   }
 
