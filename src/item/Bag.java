@@ -23,8 +23,8 @@ public class Bag {
     potions[3] = new Potion(200, 0, "Full Heal");
     for (Potion p : potions)
       p.target = Target.SELF;
-    balls[0] = new Ball(10, 0, "Ball");
-    balls[1] = new Ball(15, 0, "Superball");
+    balls[0] = new Ball(10, 0, "Poke-ball");
+    balls[1] = new Ball(15, 0, "Great Ball");
     balls[2] = new Ball(20, 0, "Ultraball");
     balls[3] = new Ball(2550, 0, "Master Ball");
     for (Ball b : balls)
