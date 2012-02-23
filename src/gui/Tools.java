@@ -92,9 +92,13 @@ public class Tools {
    * @return true if the user wants them to.
    */
   public static boolean askEvolution(Pokemon p) {
-    // TODO: figure this out
+    StringBuilder list = new StringBuilder(p.name+" wants to evolve!\n");
+    String expectedOption = "0|1";
+    list.append("Enter 1 to allow, or 0 to cancel");
 
-    return false;
+    return Integer.parseInt(Tools.askForInput("EVOLUTION", list.toString(),
+    // From 0 to 2 x The number of moves, - 1 to drop last |
+        expectedOption)) == 1;
   }
 
   /**
