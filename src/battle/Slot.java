@@ -270,8 +270,8 @@ public class Slot {
 
   /**
    * Works in tandem with attack to distribute damage to the leader. Ignores
-   * shields and immunities. E.g. Bide/Dragon Rage/Immunity. Does not report
-   * anything.
+   * shields and immunities. Does not report anything.
+   * USES: Bide/Dragon Rage/Sonicboom/Super Fang
    * 
    * @param d Damage taken
    */

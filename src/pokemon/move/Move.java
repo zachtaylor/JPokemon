@@ -128,18 +128,16 @@ public class Move {
   public static class Library {
 
     public static void setBonusEffects(Move m) {
-      int num = m.number;
-      ArrayList<BonusEffect> bonuseffects = m.be;
-      bonuseffects.clear();
+      m.be.clear();
 
       BonusEffect current;
-      switch (num) {
+      switch (m.number) {
       case 1: // Absorb
         current = BonusEffect.HEAL;
         current.target = Target.SELF;
         current.chance = 1.0;
         current.percent = .25;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 2: // Acid
@@ -147,13 +145,13 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = .05;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         current = BonusEffect.DEFENSE;
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = .05;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 3: // Acid Armor
@@ -161,7 +159,7 @@ public class Move {
         current.target = Target.SELF;
         current.power = 2;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 4: // Agility
@@ -169,7 +167,7 @@ public class Move {
         current.target = Target.SELF;
         current.power = 2;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 5: // Amnesia
@@ -177,7 +175,7 @@ public class Move {
         current.target = Target.SELF;
         current.power = 2;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 6: // Aurora Beam
@@ -185,7 +183,7 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 8: // Barrier
@@ -193,42 +191,42 @@ public class Move {
         current.target = Target.SELF;
         current.power = 2;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 10: // Bind
         current = BonusEffect.WRAP;
         current.target = Target.ENEMY;
         current.chance = .75;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 11: // Bite
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 12: // Blizzard
         current = BonusEffect.FREEZE;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 13: // Body Slam
         current = BonusEffect.PARALYZE;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 14: // Bone Club
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 16: // Bubble
@@ -236,7 +234,7 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 17: // Bubblebeam
@@ -244,28 +242,28 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 18: // Clamp
         current = BonusEffect.WRAP;
         current.target = Target.ENEMY;
         current.chance = .75;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 20: // Confuse Ray
         current = BonusEffect.CONFUSE;
         current.target = Target.ENEMY;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 21: // Confusion
         current = BonusEffect.CONFUSE;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 22: // Constrict
@@ -273,7 +271,7 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 27: // Defense Curl
@@ -281,14 +279,14 @@ public class Move {
         current.target = Target.SELF;
         current.power = 1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 30: // Dizzy Punch
         current = BonusEffect.CONFUSE;
         current.target = Target.SELF;
         current.chance = .2;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 32: // Double Team FLAG - EVASION
@@ -296,7 +294,7 @@ public class Move {
         current.target = Target.SELF;
         current.power = 1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 33: // Double-Edge
@@ -304,7 +302,7 @@ public class Move {
         current.target = Target.SELF;
         current.percent = .125;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 36: // Dream Eater
@@ -312,48 +310,48 @@ public class Move {
         current.target = Target.SELF;
         current.percent = .4;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 40: // Ember
         current = BonusEffect.BURN;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 42: // Fire Blast
         current = BonusEffect.BURN;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 43: // Fire Punch
         current = BonusEffect.BURN;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 44: // Fire Spin
         current = BonusEffect.WRAP;
         current.target = Target.ENEMY;
         current.chance = .7;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 46: // Flamethrower
         current = BonusEffect.BURN;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 47: // Flash FLAG - Accuracy
         current = BonusEffect.CONFUSE;
         current.chance = .4;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 49: // Focus Energy Flag - Crit
@@ -361,20 +359,20 @@ public class Move {
         current.target = Target.SELF;
         current.power = 2;
         current.chance = .5;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         current = BonusEffect.SPECATTACK;
         current.target = Target.SELF;
         current.power = 2;
         current.chance = .5;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 52: // Glare
         current = BonusEffect.PARALYZE;
         current.target = Target.ENEMY;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 53: // Growl
@@ -382,7 +380,7 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 54: // Growth
@@ -390,13 +388,13 @@ public class Move {
         current.target = Target.SELF;
         current.power = 1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         current = BonusEffect.SPECATTACK;
         current.target = Target.SELF;
         current.power = 1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 57: // Harden
@@ -404,42 +402,42 @@ public class Move {
         current.target = Target.SELF;
         current.power = 1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 59: // Headbutt
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 65: // Hyper Fang
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 66: // Hypnosis
         current = BonusEffect.SLEEP;
         current.target = Target.ENEMY;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 67: // Ice Beam
         current = BonusEffect.FREEZE;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 68: // Ice Punch
         current = BonusEffect.FREEZE;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 71: // Kinesis FLAG - Accuracy
@@ -447,7 +445,7 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 72: // Leech Life
@@ -455,12 +453,12 @@ public class Move {
         current.target = Target.SELF;
         current.chance = 1.0;
         current.percent = .2;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 73: // Leech Seed
         current = BonusEffect.LEECH;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 74: // Leer
@@ -468,28 +466,28 @@ public class Move {
         current.target = Target.ENEMY;
         current.power = -1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 75: // Lick
         current = BonusEffect.PARALYZE;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 77: // Lovely Kiss
         current = BonusEffect.SLEEP;
         current.target = Target.ENEMY;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 78: // Low Kick
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 79: // Meditate
@@ -497,7 +495,7 @@ public class Move {
         current.target = Target.SELF;
         current.power = 1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 80: // Mega Drain
@@ -505,7 +503,7 @@ public class Move {
         current.target = Target.SELF;
         current.chance = 1.0;
         current.percent = .5;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 85: // Minimize FLAG - Evasion
@@ -513,48 +511,48 @@ public class Move {
         current.target = Target.SELF;
         current.power = 2;
         current.chance = .5;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         current = BonusEffect.SPECDEFENSE;
         current.target = Target.SELF;
         current.power = 2;
         current.chance = .5;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 91: // Petal Dance
         current = BonusEffect.CONFUSE;
         current.target = Target.SELF;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 93: // Poison Gas
         current = BonusEffect.POISON;
         current.target = Target.ENEMY;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 94: // Poison Sting
         current = BonusEffect.POISON;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 95: // Poisonpowder
         current = BonusEffect.POISON;
         current.target = Target.ENEMY;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 97: // Psybeam
         current = BonusEffect.CONFUSE;
         current.target = Target.ENEMY;
         current.chance = .1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 98: // Psychic
@@ -562,7 +560,7 @@ public class Move {
         current.target = Target.ENEMY;
         current.chance = .1;
         current.power = -1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 101: // Rage
@@ -570,7 +568,7 @@ public class Move {
         current.target = Target.SELF;
         current.chance = 1;
         current.power = 1;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 104: // Recover
@@ -578,42 +576,297 @@ public class Move {
         current.target = Target.SELF;
         current.percent = .5;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 106: // Rest
         current = BonusEffect.SLEEP;
         current.target = Target.SELF;
         current.chance = 1.0;
-        current.power = 2; // Don't know if i'll need this..
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         current = BonusEffect.HEAL;
         current.target = Target.SELF;
         current.chance = 1.0;
         current.percent = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 108: // Rock Slide
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 110: // Rolling Kick
         current = BonusEffect.FLINCH;
         current.target = Target.ENEMY;
         current.chance = .3;
-        bonuseffects.add(current);
+        m.be.add(current);
         current = null;
         break;
       case 111: // Sand-Attack FLAG : Accuracy
         current = BonusEffect.SPEED;
         current.target = Target.ENEMY;
+        current.power = -1;
         current.chance = 1.0;
-        bonuseffects.add(current);
+        m.be.add(current);
+        current = null;
+        break;
+      case 113: // Screech
+        current = BonusEffect.DEFENSE;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        current.power = -2;
+        m.be.add(current);
+        current = null;
+        break;
+      case 115: // Selfdestruct
+        current = BonusEffect.KAMIKAZE;
+        current.target = Target.SELF;
+        current.percent = 1.0;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 116: // Sharpen
+        current = BonusEffect.ATTACK;
+        current.target = Target.SELF;
+        current.power = 1;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 117: // Sing
+        current = BonusEffect.SLEEP;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 118: // Skull Bash
+        current = BonusEffect.DEFENSE;
+        current.target = Target.SELF;
+        current.chance = .5;
+        current.power = 1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 119: // Sky Attack
+        current = BonusEffect.FLINCH;
+        current.target = Target.ENEMY;
+        current.chance = .3;
+        m.be.add(current);
+        current = null;
+        break;
+      case 122: // Sleep Powder
+        current = BonusEffect.SLEEP;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 123: // Sludge
+        current = BonusEffect.POISON;
+        current.target = Target.ENEMY;
+        current.chance = .3;
+        m.be.add(current);
+        current = null;
+        break;
+      case 124: // Smog
+        current = BonusEffect.POISON;
+        current.target = Target.ENEMY;
+        current.chance = 4.;
+        m.be.add(current);
+        current = null;
+        break;
+      case 125: // Smokescreen FLAG: Accuracy
+        current = BonusEffect.SPEED;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        current.power = -1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 126: // Softboiled
+        current = BonusEffect.HEAL;
+        current.target = Target.SELF;
+        current.percent = .5;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 131: // Spore
+        current = BonusEffect.SLEEP;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 132: // Stomp
+        current = BonusEffect.FLINCH;
+        current.target = Target.ENEMY;
+        current.chance = .3;
+        m.be.add(current);
+        current = null;
+        break;
+      case 134: // String Shot
+        current = BonusEffect.SPEED;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        current.power = -1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 135: // Struggle
+        current = BonusEffect.KAMIKAZE;
+        current.target = Target.SELF;
+        current.percent = .125;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 136: // Stun Spore
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 137: // Submission
+        current = BonusEffect.KAMIKAZE;
+        current.target = Target.SELF;
+        current.chance = 1.0;
+        current.percent = .125;
+        m.be.add(current);
+        current = null;
+        break;
+      case 139: // Supersonic
+        current = BonusEffect.CONFUSE;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 142: // Swords Dance
+        current = BonusEffect.ATTACK;
+        current.target = Target.SELF;
+        current.power = 2;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 144: // Tail Whip
+        current = BonusEffect.DEFENSE;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        current.power = -1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 145: // Take Down
+        current = BonusEffect.KAMIKAZE;
+        current.target = Target.SELF;
+        current.chance = 1.0;
+        current.percent = .125;
+        m.be.add(current);
+        current = null;
+        break;
+      case 147: // Thrash
+        current = BonusEffect.CONFUSE;
+        current.target = Target.SELF;
+        current.chance = .4;
+        m.be.add(current);
+        current = null;
+        break;
+      case 148: // Thunder
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = .1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 149: // Thunder Wave
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 150: // Thunderbolt
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = .1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 151: // Thunderpunch
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = .1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 152: // Thundershock
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = .1;
+        m.be.add(current);
+        current = null;
+        break;
+      case 153: // Toxic
+        current = BonusEffect.POISON;
+        current.target = Target.ENEMY;
+        current.chance = 1.0;
+        m.be.add(current);
+        current = null;
+        break;
+      case 155: // Tri Attack
+        current = BonusEffect.PARALYZE;
+        current.target = Target.ENEMY;
+        current.chance = .0667;
+        m.be.add(current);
+        current = null;
+        current = BonusEffect.BURN;
+        current.target = Target.ENEMY;
+        current.chance = .0667;
+        m.be.add(current);
+        current = null;
+        current = BonusEffect.FREEZE;
+        current.target = Target.ENEMY;
+        current.chance = .0667;
+        m.be.add(current);
+        current = null;
+        break;
+      case 156: // Twineedle
+        current = BonusEffect.POISON;
+        current.chance = .2;
+        current.target = Target.ENEMY;
+        m.be.add(current);
+        current = null;
+        break;
+      case 160: // Waterfall
+        current = BonusEffect.FLINCH;
+        current.chance = .2;
+        current.target = Target.ENEMY;
+        m.be.add(current);
+        current = null;
+        break;
+      case 163: // Withdraw
+        current = BonusEffect.DEFENSE;
+        current.chance = 1.0;
+        current.power = 1;
+        current.target = Target.SELF;
+        m.be.add(current);
+        current = null;
+        break;
+      case 164: // Wrap
+        current = BonusEffect.WRAP;
+        current.chance = 1.0;
+        current.percent = .125;
+        current.target = Target.ENEMY;
+        m.be.add(current);
         current = null;
         break;
       }
