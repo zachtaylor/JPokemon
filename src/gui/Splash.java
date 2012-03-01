@@ -10,7 +10,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import jpkmn.*;
 
 public class Splash extends JFrame {
-  private Preferences pref;
   private JLabel s = new JLabel();
   private ResetButton r;
   private JLayeredPane p;
@@ -18,7 +17,6 @@ public class Splash extends JFrame {
 
   public Splash(String serial) {
     player = new Player(serial);
-    pref = Driver.prefs;
 
     construct();
     setVisible(true);
@@ -40,7 +38,7 @@ public class Splash extends JFrame {
     p = new JLayeredPane();
     ImageIcon bg;
     // Add Splash
-    if (pref.getBoolean("beat", false))
+    if (Driver.prefs.getBoolean("beat", false))
       bg = new ImageIcon(Tools.findImage("splashalt"));
     else
       bg = new ImageIcon(Tools.findImage("splash"));
@@ -64,7 +62,7 @@ public class Splash extends JFrame {
     p.add(q, new Integer(0));
 
     // OPTIONAL: Reset Splash logon
-    if (pref.getBoolean("beat", false)) {
+    if (Driver.prefs.getBoolean("beat", false)) {
       r = new ResetButton();
       r.setBounds(550, 180, 110, 30);
       p.add(r, new Integer(0));
@@ -194,7 +192,7 @@ public class Splash extends JFrame {
     @Override
     public void actionPerformed(ActionEvent arg0) {
       try {
-        pref.clear();
+        Driver.prefs.clear();
         Tools.notify((Image) null, "Prefs", "Preferences were cleared");
       } catch (Exception e) {
         System.out.println("Remove preferences from splash fail");

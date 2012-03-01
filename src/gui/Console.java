@@ -88,6 +88,7 @@ public class Console extends JTextField implements ActionListener {
         }
         else {
           printError(s);
+          return;
         }
       }
 
@@ -145,7 +146,7 @@ public class Console extends JTextField implements ActionListener {
         }
         else if (string.get(1).charAt(0) == 'x') {
 
-          if (string.size() == 2) {
+          if (string.get(1).length() == 1) {
             Tools.notify("err", "Item Lookup", player.bag.toStringArray()
                 .get(3));
             Driver.logConsoleEvent("Listing xstat pocket contents: "
@@ -157,6 +158,7 @@ public class Console extends JTextField implements ActionListener {
         }
         else {
           printError(s);
+          return;
         }
         if (string.size() == 3) {
           Tools.notify("err", "Item Lookup", target.toString());
@@ -168,7 +170,6 @@ public class Console extends JTextField implements ActionListener {
           Tools.notify("err", "Populating Item", target.toString());
           Driver.logConsoleEvent("Populating item: " + target.toString());
         }
-        
 
       }
 
@@ -190,11 +191,71 @@ public class Console extends JTextField implements ActionListener {
         }
         else {
           printError(s);
+          return;
+        }
+      }
+      else if (string.get(0).equals("create")) {
+
+        // 1-argument flavor
+        if (string.size() == 1) {
+          Tools.notify("err", "Create", "Syntax not correct : 'create'");
+          Driver.logConsoleEvent("Empty Create");
+          return;
+        }
+
+        // 2-argument flavor
+        if (string.get(1).equals("win")) {
+          if (string.size() == 2) {
+            Tools.notify("err", "Won Game", "Registry values set for beating game");
+            Driver.logConsoleEvent("Registry set to beating game true");
+            Driver.prefs.putBoolean("beat", true);
+          }
+          else {
+            if (string.get(2).equals("on")) {
+              Tools.notify("err", "Won Game", "Registry values set for beating game");
+              Driver.logConsoleEvent("Registry set to beating game true");
+              Driver.prefs.putBoolean("beat", true);
+            }
+            else if (string.get(2).equals("off")) {
+              Tools.notify("err", "Un-Won Game", "Registry values set for beating game");
+              Driver.logConsoleEvent("Registry set to beating game false");
+              Driver.prefs.putBoolean("beat", false);
+            }
+            else {
+              printError(s);
+              return;
+            }
+          }
+        }
+        else if (string.get(1).equals("pokemon")) {
+          if (string.size() < 4) {
+            printError(s);
+            return;
+          }
+          else {
+            Pokemon p = new Pokemon(Integer.parseInt(string.get(2)), Integer
+                .parseInt(string.get(3)));
+            if (string.size() == 5) {
+              Tools.notify("err", "Created : " + p.name, p.name + " is now in party at position "+string.get(4));
+              Driver.logConsoleEvent(p.toString()+" created in slot "+string.get(4));
+              player.party.pkmn[Integer.parseInt(string.get(4))] = p;
+            }
+            else {
+              Tools.notify("err", "Created : " + p.name, p.name + " is now in party at position 0");
+              Driver.logConsoleEvent(p.toString()+" created in slot 0");
+              player.party.pkmn[0] = p;
+            }
+          }
+        }
+        else {
+          printError(s);
+          return;
         }
       }
 
       else {
         printError(s);
+        return;
       }
 
     } catch (Exception e) {
