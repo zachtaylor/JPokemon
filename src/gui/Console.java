@@ -217,7 +217,7 @@ public class Console extends JTextField implements ActionListener {
               Driver.prefs.putBoolean("beat", true);
             }
             else if (string.get(2).equals("off")) {
-              Tools.notify("err", "Un-Won Game", "Registry values set for beating game");
+              Tools.notify("err", "Un-Won Game", "Registry values set for not beating game");
               Driver.logConsoleEvent("Registry set to beating game false");
               Driver.prefs.putBoolean("beat", false);
             }
