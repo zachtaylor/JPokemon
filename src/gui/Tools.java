@@ -92,7 +92,7 @@ public class Tools {
    * @return true if the user wants them to.
    */
   public static boolean askEvolution(Pokemon p) {
-    StringBuilder list = new StringBuilder(p.name+" wants to evolve!\n");
+    StringBuilder list = new StringBuilder(p.toString()+" wants to evolve!\n");
     String expectedOption = "0|1";
     list.append("Enter 1 to allow, or 0 to cancel");
 
