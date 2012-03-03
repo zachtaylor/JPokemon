@@ -103,8 +103,8 @@ public class MessageView extends JPanel {
 	  }
 	  
 	  public void dispose() {
-		  System.out.println("hello world");
 		  _m.removeAll();
+		  _m.refresh();
 	  }
 	  
 	  public void close() {
