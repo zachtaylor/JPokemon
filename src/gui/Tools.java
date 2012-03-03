@@ -155,8 +155,8 @@ public class Tools {
       return p.numMoves();
     }
 
-    StringBuilder message = new StringBuilder(p.name + "can learn" + m.name
-        + "!\n");
+    StringBuilder message = new StringBuilder(p.toString() + " can learn '" + m.name
+        + "'!\n");
     message.append("Enter 0, 1, 2, or 3 to replace a move.\n");
     message.append("Enter 5 to cancel\n");
     String expectedOption = "0|1|2|3|5";

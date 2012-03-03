@@ -9,18 +9,18 @@ import jpkmn.Driver;
 
 public class MessageView extends JPanel {
   private static final long serialVersionUID = 1L;
-  private static JFrame frame;
+  private static MyFrame frame;
   
   public MessageView() {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    frame = new JFrame();
+    frame = new MyFrame(this);
     JScrollPane scroll = new JScrollPane(this);
     frame.getContentPane().add(scroll, BorderLayout.CENTER);
     frame.setSize(new Dimension(350, 200));
     frame.setResizable(false);
     frame.setIconImage(Tools.findImage("mail"));
     frame.setTitle("Message Center");
-    frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     frame.setVisible(true);
   }
   
@@ -37,7 +37,7 @@ public class MessageView extends JPanel {
   }
   
   public void dispose() {
-    frame.dispose();
+    frame.close();
   }
   
   public void destruct() {
@@ -93,5 +93,22 @@ public class MessageView extends JPanel {
     public void actionPerformed(ActionEvent arg0) {
       removeMessage(message);
     }
+  }
+  
+  private class MyFrame extends JFrame {
+	  private MessageView _m;
+	  
+	  public MyFrame(MessageView messages) {
+		  _m = messages;
+	  }
+	  
+	  public void dispose() {
+		  System.out.println("hello world");
+		  _m.removeAll();
+	  }
+	  
+	  public void close() {
+		  super.dispose();
+	  }
   }
 }
