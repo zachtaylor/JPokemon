@@ -193,7 +193,6 @@ public class Splash extends JFrame {
     public void actionPerformed(ActionEvent arg0) {
       try {
         Driver.prefs.clear();
-        Tools.notify((Image) null, "Prefs", "Preferences were cleared");
       } catch (Exception e) {
         System.out.println("Remove preferences from splash fail");
       }
