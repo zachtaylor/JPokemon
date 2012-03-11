@@ -224,21 +224,19 @@ public class Pokemon {
     int move_num = 0;
     ArrayList<Move> moves = new ArrayList<Move>();
 
-    for (int l = level; l > 0; --l) {
+    for (int l = 1; l <= level; l++) {
       Move m = Move.getNewMove(this, l);
       if (m != null && !moves.contains(m))
         moves.add(m);
     }
-    Driver.log(Pokemon.class, name + " is selecting default moves from "
-        + moves.toString());
+    Driver.log(Pokemon.class, name + " is selecting default moves from " + moves.toString());
 
     while (!moves.isEmpty() && move_num != 4) {
       int r = (int) (Math.random() * moves.size());
       move[move_num++] = moves.get(r);
       moves.remove(r);
     }
-    Driver.log(Pokemon.class,
-        name + " selected default moves: " + getMoveList());
+    Driver.log(Pokemon.class, name + " selected default moves: " + getMoveList());
   }
 
   public String getMoveList() {
@@ -331,8 +329,8 @@ public class Pokemon {
   /**
    * Properly writes this Pokemon to a save file
    * 
-   * @param p Instantaited PrintWriter that points to the file where the
-   *          Pokemon should be written.
+   * @param p Instantiated PrintWriter that points to the
+   *          file where the Pokemon should be written.
    */
   public void toFile(PrintWriter p) {
     p.print("| ( ");
