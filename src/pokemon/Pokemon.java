@@ -18,9 +18,8 @@ public class Pokemon {
   public Status status;
   public Move[] move = new Move[4];
   private int evolutionlevel;
-  private int a;
   private int unique_id;
-  
+
   private static int CURRENT_ID = 0;
 
   /**
@@ -35,12 +34,12 @@ public class Pokemon {
     points = 0;
     xp = 0;
     status = new Status(this);
-    
+
     unique_id = CURRENT_ID++;
     PokemonBase base = PokemonBase.getBaseForNumber(number);
     name = base.getName();
     resetBase(base);
-    
+
     setDefaultMoves();
   }
 
@@ -55,8 +54,7 @@ public class Pokemon {
     speed.reset();
 
     for (Move cur : move)
-      if (cur != null)
-        cur.resetBase();
+      if (cur != null) cur.resetBase();
   }
 
   /**
@@ -104,8 +102,7 @@ public class Pokemon {
    */
   public void gainExperience(int amount) {
     xp += amount;
-    if (xp >= xpNeeded())
-      levelUp();
+    if (xp >= xpNeeded()) levelUp();
   }
 
   /**
@@ -114,7 +111,7 @@ public class Pokemon {
    * @return The amount of XP needed to gain a level
    */
   public int xpNeeded() {
-    return (int) (Math.log((double) level)*level*level*.35);
+    return (int) (Math.log((double) level) * level * level * .35);
   }
 
   /**
@@ -123,7 +120,7 @@ public class Pokemon {
    * @return
    */
   public int xpGiven() {
-    double factor = (Math.random()*.5+2);
+    double factor = (Math.random() * .5 + 2);
     return (int) (factor * level);
   }
 
@@ -145,8 +142,7 @@ public class Pokemon {
     gui.Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
     status.reset();
     checkNewMoves();
-    if (level == evolutionlevel)
-      changeSpecies();
+    if (level == evolutionlevel) changeSpecies();
   }
 
   /**
@@ -154,8 +150,7 @@ public class Pokemon {
    * points, sets xp = 0, stats adjusted.
    */
   public boolean changeSpecies(int... num) {
-    if (!gui.Tools.askEvolution(this))
-      return false;
+    if (!gui.Tools.askEvolution(this)) return false;
 
     PokemonBase oldBase = PokemonBase.getBaseForNumber(number);
 
@@ -165,8 +160,7 @@ public class Pokemon {
     }
     else {
       // Eevee gets points
-      if (number == 133)
-        points += 2;
+      if (number == 133) points += 2;
       number = num[0];
     }
 
@@ -196,13 +190,11 @@ public class Pokemon {
 
   private void checkNewMoves() {
     Move m = Move.getNewMove(this, level);
-    if (m == null)
-      return; // Nothing new
+    if (m == null) return; // Nothing new
 
     // Don't allow duplicates
     for (Move x : move)
-      if (m.equals(x))
-        return;
+      if (m.equals(x)) return;
 
     // Ask for a position
     int pos = Tools.askMove(this, m);
@@ -226,8 +218,7 @@ public class Pokemon {
 
     for (int l = level; l > 0; --l) {
       Move m = Move.getNewMove(this, l);
-      if (m != null && !moves.contains(m))
-        moves.add(m);
+      if (m != null && !moves.contains(m)) moves.add(m);
     }
     Driver.log(Pokemon.class, name + " is selecting default moves from "
         + moves.toString());
@@ -237,22 +228,21 @@ public class Pokemon {
       move[move_num++] = moves.get(r);
       moves.remove(r);
     }
-    Driver.log(Pokemon.class,
-        name + " selected default moves: " + getMoveList());
+    Driver.log(Pokemon.class, name + " selected default moves: "
+        + getMoveList());
   }
 
   public String getMoveList() {
     String response = "[";
 
     for (int i = 0; i < 4; ++i) {
-      if (move[i] != null)
-        response += move[i].name;
+      if (move[i] != null) response += move[i].name;
       if (i != 3) response += ", ";
     }
 
     return (response + "]");
   }
-  
+
   public boolean canAttack() {
     return status.canAttack();
   }
@@ -260,8 +250,7 @@ public class Pokemon {
   public int numMoves() {
     int x = 0;
     for (int i = 0; i < 4; i++) {
-      if (move[i] != null)
-        ++x;
+      if (move[i] != null) ++x;
     }
     return x;
   }
@@ -280,13 +269,12 @@ public class Pokemon {
    * @return A new Pokemon as described by the file
    */
   public static Pokemon fromFile(Scanner s) {
-    if (s == null || !s.hasNextLine())
-      return null;
+    if (s == null || !s.hasNextLine()) return null;
 
     if (!(s.next().equals("("))) {
       Splash.showFatalErrorMessage("pokemon load fail");
     }
-    
+
     Pokemon p = new Pokemon(s.nextInt(), s.nextInt());
     p.points = s.nextInt();
     p.xp = s.nextInt();
@@ -317,7 +305,7 @@ public class Pokemon {
 
     int i = 0;
     for (String next = s.next(); !next.equals(")"); next = s.next(), ++i) {
-        p.move[i] = new Move(Integer.parseInt(next), p);
+      p.move[i] = new Move(Integer.parseInt(next), p);
     }
 
     p.name = s.nextLine();
@@ -346,8 +334,7 @@ public class Pokemon {
     p.print("( ");
     try {
       for (int i = 0; i < 4; i++) {
-        if (move[i] != null)
-          p.print(move[i].number + " ");
+        if (move[i] != null) p.print(move[i].number + " ");
       }
     } catch (Exception e) {
       // do nothing
@@ -357,13 +344,15 @@ public class Pokemon {
 
   @Override
   public String toString() {
-    return name + "("+unique_id+") LVL. " + level + " HP: " + health.cur + "/"
-        + health.max;
+    return name + "(" + unique_id + ") LVL. " + level + " HP: " + health.cur
+        + "/" + health.max;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Pokemon)) return false;
-    else return ((Pokemon) o).unique_id == this.unique_id;
+    if (!(o instanceof Pokemon))
+      return false;
+    else
+      return ((Pokemon) o).unique_id == this.unique_id;
   }
 }
