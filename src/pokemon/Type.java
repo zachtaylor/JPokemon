@@ -130,38 +130,23 @@ public enum Type {
     }
 
     public static Type valueOf(int r) {
-        if (r == -1)
-            return null;
-        if (r == 0)
-            return NORMAL;
-        if (r == 1)
-            return FIRE;
-        if (r == 2)
-            return WATER;
-        if (r == 3)
-            return ELECTRIC;
-        if (r == 4)
-            return GRASS;
-        if (r == 5)
-            return ICE;
-        if (r == 6)
-            return FIGHTING;
-        if (r == 7)
-            return POISON;
-        if (r == 8)
-            return GROUND;
-        if (r == 9)
-            return FLYING;
-        if (r == 10)
-            return PSYCHIC;
-        if (r == 11)
-            return BUG;
-        if (r == 12)
-            return ROCK;
-        if (r == 13)
-            return GHOST;
-
-        // r == 14
-        return DRAGON;
+        switch(r) {
+            case 0:  return NORMAL;
+            case 1:  return FIRE;
+            case 2:  return WATER;
+            case 3:  return ELECTRIC;
+            case 4:  return GRASS;
+            case 5:  return ICE;
+            case 6:  return FIGHTING;
+            case 7:  return POISON;
+            case 8:  return GROUND;
+            case 9:  return FLYING;
+            case 10: return PSYCHIC;
+            case 11: return BUG;
+            case 12: return ROCK;
+            case 13: return GHOST;
+            case 14: return DRAGON;
+            default: return null;
+        }
     }
 }

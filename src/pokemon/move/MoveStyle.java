@@ -10,22 +10,14 @@ public enum MoveStyle {
     public static final int REPEAT_MIN = 2, REPEAT_EXTRA = 3;
 
     public static MoveStyle valueOf(int style) {
-        if (style == -1)
-            return null;
-        else if (style == 0)
-            return PHYSICAL;
-        else if (style == 1)
-            return SPECIAL;
-        else if (style == 2)
-            return OHKO;
-        else if (style == 3)
-            return EFFECT;
-        else if (style == 4)
-            return REPEAT;
-        else if (style == 5)
-            return DELAY;
-        else
-            return MISC;
+        switch (style) {
+            case 0:  return PHYSICAL;
+            case 1:  return SPECIAL;
+            case 2:  return OHKO;
+            case 3:  return EFFECT;
+            case 4:  return REPEAT;
+            case 5:  return DELAY;
+            default: return MISC;
+        }
     }
-
 }
