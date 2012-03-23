@@ -49,7 +49,7 @@ public class Slot {
     }
 
     if (human) {
-      int a = Tools.selectMove(leader);
+      int a = Tools.askMove(leader, null);
       if (a == -1)
         return false;
 

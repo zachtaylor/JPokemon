@@ -21,8 +21,7 @@ public class Tools {
    * @param message Message of the window
    */
   public static void notify(Object icon, String... message) {
-    if (icon instanceof Image)
-      throw new RuntimeException();
+    if (icon instanceof Image) throw new RuntimeException();
     notify(findImage(icon), message);
   }
 
@@ -47,8 +46,7 @@ public class Tools {
 
   private static Image getImage(String s) {
     URL resource = Tools.class.getResource("../img/" + s + ".png");
-    if (resource == null)
-      resource = Tools.class.getResource("../img/err.png");
+    if (resource == null) resource = Tools.class.getResource("../img/err.png");
     return new ImageIcon(resource).getImage();
   }
 
@@ -92,7 +90,7 @@ public class Tools {
    * @return true if the user wants them to.
    */
   public static boolean askEvolution(Pokemon p) {
-    StringBuilder list = new StringBuilder(p.toString()+" wants to evolve!\n");
+    StringBuilder list = new StringBuilder(p.toString() + " wants to evolve!\n");
     String expectedOption = "0|1";
     list.append("Enter 1 to allow, or 0 to cancel");
 
@@ -149,56 +147,53 @@ public class Tools {
    * @return position for the move
    */
   public static int askMove(Pokemon p, Move m) {
-    if (p.numMoves() < 4) {
-      String[] crap = { "New Move", p.name + " learned " + m.name + "!" };
-      notify(p, crap);
-      return p.numMoves();
-    }
-
-    StringBuilder message = new StringBuilder(p.toString() + " can learn '" + m.name
-        + "'!\n");
-    message.append("Enter 0, 1, 2, or 3 to replace a move.\n");
-    message.append("Enter 5 to cancel\n");
-    String expectedOption = "0|1|2|3|5";
-    int moveCount = 0;
-
-    // We have to build the message to vary depending on
-    // how many moves the active Pokemon has
-    for (int i = 0; i < p.move.length; i++) {
-      if (p.move[i] != null) {
-        moveCount++;
-        message.append(i + ": " + p.move[i].toString() + "\n");
+    // Asking about learning new move
+    if (m != null) {
+      if (p.numMoves() < 4) {
+        String[] crap = { "New Move", p.name + " learned " + m.name + "!" };
+        notify(p, crap);
+        return p.numMoves();
       }
-    }
 
-    return Integer.parseInt(Tools.askForInput("Select Move",
-        message.toString(), expectedOption));
-  }
+      StringBuilder message = new StringBuilder(p.toString() + " can learn '"
+          + m.name + "'!\n");
+      message.append("Enter 0, 1, 2, or 3 to replace a move.\n");
+      message.append("Enter 5 to cancel\n");
+      String expectedOption = "0|1|2|3|5";
 
-  /**
-   * Allows a user to select which move they would like to use
-   * 
-   * @param p The active Pokemon
-   * @return The selected move index
-   */
-  public static int selectMove(Pokemon p) {
-    StringBuilder message = new StringBuilder("Move List:\n");
-    String expectedOption = "0|1|2|3";
-    int moveCount = 0;
-
-    // We have to build the message to vary depending on
-    // how many moves the active Pokemon has
-    for (int i = 0; i < p.move.length; i++) {
-      if (p.move[i] != null) {
-        moveCount++;
-        message.append(i + ": " + p.move[i].toString() + "\n");
+      // We have to build the message to vary depending on
+      // how many moves the active Pokemon has
+      for (int i = 0; i < p.move.length; i++) {
+        if (p.move[i] != null) {
+          message.append(i + ": " + p.move[i].toString() + "\n");
+        }
       }
+
+      return Integer.parseInt(Tools.askForInput("Select Move",
+          message.toString(), expectedOption));
     }
 
-    return Integer.parseInt(Tools.askForInput("Select Move",
-        message.toString(),
-        // From 0 to 2 x The number of moves, - 1 to drop last |
-        expectedOption.substring(0, moveCount * 2 - 1)));
+    // Selecting move
+    else {
+      StringBuilder message = new StringBuilder("Move List:\n");
+      String expectedOption = "0|1|2|3";
+      int moveCount = 0;
+
+      // We have to build the message to vary depending on
+      // how many moves the active Pokemon has
+      for (int i = 0; i < p.move.length; i++) {
+        if (p.move[i] != null) {
+          moveCount++;
+          message.append(i + ": " + p.move[i].toString() + "\n");
+        }
+      }
+
+      return Integer.parseInt(Tools.askForInput("Select Move",
+          message.toString(),
+          // From 0 to 2 x The number of moves, - 1 to drop last |
+          expectedOption.substring(0, moveCount * 2 - 1)));
+    }
+
   }
 
   /**
