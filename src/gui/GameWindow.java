@@ -42,11 +42,10 @@ public class GameWindow extends JFrame {
       construct();
 
       showMain();
-      setLocationRelativeTo(null);
       setVisible(true);
 
       Tools.createMessageWindow();
-
+      setLocationRelativeTo(null);
     } catch (Exception e) {
       e.printStackTrace();
       dispose();
@@ -56,7 +55,6 @@ public class GameWindow extends JFrame {
   private void construct() {
     Tools.game = this;
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-    setLocationRelativeTo(null);
     setIconImage(Tools.findImage("main-icon"));
     setResizable(false);
     root.setLayout(new FlowLayout());
@@ -68,7 +66,7 @@ public class GameWindow extends JFrame {
 
   public void showMain() {
     setTitle("Main Menu");
-    this.setSize(420, Driver.console ? 420 : 400);
+    this.setSize(Driver.console ? 350 : 200, 150);
     root.removeAll();
     root.add(main);
   }
@@ -77,7 +75,7 @@ public class GameWindow extends JFrame {
     Tools.messages.dispose();
     super.dispose();
   }
-  
+
   public void showBattle(Battle b) {
     setTitle("Battle!");
     setSize(620, Driver.console ? 210 : 190);

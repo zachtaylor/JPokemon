@@ -32,7 +32,7 @@ public class Bag {
     xstat[0] = new XStat(0, 0, XStat.Type.ATTACK);
     xstat[1] = new XStat(0, 0, XStat.Type.SATTACK);
     xstat[2] = new XStat(0, 0, XStat.Type.DEFENSE);
-    xstat[3] = new XStat(0, 0, XStat.Type.DEFENSE);
+    xstat[3] = new XStat(0, 0, XStat.Type.SDEFENSE);
     xstat[4] = new XStat(0, 0, XStat.Type.SPEED);
     for (XStat x : xstat)
       x.target = Target.SELF;

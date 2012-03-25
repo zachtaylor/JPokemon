@@ -10,7 +10,7 @@ public class Stone extends Item {
 
     private String formatName() {
       return name().charAt(0)
-          + name().substring(1, name().length() - 1).toLowerCase() + "stone";
+          + name().substring(1, name().length()).toLowerCase() + "stone";
     }
   }
 

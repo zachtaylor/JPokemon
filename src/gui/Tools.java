@@ -132,8 +132,48 @@ public class Tools {
    * @return Item from the bag
    */
   public static Item item(Bag bag) {
-    // TODO Auto-generated method stub
-    return null;
+    String[] choices = { "Potion", "Super Potion", "Hyper Potion", "Full Heal",
+        "Poke-Ball", "Great Ball", "Ultraball", "Master Ball", "XAttack",
+        "XSAttack", "XDefense", "XSDefense", "XSpeed", "Firestone",
+        "Waterstone", "Thunderstone", "Moonstone", "Leafstone" };
+
+    try {
+      String input = (String) JOptionPane.showInputDialog(null,
+          "Choose an item to use", "BAG", JOptionPane.QUESTION_MESSAGE, null,
+          choices, choices[0]);
+
+      if (input.contains("X")) {
+        return bag.xstat(input.substring(1));
+      }
+
+      if (input.contains("stone")) {
+        return bag.stone(input.substring(0, input.indexOf("stone")));
+      }
+
+      switch (input) {
+      case "Potion":
+        return bag.potion(0);
+      case "Super Potion":
+        return bag.potion(1);
+      case "Hyper Potion":
+        return bag.potion(2);
+      case "Full Heal":
+        return bag.potion(3);
+      case "Poke-Ball":
+        return bag.ball(0);
+      case "Great Ball":
+        return bag.ball(1);
+      case "Ultraball":
+        return bag.ball(2);
+      case "Master Ball":
+        return bag.ball(3);
+      default:
+        throw new Exception();
+      }
+
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   /**

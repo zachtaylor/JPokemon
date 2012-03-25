@@ -70,7 +70,6 @@ public class Slot {
   }
 
   private boolean canChooseMove() {
-    // TODO : I haven't decided if this is correct
     return !leader.status.contains(Effect.WAIT);
   }
 
@@ -209,8 +208,8 @@ public class Slot {
     }
 
     else { // Misc
-      // TODO : This crap
-      System.out.println("hello world.");
+      Tools.notify("err", move.name + " doesn't work yet. Sorry about that.",
+          "Please write this up so I can work on it.");
     }
   }
 

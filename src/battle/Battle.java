@@ -56,7 +56,7 @@ public class Battle {
 
     user.set();
     enemy.set();
-    
+
     user.applyEffects();
     enemy.applyEffects();
 
@@ -68,8 +68,7 @@ public class Battle {
       participants.add(user.leader);
     }
 
-    if (window != null)
-      window.reload();
+    if (window != null) window.reload();
   }
 
   /**
@@ -108,7 +107,7 @@ public class Battle {
     applyEffects(slow);
 
     set();
-    
+
     if (user.leader.status.contains(Effect.WAIT)) {
       Driver.log(Battle.class, "Leader (" + user.leader.name
           + ") contains wait effect in " + user.leader.status.toString()
@@ -118,8 +117,8 @@ public class Battle {
   }
 
   /**
-   * Apply status effects at the end of the turn, using the slot specified
-   * as the user's slot.
+   * Apply status effects at the end of the turn, using the slot specified as
+   * the user's slot.
    * 
    * @throws BattleEndException If applying effects ended the battle
    */
@@ -146,6 +145,13 @@ public class Battle {
       Driver.log(Battle.class, "Item selection cancelled.");
       return;
     }
+    else if (i.getQuantity() == 0) {
+      Driver.log(Battle.class,
+          "Item selection failed. Not enough of: " + i.toString());
+      Tools.notify("err", "Uh...", "You don't have enough of " + i.getName()
+          + ".", "Item use cancelled.");
+      return;
+    }
     Driver.log(Battle.class, "Item selected = " + i.name());
 
     // Items used on self : Potion, Machine, XStat, Stone
@@ -153,16 +159,15 @@ public class Battle {
 
       // Don't allow Stones or Machines in battle
       if (i instanceof Stone || i instanceof Machine) {
-        Driver.log(Battle.class, i.getClass().toString()
+        Driver.log(Battle.class, i.getName()
             + "s cannot be used in battle.");
-        Tools.notify(Tools.findImage(i), i.name(), i.getClass().toString()
+        Tools.notify(i, i.name(), i.getName()
             + "s cannot be used in battle!");
         return;
       }
 
       // Select target pokemon
-      Tools.notify(Tools.findImage(i.name()), i.name(),
-          "Who do you want to use this on?");
+      Tools.notify(i.name(), i.name(), "Who do you want to use this on?");
       int target = Tools.selectFromParty("Who do you want to use this on?",
           user.party);
 
@@ -176,9 +181,11 @@ public class Battle {
       i.effect(user.party.pkmn[target]);
 
       // Enemy attacks
+      enemy.chooseMove();
       enemy.attack();
       checkAwake();
       applyEffects(enemy);
+
     }
     // Items used on enemy : Ball
     else {
@@ -194,8 +201,7 @@ public class Battle {
       if (i.effect(enemy.leader)) {
         Tools.notify(enemy.leader, "SUCCESS", enemy.leader.name
             + " was caught!");
-        if (!user.party.add(enemy.leader))
-          player.box.add(enemy.leader);
+        if (!user.party.add(enemy.leader)) player.box.add(enemy.leader);
         enemy.party.remove(enemy.leader);
 
         // a wild party? i like the idea. I'll support it
@@ -212,6 +218,7 @@ public class Battle {
         Tools.notify(enemy.leader, "FAILURE", "Y U NO GET CAUGHT!?");
 
         // Enemy attacks
+        enemy.chooseMove();
         enemy.attack();
         checkAwake();
         applyEffects(enemy);
@@ -227,6 +234,7 @@ public class Battle {
   public void swap() throws BattleEndException {
     Driver.log(Battle.class, "Swap selected.");
     if (user.doSwap()) {
+      enemy.chooseMove();
       enemy.attack();
       applyEffects(enemy);
     }
@@ -282,13 +290,13 @@ public class Battle {
       D = 1;
     }
     else if (move.style == MoveStyle.DELAY) {
-      // TODO
-      // Ugh. Figure out whether spec or reg attack/defense
-      // Based on the type of the attack.
+      A = user.attack.cur > user.specattack.cur ? user.attack.cur
+          : user.specattack.cur;
+      D = victim.defense.cur > victim.specdefense.cur ? victim.defense.cur
+          : victim.specdefense.cur;
     }
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R;
-    if (damage < 1 && move.effectiveness(victim) != 0)
-      damage = 1;
+    if (damage < 1 && move.effectiveness(victim) != 0) damage = 1;
     return (int) damage;
   }
 
@@ -317,8 +325,7 @@ public class Battle {
 
   private void payxp() {
     int xpwon = enemy.leader.xpGiven();
-    if (!wild)
-      xpwon *= 1.5;
+    if (!wild) xpwon *= 1.5;
 
     Driver.log(Battle.class, xpwon + "xp per " + participants.countAwake()
         + " participants = " + (xpwon /= participants.countAwake()));
@@ -361,8 +368,7 @@ public class Battle {
 
   private void clear() {
     for (Pokemon p : user.party.pkmn) {
-      if (p == null)
-        continue;
+      if (p == null) continue;
       p.status.remove(Effect.SEEDED);
       p.status.remove(Effect.SEEDUSR);
     }
