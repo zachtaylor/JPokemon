@@ -50,8 +50,7 @@ public class Slot {
 
     if (human) {
       int a = Tools.askMove(leader, null);
-      if (a == -1)
-        return false;
+      if (a == -1) return false;
 
       move = leader.move[a];
 
@@ -114,13 +113,12 @@ public class Slot {
       }
 
       // 3 Reduce PP
-      if (human)
-        move.enabled = --move.pp == 0;
+      if (human) move.enabled = --move.pp == 0;
 
       // 4 Measure accuracy
       if (!move.hits(enemy.leader)) {
         text.add("MISS");
-        text.add(leader.name+" used "+move.name+", but it missed!");
+        text.add(leader.name + " used " + move.name + ", but it missed!");
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (move.number == 60 || move.number == 69) {
@@ -226,11 +224,10 @@ public class Slot {
 
     ArrayList<String> text = new ArrayList<String>();
     text.add("DAMAGE");
-    text.add(enemy.leader.name+" used "+enemy.move.name+"!");
-    
+    text.add(enemy.leader.name + " used " + enemy.move.name + "!");
+
     // If measuring bide damage, record it
-    if (bide)
-      bidedamage += d;
+    if (bide) bidedamage += d;
 
     // Account for shielding
     if (field.contains(Field.Effect.PHYSSHIELD)
@@ -245,33 +242,33 @@ public class Slot {
       if (field.isImmune(enemy.move.name)) {
         d = 0;
         field.rollDownDuration();
-        text.add(leader.name+" is invulnerable to "+enemy.move.name);
+        text.add(leader.name + " is invulnerable to " + enemy.move.name);
       }
       else
         // Have immunity, but not to the move name
         // E.g. Dig/Rollout
         d *= 2;
-      text.add(leader.name+" took "+d+" damage.");
+      text.add(leader.name + " took " + d + " damage.");
     }
 
-    text.add(leader.name+" took "+d+" damage.");
-    
+    text.add(leader.name + " took " + d + " damage.");
+
     if (enemy.move.effectiveness(leader) > 1.0)
       text.add("It's super effective!");
     else if (enemy.move.effectiveness(leader) == 0)
       text.add("It failed!");
     else if (enemy.move.effectiveness(leader) < 1)
       text.add("It's not very effective...");
-    
+
     reportDamage(enemy.leader, text);
-    
+
     takeDamageAbsolute(d);
   }
 
   /**
    * Works in tandem with attack to distribute damage to the leader. Ignores
-   * shields and immunities. Does not report anything.
-   * USES: Bide/Dragon Rage/Sonicboom/Super Fang
+   * shields and immunities. Does not report anything. USES: Bide/Dragon
+   * Rage/Sonicboom/Super Fang
    * 
    * @param d Damage taken
    */
@@ -284,7 +281,7 @@ public class Slot {
   public void applyEffects() {
     leader.status.applyEffects();
   }
-  
+
   /**
    * Applies bonus effects from the current move to the enemy.
    * 
@@ -292,7 +289,7 @@ public class Slot {
    */
   public void applyCurrentMoveEffects(boolean isFast) {
     for (BonusEffect b : move.be) {
-      if ( !(b == BonusEffect.FLINCH) || isFast) {
+      if (!(b == BonusEffect.FLINCH) || isFast) {
         b.effect(enemy.leader);
       }
     }

@@ -53,15 +53,14 @@ public class Status {
 
       if (e == Effect.BURN)
         pkmn.attack.cur /= 2;
-      else if (e == Effect.PARALYZE)
-        pkmn.speed.cur /= 4;
+      else if (e == Effect.PARALYZE) pkmn.speed.cur /= 4;
     }
     else if (e == Effect.WAIT) {
       effects.add(e);
     }
 
-    Driver.log(Status.class, "New effect added to " + pkmn.name
-        + ". Effect = " + e.name());
+    Driver.log(Status.class, "New effect added to " + pkmn.name + ". Effect = "
+        + e.name());
   }
 
   /**
@@ -78,16 +77,20 @@ public class Status {
     else if (effects.contains(Effect.FLINCH))
       return false;
     else if (effects.contains(Effect.PARALYZE))
-      if (Math.random() < .25)
+      if (Math.random() < .25) {
         return false;
-      else if (effects.contains(Effect.CONFUSE)) {
-        if (Math.random() > .66666)
-          return true;
-        else {
-          pkmn.confusedAttack();
-          return false;
-        }
       }
+      else {
+        
+      }
+    else if (effects.contains(Effect.CONFUSE)) {
+      if (Math.random() > .66666)
+        return true;
+      else {
+        pkmn.confusedAttack();
+        return false;
+      }
+    }
     return true;
   }
 
@@ -170,8 +173,7 @@ public class Status {
 
   public boolean contains(Effect e) {
     for (Effect current : effects) {
-      if (current == e)
-        return true;
+      if (current == e) return true;
     }
     return false;
   }
@@ -179,11 +181,11 @@ public class Status {
   public String toString() {
     return effects.toString();
   }
-  
+
   public void remove(Effect e) {
     effects.remove(e);
   }
-  
+
   public String effectsToString() {
     return effects.toString();
   }
