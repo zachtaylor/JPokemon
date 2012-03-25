@@ -44,9 +44,6 @@ public class Battle {
    */
   public void set() throws BattleEndException {
 
-    // Verify that everyone is awake
-    checkAwake();
-
     // tie goes to the enemy for speed
     if (user.leader.speed.cur > enemy.leader.speed.cur) {
       fast = user;
@@ -59,6 +56,12 @@ public class Battle {
 
     user.set();
     enemy.set();
+    
+    user.applyEffects();
+    enemy.applyEffects();
+
+    // Verify that everyone is awake
+    checkAwake();
 
     if (!participants.contains(user.leader)) {
       Driver.log(Battle.class, user.leader.name + " added to participants.");
@@ -100,12 +103,12 @@ public class Battle {
     // Attacks
     Driver.log(Battle.class, fast.leader.name + " is fastest this round.");
     fast.attack();
-    checkAwake();
+    applyEffects(fast);
     slow.attack();
-    checkAwake();
+    applyEffects(slow);
 
-    applyEffects();
-
+    set();
+    
     if (user.leader.status.contains(Effect.WAIT)) {
       Driver.log(Battle.class, "Leader (" + user.leader.name
           + ") contains wait effect in " + user.leader.status.toString()
@@ -115,15 +118,14 @@ public class Battle {
   }
 
   /**
-   * Apply status effects at the end of the turn
+   * Apply status effects at the end of the turn, using the slot specified
+   * as the user's slot.
    * 
    * @throws BattleEndException If applying effects ended the battle
    */
-  private void applyEffects() throws BattleEndException {
-    user.applyEffects();
-    enemy.applyEffects();
+  private void applyEffects(Slot s) throws BattleEndException {
+    s.applyCurrentMoveEffects(s == fast);
     checkAwake();
-    set();
   }
 
   public void addEnemy(Pokemon p) throws BattleEndException {
@@ -176,7 +178,7 @@ public class Battle {
       // Enemy attacks
       enemy.attack();
       checkAwake();
-      applyEffects();
+      applyEffects(enemy);
     }
     // Items used on enemy : Ball
     else {
@@ -212,7 +214,7 @@ public class Battle {
         // Enemy attacks
         enemy.attack();
         checkAwake();
-        applyEffects();
+        applyEffects(enemy);
       }
     }
   }
@@ -226,9 +228,9 @@ public class Battle {
     Driver.log(Battle.class, "Swap selected.");
     if (user.doSwap()) {
       enemy.attack();
-      checkAwake();
-      applyEffects();
+      applyEffects(enemy);
     }
+    set();
   }
 
   /**
@@ -252,7 +254,7 @@ public class Battle {
       enemy.chooseMove();
       enemy.attack();
       checkAwake();
-      applyEffects();
+      applyEffects(enemy);
     }
   }
 

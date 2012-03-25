@@ -282,8 +282,20 @@ public class Slot {
   }
 
   public void applyEffects() {
-    // TODO : I haven't decided if this is correct
     leader.status.applyEffects();
+  }
+  
+  /**
+   * Applies bonus effects from the current move to the enemy.
+   * 
+   * @param isFast True to allow making the opponent flinch
+   */
+  public void applyCurrentMoveEffects(boolean isFast) {
+    for (BonusEffect b : move.be) {
+      if ( !(b == BonusEffect.FLINCH) || isFast) {
+        b.effect(enemy.leader);
+      }
+    }
   }
 
   /**
