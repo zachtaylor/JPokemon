@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.event.*;
 
 import item.Item;
 import jpkmn.*;
@@ -94,7 +93,6 @@ public class Console extends JTextField implements ActionListener {
 
       else if (string.get(0).equals("bag")) {
         Item target = null;
-        int pos;
 
         // 1-argument flavor
         if (string.size() == 1) {
@@ -153,13 +151,25 @@ public class Console extends JTextField implements ActionListener {
                 + player.bag.toStringArray().get(1));
             return;
           }
-          else
+          else {
             target = player.bag.xstat(string.get(1).substring(1));
+            if (string.size() == 2) {
+              Tools.notify("err", "Item Lookup", target.toString());
+              Driver.logConsoleEvent("Describing item: " + target.toString());
+              return;
+            }
+            else {
+              target.add(Integer.parseInt(string.get(2)));
+              Tools.notify("err", "Populating Item", target.toString());
+              Driver.logConsoleEvent("Populating item: " + target.toString());
+            }
+          }
         }
         else {
           printError(s);
           return;
         }
+        
         if (string.size() == 3) {
           Tools.notify("err", "Item Lookup", target.toString());
           Driver.logConsoleEvent("Describing item: " + target.toString());
