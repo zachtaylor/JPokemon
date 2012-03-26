@@ -6,7 +6,6 @@ package map;
  * @author Zach
  */
 public class City extends Area {
-
   public City(String name) {
     super(name);
   }
