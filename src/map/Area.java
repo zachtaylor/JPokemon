@@ -17,8 +17,6 @@ public abstract class Area {
     _name = name;
     _neighbors = new ArrayList<AreaConnection>();
     _buildings = new ArrayList<Building>();
-
-    AreaManager.registerArea(this);
   }
 
   public String getName() {
