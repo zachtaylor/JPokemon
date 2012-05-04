@@ -26,7 +26,7 @@ public class BattleView extends JPanel {
 
   private void construct() {
     //@preformat
-
+    //@formatter:off
 
 		// Root Panel
 		JPanel root = new JPanel();

@@ -14,9 +14,6 @@ public class Driver {
   public static Preferences prefs;
   public static boolean debug, console;
 
-  private static StringBuilder log = new StringBuilder();
-  public static String officialSerial = "HELLOWORLD";
-
   public static void main(String[] args) {
     prefs = Preferences.systemNodeForPackage(Driver.class);
 
@@ -73,4 +70,7 @@ public class Driver {
     Tools.crashReport();
     throw new FatalCrash();
   }
+
+  private static StringBuilder log = new StringBuilder();
+  public static String officialSerial = "jpkmn build-ver 0.2.1";
 }

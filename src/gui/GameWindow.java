@@ -128,19 +128,16 @@ public class GameWindow extends JFrame {
 
     public void actionPerformed(ActionEvent arg0) {
       JFileChooser fc = new JFileChooser(Driver.prefs.get("save_location", ""));
-      File f;
       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      fc.addChoosableFileFilter(new FileNameExtensionFilter("JPokemon Files",
-          "jpkmn"));
+      fc.addChoosableFileFilter(new FileNameExtensionFilter("JPokemon Files", "jpkmn"));
+      
       if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        f = fc.getSelectedFile();
+        File f = fc.getSelectedFile();
 
         try {
-          // Make sure the file is of type .jpkmn
-          if (!f.getName()
-              .substring(f.getName().lastIndexOf('.'), f.getName().length())
-              .equalsIgnoreCase(".jpkmn")) {
-            gui.Tools.notify((Image) null, "ERROR", "not type .jpkmn");
+          // Append .jpkmn if it isn't already
+          if (!f.getName().endsWith(".jpkmn")) {
+            f = new File(f.getAbsolutePath()+".jpkmn");
           }
 
           // Store the default save location
@@ -158,7 +155,8 @@ public class GameWindow extends JFrame {
           e.printStackTrace();
           gui.Tools.notify((Image) null, "ERROR", "General Error");
         }
-      } // End if
+        
+      }
     }
   }
 

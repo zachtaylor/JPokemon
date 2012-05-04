@@ -69,6 +69,8 @@ public class Battle {
     }
 
     if (window != null) window.reload();
+
+    player.dex.saw(enemy.leader);
   }
 
   /**
@@ -159,10 +161,8 @@ public class Battle {
 
       // Don't allow Stones or Machines in battle
       if (i instanceof Stone || i instanceof Machine) {
-        Driver.log(Battle.class, i.getName()
-            + "s cannot be used in battle.");
-        Tools.notify(i, i.name(), i.getName()
-            + "s cannot be used in battle!");
+        Driver.log(Battle.class, i.getName() + "s cannot be used in battle.");
+        Tools.notify(i, i.name(), i.getName() + "s cannot be used in battle!");
         return;
       }
 
@@ -202,6 +202,7 @@ public class Battle {
         Tools.notify(enemy.leader, "SUCCESS", enemy.leader.name
             + " was caught!");
         if (!user.party.add(enemy.leader)) player.box.add(enemy.leader);
+        player.dex.caught(enemy.leader);
         enemy.party.remove(enemy.leader);
 
         // a wild party? i like the idea. I'll support it
