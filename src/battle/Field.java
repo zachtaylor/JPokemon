@@ -1,7 +1,7 @@
 package battle;
 
 import java.util.ArrayList;
-import pokemon.Status;
+import pokemon.Condition;
 import jpkmn.Driver;
 
 public class Field {
@@ -63,10 +63,10 @@ public class Field {
     verifyEffects();
     for (Effect e : effects) {
       if (e == Effect.SEEDS) {
-        slot.leader.status.addEffect(Status.Effect.SEEDUSR);
+        slot.leader.condition.addIssue(Condition.Issue.SEEDUSR);
       }
       else if (e == Effect.SEEDED) {
-        slot.leader.status.addEffect(Status.Effect.SEEDED);
+        slot.leader.condition.addIssue(Condition.Issue.SEEDED);
       }
       // Invulnerable cannot persist between Pokemon, so no need to reset it
       // Phys and Spec Shield are Field-specific. don't apply to Pokemon.

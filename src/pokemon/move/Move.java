@@ -20,7 +20,6 @@ public class Move {
   public MoveStyle style;
   public ArrayList<BonusEffect> be = new ArrayList<BonusEffect>();
   public boolean enabled = true;
-  private int a;
 
   /**
    * Creates a new move of the specified number
@@ -39,17 +38,16 @@ public class Move {
 
   /**
    * Tells the STAB advantage. 1.5 is true, 1 if false
-   *
+   * 
    * @return the STAB advantage
    */
   public double STAB() {
-    return (type == pkmn.type1 || type == pkmn.type2) ? 1.5 : 1.0;
+    return (type == pkmn.type1() || type == pkmn.type2()) ? 1.5 : 1.0;
   }
 
   /**
-   * Determine whether a move is
-   * normal, super, or not very effective
-   *
+   * Determine whether a move is normal, super, or not very effective
+   * 
    * @param p The pokemon targeted by the move
    * @return How effect the move is
    */
@@ -77,7 +75,7 @@ public class Move {
    * it is random. Therefore, do not call it multiple times per attempted
    * attack. This method only computes the probability of hitting, but does not
    * effect pp.
-   *
+   * 
    * @param p Target pokemon
    * @return True if the move hits
    */
@@ -90,15 +88,15 @@ public class Move {
     }
 
     if (style == MoveStyle.OHKO) {
-      if (p.level > pkmn.level) {
+      if (p.level() > pkmn.level()) {
         Tools
             .notify(pkmn, "FAIL", "OHKO moves can't be used on higher levels!");
         Driver.log(Move.class, "OHKO Move used on higher level. Move = " + name
-            + ". User/Target = " + pkmn.name + "/" + p.name);
+            + ". User/Target = " + pkmn.name() + "/" + p.name());
         return false;
       }
       else {
-        if ((pkmn.level - p.level + 30.0) / 100.0 > Math.random()) {
+        if ((pkmn.level() - p.level() + 30.0) / 100.0 > Math.random()) {
           Driver.log(Move.class, "OHKO move successful");
           return true;
         }
@@ -115,7 +113,7 @@ public class Move {
   }
 
   public static Move getNewMove(Pokemon p, int level) {
-    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(p.number, level);
+    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(p.number(), level);
 
     // Return null if there isn't a move for this level, or construct the move
     return m == null ? null : new Move(m.getMove_number(), p);
@@ -125,18 +123,18 @@ public class Move {
    * Loads and sets all the bonus effects for a move
    */
   private void setBonusEffects() {
-      BonusEffect current;
-      for (BonusEffectBase base : BonusEffectBase.getBasesForMoveNumber(number)) {
-          // Get Bonus Effect type
-          current = BonusEffect.valueOf(base.getType());
-          // Add all attributes, including unused
-          current.target = Target.valueOf(base.getTarget());
-          current.chance = base.getChance();
-          current.percent = base.getPercent();
-          current.power = base.getPower();
-          // Add to moves list of effects
-          be.add(current);
-      }
+    BonusEffect current;
+    for (BonusEffectBase base : BonusEffectBase.getBasesForMoveNumber(number)) {
+      // Get Bonus Effect type
+      current = BonusEffect.valueOf(base.getType());
+      // Add all attributes, including unused
+      current.target = Target.valueOf(base.getTarget());
+      current.chance = base.getChance();
+      current.percent = base.getPercent();
+      current.power = base.getPower();
+      // Add to moves list of effects
+      be.add(current);
+    }
   }
 
   @Override
@@ -146,8 +144,7 @@ public class Move {
 
   @Override
   public boolean equals(Object m) {
-    if (!(m instanceof Move))
-      return false;
+    if (!(m instanceof Move)) return false;
     Move n = (Move) m; // MUpdated. makes life easier
     return (number == n.number && n.name.equals(name));
   }

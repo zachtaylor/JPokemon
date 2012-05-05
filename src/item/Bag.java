@@ -1,12 +1,9 @@
 package item;
 
-//Wrapper class for all the items
-
 import battle.Target;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import jpkmn.Driver;
 
 public class Bag {
   public int cash;

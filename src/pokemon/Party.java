@@ -8,25 +8,12 @@ import java.util.Scanner;
 import jpkmn.Driver;
 
 public class Party {
-  public Pokemon[] pkmn;
+  private Pokemon[] pkmn;
   private int amount;
 
   public Party() {
-    pkmn = new Pokemon[6];
+    pkmn = new Pokemon[Driver.PARTYSIZE];
     amount = 0;
-  }
-
-  public Party(Pokemon... p) {
-    if (p.length > 6) {
-      throw new IllegalArgumentException(
-          "Parties cannot be greater than 6 in length");
-    }
-    pkmn = new Pokemon[6];
-    amount = p.length;
-
-    for (int i = 0; i < amount; i++) {
-      pkmn[i] = p[i];
-    }
   }
 
   /**
@@ -34,10 +21,10 @@ public class Party {
    * 
    * @return the leader
    */
-  public Pokemon leader() {
+  public Pokemon getLeader() {
     return pkmn[0];
   }
-  
+
   /**
    * Gets the number of pokemon currently in the party
    * 
@@ -48,52 +35,51 @@ public class Party {
   }
 
   /**
-   * Swaps pokemon in this party. Forces leader to be awake.
+   * Swaps pokemon in this party.
    * 
    * @return True if a swap occurred
    */
-  public boolean doSwap() {
-    Driver.log(Party.class, "First call to doSwap. Leader = " + pkmn[0].name);
-    return doSwap(pkmn[0]);
-  }
-
-  private boolean doSwap(Pokemon origLeader) {
+  public boolean swap() {
     int lead = Tools.selectFromParty("Select a new leader", this);
 
-    if (lead <= 0 && pkmn[0].awake)
-      return false;
-
-    if (lead > 0) {
+    if (lead > 0 && lead < amount) {
       Pokemon swap = pkmn[0];
       pkmn[0] = pkmn[lead];
       pkmn[lead] = swap;
-      Driver.log(Party.class, "doSwap new leader = " + pkmn[0].name);
+      Driver.log(Party.class, "doSwap new leader = " + getLeader().name());
+      return true;
     }
 
-    if (pkmn[0].awake)
-      return true;
-    else {
-      Tools
-          .notify(pkmn[0], "UNCONSCIOUS", "Leader is unconscious. Pick again.");
-      Driver.log(Party.class,
-          "doSwap calling recursively. " + pkmn[0] == null ? "" : "");
-      return doSwap(origLeader);
-    }
+    return false;
   }
 
   /**
-   * Tries to add p. Returns if the party is full or p is already in this Party
+   * Repetitively calls swap until the leader is awake. May fail if number of
+   * awake pokemon is 0.
+   * 
+   * @return True if the leader is awake
+   */
+  public boolean forceAwakeLeader() {
+    if (countAwake() == 0) return false;
+
+    while (!getLeader().isAwake()) {
+      swap();
+    }
+    return true;
+  }
+
+  /**
+   * Tries to add p. Reports success
    * 
    * @param p Pokemon to be added
    * @return true if it is added
    */
   public boolean add(Pokemon p) {
-    if (amount == 6 || contains(p))
-      return false;
-    else {
-      pkmn[amount++] = p;
-      return true;
-    }
+    if (amount == Driver.PARTYSIZE || contains(p)) return false;
+
+    pkmn[amount++] = p;
+    return true;
+
   }
 
   /**
@@ -105,8 +91,7 @@ public class Party {
     int answer = 0;
 
     for (Pokemon p : pkmn) {
-      if (p != null && p.awake)
-        answer++;
+      if (p != null && p.isAwake()) answer++;
     }
 
     return answer;
@@ -119,7 +104,10 @@ public class Party {
    * @return True if this party contains p
    */
   public boolean contains(Pokemon p) {
-    return indexOf(p) >= 0;
+    for (int i = 0; i < amount; i++) {
+      if (pkmn[i].equals(p)) return true;
+    }
+    return false;
   }
 
   /**
@@ -129,45 +117,22 @@ public class Party {
    * @return True if p was removed
    */
   public boolean remove(Pokemon p) {
-    int i = indexOf(p);
+    int index = indexOf(p);
+    if (index < 0) return false;
 
-    if (i < 0)
-      return false;
+    for (int i = index; i < amount - 1; i++) {
+      pkmn[i] = pkmn[i + 1];
+    }
+    pkmn[--amount] = null;
 
-    pkmn[i] = null;
     return true;
-  }
-
-  /**
-   * Returns the index of a Pokemon in the internal array
-   * 
-   * @param p Pokemon to get the index of
-   * @return position of p in the internal array
-   */
-  public int indexOf(Pokemon p) {
-    for (int i = 0; i < amount; i++) {
-      if (pkmn[i].equals(p))
-        return i;
-    }
-    return -1;
-  }
-
-  /**
-   * Calls resetTempStats on each pokemon in the party
-   */
-  public void resetTempStats() {
-    for (int i = 0; i < amount; i++) {
-      if (pkmn[i] != null)
-        pkmn[i].resetTempStats();
-    }
   }
 
   public String getNameList() {
     String response = "[";
 
     for (int i = 0; i < 6; ++i) {
-      if (pkmn[i] != null)
-        response += pkmn[i].name;
+      if (pkmn[i] != null) response += pkmn[i].name();
       if (i != 5) response += ", ";
     }
 
@@ -179,18 +144,22 @@ public class Party {
    * 
    * @param s Scanner to read from
    */
-  public void fromFile(Scanner s) {
+  public static Party fromFile(Scanner s) {
+    Party p = new Party();
+
     for (int i = 0; i < 6 && s.hasNext(); i++) {
       String token = s.next();
       if (token.equals("|")) {
-        pkmn[i] = Pokemon.fromFile(s);
-        ++amount;
+        p.pkmn[i] = Pokemon.fromFile(s);
+        ++p.amount;
       }
       else {
         if (!token.equals("||"))
           Splash.showFatalErrorMessage("Error reading party");
       }
     }
+
+    return p;
   }
 
   /**
@@ -205,5 +174,12 @@ public class Party {
       else
         pkmn[i].toFile(p);
     }
+  }
+
+  private int indexOf(Pokemon p) {
+    for (int i = 0; i < amount; i++) {
+      if (pkmn[i].equals(p)) return i;
+    }
+    return -1;
   }
 }

@@ -35,23 +35,22 @@ public class XStat extends Item {
     }
     
 	  if (type == Type.ATTACK) {
-		  p.attack.effect(1);
+		  p.stats.atk.effect(1);
 	  }
 	  else if (type == Type.SATTACK) {
-		  p.specattack.effect(1);
+		  p.stats.stk.effect(1);
 		  
 	  }
 	  else if (type == Type.DEFENSE) {
-		  p.defense.effect(1);
+		  p.stats.def.effect(1);
 		  
 	  }
 	  else if (type == Type.SDEFENSE) {
-      p.specdefense.effect(1);
+      p.stats.sdf.effect(1);
 		  
 	  }
 	  else {
-	    p.speed.effect(1);
-	    
+	    p.stats.spd.effect(1);
 	  }
 	  
 	  return true;

@@ -74,7 +74,7 @@ public class BattleView extends JPanel {
 						userxp.setBorderPainted(false);
 					userinfo.add(userxp);
 						// Status
-						userstatus = new JLabel(battle.user.leader.status.toString());
+						userstatus = new JLabel(battle.user.leader.condition.toString());
 					userinfo.add(userstatus);
 				userpane.add(userinfo);
 			f.add(userpane);
@@ -96,7 +96,7 @@ public class BattleView extends JPanel {
 						enemyhp.setBorderPainted(false);
 					enemyinfo.add(enemyhp);
 						// Status
-						enemystatus = new JLabel(battle.enemy.leader.status.toString());
+						enemystatus = new JLabel(battle.enemy.leader.condition.toString());
 					enemyinfo.add(enemystatus);
 				enemypane.add(enemyinfo);
 					// Picture
@@ -144,8 +144,8 @@ public class BattleView extends JPanel {
     enemypic.setIcon(new ImageIcon(Tools.findImage(battle.enemy.leader)));
     username.setText(battle.user.party.leader().name+" Lvl."+battle.user.leader.level);
     enemyname.setText(battle.enemy.leader.name+" Lvl."+battle.enemy.leader.level);
-    userstatus.setText(battle.user.leader.status.toString());
-    enemystatus.setText(battle.enemy.leader.status.toString());
+    userstatus.setText(battle.user.leader.condition.toString());
+    enemystatus.setText(battle.enemy.leader.condition.toString());
     Tools.game.repaint();
   }
 

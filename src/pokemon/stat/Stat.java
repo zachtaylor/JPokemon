@@ -55,15 +55,6 @@ public abstract class Stat {
   }
 
   /**
-   * Increases the stored lvl variable, and resets the max and current values.
-   */
-  public void incLevel() {
-    lvl++;
-    resetMax();
-    cur = max;
-  }
-
-  /**
    * Sets the stored lvl variable, and resets the max and current values.
    * 
    * @param l New value for the stored lvl variable
@@ -71,6 +62,12 @@ public abstract class Stat {
   public void setLevel(int l) {
     lvl = l;
     resetMax();
-    cur = max;
+    reset();
+  }
+  
+  public void setBase(int b) {
+    base = b;
+    resetMax();
+    reset();
   }
 }

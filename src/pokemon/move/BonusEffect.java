@@ -20,52 +20,52 @@ public enum BonusEffect {
       return; // didn't hit
     }
     jpkmn.Driver.log(BonusEffect.class, this.name()
-        + " connected. Target = " + p.name);
+        + " connected. Target = " + p.name());
 
     if (this == BonusEffect.ATTACK) {
-      p.attack.effect(power);
+      p.stats.atk.effect(power);
     }
     else if (this == BonusEffect.DEFENSE) {
-      p.defense.effect(power);
+      p.stats.def.effect(power);
     }
     else if (this == BonusEffect.SPECATTACK) {
-      p.specattack.effect(power);
+      p.stats.stk.effect(power);
     }
     else if (this == BonusEffect.SPECDEFENSE) {
-      p.specdefense.effect(power);
+      p.stats.sdf.effect(power);
     }
     else if (this == BonusEffect.SPEED) {
-      p.speed.effect(power);
+      p.stats.spd.effect(power);
     }
     else if (this == BonusEffect.BURN) {
-      p.status.addEffect(Status.Effect.BURN);
+      p.condition.addIssue(Condition.Issue.BURN);
     }
     else if (this == BonusEffect.PARALYZE) {
-      p.status.addEffect(Status.Effect.PARALYZE);
+      p.condition.addIssue(Condition.Issue.PARALYZE);
     }
     else if (this == BonusEffect.SLEEP) {
-      p.status.addEffect(Status.Effect.SLEEP);
+      p.condition.addIssue(Condition.Issue.SLEEP);
     }
     else if (this == BonusEffect.POISON) {
-      p.status.addEffect(Status.Effect.POISON);
+      p.condition.addIssue(Condition.Issue.POISON);
     }
     else if (this == BonusEffect.FREEZE) {
-      p.status.addEffect(Status.Effect.FREEZE);
+      p.condition.addIssue(Condition.Issue.FREEZE);
     }
     else if (this == BonusEffect.CONFUSE) {
-      p.status.addEffect(Status.Effect.CONFUSE);
+      p.condition.addIssue(Condition.Issue.CONFUSE);
     }
     else if (this == BonusEffect.WRAP) {
-      p.status.addEffect(Status.Effect.WRAP);
+      p.condition.addIssue(Condition.Issue.WRAP);
     }
     else if (this == BonusEffect.FLINCH) { 
-      p.status.addEffect(Status.Effect.FLINCH);
+      p.condition.addIssue(Condition.Issue.FLINCH);
     }
     else if (this == BonusEffect.HEAL) {
-      p.healDamage((int) (p.health.max * percent));
+      p.healDamage((int) (p.stats.hp.max * percent));
     }
     else if (this == BonusEffect.KAMIKAZE) {
-      p.takeDamage((int) (p.health.max * percent));
+      p.takeDamage((int) (p.stats.hp.max * percent));
     }
   }
 

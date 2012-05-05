@@ -20,7 +20,7 @@ public class Pokedex {
    * @param p The Pokemon
    */
   public void saw(Pokemon p) {
-    saw(p.number);
+    saw(p.number());
   }
 
   /**
@@ -29,7 +29,7 @@ public class Pokedex {
    * @param p The Pokemon
    */
   public void caught(Pokemon p) {
-    caught(p.number);
+    caught(p.number());
   }
 
   private void saw(int num) {

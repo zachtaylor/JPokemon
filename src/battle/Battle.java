@@ -6,7 +6,7 @@ import jpkmn.Driver;
 import jpkmn.Player;
 import pokemon.*;
 import pokemon.move.*;
-import pokemon.Status.Effect;
+import pokemon.Condition.Issue;
 
 /**
  * A battle. Responds to to events from the BattleWindow in general terms, such
@@ -110,9 +110,9 @@ public class Battle {
 
     set();
 
-    if (user.leader.status.contains(Effect.WAIT)) {
+    if (user.leader.condition.contains(Issue.WAIT)) {
       Driver.log(Battle.class, "Leader (" + user.leader.name
-          + ") contains wait effect in " + user.leader.status.toString()
+          + ") contains wait effect in " + user.leader.condition.toString()
           + ". Calling fight recursively.");
       fight();
     }
@@ -370,8 +370,8 @@ public class Battle {
   private void clear() {
     for (Pokemon p : user.party.pkmn) {
       if (p == null) continue;
-      p.status.remove(Effect.SEEDED);
-      p.status.remove(Effect.SEEDUSR);
+      p.condition.remove(Issue.SEEDED);
+      p.condition.remove(Issue.SEEDUSR);
     }
   }
 

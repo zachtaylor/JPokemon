@@ -5,22 +5,15 @@ import java.io.PrintWriter;
 
 import gui.*;
 import jpkmn.Driver;
-import pokemon.stat.*;
 import pokemon.move.*;
 import lib.PokemonBase;
 
 public class Pokemon {
-  public Type type1, type2;
-  public int number, level, points, xp;
-  public Stat attack, specattack, defense, specdefense, speed, health;
-  public String name;
-  public boolean awake = true;
-  public Status status;
+  public final Condition condition;
+  public final StatBlock stats;
   public Move[] move = new Move[4];
-  private int evolutionlevel;
-  private int unique_id;
 
-  private static int CURRENT_ID = 0;
+  private static long CURRENT_ID = 0;
 
   /**
    * Makes a new Pokemon of the specified number. All stats are stock.
@@ -31,30 +24,114 @@ public class Pokemon {
   public Pokemon(int num, int lvl) {
     number = num;
     level = lvl;
-    points = 0;
     xp = 0;
-    status = new Status(this);
+    condition = new Condition(this);
+    stats = new StatBlock(this);
 
-    unique_id = CURRENT_ID++;
     PokemonBase base = PokemonBase.getBaseForNumber(number);
-    name = base.getName();
-    resetBase(base);
+    evolutionlevel = base.getEvolutionlevel();
+    name = species = base.getName();
+    type1 = Type.valueOf(base.getType1());
+    type2 = Type.valueOf(base.getType2());
 
     setDefaultMoves();
+
+    unique_id = CURRENT_ID++;
+  }
+
+  public Pokemon clone() {
+    Pokemon p = new Pokemon(number, level);
+    p.stats.hp.cur = this.stats.hp.cur;
+    return p;
   }
 
   /**
-   * Resets temporary stats to their maximum values. Does NOT reset health.
+   * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
+   * points, sets xp = 0, stats adjusted.
    */
-  public void resetTempStats() {
-    attack.reset();
-    specattack.reset();
-    defense.reset();
-    specdefense.reset();
-    speed.reset();
+  public boolean changeSpecies(int... num) {
+    if (!gui.Tools.askEvolution(this)) return false;
 
-    for (Move cur : move)
-      if (cur != null) cur.resetBase();
+    if (num == null || num.length == 0)
+      number++;
+    else
+      number = num[0];
+
+    PokemonBase base = PokemonBase.getBaseForNumber(number);
+    evolutionlevel = base.getEvolutionlevel();
+    type1 = Type.valueOf(base.getType1());
+    type2 = Type.valueOf(base.getType2());
+
+    if (name.equals(species))
+      name = species = base.getName();
+    else
+      species = base.getName();
+
+    stats.changeSpecies(num);
+    checkNewMoves();
+
+    return true;
+  }
+
+  public int number() {
+    return number;
+  }
+
+  public String name() {
+    return name;
+  }
+
+  public void nickname(String s) {
+    name = s;
+  }
+
+  public String species() {
+    return species;
+  }
+
+  public int level() {
+    return level;
+  }
+
+  public boolean isAwake() {
+    return condition.getAwake();
+  }
+
+  public Type type1() {
+    return type1;
+  }
+
+  public Type type2() {
+    return type2;
+  }
+
+  /**
+   * Pokemon gains the experience amount. If it gains enough, it will level up.
+   * 
+   * @param amount The amount of xp gained
+   */
+  public void gainXP(int amount) {
+    xp += amount;
+    if (xp >= getXPNeeded()) levelUp();
+  }
+
+  /**
+   * XP this Pokemon needs to level
+   * 
+   * @return The amount of XP needed to gain a level
+   */
+  public int getXPNeeded() {
+    return (int) (Math.log((double) level) * level * level * .35);
+  }
+
+  /**
+   * XP this Pokemon gives if it is defeated
+   * 
+   * @return
+   */
+  public int getXPAwarded() {
+    double factor = (Math.random() * .5 + 2);
+    return (int) (factor * level);
   }
 
   /**
@@ -65,10 +142,10 @@ public class Pokemon {
    * @return the awake state of the Pokemon
    */
   public void takeDamage(int damage) {
-    health.cur -= damage;
-    if (health.cur <= 0) {
-      health.cur = 0;
-      awake = false;
+    stats.hp.cur -= damage;
+    if (stats.hp.cur <= 0) {
+      stats.hp.cur = 0;
+      condition.setAwake(false);
     }
   }
 
@@ -79,10 +156,15 @@ public class Pokemon {
    * @param heal The amount healed by
    */
   public void healDamage(int heal) {
-    health.cur += heal;
-    if (health.cur > health.max) {
-      health.cur = health.max;
+    condition.setAwake(true);
+    stats.hp.cur += heal;
+    if (stats.hp.cur > stats.hp.max) {
+      stats.hp.cur = stats.hp.max;
     }
+  }
+
+  public boolean canAttack() {
+    return condition.canAttack();
   }
 
   /**
@@ -92,100 +174,6 @@ public class Pokemon {
     gui.Tools.notify(this, "CONFUSION", name + " hurt itself in confusion!");
 
     takeDamage(battle.Battle.confusedDamage(this));
-  }
-
-  /**
-   * Pokemon gains the experience amount. If it gains enough, it will
-   * levelUp().
-   * 
-   * @param amount The amount of xp gained
-   */
-  public void gainExperience(int amount) {
-    xp += amount;
-    if (xp >= xpNeeded()) levelUp();
-  }
-
-  /**
-   * XP this Pokemon needs to level
-   * 
-   * @return The amount of XP needed to gain a level
-   */
-  public int xpNeeded() {
-    return (int) (Math.log((double) level) * level * level * .35);
-  }
-
-  /**
-   * XP this Pokemon gives if it is defeated
-   * 
-   * @return
-   */
-  public int xpGiven() {
-    double factor = (Math.random() * .5 + 2);
-    return (int) (factor * level);
-  }
-
-  /**
-   * Applies the level up. Level++, points++, stats adjusted, and checks for
-   * evolution. Resets status conditions. Calls gui.Tools to notify the user
-   * about the level up.
-   */
-  private void levelUp() {
-    xp -= xpNeeded();
-    level++;
-    points++;
-    attack.incLevel();
-    specattack.incLevel();
-    defense.incLevel();
-    specdefense.incLevel();
-    speed.incLevel();
-    health.incLevel();
-    gui.Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
-    status.reset();
-    checkNewMoves();
-    if (level == evolutionlevel) changeSpecies();
-  }
-
-  /**
-   * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
-   * points, sets xp = 0, stats adjusted.
-   */
-  public boolean changeSpecies(int... num) {
-    if (!gui.Tools.askEvolution(this)) return false;
-
-    PokemonBase oldBase = PokemonBase.getBaseForNumber(number);
-
-    if (num == null || num.length == 0) {
-      number++;
-      points++;
-    }
-    else {
-      // Eevee gets points
-      if (number == 133) points += 2;
-      number = num[0];
-    }
-
-    // Proper handling for renaming
-    PokemonBase newBase = PokemonBase.getBaseForNumber(number);
-    name = name.equals(oldBase.getName()) ? newBase.getName() : name;
-
-    resetBase(newBase);
-
-    checkNewMoves();
-
-    return true;
-  }
-
-  private void resetBase(PokemonBase base) {
-    attack = new AtkStat(level, base.getAttack());
-    specattack = new SpecAtkStat(level, base.getSpecattack());
-    defense = new DefStat(level, base.getDefense());
-    specdefense = new SpecDefStat(level, base.getSpecdefense());
-    speed = new SpeedStat(level, base.getSpeed());
-    health = new HPStat(level, base.getHealth());
-    evolutionlevel = base.getEvolutionlevel();
-    type1 = Type.valueOf(base.getType1());
-    type2 = Type.valueOf(base.getType2());
-    xp = 0;
   }
 
   private void checkNewMoves() {
@@ -220,15 +208,17 @@ public class Pokemon {
       Move m = Move.getNewMove(this, l);
       if (m != null && !moves.contains(m)) moves.add(m);
     }
-    Driver.log(Pokemon.class, name + " is selecting default moves from " + moves.toString());
+    Driver.log(Pokemon.class, name + " is selecting default moves from "
+        + moves.toString());
 
     while (!moves.isEmpty() && move_num != 4) {
       int r = (int) (Math.random() * moves.size());
       move[move_num++] = moves.get(r);
       moves.remove(r);
     }
-    
-    Driver.log(Pokemon.class, name + " selected default moves: " + getMoveList());
+
+    Driver.log(Pokemon.class, name + " selected default moves: "
+        + getMoveList());
   }
 
   public String getMoveList() {
@@ -240,24 +230,6 @@ public class Pokemon {
     }
 
     return (response + "]");
-  }
-
-  public boolean canAttack() {
-    return status.canAttack();
-  }
-
-  public int numMoves() {
-    int x = 0;
-    for (int i = 0; i < 4; i++) {
-      if (move[i] != null) ++x;
-    }
-    return x;
-  }
-
-  public Pokemon clone() {
-    Pokemon p = new Pokemon(number, level);
-    p.health.cur = this.health.cur;
-    return p;
   }
 
   /**
@@ -275,25 +247,19 @@ public class Pokemon {
     }
 
     Pokemon p = new Pokemon(s.nextInt(), s.nextInt());
-    p.points = s.nextInt();
+    p.stats.setPoints(s.nextInt());
     p.xp = s.nextInt();
 
     if (!(s.next().equals(")")))
       Splash.showFatalErrorMessage("Insufficient basic data");
 
     try {
-      p.attack.pts = s.nextInt();
-      p.attack.resetMax();
-      p.specattack.pts = s.nextInt();
-      p.specattack.resetMax();
-      p.defense.pts = s.nextInt();
-      p.defense.resetMax();
-      p.specdefense.pts = s.nextInt();
-      p.specdefense.resetMax();
-      p.speed.pts = s.nextInt();
-      p.speed.resetMax();
-      p.health.pts = s.nextInt();
-      p.health.resetMax();
+      p.stats.atk.pts = s.nextInt();
+      p.stats.stk.pts = s.nextInt();
+      p.stats.def.pts = s.nextInt();
+      p.stats.sdf.pts = s.nextInt();
+      p.stats.spd.pts = s.nextInt();
+      p.stats.resetMaxAll();
     } catch (Exception e) {
       e.printStackTrace();
       Splash.showFatalErrorMessage("insufficient stat values");
@@ -318,18 +284,17 @@ public class Pokemon {
   /**
    * Properly writes this Pokemon to a save file
    * 
-   * @param p Instantiated PrintWriter that points to the
-   *          file where the Pokemon should be written.
+   * @param p Instantiated PrintWriter that points to the file where the
+   *          Pokemon should be written.
    */
   public void toFile(PrintWriter p) {
     p.print("| ( ");
-    p.print(number + " " + level + " " + points + " " + xp + " ) ");
-    p.print(attack.pts + " ");
-    p.print(specattack.pts + " ");
-    p.print(defense.pts + " ");
-    p.print(specdefense.pts + " ");
-    p.print(speed.pts + " ");
-    p.print(health.pts + " ");
+    p.print(number + " " + level + " " + stats.getPoints() + " " + xp + " ) ");
+    p.print(stats.atk.pts + " ");
+    p.print(stats.stk.pts + " ");
+    p.print(stats.def.pts + " ");
+    p.print(stats.sdf.pts + " ");
+    p.print(stats.spd.pts + " ");
     p.print("( ");
     try {
       for (int i = 0; i < 4; i++) {
@@ -343,8 +308,8 @@ public class Pokemon {
 
   @Override
   public String toString() {
-    return name + "(" + unique_id + ") LVL. " + level + " HP: " + health.cur
-        + "/" + health.max;
+    return name + "(" + unique_id + ") LVL. " + level + " HP: " + stats.hp.cur
+        + "/" + stats.hp.max;
   }
 
   @Override
@@ -354,4 +319,24 @@ public class Pokemon {
     else
       return ((Pokemon) o).unique_id == this.unique_id;
   }
+
+  /**
+   * Applies the level up. Level++, points++, stats adjusted, and checks for
+   * evolution. Resets status conditions. Calls gui.Tools to notify the user
+   * about the level up.
+   */
+  private void levelUp() {
+    xp -= getXPNeeded();
+    level++;
+    stats.levelUp();
+    condition.reset();
+    gui.Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
+    checkNewMoves();
+    if (level == evolutionlevel) changeSpecies();
+  }
+
+  private int number, level, xp, evolutionlevel;
+  private String name, species;
+  private Type type1, type2;
+  private long unique_id;
 }

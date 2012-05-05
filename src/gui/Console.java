@@ -72,7 +72,7 @@ public class Console extends JTextField implements ActionListener {
         }
         else if (string.get(2).equals("restore")) {
           target.resetTempStats();
-          target.status.reset();
+          target.condition.reset();
         }
         else if (string.get(2).equals("move")) {
           Tools.notify(target, "Pokemon Lookup", target.getMoveList());

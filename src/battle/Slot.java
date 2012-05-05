@@ -6,7 +6,7 @@ import gui.Tools;
 import jpkmn.Driver;
 import pokemon.*;
 import pokemon.move.*;
-import pokemon.Status.Effect;
+import pokemon.Condition.Issue;
 
 /**
  * A slot in a battle. Abstracts the difference between a user-controlled party
@@ -26,13 +26,13 @@ public class Slot {
 
   public Slot(Party p, Boolean humancontrol) {
     party = p;
-    leader = p.leader();
+    leader = p.getLeader();
     field = new Field(this);
     human = humancontrol;
   }
 
   public void set() {
-    leader = party.pkmn[0];
+    leader = party.getLeader();
     field.resetEffects();
   }
 
@@ -43,7 +43,7 @@ public class Slot {
    */
   public boolean chooseMove() {
     if (!canChooseMove()) {
-      Driver.log(Slot.class, leader.name + " Can't pick new move. Forced = "
+      Driver.log(Slot.class, leader.name() + " Can't pick new move. Forced = "
           + move.name);
       return true;
     }
@@ -70,7 +70,7 @@ public class Slot {
   }
 
   private boolean canChooseMove() {
-    return !leader.status.contains(Effect.WAIT);
+    return !leader.condition.contains(Issue.WAIT);
   }
 
   public Move getMove() {
@@ -106,7 +106,7 @@ public class Slot {
       if (!leader.canAttack()) {
         text.add("CANNOT ATTACK");
         text.add(leader.name + " cannot attack because of "
-            + leader.status.effectsToString());
+            + leader.condition.effectsToString());
         reportDamage(leader, text);
         return;
       }
@@ -143,11 +143,11 @@ public class Slot {
     }
 
     else if (move.style == MoveStyle.DELAY) {
-      if (leader.status.contains(Effect.WAIT)) {
+      if (leader.condition.contains(Issue.WAIT)) {
 
-        leader.status.remove(Effect.WAIT); // take away 1 wait
+        leader.condition.remove(Issue.WAIT); // take away 1 wait
 
-        if (!leader.status.contains(Effect.WAIT) && move.style.attackAfterDelay) {
+        if (!leader.condition.contains(Issue.WAIT) && move.style.attackAfterDelay) {
           damage = Battle.computeDamage(move, leader, enemy.leader);
           enemy.takeDamage(damage);
         }
@@ -162,7 +162,7 @@ public class Slot {
       else {
 
         for (int i = 0; i < move.style.delay; ++i)
-          leader.status.addEffect(Effect.WAIT); // add all the waits
+          leader.condition.addIssue(Issue.WAIT); // add all the waits
 
         if (!move.style.attackAfterDelay) {
           damage = Battle.computeDamage(move, leader, enemy.leader);
@@ -191,8 +191,8 @@ public class Slot {
       for (BonusEffect be : move.be) {
         // Move # 73 (Leech Seed) fix cause it targets both user and enemy
         if (be == BonusEffect.LEECH) {
-          enemy.leader.status.addEffect(Status.Effect.SEEDED);
-          leader.status.addEffect(Status.Effect.SEEDUSR);
+          enemy.leader.condition.addIssue(Condition.Issue.SEEDED);
+          leader.condition.addIssue(Condition.Issue.SEEDUSR);
         }
         else if (be.target == Target.SELF) {
           text.add(leader.name + " is now " + be.toString());
@@ -278,7 +278,7 @@ public class Slot {
   }
 
   public void applyEffects() {
-    leader.status.applyEffects();
+    leader.condition.applyEffects();
   }
 
   /**

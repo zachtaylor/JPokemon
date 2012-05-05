@@ -22,12 +22,12 @@ public class Machine extends Item {
     
     Move m = new Move(getPower(), p);
     
-    if (p.type1 != m.type && p.type2 != m.type) {
-      Driver.log(Machine.class, p.name + " cannot learn move "+m.name);
+    if (p.type1() != m.type && p.type2() != m.type) {
+      Driver.log(Machine.class, p.name() + " cannot learn move "+m.name);
       add(1); // restore the removed machine
       return false;
     }
-    Driver.log(Machine.class, p.name + " can learn move "+m.name);
+    Driver.log(Machine.class, p.name() + " can learn move "+m.name);
     
     // TODO : Finish this. Make sure to add(1) if they cancel.
     gui.Tools.askMove(p, m);

@@ -18,10 +18,10 @@ public class Ball extends Item {
 	
 	int HPmax, HPcur, BALL, STAT, q;
 	
-	HPmax = p.health.max;
-	HPcur = p.health.cur;
+	HPmax = p.stats.hp.max;
+	HPcur = p.stats.hp.cur;
 	BALL = getPower();
-	STAT = p.status.catchBonus();
+	STAT = p.condition.getCatchBonus();
 	
 	q = BALL*4*STAT;
 	q /= HPmax;
