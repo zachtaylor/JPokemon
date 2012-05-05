@@ -150,26 +150,15 @@ public class Tools {
         return bag.stone(input.substring(0, input.indexOf("stone")));
       }
 
-      switch (input) {
-      case "Potion":
-        return bag.potion(0);
-      case "Super Potion":
-        return bag.potion(1);
-      case "Hyper Potion":
-        return bag.potion(2);
-      case "Full Heal":
-        return bag.potion(3);
-      case "Poke-Ball":
-        return bag.ball(0);
-      case "Great Ball":
-        return bag.ball(1);
-      case "Ultraball":
-        return bag.ball(2);
-      case "Master Ball":
-        return bag.ball(3);
-      default:
-        throw new Exception();
-      }
+      if (input.equals("Potion")) return bag.potion(0);
+      if (input.equals("Super Potion")) return bag.potion(1);
+      if (input.equals("Hyper Potion")) return bag.potion(2);
+      if (input.equals("Full Heal")) return bag.potion(3);
+      if (input.equals("Poke-Ball")) return bag.ball(0);
+      if (input.equals("Great Ball")) return bag.ball(1);
+      if (input.equals("Ultraball")) return bag.ball(2);
+      if (input.equals("Master Ball")) return bag.ball(3);
+      return null;
 
     } catch (Exception e) {
       return null;

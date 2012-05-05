@@ -14,12 +14,12 @@ public class Player {
   public Bag bag;
   public ArrayList<Pokemon> box = new ArrayList<Pokemon>();
   public Party party;
+  public Pokedex dex;
   private static String serial;
 
   public Player(String serial) {
     Player.serial = serial;
   }
-
 
   public void createNew() {
     name = JOptionPane.showInputDialog(null,
@@ -30,14 +30,14 @@ public class Player {
     starters.add(new Pokemon(1, 5));
     starters.add(new Pokemon(4, 5));
     starters.add(new Pokemon(7, 5));
-    int pos = gui.Tools.selectFromParty("Select your starter!",starters);
-    if (pos == -1)
-      return;
+    int pos = gui.Tools.selectFromParty("Select your starter!", starters);
+    if (pos == -1) return;
 
     party = new Party();
     box = new ArrayList<Pokemon>();
     bag = new Bag();
     party.add(starters.pkmn[pos]);
+    dex = new Pokedex();
   }
 
   public void changeCash(int change) {
@@ -63,6 +63,7 @@ public class Player {
     for (Pokemon pkmn : box) {
       pkmn.toFile(p);
     }
+    dex.toFile(p);
   }
 
   public static Player fromFile(Scanner s) {
@@ -79,6 +80,8 @@ public class Player {
     while (s.hasNext() && s.next().equals("|")) {
       p.box.add(Pokemon.fromFile(s));
     }
+
+    p.dex = Pokedex.fromFile(s);
 
     return p;
   }
