@@ -1,5 +1,6 @@
 package item;
 
+import battle.Target;
 import jpkmn.Driver;
 import pokemon.Pokemon;
 
@@ -14,11 +15,11 @@ public class Stone extends Item {
     }
   }
 
-  public Type type;
 
   public Stone(int power, int quantity, Type type) {
     super(power, quantity, type.formatName());
     this.type = type;
+    target = Target.SELF;
   }
 
   @Override
@@ -33,45 +34,35 @@ public class Stone extends Item {
       switch (p.number()) {
       case 133: case 134: case 135: case 37: case 58:
         return report(p, true);
-      default:
-        return report(p, false);
       }
     }
     else if (this.type == Type.WATER) {
       switch (p.number()) {
       case 60: case 90: case 120: case 133: case 135: case 136:
         return report(p, true);
-      default:
-        return report(p, false);
       }
     }
     else if (this.type == Type.LEAF) {
       switch (p.number()) {
       case 102: case 70: case 44:
         return report(p, true);
-      default:
-        return report(p, false);
       }
     }
     else if (this.type == Type.THUNDER) {
       switch (p.number()) {
       case 133: case 134: case 136: case 25:
         return report(p, true);
-      default:
-        return report(p, false);
       }
     }
     else if (this.type == Type.MOON) {
       switch (p.number()) {
       case 33: case 30: case 35: case 39:
         return report(p, true);
-      default:
-        return report(p, false);
       }
     }
     //@format
 
-    return false;
+    return report(p, false);
   }
 
   /**
@@ -98,9 +89,11 @@ public class Stone extends Item {
         b = p.changeSpecies(134);
     }
     else {
-      gui.Tools.notify(p, "ERROR", getName() + " does not work on :" + p.name());
+      Tools.notify(p, "ERROR", getName() + " does not work on :" + p.name());
       Driver.log(Stone.class, getName() + " does not work on : " + p.name());
     }
     return b;
   }
+  
+  private Type type;
 }

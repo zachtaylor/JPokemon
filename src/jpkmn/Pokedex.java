@@ -64,18 +64,14 @@ public class Pokedex {
     p.println("]");
   }
 
-  public static Pokedex fromFile(Scanner s) {
-    Pokedex p = new Pokedex();
-
+  public void readFile(Scanner s) {
     for (String cur = s.next(); !cur.equals("]"); cur = s.next()) {
-      p.saw(Integer.parseInt(cur) + 1);
+      saw(Integer.parseInt(cur) + 1);
     }
     s.next();
     for (String cur = s.next(); !cur.equals("]"); cur = s.next()) {
-      p.caught(Integer.parseInt(cur) + 1);
+      caught(Integer.parseInt(cur) + 1);
     }
-
-    return p;
   }
 
   private static int POKEMONNUMBER = 151;

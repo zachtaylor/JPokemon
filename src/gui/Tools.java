@@ -14,22 +14,6 @@ public class Tools {
   static MessageView messages;
 
   /**
-   * Generates a notify window, with the specified icon
-   * 
-   * @param icon The icon that will be used
-   * @param title Title of the window
-   * @param message Message of the window
-   */
-  public static void notify(Object icon, String... message) {
-    if (icon instanceof Image) throw new RuntimeException();
-    notify(findImage(icon), message);
-  }
-
-  private static void notify(Image icon, String... message) {
-    messages.addMessage(icon, message);
-  }
-
-  /**
    * Retrieves the Image to be used for an object
    * 
    * @param o Object to get the image of.
@@ -43,15 +27,15 @@ public class Tools {
     else
       return getImage(o.toString());
   }
-
-  private static Image getImage(String s) {
-    URL resource = Tools.class.getResource("../img/" + s + ".png");
-    if (resource == null) resource = Tools.class.getResource("../img/err.png");
-    return new ImageIcon(resource).getImage();
+  
+  private static Image getImage(String path) {
+    URL url = Graphics.class.getResource("../img/" + path + ".png");
+    if (url == null) url = Graphics.class.getResource("../img/err.png");
+    return new ImageIcon(url).getImage();
   }
 
   private static Image getImage(Pokemon p) {
-    return getImage("pkmn/" + p.number);
+    return getImage("pkmn/" + p.number());
   }
 
   private static Image getImage(Item i) {

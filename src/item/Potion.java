@@ -1,5 +1,6 @@
 package item;
 
+import battle.Target;
 import jpkmn.Driver;
 import pokemon.*;
 
@@ -7,6 +8,7 @@ public class Potion extends Item {
   
   public Potion(int power, int quantity, String name) {
     super(power, quantity, name);
+    target = Target.SELF;
   }
   
   @Override

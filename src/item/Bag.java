@@ -1,45 +1,36 @@
 package item;
 
-import battle.Target;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Bag {
-  public int cash;
-  Potion[] potions = new Potion[4];
-  Ball[] balls = new Ball[4];
-  Stone[] stone = new Stone[5];
-  XStat[] xstat = new XStat[5];
-
   public Bag() {
-    cash = 0;
+    potions = new Potion[4];
     potions[0] = new Potion(10, 0, "Potion");
     potions[1] = new Potion(20, 0, "Super Potion");
     potions[2] = new Potion(50, 0, "Hyper Potion");
     potions[3] = new Potion(200, 0, "Full Heal");
-    for (Potion p : potions)
-      p.target = Target.SELF;
+    
+    balls = new Ball[4];
     balls[0] = new Ball(10, 0, "Poke-ball");
     balls[1] = new Ball(15, 0, "Great Ball");
     balls[2] = new Ball(20, 0, "Ultraball");
     balls[3] = new Ball(2550, 0, "Master Ball");
-    for (Ball b : balls)
-      b.target = Target.ENEMY;
+    
+    xstat = new XStat[5];
     xstat[0] = new XStat(0, 0, XStat.Type.ATTACK);
     xstat[1] = new XStat(0, 0, XStat.Type.SATTACK);
     xstat[2] = new XStat(0, 0, XStat.Type.DEFENSE);
     xstat[3] = new XStat(0, 0, XStat.Type.SDEFENSE);
     xstat[4] = new XStat(0, 0, XStat.Type.SPEED);
-    for (XStat x : xstat)
-      x.target = Target.SELF;
+
+    stone = new Stone[5];
     stone[0] = new Stone(0, 0, Stone.Type.FIRE);
     stone[1] = new Stone(0, 0, Stone.Type.WATER);
     stone[2] = new Stone(0, 0, Stone.Type.THUNDER);
     stone[3] = new Stone(0, 0, Stone.Type.MOON);
     stone[4] = new Stone(0, 0, Stone.Type.LEAF);
-    for (Stone s : stone)
-      s.target = Target.SELF;
   }
 
   public Ball ball(int p) {
@@ -134,4 +125,9 @@ public class Bag {
     }
     s.nextLine();
   }
+
+  private Potion[] potions;
+  private Ball[] balls;
+  private Stone[] stone;
+  private XStat[] xstat;
 }

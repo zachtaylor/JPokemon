@@ -4,6 +4,7 @@ import battle.Target;
 import pokemon.*;
 
 public abstract class Item {
+  public Target target;
   
   public Item(int power, int quantity, String name) {
     _power = power;
@@ -44,8 +45,7 @@ public abstract class Item {
   public String toString() {
     return _name + " "+_quantity;
   }
-  
-  public Target target;
+
   private int _quantity;
   private final String _name;
   private final int _power;

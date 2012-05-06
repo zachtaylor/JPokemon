@@ -3,8 +3,10 @@ package pokemon;
 import java.util.*;
 import java.io.PrintWriter;
 
-import gui.*;
 import lib.PokemonBase;
+
+import gui.*;
+import jpkmn.Player;
 
 public class Pokemon {
   public final Condition condition;
@@ -101,7 +103,7 @@ public class Pokemon {
   public Type type2() {
     return type2;
   }
-
+  
   /**
    * Pokemon gains the experience amount. If it gains enough, it will level up.
    * 
@@ -168,7 +170,7 @@ public class Pokemon {
    * Used when the user attacks itself in confusion.
    */
   public void confusedAttack() {
-    gui.Tools.notify(this, "CONFUSION", name + " hurt itself in confusion!");
+    Tools.notify(this, "CONFUSION", name + " hurt itself in confusion!");
 
     takeDamage(battle.Battle.confusedDamage(this));
   }
@@ -271,7 +273,7 @@ public class Pokemon {
     stats.levelUp();
     moves.check();
     condition.reset();
-    gui.Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
+    Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
     if (level == evolutionlevel) changeSpecies();
   }
 

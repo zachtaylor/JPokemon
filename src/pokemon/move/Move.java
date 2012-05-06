@@ -8,6 +8,7 @@ import lib.MoveBase;
 
 import gui.Tools;
 import jpkmn.Driver;
+import jpkmn.Player;
 import pokemon.Pokemon;
 import pokemon.Type;
 import battle.Target;
@@ -53,6 +54,10 @@ public class Move {
     return style;
   }
 
+  public Type type() {
+    return type;
+  }
+
   /**
    * Tells whether it is valid to use this move. This method will reduce PP.
    * Note that it is not appropriate to call this method on repeat-style moves,
@@ -61,7 +66,7 @@ public class Move {
    * @return True if the move can be performed this turn
    */
   public boolean use() {
-    return enabled = enabled && pp-- >= 0;
+    return enabled = enabled && pp-- > 0;
   }
 
   /**
@@ -110,8 +115,7 @@ public class Move {
 
     if (style == MoveStyle.OHKO) {
       if (p.level() > pkmn.level()) {
-        Tools
-            .notify(pkmn, "FAIL", "OHKO moves can't be used on higher levels!");
+        Tools.notify(pkmn, "FAIL", "OHKO moves always fail on higher levels!");
         Driver.log(Move.class, "OHKO Move used on higher level. Move = " + name
             + ". User/Target = " + pkmn.name() + "/" + p.name());
         return false;

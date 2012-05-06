@@ -1,5 +1,6 @@
 package item;
 
+import battle.Target;
 import jpkmn.Driver;
 import pokemon.*;
 
@@ -20,11 +21,12 @@ public class XStat extends Item {
     }
   }
 	
-  public Type type;
+  private Type type;
   
   public XStat(int power, int quantity, Type type) {
     super(power, quantity, "X"+type.formatName());
     this.type = type;
+    target = Target.SELF;
   }
 
   @Override

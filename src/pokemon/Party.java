@@ -1,21 +1,23 @@
 package pokemon;
 
-import gui.Splash;
-import gui.Tools;
-
 import java.io.PrintWriter;
 import java.util.Scanner;
+
+import gui.Splash;
+import gui.Tools;
 import jpkmn.Driver;
 
 public class Party {
-  private Pokemon[] pkmn;
-  private int amount;
 
   public Party() {
     pkmn = new Pokemon[Driver.PARTYSIZE];
     amount = 0;
   }
 
+  public Pokemon get(int i) {
+    return pkmn[i];
+  }
+  
   /**
    * Gets the current leader of the party
    * 
@@ -144,22 +146,18 @@ public class Party {
    * 
    * @param s Scanner to read from
    */
-  public static Party fromFile(Scanner s) {
-    Party p = new Party();
-
-    for (int i = 0; i < 6 && s.hasNext(); i++) {
+  public void readFile(Scanner s) {
+    for (int i = 0; i < Driver.PARTYSIZE && s.hasNext(); i++) {
       String token = s.next();
       if (token.equals("|")) {
-        p.pkmn[i] = Pokemon.fromFile(s);
-        ++p.amount;
+        pkmn[i] = Pokemon.fromFile(s);
+        ++amount;
       }
       else {
         if (!token.equals("||"))
           Splash.showFatalErrorMessage("Error reading party");
       }
     }
-
-    return p;
   }
 
   /**
@@ -182,4 +180,7 @@ public class Party {
     }
     return -1;
   }
+
+  private int amount;
+  private Pokemon[] pkmn;
 }

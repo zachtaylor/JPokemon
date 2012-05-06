@@ -1,5 +1,6 @@
 package jpkmn;
 
+import gui.Graphics;
 import item.*;
 import pokemon.*;
 
@@ -9,16 +10,17 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 public class Player {
-  public int cash, badge;
-  public String name;
-  public Bag bag;
-  public ArrayList<Pokemon> box = new ArrayList<Pokemon>();
-  public Party party;
-  public Pokedex dex;
-  private static String serial;
+  public final Bag bag;
+  public final Box box;
+  public final Party party;
+  public final Pokedex dex;
 
   public Player(String serial) {
     Player.serial = serial;
+    dex = new Pokedex();
+    bag = new Bag();
+    box = new Box();
+    party = new Party();
   }
 
   public void createNew() {
@@ -33,26 +35,33 @@ public class Player {
     int pos = gui.Tools.selectFromParty("Select your starter!", starters);
     if (pos == -1) return;
 
-    party = new Party();
-    box = new ArrayList<Pokemon>();
-    bag = new Bag();
-    party.add(starters.pkmn[pos]);
-    dex = new Pokedex();
+    party.add(starters.get(pos));
   }
 
-  public void changeCash(int change) {
+  public String name() {
+    return name;
+  }
+
+  public int cash() {
+    return cash;
+  }
+
+  public void addCash(int change) {
     cash += change;
-
-    // TODO: notify
   }
 
-  public void getBadge() {
-    badge++;
-
-    // TODO: notify
-
+  public int badges() {
+    return badge;
   }
 
+  public int addBadge() {
+    return ++badge;
+  }
+
+  public void alert(Object o, String... s) {
+    graphics.alert(o, s);
+  }
+  
   public void toFile(PrintWriter p) {
     p.println(serial);
     p.println(name);
@@ -69,19 +78,17 @@ public class Player {
   public static Player fromFile(Scanner s) {
     Player p = new Player(s.nextLine());
     p.name = s.nextLine();
-    p.party = new Party();
-    p.party.fromFile(s);
+    p.party.readFile(s);
 
     p.cash = s.nextInt();
     p.badge = s.nextInt();
-    p.bag = new Bag();
     p.bag.fromFile(s);
     s.nextLine();
     while (s.hasNext() && s.next().equals("|")) {
       p.box.add(Pokemon.fromFile(s));
     }
 
-    p.dex = Pokedex.fromFile(s);
+    p.dex.readFile(s);
 
     return p;
   }
@@ -90,4 +97,8 @@ public class Player {
     return serial.equals(Driver.officialSerial);
   }
 
+  private String name;
+  private int cash, badge;
+  private static String serial;
+  private Graphics graphics;
 }
