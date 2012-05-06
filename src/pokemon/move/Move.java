@@ -1,25 +1,19 @@
 package pokemon.move;
 
-import gui.Tools;
-
 import java.util.ArrayList;
+import java.util.List;
 
-import jpkmn.Driver;
 import lib.BonusEffectBase;
 import lib.MoveBase;
-import lib.MoveMap;
-import pokemon.*;
+
+import gui.Tools;
+import jpkmn.Driver;
+import pokemon.Pokemon;
+import pokemon.Type;
 import battle.Target;
 
 public class Move {
-  public Type type;
-  public Pokemon pkmn;
-  public int number, power, pp, ppmax;
-  public double accuracy;
-  public String name;
-  public MoveStyle style;
-  public ArrayList<BonusEffect> be = new ArrayList<BonusEffect>();
-  public boolean enabled = true;
+  public final Pokemon pkmn;
 
   /**
    * Creates a new move of the specified number
@@ -30,19 +24,52 @@ public class Move {
   public Move(int num, Pokemon user) {
     number = num;
     pkmn = user;
+    enabled = true;
+
+    MoveBase base = MoveBase.getBaseForNumber(number);
+    name = base.getName();
+    power = base.getPower();
+    pp = ppmax = base.getPp();
+    accuracy = base.getAccuracy();
+    type = Type.valueOf(base.getType());
+    style = MoveStyle.valueOf(base.getStyle());
 
     setBonusEffects();
+  }
 
-    resetBase();
+  public String name() {
+    return name;
+  }
+
+  public int number() {
+    return number;
+  }
+
+  public int power() {
+    return power;
+  }
+
+  public MoveStyle style() {
+    return style;
   }
 
   /**
-   * Tells the STAB advantage. 1.5 is true, 1 if false
+   * Tells whether it is valid to use this move. This method will reduce PP.
+   * Note that it is not appropriate to call this method on repeat-style moves,
+   * or multi-turn moves.
    * 
-   * @return the STAB advantage
+   * @return True if the move can be performed this turn
    */
-  public double STAB() {
-    return (type == pkmn.type1() || type == pkmn.type2()) ? 1.5 : 1.0;
+  public boolean use() {
+    return enabled = enabled && pp-- >= 0;
+  }
+
+  /**
+   * Reset base attributes for a move
+   */
+  public void restore() {
+    pp = ppmax;
+    enabled = true;
   }
 
   /**
@@ -56,18 +83,12 @@ public class Move {
   }
 
   /**
-   * Reset base attributes for a move
+   * Tells the Same-Type-Attack-Bonus advantage. 1.5 is true, 1 if false
+   * 
+   * @return the STAB advantage
    */
-  public void resetBase() {
-    MoveBase base = MoveBase.getBaseForNumber(number);
-
-    accuracy = base.getAccuracy();
-    name = base.getName();
-    power = base.getPower();
-    ppmax = base.getPp();
-    pp = ppmax;
-    style = MoveStyle.valueOf(base.getStyle());
-    type = Type.valueOf(base.getType());
+  public double STAB() {
+    return (type == pkmn.type1() || type == pkmn.type2()) ? 1.5 : 1.0;
   }
 
   /**
@@ -112,11 +133,16 @@ public class Move {
     }
   }
 
-  public static Move getNewMove(Pokemon p, int level) {
-    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(p.number(), level);
+  @Override
+  public String toString() {
+    return name + " (" + pp + "/" + ppmax + ")";
+  }
 
-    // Return null if there isn't a move for this level, or construct the move
-    return m == null ? null : new Move(m.getMove_number(), p);
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Move)) return false;
+
+    return number == ((Move) o).number;
   }
 
   /**
@@ -124,6 +150,8 @@ public class Move {
    */
   private void setBonusEffects() {
     BonusEffect current;
+    be = new ArrayList<BonusEffect>();
+
     for (BonusEffectBase base : BonusEffectBase.getBasesForMoveNumber(number)) {
       // Get Bonus Effect type
       current = BonusEffect.valueOf(base.getType());
@@ -137,15 +165,11 @@ public class Move {
     }
   }
 
-  @Override
-  public String toString() {
-    return name + " (" + pp + "/" + ppmax + ")";
-  }
-
-  @Override
-  public boolean equals(Object m) {
-    if (!(m instanceof Move)) return false;
-    Move n = (Move) m; // MUpdated. makes life easier
-    return (number == n.number && n.name.equals(name));
-  }
+  private String name;
+  private int number, power, pp, ppmax;
+  private double accuracy;
+  private boolean enabled = true;
+  private Type type;
+  private MoveStyle style;
+  private List<BonusEffect> be;
 }

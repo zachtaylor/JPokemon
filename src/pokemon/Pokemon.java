@@ -4,14 +4,12 @@ import java.util.*;
 import java.io.PrintWriter;
 
 import gui.*;
-import jpkmn.Driver;
-import pokemon.move.*;
 import lib.PokemonBase;
 
 public class Pokemon {
   public final Condition condition;
   public final StatBlock stats;
-  public Move[] move = new Move[4];
+  public final MoveBlock moves;
 
   private static long CURRENT_ID = 0;
 
@@ -27,14 +25,13 @@ public class Pokemon {
     xp = 0;
     condition = new Condition(this);
     stats = new StatBlock(this);
+    moves = new MoveBlock(this);
 
     PokemonBase base = PokemonBase.getBaseForNumber(number);
     evolutionlevel = base.getEvolutionlevel();
     name = species = base.getName();
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
-
-    setDefaultMoves();
 
     unique_id = CURRENT_ID++;
   }
@@ -68,7 +65,7 @@ public class Pokemon {
       species = base.getName();
 
     stats.changeSpecies(num);
-    checkNewMoves();
+    moves.check();
 
     return true;
   }
@@ -176,62 +173,6 @@ public class Pokemon {
     takeDamage(battle.Battle.confusedDamage(this));
   }
 
-  private void checkNewMoves() {
-    Move m = Move.getNewMove(this, level);
-    if (m == null) return; // Nothing new
-
-    // Don't allow duplicates
-    for (Move x : move)
-      if (m.equals(x)) return;
-
-    // Ask for a position
-    int pos = Tools.askMove(this, m);
-
-    // User canceled learning new move
-    if (pos == -1)
-      return;
-
-    // Set new move position
-    else
-      move[pos] = m;
-  }
-
-  /**
-   * Picks up to 4 moves randomly from the list of moves that this Pokemon
-   * could have learned by this level, and assigns them.
-   */
-  private void setDefaultMoves() {
-    int move_num = 0;
-    ArrayList<Move> moves = new ArrayList<Move>();
-
-    for (int l = 1; l <= level; l++) {
-      Move m = Move.getNewMove(this, l);
-      if (m != null && !moves.contains(m)) moves.add(m);
-    }
-    Driver.log(Pokemon.class, name + " is selecting default moves from "
-        + moves.toString());
-
-    while (!moves.isEmpty() && move_num != 4) {
-      int r = (int) (Math.random() * moves.size());
-      move[move_num++] = moves.get(r);
-      moves.remove(r);
-    }
-
-    Driver.log(Pokemon.class, name + " selected default moves: "
-        + getMoveList());
-  }
-
-  public String getMoveList() {
-    String response = "[";
-
-    for (int i = 0; i < 4; ++i) {
-      if (move[i] != null) response += move[i].name;
-      if (i != 3) response += ", ";
-    }
-
-    return (response + "]");
-  }
-
   /**
    * Properly initializes a Pokemon from a file.
    * 
@@ -268,9 +209,8 @@ public class Pokemon {
     if (!s.next().equals("("))
       Splash.showFatalErrorMessage("excessive stat values");
 
-    int i = 0;
-    for (String next = s.next(); !next.equals(")"); next = s.next(), ++i) {
-      p.move[i] = new Move(Integer.parseInt(next), p);
+    for (String next = s.next(); !next.equals(")"); next = s.next()) {
+      p.moves.add(Integer.parseInt(next));
     }
 
     p.name = s.nextLine();
@@ -297,8 +237,8 @@ public class Pokemon {
     p.print(stats.spd.pts + " ");
     p.print("( ");
     try {
-      for (int i = 0; i < 4; i++) {
-        if (move[i] != null) p.print(move[i].number + " ");
+      for (int i = 0; i < moves.amount(); i++) {
+        p.print(moves.get(i).number() + " ");
       }
     } catch (Exception e) {
       // do nothing
@@ -329,9 +269,9 @@ public class Pokemon {
     xp -= getXPNeeded();
     level++;
     stats.levelUp();
+    moves.check();
     condition.reset();
     gui.Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
-    checkNewMoves();
     if (level == evolutionlevel) changeSpecies();
   }
 

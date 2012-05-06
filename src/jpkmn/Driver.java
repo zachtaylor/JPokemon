@@ -11,11 +11,13 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
 public class Driver {
+
   public static String officialSerial = "jpkmn build-ver 0.2.2";
   
   // Later incorporated into server settings
-  public static int PARTYSIZE = 6;
-  public static double TYPEADVANTAGE = 2.0;
+  public static final int PARTYSIZE = 6;
+  public static final int MOVENUMBER = 4;
+  public static final double TYPEADVANTAGE = 2.0;
   
   public static Preferences prefs;
   public static boolean debug, console;

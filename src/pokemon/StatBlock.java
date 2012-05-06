@@ -1,6 +1,7 @@
 package pokemon;
 
 import lib.PokemonBase;
+
 import pokemon.stat.*;
 
 public class StatBlock {
@@ -28,7 +29,7 @@ public class StatBlock {
     spd.reset();
     hp.reset();
   }
-  
+
   public void resetMaxAll() {
     atk.resetMax();
     stk.resetMax();
@@ -59,7 +60,7 @@ public class StatBlock {
       if (number == 133) points++;
       number = n[0];
     }
-    
+
     PokemonBase base = PokemonBase.getBaseForNumber(number);
     atk.setBase(base.getAttack());
     stk.setBase(base.getSpecattack());
@@ -74,34 +75,28 @@ public class StatBlock {
   }
 
   public boolean usePoint(Stat s) {
-    if (points == 0) return false;
+    if (points == 0) 
+      return false;
+    else 
+      points--;
 
-    if (s == atk) {
-      points--;
+    if (s == atk)
       atk.usePoint();
-    }
-    else if (s == stk) {
-      points--;
+    else if (s == stk)
       stk.usePoint();
-    }
-    else if (s == def) {
-      points--;
+    else if (s == def)
       def.usePoint();
-    }
-    else if (s == sdf) {
-      points--;
+    else if (s == sdf)
       sdf.usePoint();
-    }
-    else if (s == spd) {
-      points--;
+    else if (s == spd) 
       spd.usePoint();
-    }
+
     return true;
   }
 
   public void setPoints(int p) {
     points = p;
   }
-  
+
   private int number, level, points;
 }

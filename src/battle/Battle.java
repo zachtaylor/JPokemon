@@ -297,7 +297,7 @@ public class Battle {
           : victim.specdefense.cur;
     }
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R;
-    if (damage < 1 && move.effectiveness(victim) != 0) damage = 1;
+    if (damage < 1 && E != 0) damage = 1;
     return (int) damage;
   }
 
