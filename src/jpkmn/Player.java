@@ -1,13 +1,14 @@
 package jpkmn;
 
-import gui.Graphics;
-import item.*;
-import pokemon.*;
 
 import java.io.PrintWriter;
 import java.util.*;
 
 import javax.swing.JOptionPane;
+
+import jpkmn.gui.Graphics;
+import jpkmn.item.*;
+import jpkmn.pokemon.*;
 
 public class Player {
   public final Bag bag;
@@ -32,7 +33,7 @@ public class Player {
     starters.add(new Pokemon(1, 5));
     starters.add(new Pokemon(4, 5));
     starters.add(new Pokemon(7, 5));
-    int pos = gui.Tools.selectFromParty("Select your starter!", starters);
+    int pos = jpkmn.gui.Tools.selectFromParty("Select your starter!", starters);
     if (pos == -1) return;
 
     party.add(starters.get(pos));
@@ -61,7 +62,7 @@ public class Player {
   public void alert(Object o, String... s) {
     graphics.alert(o, s);
   }
-  
+
   public void toFile(PrintWriter p) {
     p.println(serial);
     p.println(name);

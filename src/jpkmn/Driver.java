@@ -1,7 +1,5 @@
 package jpkmn;
 
-import gui.Splash;
-import gui.Tools;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,6 +7,9 @@ import java.io.PrintWriter;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
+
+import jpkmn.gui.Splash;
+import jpkmn.gui.Tools;
 
 public class Driver {
 
