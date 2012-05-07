@@ -1,6 +1,5 @@
 package jpkmn.item;
 
-import jpkmn.Driver;
 import jpkmn.battle.Target;
 import jpkmn.pokemon.Pokemon;
 
@@ -15,7 +14,6 @@ public class Stone extends Item {
     }
   }
 
-
   public Stone(int power, int quantity, Type type) {
     super(power, quantity, type.formatName());
     this.type = type;
@@ -24,10 +22,7 @@ public class Stone extends Item {
 
   @Override
   public boolean effect(Pokemon p) {
-    if (!reduce()) {
-      Driver.log(Stone.class, "Not enough to use type " + getName());
-      return false;
-    }
+    if (!reduce()) return false;
 
     //@preformat
     if (this.type == Type.FIRE) {
@@ -74,26 +69,19 @@ public class Stone extends Item {
    */
   private boolean report(Pokemon p, boolean b) {
     if (b) {
-      Driver.log(Stone.class, getName() + " is effectively used on : " + p.name());
-
-      if (p.number() < 133 || p.number() > 136) {
+      if (p.number() < 133 || p.number() > 136)
         b = p.changeSpecies();
-      }
 
       // All evolutions of Eevee have their stats increased specially
       else if (this.type == Type.FIRE)
         b = p.changeSpecies(136);
       else if (this.type == Type.THUNDER)
         b = p.changeSpecies(135);
-      else if (this.type == Type.WATER)
+      else if (this.type == Type.WATER) 
         b = p.changeSpecies(134);
-    }
-    else {
-      Tools.notify(p, "ERROR", getName() + " does not work on :" + p.name());
-      Driver.log(Stone.class, getName() + " does not work on : " + p.name());
     }
     return b;
   }
-  
+
   private Type type;
 }

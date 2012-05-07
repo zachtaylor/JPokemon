@@ -48,7 +48,6 @@ public class Party {
       Pokemon swap = pkmn[0];
       pkmn[0] = pkmn[lead];
       pkmn[lead] = swap;
-      Driver.log(Party.class, "doSwap new leader = " + getLeader().name());
       return true;
     }
 

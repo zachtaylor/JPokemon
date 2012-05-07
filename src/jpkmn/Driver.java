@@ -55,20 +55,6 @@ public class Driver {
     new Splash(officialSerial); // Serial for versioning purposes
   }
 
-  public static <T> void log(Class<T> c, String s) {
-    if (debug)
-      System.out.println(c.toString().substring(c.toString().indexOf('.') + 1)
-          + " : " + s);
-    log.append(c.toString() + " : " + s + "\n");
-  }
-
-  public static void logConsoleEvent(String s) {
-    if (debug)
-      System.out.println("Console Event : " + s);
-
-    log.append("Console Event : " + s + "\n");
-  }
-
   public static <T> void crash(Class<T> c, String s) {
     if (debug)
       System.out.println("CRASH " + c.toString() + " : " + s);

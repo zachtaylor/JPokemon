@@ -53,9 +53,8 @@ public class Condition {
    * @param i The issue to be added
    */
   public void addIssue(Issue i) {
-    if (i == Issue.WAIT) {
+    if (i == Issue.WAIT)
       issues.add(i);
-    }
     else if (!issues.contains(i) && i != Issue.WAIT) {
       issues.add(i);
       jpkmn.gui.Tools.notify(pkmn, i.toString(), pkmn.name() + " is now " + i);
@@ -64,9 +63,6 @@ public class Condition {
         pkmn.stats.atk.cur /= 2;
       else if (i == Issue.PARALYZE) pkmn.stats.spd.cur /= 4;
     }
-
-    Driver.log(Condition.class, "New issue added to " + pkmn.name()
-        + ". Effect = " + i.name());
   }
 
   /**
@@ -100,7 +96,8 @@ public class Condition {
     for (Issue current : issues) {
       if (current == Issue.BURN) {
         pkmn.takeDamage(pkmn.stats.hp.max / 10);
-        jpkmn.gui.Tools.notify(pkmn, "BURN", pkmn.name() + " was hurt by it's burn!");
+        jpkmn.gui.Tools.notify(pkmn, "BURN", pkmn.name()
+            + " was hurt by it's burn!");
       }
       else if (current == Issue.WRAP) {
         if (Math.random() > .66666) {
@@ -132,7 +129,8 @@ public class Condition {
               + " escaped from being frozen!");
         }
         else {
-          jpkmn.gui.Tools.notify(pkmn, "FROZEN", pkmn.name() + " is still frozen!");
+          jpkmn.gui.Tools.notify(pkmn, "FROZEN", pkmn.name()
+              + " is still frozen!");
         }
       }
       else if (current == Issue.SEEDED) {
@@ -142,12 +140,13 @@ public class Condition {
       }
       else if (current == Issue.SEEDUSR) {
         pkmn.healDamage(pkmn.stats.hp.max / 12);
-        jpkmn.gui.Tools
-            .notify(pkmn, "LEECH", pkmn.name() + " was healed by the seeds!");
+        jpkmn.gui.Tools.notify(pkmn, "LEECH", pkmn.name()
+            + " was healed by the seeds!");
       }
       else if (current == Issue.POISON) {
         pkmn.takeDamage(pkmn.stats.hp.max / 10);
-        jpkmn.gui.Tools.notify(pkmn, "POISON", pkmn.name() + " was hurt by the toxin!");
+        jpkmn.gui.Tools.notify(pkmn, "POISON", pkmn.name()
+            + " was hurt by the toxin!");
       }
       else if (current == Issue.SLEEP) {
         if (Math.random() > .333333) {
@@ -155,7 +154,8 @@ public class Condition {
           jpkmn.gui.Tools.notify(pkmn, "AWAKEN", pkmn.name() + " woke up!");
         }
         else {
-          jpkmn.gui.Tools.notify(pkmn, "SLEEP", pkmn.name() + " is still sleeping!");
+          jpkmn.gui.Tools.notify(pkmn, "SLEEP", pkmn.name()
+              + " is still sleeping!");
         }
       }
     }

@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 
 import lib.PokemonBase;
 
-import jpkmn.Player;
 import jpkmn.gui.*;
 
 public class Pokemon {
@@ -103,7 +102,7 @@ public class Pokemon {
   public Type type2() {
     return type2;
   }
-  
+
   /**
    * Pokemon gains the experience amount. If it gains enough, it will level up.
    * 
@@ -170,8 +169,6 @@ public class Pokemon {
    * Used when the user attacks itself in confusion.
    */
   public void confusedAttack() {
-    Tools.notify(this, "CONFUSION", name + " hurt itself in confusion!");
-
     takeDamage(jpkmn.battle.Battle.confusedDamage(this));
   }
 
@@ -273,7 +270,6 @@ public class Pokemon {
     stats.levelUp();
     moves.check();
     condition.reset();
-    Tools.notify(this, "LEVEL UP", name + " reached level " + level + "!");
     if (level == evolutionlevel) changeSpecies();
   }
 

@@ -46,7 +46,7 @@ public class Graphics {
       else if (o instanceof Potion)
         dest += "potion/" + ((Item) o).getName().toLowerCase().charAt(0);
       else if (o instanceof Stone)
-        dest += "stone/" + ((Item) o).getName().toLowerCase();
+        dest += "stone/" + ((Item) o).getName().toLowerCase().charAt(0);
       else
         dest += "xstat";
     }

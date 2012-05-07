@@ -62,7 +62,8 @@ public class MoveBlock {
   }
 
   public void add(int number, int position) {
-    moves[position] = new Move(number, pkmn);
+    if (!contains(number))
+      moves[position] = new Move(number, pkmn);
   }
 
   /**
@@ -78,13 +79,14 @@ public class MoveBlock {
       if (m != null && !possible.contains(m)) possible.add(m.getMove_number());
     }
 
-    while (!possible.isEmpty() && amount < moves.length) {
-      int r = (int) (Math.random() * possible.size());
-      add(possible.remove(r), amount++);
-    }
+    while (!possible.isEmpty() && amount < moves.length)
+      add(possible.remove((int) (Math.random() * possible.size())), amount++);
+  }
 
-    Driver.log(Pokemon.class, pkmn.name() + " selected default moves: "
-        + list());
+  private boolean contains(int number) {
+    for (Move m : moves)
+      if (m != null && m.number() == number) return true;
+    return false;
   }
 
   private int amount;

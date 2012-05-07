@@ -6,10 +6,7 @@ import java.util.List;
 import lib.BonusEffectBase;
 import lib.MoveBase;
 
-import jpkmn.Driver;
-import jpkmn.Player;
 import jpkmn.battle.Target;
-import jpkmn.gui.Tools;
 import jpkmn.pokemon.Pokemon;
 import jpkmn.pokemon.Type;
 
@@ -102,39 +99,25 @@ public class Move {
    * attack. This method only computes the probability of hitting, but does not
    * effect pp.
    * 
-   * @param p Target pokemon
+   * @param target Target pokemon
    * @return True if the move hits
    */
-  public boolean hits(Pokemon p) {
+  public boolean hits(Pokemon target) {
 
     // Move # 141 (Swift) never misses
-    if (number == 141) {
-      Driver.log(Move.class, "Swift auto-succeeds.");
+    if (number == 141)
       return true;
-    }
 
     if (style == MoveStyle.OHKO) {
-      if (p.level() > pkmn.level()) {
-        Tools.notify(pkmn, "FAIL", "OHKO moves always fail on higher levels!");
-        Driver.log(Move.class, "OHKO Move used on higher level. Move = " + name
-            + ". User/Target = " + pkmn.name() + "/" + p.name());
+      int levelDiff = pkmn.level() - target.level();
+
+      if (levelDiff >= 0 && (levelDiff + 30.0) / 100.0 > Math.random())
+        return true;
+      else
         return false;
-      }
-      else {
-        if ((pkmn.level() - p.level() + 30.0) / 100.0 > Math.random()) {
-          Driver.log(Move.class, "OHKO move successful");
-          return true;
-        }
-        else {
-          Tools.notify(pkmn, "MISS", name + " missed!");
-          Driver.log(Move.class, "OHKO move missed.");
-          return false;
-        }
-      }
     }
-    else {
-      return Math.random() <= accuracy;
-    }
+    else
+      return accuracy >= Math.random();
   }
 
   @Override

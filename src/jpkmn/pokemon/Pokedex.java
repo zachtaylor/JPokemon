@@ -1,4 +1,4 @@
-package jpkmn;
+package jpkmn.pokemon;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
