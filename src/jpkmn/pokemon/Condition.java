@@ -2,8 +2,6 @@ package jpkmn.pokemon;
 
 import java.util.ArrayList;
 
-import jpkmn.Driver;
-
 public class Condition {
 
   public enum Issue {

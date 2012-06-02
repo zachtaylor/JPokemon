@@ -20,39 +20,39 @@ public class Move {
    * @param user The user of the move
    */
   public Move(int num, Pokemon user) {
-    number = num;
+    _number = num;
     pkmn = user;
-    enabled = true;
+    _enabled = true;
 
-    MoveBase base = MoveBase.getBaseForNumber(number);
-    name = base.getName();
-    power = base.getPower();
-    pp = ppmax = base.getPp();
-    accuracy = base.getAccuracy();
-    type = Type.valueOf(base.getType());
-    style = MoveStyle.valueOf(base.getStyle());
+    MoveBase base = MoveBase.getBaseForNumber(_number);
+    _name = base.getName();
+    _power = base.getPower();
+    _ppcur = _ppmax = base.getPp();
+    _accuracy = base.getAccuracy();
+    _type = Type.valueOf(base.getType());
+    _style = MoveStyle.valueOf(base.getStyle());
 
     setBonusEffects();
   }
 
   public String name() {
-    return name;
+    return _name;
   }
 
   public int number() {
-    return number;
+    return _number;
   }
 
   public int power() {
-    return power;
+    return _power;
   }
 
   public MoveStyle style() {
-    return style;
+    return _style;
   }
 
   public Type type() {
-    return type;
+    return _type;
   }
 
   /**
@@ -63,15 +63,15 @@ public class Move {
    * @return True if the move can be performed this turn
    */
   public boolean use() {
-    return enabled = enabled && pp-- > 0;
+    return _enabled = _enabled && _ppcur-- > 0;
   }
 
   /**
    * Reset base attributes for a move
    */
   public void restore() {
-    pp = ppmax;
-    enabled = true;
+    _ppcur = _ppmax;
+    _enabled = true;
   }
 
   /**
@@ -81,7 +81,7 @@ public class Move {
    * @return How effect the move is
    */
   public double effectiveness(Pokemon p) {
-    return type.effectiveness(p);
+    return _type.effectiveness(p);
   }
 
   /**
@@ -90,7 +90,7 @@ public class Move {
    * @return the STAB advantage
    */
   public double STAB() {
-    return (type == pkmn.type1() || type == pkmn.type2()) ? 1.5 : 1.0;
+    return (_type == pkmn.type1() || _type == pkmn.type2()) ? 1.5 : 1.0;
   }
 
   /**
@@ -105,10 +105,10 @@ public class Move {
   public boolean hits(Pokemon target) {
 
     // Move # 141 (Swift) never misses
-    if (number == 141)
+    if (_number == 141)
       return true;
 
-    if (style == MoveStyle.OHKO) {
+    if (_style == MoveStyle.OHKO) {
       int levelDiff = pkmn.level() - target.level();
 
       if (levelDiff >= 0 && (levelDiff + 30.0) / 100.0 > Math.random())
@@ -117,46 +117,46 @@ public class Move {
         return false;
     }
     else
-      return accuracy >= Math.random();
+      return _accuracy >= Math.random();
   }
 
   @Override
   public String toString() {
-    return name + " (" + pp + "/" + ppmax + ")";
+    return _name + " (" + _ppcur + "/" + _ppmax + ")";
   }
 
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Move)) return false;
 
-    return number == ((Move) o).number;
+    return _number == ((Move) o)._number;
   }
 
   /**
    * Loads and sets all the bonus effects for a move
    */
   private void setBonusEffects() {
-    BonusEffect current;
-    be = new ArrayList<BonusEffect>();
+    MoveEffect current;
+    _effects = new ArrayList<MoveEffect>();
 
-    for (BonusEffectBase base : BonusEffectBase.getBasesForMoveNumber(number)) {
+    for (BonusEffectBase base : BonusEffectBase.getBasesForMoveNumber(_number)) {
       // Get Bonus Effect type
-      current = BonusEffect.valueOf(base.getType());
+      current = MoveEffect.valueOf(base.getType());
       // Add all attributes, including unused
       current.target = Target.valueOf(base.getTarget());
       current.chance = base.getChance();
       current.percent = base.getPercent();
       current.power = base.getPower();
       // Add to moves list of effects
-      be.add(current);
+      _effects.add(current);
     }
   }
 
-  private String name;
-  private int number, power, pp, ppmax;
-  private double accuracy;
-  private boolean enabled = true;
-  private Type type;
-  private MoveStyle style;
-  private List<BonusEffect> be;
+  private String _name;
+  private int _number, _power, _ppcur, _ppmax;
+  private double _accuracy;
+  private boolean _enabled = true;
+  private Type _type;
+  private MoveStyle _style;
+  private List<MoveEffect> _effects;
 }

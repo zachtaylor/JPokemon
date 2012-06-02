@@ -3,9 +3,9 @@ package jpkmn.pokemon;
 import jpkmn.pokemon.stat.*;
 import lib.PokemonBase;
 
-
 public class StatBlock {
-  public final Stat atk, stk, def, sdf, spd, hp;
+  public final Stat atk, stk, def, sdf, spd;
+  public final Health hp; // necessary so health can do more without cast
 
   public StatBlock(Pokemon p) {
     number = p.number();
@@ -75,9 +75,9 @@ public class StatBlock {
   }
 
   public boolean usePoint(Stat s) {
-    if (points == 0) 
+    if (points == 0)
       return false;
-    else 
+    else
       points--;
 
     if (s == atk)
@@ -88,8 +88,7 @@ public class StatBlock {
       def.usePoint();
     else if (s == sdf)
       sdf.usePoint();
-    else if (s == spd) 
-      spd.usePoint();
+    else if (s == spd) spd.usePoint();
 
     return true;
   }

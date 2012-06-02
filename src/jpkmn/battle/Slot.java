@@ -188,9 +188,9 @@ public class Slot {
       text.add("EFFECTS");
       text.add(leader.name + " used " + move.name + "!");
 
-      for (BonusEffect be : move.be) {
+      for (MoveEffect be : move.be) {
         // Move # 73 (Leech Seed) fix cause it targets both user and enemy
-        if (be == BonusEffect.LEECH) {
+        if (be == MoveEffect.LEECH) {
           enemy.leader.condition.addIssue(Condition.Issue.SEEDED);
           leader.condition.addIssue(Condition.Issue.SEEDUSR);
         }
@@ -287,8 +287,8 @@ public class Slot {
    * @param isFast True to allow making the opponent flinch
    */
   public void applyCurrentMoveEffects(boolean isFast) {
-    for (BonusEffect b : move.be) {
-      if (!(b == BonusEffect.FLINCH) || isFast) {
+    for (MoveEffect b : move.be) {
+      if (!(b == MoveEffect.FLINCH) || isFast) {
         b.effect(enemy.leader);
       }
     }

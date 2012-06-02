@@ -1,14 +1,14 @@
 package jpkmn.pokemon.stat;
 
 public class SpecialDefense extends Stat {
-    public SpecialDefense(int base, int level) {
-        super(base, level);
-        resetMax();
-        cur = max;
-    }
+  public SpecialDefense(int base, int level) {
+    super(base, level);
+    resetMax();
+    _cur = _max;
+  }
 
-    @Override
-    public void resetMax() {
-        max = ((2 * base + pts) * lvl) / 100 + 5;
-    }
+  @Override
+  public void resetMax() {
+    _max = ((2 * _base + _pts) * _lvl) / 100 + 5;
+  }
 }

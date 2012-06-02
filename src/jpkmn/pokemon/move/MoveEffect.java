@@ -3,7 +3,7 @@ package jpkmn.pokemon.move;
 import jpkmn.battle.Target;
 import jpkmn.pokemon.*;
 
-public enum BonusEffect {
+public enum MoveEffect {
 
   ATTACK, DEFENSE, SPECATTACK, SPECDEFENSE, SPEED, BURN, PARALYZE, SLEEP,
   POISON, FREEZE, CONFUSE, WRAP, FLINCH, HEAL, LEECH, KAMIKAZE;
@@ -42,12 +42,12 @@ public enum BonusEffect {
     else if (this == FLINCH)
       p.condition.addIssue(Condition.Issue.FLINCH);
     else if (this == HEAL)
-      p.healDamage((int) (p.stats.hp.max * percent));
+      p.healDamage((int) (p.stats.hp.max() * percent));
     else if (this == KAMIKAZE)
-      p.takeDamage((int) (p.stats.hp.max * percent));
+      p.takeDamage((int) (p.stats.hp.max() * percent));
   }
 
-  public static BonusEffect valueOf(int style) {
+  public static MoveEffect valueOf(int style) {
     switch (style) {
     case 0:
       return ATTACK;

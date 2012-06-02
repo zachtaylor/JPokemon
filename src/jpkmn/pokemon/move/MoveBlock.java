@@ -1,17 +1,16 @@
-package jpkmn.pokemon;
+package jpkmn.pokemon.move;
 
 import java.util.ArrayList;
 
 import lib.MoveMap;
 
-import jpkmn.Driver;
-import jpkmn.gui.Tools;
-import jpkmn.pokemon.move.Move;
+import jpkmn.Constants;
+import jpkmn.pokemon.Pokemon;
 
 public class MoveBlock {
   public MoveBlock(Pokemon p) {
     pkmn = p;
-    moves = new Move[Driver.MOVENUMBER];
+    moves = new Move[Constants.MOVENUMBER];
 
     setDefaults();
   }

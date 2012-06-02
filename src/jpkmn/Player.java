@@ -12,7 +12,7 @@ import jpkmn.pokemon.*;
 
 public class Player {
   public final Bag bag;
-  public final Box box;
+  public final StorageBox box;
   public final Party party;
   public final Pokedex dex;
 
@@ -20,7 +20,7 @@ public class Player {
     Player.serial = serial;
     dex = new Pokedex();
     bag = new Bag();
-    box = new Box();
+    box = new StorageBox();
     party = new Party();
   }
 

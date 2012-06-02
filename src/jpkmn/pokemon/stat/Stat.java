@@ -1,26 +1,52 @@
 package jpkmn.pokemon.stat;
 
-public abstract class Stat {
-  public int cur, max, base, pts;
-  protected int lvl;
+import jpkmn.Constants;
 
-  public Stat(int _base, int _lvl) {
-    base = _base;
-    lvl  = _lvl;
+public abstract class Stat {
+  public Stat(int base, int lvl) {
+    _base = base;
+    _lvl = lvl;
+  }
+
+  public int cur() {
+    return _cur;
+  }
+
+  public int max() {
+    return _max;
+  }
+
+  public int pts() {
+    return _pts;
+  }
+
+  public void setPts(int p) {
+    _pts = p;
+  }
+  
+  public double percentage() {
+    return ((double) _cur) / ((double) _max);
   }
 
   /**
    * Increases the temporary version by max/2
    */
   private void increase() {
-    cur += max / 2;
+    if (_delta == Constants.STATCHANGEMAX) return;
+
+    _delta++;
+    _cur += _max / 2;
   }
 
   /**
    * Decreases the temporary version by *= 3/4
    */
   private void decrease() {
-    cur *= 3 / 4;
+    if (_delta == -Constants.STATCHANGEMAX) return;
+
+    _delta++;
+    _cur *= 3 / 4;
+    if (_cur < 1) _cur = 1;
   }
 
   /**
@@ -34,14 +60,14 @@ public abstract class Stat {
       increase();
     for (int i = 0; i > power; --i)
       decrease();
-    if (cur == 0) cur = 1;
+    if (_cur == 0) _cur = 1;
   }
 
   /**
    * Sets the temporary version the max version
    */
   public void reset() {
-    cur = max;
+    _cur = _max;
   }
 
   public abstract void resetMax();
@@ -50,7 +76,7 @@ public abstract class Stat {
    * Increases the points spent, calls resetMax();
    */
   public void usePoint() {
-    pts++;
+    _pts++;
     resetMax();
   }
 
@@ -60,14 +86,16 @@ public abstract class Stat {
    * @param l New value for the stored lvl variable
    */
   public void setLevel(int l) {
-    lvl = l;
+    _lvl = l;
     resetMax();
     reset();
   }
-  
+
   public void setBase(int b) {
-    base = b;
+    _base = b;
     resetMax();
     reset();
   }
+
+  protected int _cur, _max, _base, _pts, _lvl, _delta;
 }

@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 import lib.PokemonBase;
 
-import jpkmn.gui.*;
+import jpkmn.pokemon.move.MoveBlock;
 
 public class Pokemon {
   public final Condition condition;
@@ -39,7 +39,7 @@ public class Pokemon {
 
   public Pokemon clone() {
     Pokemon p = new Pokemon(number, level);
-    p.stats.hp.cur = this.stats.hp.cur;
+    p.stats.hp.set(this.stats.hp.cur());
     return p;
   }
 
@@ -140,11 +140,8 @@ public class Pokemon {
    * @return the awake state of the Pokemon
    */
   public void takeDamage(int damage) {
-    stats.hp.cur -= damage;
-    if (stats.hp.cur <= 0) {
-      stats.hp.cur = 0;
-      condition.setAwake(false);
-    }
+    stats.hp.effect(-damage);
+    if (stats.hp.cur() == 0) condition.setAwake(false);
   }
 
   /**
@@ -155,10 +152,7 @@ public class Pokemon {
    */
   public void healDamage(int heal) {
     condition.setAwake(true);
-    stats.hp.cur += heal;
-    if (stats.hp.cur > stats.hp.max) {
-      stats.hp.cur = stats.hp.max;
-    }
+    stats.hp.effect(heal);
   }
 
   public boolean canAttack() {
@@ -194,11 +188,11 @@ public class Pokemon {
       Splash.showFatalErrorMessage("Insufficient basic data");
 
     try {
-      p.stats.atk.pts = s.nextInt();
-      p.stats.stk.pts = s.nextInt();
-      p.stats.def.pts = s.nextInt();
-      p.stats.sdf.pts = s.nextInt();
-      p.stats.spd.pts = s.nextInt();
+      p.stats.atk.setPts(s.nextInt());
+      p.stats.stk.setPts(s.nextInt());
+      p.stats.def.setPts(s.nextInt());
+      p.stats.sdf.setPts(s.nextInt());
+      p.stats.spd.setPts(s.nextInt());
       p.stats.resetMaxAll();
     } catch (Exception e) {
       e.printStackTrace();
@@ -229,11 +223,11 @@ public class Pokemon {
   public void toFile(PrintWriter p) {
     p.print("| ( ");
     p.print(number + " " + level + " " + stats.getPoints() + " " + xp + " ) ");
-    p.print(stats.atk.pts + " ");
-    p.print(stats.stk.pts + " ");
-    p.print(stats.def.pts + " ");
-    p.print(stats.sdf.pts + " ");
-    p.print(stats.spd.pts + " ");
+    p.print(stats.atk.pts() + " ");
+    p.print(stats.stk.pts() + " ");
+    p.print(stats.def.pts() + " ");
+    p.print(stats.sdf.pts() + " ");
+    p.print(stats.spd.pts() + " ");
     p.print("( ");
     try {
       for (int i = 0; i < moves.amount(); i++) {
@@ -247,8 +241,8 @@ public class Pokemon {
 
   @Override
   public String toString() {
-    return name + "(" + unique_id + ") LVL. " + level + " HP: " + stats.hp.cur
-        + "/" + stats.hp.max;
+    return name + "(" + unique_id + ") LVL. " + level + " HP: "
+        + stats.hp.cur() + "/" + stats.hp.max();
   }
 
   @Override

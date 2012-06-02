@@ -1,22 +1,30 @@
 package jpkmn.pokemon.stat;
 
-import jpkmn.Driver;
-
 public class Health extends Stat {
 
-    public Health(int base, int level) {
-        super(base, level);
-        resetMax();
-    }
+  public Health(int base, int level) {
+    super(base, level);
+    resetMax();
+  }
 
-    @Override
-    public void resetMax() {
-        max = 10 + lvl + ((2 * base + pts) * lvl) / 100;
-        cur = max;
-    }
+  @Override
+  public void resetMax() {
+    _max = 10 + _lvl + ((2 * _base + _pts) * _lvl) / 100;
+    _cur = _max;
+  }
 
-    public void effect(int power) {
-        // Being here doesn't make sense. Fatal error.
-        Driver.crash(Health.class, "Effect was called on HPStat. Crashing.");
-    }
+  public void effect(int power) {
+    _cur += power;
+    verify();
+  }
+  
+  public void set(int h) {
+    _cur = h;
+    verify();
+  }
+  
+  private void verify() {
+    if (_cur > _max) _cur = _max;
+    if (_cur < 0) _cur = 0;
+  }
 }

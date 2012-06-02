@@ -1,23 +1,17 @@
-package jpkmn.pokemon;
+package jpkmn.pokemon.storage;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import jpkmn.Driver;
-import jpkmn.gui.Splash;
-import jpkmn.gui.Tools;
+import jpkmn.Constants;
+import jpkmn.pokemon.Pokemon;
 
 public class Party {
-
   public Party() {
-    pkmn = new Pokemon[Driver.PARTYSIZE];
     amount = 0;
+    pkmn = new Pokemon[Constants.PARTYSIZE];
   }
 
-  public Pokemon get(int i) {
-    return pkmn[i];
-  }
-  
   /**
    * Gets the current leader of the party
    * 
@@ -63,9 +57,9 @@ public class Party {
   public boolean forceAwakeLeader() {
     if (countAwake() == 0) return false;
 
-    while (!getLeader().isAwake()) {
+    while (!getLeader().isAwake()) 
       swap();
-    }
+    
     return true;
   }
 
@@ -76,7 +70,7 @@ public class Party {
    * @return true if it is added
    */
   public boolean add(Pokemon p) {
-    if (amount == Driver.PARTYSIZE || contains(p)) return false;
+    if (amount == Constants.PARTYSIZE || contains(p)) return false;
 
     pkmn[amount++] = p;
     return true;
@@ -91,8 +85,8 @@ public class Party {
   public int countAwake() {
     int answer = 0;
 
-    for (Pokemon p : pkmn) {
-      if (p != null && p.isAwake()) answer++;
+    for (int i = 0; i < amount; i++) {
+      if (pkmn[i].isAwake()) answer++;
     }
 
     return answer;
@@ -121,9 +115,9 @@ public class Party {
     int index = indexOf(p);
     if (index < 0) return false;
 
-    for (int i = index; i < amount - 1; i++) {
+    for (int i = index; i < amount - 1; i++)
       pkmn[i] = pkmn[i + 1];
-    }
+    
     pkmn[--amount] = null;
 
     return true;
@@ -132,9 +126,9 @@ public class Party {
   public String getNameList() {
     String response = "[";
 
-    for (int i = 0; i < 6; ++i) {
-      if (pkmn[i] != null) response += pkmn[i].name();
-      if (i != 5) response += ", ";
+    for (int i = 0; i < amount; i++) {
+      if (i != 0) response += ", ";
+      response += pkmn[i].name();
     }
 
     return (response + "]");
@@ -146,7 +140,7 @@ public class Party {
    * @param s Scanner to read from
    */
   public void readFile(Scanner s) {
-    for (int i = 0; i < Driver.PARTYSIZE && s.hasNext(); i++) {
+    for (int i = 0; i < Constants.PARTYSIZE && s.hasNext(); i++) {
       String token = s.next();
       if (token.equals("|")) {
         pkmn[i] = Pokemon.fromFile(s);
@@ -174,9 +168,9 @@ public class Party {
   }
 
   private int indexOf(Pokemon p) {
-    for (int i = 0; i < amount; i++) {
+    for (int i = 0; i < amount; i++)
       if (pkmn[i].equals(p)) return i;
-    }
+
     return -1;
   }
 
