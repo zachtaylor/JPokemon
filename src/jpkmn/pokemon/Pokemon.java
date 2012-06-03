@@ -1,13 +1,16 @@
 package jpkmn.pokemon;
 
 import java.util.*;
-import java.io.PrintWriter;
 
 import lib.PokemonBase;
 
+import exceptions.LoadException;
 import jpkmn.pokemon.move.MoveBlock;
+import jpkmn.pokemon.stat.StatBlock;
 
 public class Pokemon {
+  private int a; // flag to do work
+
   public final Condition condition;
   public final StatBlock stats;
   public final MoveBlock moves;
@@ -37,18 +40,18 @@ public class Pokemon {
     unique_id = CURRENT_ID++;
   }
 
-  public Pokemon clone() {
-    Pokemon p = new Pokemon(number, level);
-    p.stats.hp.set(this.stats.hp.cur());
-    return p;
-  }
+  // public Pokemon clone() {
+  // Pokemon p = new Pokemon(number, level);
+  // p.stats.hp.set(this.stats.hp.cur());
+  // return p;
+  // }
 
   /**
    * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
    * points, sets xp = 0, stats adjusted.
    */
   public boolean changeSpecies(int... num) {
-    if (!jpkmn.gui.Tools.askEvolution(this)) return false;
+    // TODO Ask the user if they want to cancel?
 
     if (num == null || num.length == 0)
       number++;
@@ -125,7 +128,7 @@ public class Pokemon {
   /**
    * XP this Pokemon gives if it is defeated
    * 
-   * @return
+   * @return a randomly generated amount of XP
    */
   public int getXPAwarded() {
     double factor = (Math.random() * .5 + 2);
@@ -160,89 +163,76 @@ public class Pokemon {
   }
 
   /**
-   * Used when the user attacks itself in confusion.
-   */
-  public void confusedAttack() {
-    takeDamage(jpkmn.battle.Battle.confusedDamage(this));
-  }
-
-  /**
    * Properly initializes a Pokemon from a file.
    * 
-   * @param s Scanner that points to the file. The '|' character should already
-   *          be consumed
-   * @return A new Pokemon as described by the file
+   * @param s String save representation of the pokemon.
+   * @return A new Pokemon as described by the string
+   * @throws LoadException if loaded with invalid string
    */
-  public static Pokemon fromFile(Scanner s) {
-    if (s == null || !s.hasNextLine()) return null;
+  public static Pokemon createFromString(String s) throws LoadException {
+    if (s != null && !s.equals("||")) {
+      try {
+        Scanner scan = new Scanner(s);
 
-    if (!(s.next().equals("("))) {
-      Splash.showFatalErrorMessage("pokemon load fail");
+        if (!(scan.next().equals("|("))) throw new Exception();
+
+        Pokemon p = new Pokemon(scan.nextInt(), scan.nextInt());
+        p.stats.setPoints(scan.nextInt());
+        p.xp = scan.nextInt();
+
+        if (!scan.next().equals(")")) throw new Exception();
+
+        p.stats.atk.setPts(scan.nextInt());
+        p.stats.stk.setPts(scan.nextInt());
+        p.stats.def.setPts(scan.nextInt());
+        p.stats.sdf.setPts(scan.nextInt());
+        p.stats.spd.setPts(scan.nextInt());
+        p.stats.resetMaxAll();
+
+        if (!scan.next().equals("(")) throw new Exception();
+
+        p.moves.removeAll();
+        for (String next = scan.next(); !next.equals(")"); next = scan.next())
+          p.moves.add(Integer.parseInt(next));
+
+        p.name = scan.nextLine();
+        p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
+        
+        return p;
+
+      } catch (Throwable t) {
+        throw new LoadException("Pokemon loaded with string: " + s);
+      }
     }
 
-    Pokemon p = new Pokemon(s.nextInt(), s.nextInt());
-    p.stats.setPoints(s.nextInt());
-    p.xp = s.nextInt();
-
-    if (!(s.next().equals(")")))
-      Splash.showFatalErrorMessage("Insufficient basic data");
-
-    try {
-      p.stats.atk.setPts(s.nextInt());
-      p.stats.stk.setPts(s.nextInt());
-      p.stats.def.setPts(s.nextInt());
-      p.stats.sdf.setPts(s.nextInt());
-      p.stats.spd.setPts(s.nextInt());
-      p.stats.resetMaxAll();
-    } catch (Exception e) {
-      e.printStackTrace();
-      Splash.showFatalErrorMessage("insufficient stat values");
-    }
-
-    if (!s.next().equals("("))
-      Splash.showFatalErrorMessage("excessive stat values");
-
-    for (String next = s.next(); !next.equals(")"); next = s.next()) {
-      p.moves.add(Integer.parseInt(next));
-    }
-
-    p.name = s.nextLine();
-    if (p.name.indexOf("|") == -1)
-      Splash.showFatalErrorMessage("naming error");
-    p.name = p.name.substring(1, p.name.indexOf("|") - 1);
-
-    return p;
+    return null;
   }
 
   /**
    * Properly writes this Pokemon to a save file
-   * 
-   * @param p Instantiated PrintWriter that points to the file where the
-   *          Pokemon should be written.
    */
-  public void toFile(PrintWriter p) {
-    p.print("| ( ");
-    p.print(number + " " + level + " " + stats.getPoints() + " " + xp + " ) ");
-    p.print(stats.atk.pts() + " ");
-    p.print(stats.stk.pts() + " ");
-    p.print(stats.def.pts() + " ");
-    p.print(stats.sdf.pts() + " ");
-    p.print(stats.spd.pts() + " ");
-    p.print("( ");
+  public String saveToString() {
+    StringBuilder save = new StringBuilder();
+
+    save.append("|( ");
+    save.append(number + " " + level + " " + stats.getPoints() + " " + xp
+        + " ) ");
+    save.append(stats.atk.pts() + " ");
+    save.append(stats.stk.pts() + " ");
+    save.append(stats.def.pts() + " ");
+    save.append(stats.sdf.pts() + " ");
+    save.append(stats.spd.pts() + " ");
+    save.append("( ");
     try {
       for (int i = 0; i < moves.amount(); i++) {
-        p.print(moves.get(i).number() + " ");
+        save.append(moves.get(i).number() + " ");
       }
     } catch (Exception e) {
       // do nothing
     }
-    p.println(") " + name + " |");
-  }
+    save.append(") " + name + " |");
 
-  @Override
-  public String toString() {
-    return name + "(" + unique_id + ") LVL. " + level + " HP: "
-        + stats.hp.cur() + "/" + stats.hp.max();
+    return save.toString();
   }
 
   @Override
@@ -261,8 +251,8 @@ public class Pokemon {
   private void levelUp() {
     xp -= getXPNeeded();
     level++;
-    stats.levelUp();
     moves.check();
+    stats.levelUp();
     condition.reset();
     if (level == evolutionlevel) changeSpecies();
   }

@@ -31,7 +31,7 @@ public abstract class Stat {
   /**
    * Increases the temporary version by max/2
    */
-  private void increase() {
+  public void increase() {
     if (_delta == Constants.STATCHANGEMAX) return;
 
     _delta++;
@@ -41,10 +41,10 @@ public abstract class Stat {
   /**
    * Decreases the temporary version by *= 3/4
    */
-  private void decrease() {
+  public void decrease() {
     if (_delta == -Constants.STATCHANGEMAX) return;
 
-    _delta++;
+    _delta--;
     _cur *= 3 / 4;
     if (_cur < 1) _cur = 1;
   }
@@ -60,7 +60,7 @@ public abstract class Stat {
       increase();
     for (int i = 0; i > power; --i)
       decrease();
-    if (_cur == 0) _cur = 1;
+    if (_cur < 0) _cur = 1;
   }
 
   /**
@@ -97,5 +97,5 @@ public abstract class Stat {
     reset();
   }
 
-  protected int _cur, _max, _base, _pts, _lvl, _delta;
+  int _cur, _max, _base, _pts, _lvl, _delta;
 }

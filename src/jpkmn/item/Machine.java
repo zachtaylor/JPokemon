@@ -2,12 +2,11 @@ package jpkmn.item;
 
 import lib.MoveBase;
 
-import jpkmn.Driver;
 import jpkmn.pokemon.Pokemon;
 import jpkmn.pokemon.move.Move;
 
 public class Machine extends Item {
-  private int a;
+  private int a; // Flag to do work
 
   public Machine(int move, int quantity) {
     super(move, quantity, "TM-" + MoveBase.getBaseForNumber(move).getName());
@@ -25,7 +24,6 @@ public class Machine extends Item {
     }
 
     // TODO : Finish this. Make sure to add(1) if they cancel.
-    jpkmn.gui.Tools.askMove(p, m);
     return false;
   }
 

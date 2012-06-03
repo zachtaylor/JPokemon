@@ -1,4 +1,4 @@
-package exe;
+package exceptions;
 
 public class FatalCrash extends RuntimeException {
   // Keep eclipse happy

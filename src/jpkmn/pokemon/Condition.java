@@ -3,6 +3,7 @@ package jpkmn.pokemon;
 import java.util.ArrayList;
 
 public class Condition {
+  private int a; // flag to do work
 
   public enum Issue {
     BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE,
@@ -53,13 +54,12 @@ public class Condition {
   public void addIssue(Issue i) {
     if (i == Issue.WAIT)
       issues.add(i);
-    else if (!issues.contains(i) && i != Issue.WAIT) {
+    else if (!issues.contains(i)) {
       issues.add(i);
-      jpkmn.gui.Tools.notify(pkmn, i.toString(), pkmn.name() + " is now " + i);
 
-      if (i == Issue.BURN)
-        pkmn.stats.atk.cur /= 2;
-      else if (i == Issue.PARALYZE) pkmn.stats.spd.cur /= 4;
+      // TODO Notify that effect is added
+
+      pkmn.stats.effectBy(i);
     }
   }
 
@@ -91,30 +91,31 @@ public class Condition {
    * chance to dispel.
    */
   public void applyEffects() {
+    // TODO Notifications for all status things
+
     for (Issue current : issues) {
       if (current == Issue.BURN) {
-        pkmn.takeDamage(pkmn.stats.hp.max / 10);
-        jpkmn.gui.Tools.notify(pkmn, "BURN", pkmn.name()
-            + " was hurt by it's burn!");
+        pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+        // TODO Hurt by burn
       }
       else if (current == Issue.WRAP) {
         if (Math.random() > .66666) {
-          jpkmn.gui.Tools.notify(pkmn, "ESCAPE", pkmn.name()
-              + " escaped from it's wrap!");
+          issues.remove(Issue.WRAP);
+          // TODO No longer wrapped
         }
         else {
-          pkmn.takeDamage(pkmn.stats.hp.max / 10);
-          jpkmn.gui.Tools.notify(pkmn, "BURN", pkmn.name()
-              + " was hurt by it's wrap!");
+          pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+          // TODO Hurt by wrap
         }
       }
       else if (current == Issue.CONFUSE) {
-        if (attackself) pkmn.confusedAttack();
-
-        if (Math.random() > .66666) {
+        if (attackself) {
+          // TODO Make pokemon attack itself
+          attackself = false;
+        }
+        else if (Math.random() > .66666) {
           issues.remove(Issue.CONFUSE);
-          jpkmn.gui.Tools.notify(pkmn, "ATTENTION", pkmn.name()
-              + " is no longer confused!");
+          // TODO No longer confused
         }
       }
       else if (current == Issue.FLINCH) {
@@ -123,37 +124,31 @@ public class Condition {
       else if (current == Issue.FREEZE) {
         if (Math.random() > .8) {
           issues.remove(Issue.FREEZE);
-          jpkmn.gui.Tools.notify(pkmn, "ESCAPE", pkmn.name()
-              + " escaped from being frozen!");
+          // TODO No longer frozen
         }
         else {
-          jpkmn.gui.Tools.notify(pkmn, "FROZEN", pkmn.name()
-              + " is still frozen!");
+          // TODO Still frozen
         }
       }
       else if (current == Issue.SEEDED) {
-        pkmn.takeDamage(pkmn.stats.hp.max / 10);
-        jpkmn.gui.Tools.notify(pkmn, "LEECH", pkmn.name()
-            + " was leeched by the seeds!");
+        pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+        // TODO Leeched by seeds
       }
       else if (current == Issue.SEEDUSR) {
-        pkmn.healDamage(pkmn.stats.hp.max / 12);
-        jpkmn.gui.Tools.notify(pkmn, "LEECH", pkmn.name()
-            + " was healed by the seeds!");
+        pkmn.healDamage(pkmn.stats.hp.max() / 12);
+        // TODO Recover health from leech seed
       }
       else if (current == Issue.POISON) {
-        pkmn.takeDamage(pkmn.stats.hp.max / 10);
-        jpkmn.gui.Tools.notify(pkmn, "POISON", pkmn.name()
-            + " was hurt by the toxin!");
+        pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+        // TODO Hurt by poison
       }
       else if (current == Issue.SLEEP) {
         if (Math.random() > .333333) {
           issues.remove(Issue.SLEEP);
-          jpkmn.gui.Tools.notify(pkmn, "AWAKEN", pkmn.name() + " woke up!");
+          // TODO No longer sleeping
         }
         else {
-          jpkmn.gui.Tools.notify(pkmn, "SLEEP", pkmn.name()
-              + " is still sleeping!");
+          // TODO Still sleeping
         }
       }
     }

@@ -8,6 +8,8 @@ import jpkmn.Constants;
 import jpkmn.pokemon.Pokemon;
 
 public class MoveBlock {
+  private int a; // Flag to do work
+  
   public MoveBlock(Pokemon p) {
     pkmn = p;
     moves = new Move[Constants.MOVENUMBER];
@@ -55,7 +57,7 @@ public class MoveBlock {
     if (amount < moves.length)
       position = amount++;
     else
-      position = Tools.askMove(pkmn, new Move(number, pkmn));
+      position = 0; // TODO Ask user what position
 
     add(number, position);
   }
@@ -65,6 +67,13 @@ public class MoveBlock {
       moves[position] = new Move(number, pkmn);
   }
 
+  public void removeAll() {
+    for (int i=0; i<Constants.MOVENUMBER; i++) {
+      moves[i] = null;
+    }
+    amount = 0;
+  }
+  
   /**
    * Picks up to 4 moves randomly from the list of moves that this Pokemon
    * could have learned by this level, and assigns them.

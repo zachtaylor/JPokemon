@@ -3,8 +3,9 @@ package jpkmn.pokemon;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import jpkmn.pokemon.Pokemon;
+import exceptions.LoadException;
 
+import jpkmn.pokemon.Pokemon;
 
 public class Pokedex {
   private boolean[] own;
@@ -51,26 +52,50 @@ public class Pokedex {
     return own[num - 1] ? 2 : seen[num - 1] ? 1 : 0;
   }
 
-  public void toFile(PrintWriter p) {
-    p.print("[ ");
+  public String saveSeenToString() {
+    StringBuilder list = new StringBuilder();
+    list.append("[ ");
+
     for (int i = 0; i < POKEMONNUMBER; i++) {
-      if (seen[i]) p.print(i + " ");
+      if (seen[i]) list.append(i + " ");
 
     }
-    p.print("]\n[ ");
-    for (int i = 0; i < POKEMONNUMBER; i++) {
-      if (own[i]) p.print(i + " ");
+    list.append("]");
 
-    }
-    p.println("]");
+    return list.toString();
   }
 
-  public void readFile(Scanner s) {
-    for (String cur = s.next(); !cur.equals("]"); cur = s.next()) {
+  public String saveOwnToString() {
+    StringBuilder list = new StringBuilder();
+    list.append("[ ");
+
+    for (int i = 0; i < POKEMONNUMBER; i++) {
+      if (own[i]) list.append(i + " ");
+
+    }
+    list.append("]");
+
+    return list.toString();
+  }
+
+  public void readSeen(String s) throws LoadException {
+    Scanner scan = new Scanner(s);
+
+    if (!scan.next().equals("["))
+      throw new LoadException("Pokedex seen read from: " + s);
+
+    for (String cur = scan.next(); !cur.equals("]"); cur = scan.next()) {
       saw(Integer.parseInt(cur) + 1);
     }
-    s.next();
-    for (String cur = s.next(); !cur.equals("]"); cur = s.next()) {
+  }
+
+  public void readOwn(String s) throws LoadException {
+    Scanner scan = new Scanner(s);
+
+    if (!scan.next().equals("["))
+      throw new LoadException("Pokedex own read from: " + s);
+
+    for (String cur = scan.next(); !cur.equals("]"); cur = scan.next()) {
       caught(Integer.parseInt(cur) + 1);
     }
   }

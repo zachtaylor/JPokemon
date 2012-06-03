@@ -1,6 +1,7 @@
-package jpkmn.pokemon;
+package jpkmn.pokemon.stat;
 
-import jpkmn.pokemon.stat.*;
+import jpkmn.pokemon.Condition;
+import jpkmn.pokemon.Pokemon;
 import lib.PokemonBase;
 
 public class StatBlock {
@@ -74,6 +75,10 @@ public class StatBlock {
     return points;
   }
 
+  public void setPoints(int p) {
+    points = p;
+  }
+
   public boolean usePoint(Stat s) {
     if (points == 0)
       return false;
@@ -92,10 +97,30 @@ public class StatBlock {
 
     return true;
   }
+  
+  public void effectBy(Condition.Issue i) {
+    if (i == Condition.Issue.BURN)
+      burn();
+    if (i == Condition.Issue.PARALYZE)
+      paralyze();
+  }
 
-  public void setPoints(int p) {
-    points = p;
+  /**
+   * Applies the status effect of getting paralyzed
+   */
+  private void paralyze() {
+    spd._cur /= 4;
+    if (spd._cur < 1) spd._cur = 1;
+  }
+
+  /**
+   * Applies the status effect of getting burned
+   */
+  private void burn() {
+    atk._cur /= 2;
+    if (atk._cur < 1) atk._cur = 1;
   }
 
   private int number, level, points;
+
 }

@@ -1,105 +1,89 @@
 package jpkmn;
 
-
 import java.io.PrintWriter;
-import java.util.*;
 
-import javax.swing.JOptionPane;
+import exceptions.LoadException;
 
-import jpkmn.gui.Graphics;
-import jpkmn.item.*;
-import jpkmn.pokemon.*;
+import exe.Driver;
+
+import jpkmn.item.Bag;
+import jpkmn.pokemon.Pokedex;
+import jpkmn.pokemon.Pokemon;
+import jpkmn.pokemon.storage.Party;
+import jpkmn.pokemon.storage.PCStorage;
 
 public class Player {
   public final Bag bag;
-  public final StorageBox box;
+  public final PCStorage box;
   public final Party party;
   public final Pokedex dex;
 
-  public Player(String serial) {
-    Player.serial = serial;
+  public Player(String serial) throws LoadException {
+    if (!serial.equals(Driver.officialSerial))
+      throw new LoadException("Improper file version: " + _serial);
+
+    _serial = serial;
     dex = new Pokedex();
     bag = new Bag();
-    box = new StorageBox();
+    box = new PCStorage();
     party = new Party();
   }
 
-  public void createNew() {
-    name = JOptionPane.showInputDialog(null,
-        "Welcome, new player.\nPlease enter your name", "New Player",
-        JOptionPane.QUESTION_MESSAGE);
-
-    Party starters = new Party();
-    starters.add(new Pokemon(1, 5));
-    starters.add(new Pokemon(4, 5));
-    starters.add(new Pokemon(7, 5));
-    int pos = jpkmn.gui.Tools.selectFromParty("Select your starter!", starters);
-    if (pos == -1) return;
-
-    party.add(starters.get(pos));
+  public String name() {
+    return _name;
   }
 
-  public String name() {
-    return name;
+  public void setName(String s) {
+    _name = s;
   }
 
   public int cash() {
-    return cash;
+    return _cash;
   }
 
   public void addCash(int change) {
-    cash += change;
+    _cash += change;
+  }
+
+  public void setCash(int c) {
+    _cash = c;
   }
 
   public int badges() {
-    return badge;
+    return _badge;
   }
 
   public int addBadge() {
-    return ++badge;
+    return ++_badge;
   }
 
-  public void alert(Object o, String... s) {
-    graphics.alert(o, s);
+  public void setBadge(int b) {
+    _badge = b;
   }
 
   public void toFile(PrintWriter p) {
-    p.println(serial);
-    p.println(name);
-    party.toFile(p);
-    p.println(cash + " " + badge);
-    bag.toFile(p);
-    p.println();
-    for (Pokemon pkmn : box) {
-      pkmn.toFile(p);
-    }
-    dex.toFile(p);
+    p.println(_serial);
+    p.println(_name);
+    p.println(_cash);
+    p.println(_badge);
+
+    for (int i = 0; i < Constants.PARTYSIZE; i++)
+      if (party.get(i) != null)
+        p.println(party.get(i).saveToString());
+      else
+        p.println("||");
+
+    p.println(bag.saveToString());
+
+    p.println(dex.saveSeenToString());
+    p.println(dex.saveOwnToString());
+
+    for (Pokemon pkmn : box)
+      p.println(pkmn.saveToString());
+
   }
 
-  public static Player fromFile(Scanner s) {
-    Player p = new Player(s.nextLine());
-    p.name = s.nextLine();
-    p.party.readFile(s);
-
-    p.cash = s.nextInt();
-    p.badge = s.nextInt();
-    p.bag.fromFile(s);
-    s.nextLine();
-    while (s.hasNext() && s.next().equals("|")) {
-      p.box.add(Pokemon.fromFile(s));
-    }
-
-    p.dex.readFile(s);
-
-    return p;
-  }
-
-  public static boolean isCurrent() {
-    return serial.equals(Driver.officialSerial);
-  }
-
-  private String name;
-  private int cash, badge;
-  private static String serial;
-  private Graphics graphics;
+  private String _name;
+  private int _cash, _badge;
+  private String _serial;
 }

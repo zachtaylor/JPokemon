@@ -100,21 +100,22 @@ public class Bag {
     return response;
   }
 
-  public void toFile(PrintWriter p) {
-    p.println();
+  public String saveToString() {
+    StringBuffer s = new StringBuffer();
+    
     for (int i = 0; i < 4; i++) {
-      p.print(potions[i].getQuantity() + " ");
-      p.print(balls[i].getQuantity() + " ");
+      s.append(potions[i].getQuantity() + " ");
+      s.append(balls[i].getQuantity() + " ");
     }
     for (int i = 0; i < 5; i++) {
-      p.print(xstat[i].getQuantity() + " ");
-      p.print(stone[i].getQuantity() + " ");
+      s.append(xstat[i].getQuantity() + " ");
+      s.append(stone[i].getQuantity() + " ");
     }
-    p.println();
+    
+    return s.toString();
   }
 
   public void fromFile(Scanner s) {
-    s.nextLine();
     for (int i = 0; i < 4; i++) {
       potions[i].add(s.nextInt());
       balls[i].add(s.nextInt());

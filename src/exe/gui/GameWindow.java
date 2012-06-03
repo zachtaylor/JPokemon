@@ -6,9 +6,10 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import exceptions.BattleEndException;
+
 import jpkmn.*;
 import jpkmn.battle.Battle;
-import jpkmn.battle.BattleEndException;
 import jpkmn.pokemon.Pokemon;
 
 public class GameWindow extends JFrame {

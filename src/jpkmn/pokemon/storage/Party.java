@@ -1,15 +1,22 @@
 package jpkmn.pokemon.storage;
 
-import java.io.PrintWriter;
-import java.util.Scanner;
+import java.util.Iterator;
 
 import jpkmn.Constants;
 import jpkmn.pokemon.Pokemon;
 
-public class Party {
+public class Party implements Iterable<Pokemon> {
+  private int a; // flag to do work
+
   public Party() {
     amount = 0;
     pkmn = new Pokemon[Constants.PARTYSIZE];
+  }
+
+  public Pokemon get(int i) {
+    if (i < 0 || i > amount) return null;
+
+    return pkmn[i];
   }
 
   /**
@@ -36,7 +43,7 @@ public class Party {
    * @return True if a swap occurred
    */
   public boolean swap() {
-    int lead = Tools.selectFromParty("Select a new leader", this);
+    int lead = 1; // TODO Ask user for position
 
     if (lead > 0 && lead < amount) {
       Pokemon swap = pkmn[0];
@@ -57,9 +64,9 @@ public class Party {
   public boolean forceAwakeLeader() {
     if (countAwake() == 0) return false;
 
-    while (!getLeader().isAwake()) 
+    while (!getLeader().isAwake())
       swap();
-    
+
     return true;
   }
 
@@ -70,7 +77,8 @@ public class Party {
    * @return true if it is added
    */
   public boolean add(Pokemon p) {
-    if (amount == Constants.PARTYSIZE || contains(p)) return false;
+    if (p == null || amount == Constants.PARTYSIZE || contains(p))
+      return false;
 
     pkmn[amount++] = p;
     return true;
@@ -117,7 +125,7 @@ public class Party {
 
     for (int i = index; i < amount - 1; i++)
       pkmn[i] = pkmn[i + 1];
-    
+
     pkmn[--amount] = null;
 
     return true;
@@ -134,39 +142,6 @@ public class Party {
     return (response + "]");
   }
 
-  /**
-   * Constructs a party from a file
-   * 
-   * @param s Scanner to read from
-   */
-  public void readFile(Scanner s) {
-    for (int i = 0; i < Constants.PARTYSIZE && s.hasNext(); i++) {
-      String token = s.next();
-      if (token.equals("|")) {
-        pkmn[i] = Pokemon.fromFile(s);
-        ++amount;
-      }
-      else {
-        if (!token.equals("||"))
-          Splash.showFatalErrorMessage("Error reading party");
-      }
-    }
-  }
-
-  /**
-   * Prints all of the pokemon in this party in 6 lines
-   * 
-   * @param p File to print to
-   */
-  public void toFile(PrintWriter p) {
-    for (int i = 0; i < 6; i++) {
-      if (pkmn[i] == null)
-        p.println("||");
-      else
-        pkmn[i].toFile(p);
-    }
-  }
-
   private int indexOf(Pokemon p) {
     for (int i = 0; i < amount; i++)
       if (pkmn[i].equals(p)) return i;
@@ -176,4 +151,33 @@ public class Party {
 
   private int amount;
   private Pokemon[] pkmn;
+
+  @Override
+  public Iterator<Pokemon> iterator() {
+    return new PartyIterator(this);
+  }
+
+  private class PartyIterator implements Iterator<Pokemon> {
+    public PartyIterator(Party p) {
+      _party = p;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return position < _party.amount;
+    }
+
+    public Pokemon next() {
+      return _party.get(position++);
+    }
+
+    @Override
+    public void remove() {
+      // Not needed
+    }
+
+    private int position = 0;
+    private Party _party;
+  }
+
 }

@@ -1,4 +1,4 @@
-package jpkmn.battle;
+package exceptions;
 
 public class BattleEndException extends Exception {
   private int exitStatus;

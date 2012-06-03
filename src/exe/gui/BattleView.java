@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import exceptions.BattleEndException;
+
 import jpkmn.*;
 import jpkmn.battle.*;
 

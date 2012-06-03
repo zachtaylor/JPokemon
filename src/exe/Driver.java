@@ -7,10 +7,11 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 
-public class Driver {
+import exceptions.FatalCrash;
 
-  public static String officialSerial = "jpkmn build-ver 0.2.2";
-  
+public class Driver {
+  public static final String officialSerial = "jpkmn build-ver 0.2.3";
+
   public static Preferences prefs;
   public static boolean debug, console;
 
@@ -20,10 +21,8 @@ public class Driver {
     // Special mode
     if (args.length > 0 && args[0].charAt(0) == '-') {
       System.out.println("Arguments specified: " + args.toString());
-      if (args[0].contains("d"))
-        debug = true;
-      if (args[0].contains("c"))
-        console = true;
+      if (args[0].contains("d")) debug = true;
+      if (args[0].contains("c")) console = true;
     }
 
     // Crash recovery
@@ -43,17 +42,16 @@ public class Driver {
       return;
     }
 
-    new Splash(officialSerial); // Serial for versioning purposes
+    // new Splash(officialSerial); // Serial for versioning purposes
   }
 
   public static <T> void crash(Class<T> c, String s) {
-    if (debug)
-      System.out.println("CRASH " + c.toString() + " : " + s);
+    if (debug) System.out.println("CRASH " + c.toString() + " : " + s);
     log.append("CRASH " + c.toString() + " : " + s + "\n");
 
     prefs.putBoolean("crash", true);
     prefs.put("log", log.toString());
-    Tools.crashReport();
+    // Tools.crashReport();
     throw new FatalCrash();
   }
 
