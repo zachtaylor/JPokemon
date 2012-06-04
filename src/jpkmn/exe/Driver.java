@@ -5,8 +5,7 @@ public class Driver {
   public static boolean debug, console;
 
   public static void main(String[] args) {
-    // Read Constants
-    
+    // Do nothing yet...
   }
 
   private static StringBuilder log = new StringBuilder();
