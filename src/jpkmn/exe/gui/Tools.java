@@ -14,55 +14,6 @@ public class Tools {
   static GameWindow game;
   static MessageView messages;
 
-  /**
-   * Retrieves the Image to be used for an object
-   * 
-   * @param o Object to get the image of.
-   * @return Image for that object
-   */
-  public static Image findImage(Object o) {
-    if (o instanceof Pokemon)
-      return getImage((Pokemon) o);
-    else if (o instanceof Item)
-      return getImage((Item) o);
-    else
-      return getImage(o.toString());
-  }
-  
-  private static Image getImage(String path) {
-    URL url = Graphics.class.getResource("../img/" + path + ".png");
-    if (url == null) url = Graphics.class.getResource("../img/err.png");
-    return new ImageIcon(url).getImage();
-  }
-
-  private static Image getImage(Pokemon p) {
-    return getImage("pkmn/" + p.number());
-  }
-
-  private static Image getImage(Item i) {
-    String dest = "item/";
-
-    if (i instanceof Ball) {
-      dest += "ball/" + i.getName().toLowerCase().charAt(0);
-    }
-    else if (i instanceof Machine) {
-      dest += "machine";
-    }
-    else if (i instanceof Potion) {
-      dest += "potion/" + i.getName().toLowerCase().charAt(0);
-    }
-    else if (i instanceof Stone) {
-      dest += "stone/"
-          + i.getName().substring(0, i.getName().indexOf("stone"))
-              .toLowerCase();
-    }
-    else {
-      dest += "xstat";
-    }
-
-    return getImage(dest);
-  }
-
   public static void createMessageWindow() {
     messages = new MessageView();
     messages.setLocationRelativeTo(game);

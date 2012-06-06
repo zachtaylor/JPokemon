@@ -6,8 +6,6 @@ import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
 
 public class Party implements Iterable<Pokemon> {
-  private int a; // flag to do work
-
   public Party() {
     amount = 0;
     pkmn = new Pokemon[Constants.PARTYSIZE];
@@ -40,23 +38,21 @@ public class Party implements Iterable<Pokemon> {
   /**
    * Swaps pokemon in this party.
    * 
-   * @return True if a swap occurred
+   * @return True if valid swap
    */
-  public boolean swap() {
-    int lead = 1; // TODO Ask user for position
+  public boolean swap(int index1, int index2) {
+    if (index1 < 0 || index2 < 0) return false;
+    if (index1 >= amount || index2 >= amount) return false;
 
-    if (lead > 0 && lead < amount) {
-      Pokemon swap = pkmn[0];
-      pkmn[0] = pkmn[lead];
-      pkmn[lead] = swap;
-      return true;
-    }
+    Pokemon swap = pkmn[index1];
+    pkmn[index1] = pkmn[index2];
+    pkmn[index2] = swap;
 
-    return false;
+    return true;
   }
 
   /**
-   * Repetitively calls swap until the leader is awake. May fail if number of
+   * Repetitively calls swap until the leader is awake. Fails if number of
    * awake pokemon is 0.
    * 
    * @return True if the leader is awake
@@ -64,10 +60,13 @@ public class Party implements Iterable<Pokemon> {
   public boolean forceAwakeLeader() {
     if (countAwake() == 0) return false;
 
-    while (!getLeader().isAwake())
-      swap();
+    for (int i = 0; i < amount; ++i) {
+      if (pkmn[i].condition.getAwake()) {
+        return swap(0, i);
+      }
+    }
 
-    return true;
+    return false;
   }
 
   /**
@@ -149,9 +148,6 @@ public class Party implements Iterable<Pokemon> {
     return -1;
   }
 
-  private int amount;
-  private Pokemon[] pkmn;
-
   @Override
   public Iterator<Pokemon> iterator() {
     return new PartyIterator(this);
@@ -180,4 +176,6 @@ public class Party implements Iterable<Pokemon> {
     private Party _party;
   }
 
+  private int amount;
+  private Pokemon[] pkmn;
 }

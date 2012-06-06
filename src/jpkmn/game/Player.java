@@ -16,6 +16,8 @@ public class Player {
   public final PCStorage box;
   public final Party party;
   public final Pokedex dex;
+  
+  public static int UNIQUE_ID = 0;
 
   public Player(String serial) throws LoadException {
     if (!serial.equals(Driver.officialSerial))
@@ -82,7 +84,13 @@ public class Player {
 
   }
 
-  private String _name;
+  public boolean equals(Object o) {
+    if (!(o instanceof Player))
+      return false;
+    return ((Player) o)._id == _id;
+  }
+  
+  int _id;
+  private String _name, _serial;
   private int _cash, _badge;
-  private String _serial;
 }

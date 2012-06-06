@@ -1,4 +1,4 @@
-package jpkmn.exe.gui.splash;
+package jpkmn.exe.launcher;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -6,15 +6,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class ConnectButton extends JButton implements ActionListener {
+public class PlayButton extends JButton implements ActionListener {
   private int a; // Flag to do work
 
-  public ConnectButton(Launcher l) {
-    super("Connect");
+  public PlayButton(Launcher l) {
+    super("Play");
 
     _launcher = l;
 
-    setBackground(new Color(77, 206, 77));
+    setBackground(new Color(206, 77, 77));
     setBorderPainted(false);
     setFocusable(false);
 

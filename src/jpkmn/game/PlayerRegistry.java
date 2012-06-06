@@ -13,7 +13,9 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.exe.Driver;
 import jpkmn.game.pokemon.Pokemon;
 
-public class PlayerFactory {
+public class PlayerRegistry {
+  public static int UNIQUE_ID;
+  
   public static Player createNew() {
     try {
       Player newPlayer = new Player(Driver.officialSerial);
@@ -73,6 +75,7 @@ public class PlayerFactory {
     else if (names.contains(p.name()))
       throw new LoadException("Player is already registered: " + p.name());
 
+    p._id = UNIQUE_ID++;
     names.add(p.name());
   }
 

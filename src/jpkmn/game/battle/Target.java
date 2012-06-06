@@ -1,4 +1,4 @@
-package jpkmn.battle;
+package jpkmn.game.battle;
 
 public enum Target {
   SELF, ENEMY;

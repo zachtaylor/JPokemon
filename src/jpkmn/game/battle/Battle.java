@@ -1,11 +1,14 @@
-package jpkmn.battle;
+package jpkmn.game.battle;
 
-import exceptions.BattleEndException;
-import jpkmn.Player;
-import jpkmn.item.*;
-import jpkmn.pokemon.*;
-import jpkmn.pokemon.move.*;
-import jpkmn.pokemon.storage.Party;
+import java.util.ArrayList;
+import java.util.List;
+
+import jpkmn.exceptions.BattleEndException;
+import jpkmn.game.Player;
+import jpkmn.game.item.*;
+import jpkmn.game.pokemon.*;
+import jpkmn.game.pokemon.move.*;
+import jpkmn.game.pokemon.storage.Party;
 
 /**
  * A battle. Responds to to events from the BattleWindow in general terms, such
@@ -13,28 +16,14 @@ import jpkmn.pokemon.storage.Party;
  * This class is a more abstracted view of a battle.
  */
 public class Battle {
-  public BattleView window;
-  public Slot user, enemy;
-
   boolean wild = true, gym = false;
 
-  private Player player;
-  private Slot fast;
-  private Slot slow;
-  private Party participants;
-
-  public Battle(Player p, Party e) throws BattleEndException {
-    player = p;
-    user = new Slot(player.party, true);
-    enemy = new Slot(e, false);
-    user.enemy = enemy;
-    enemy.enemy = user;
-    participants = new Party(user.leader);
-    set();
+  public Battle() {
+    _turns = new ArrayList<Turn>();
   }
-
-  public Battle(Player p, Pokemon pkmn) throws BattleEndException {
-    this(p, new Party(pkmn));
+  
+  public void addPlayer(Player p) {
+    
   }
 
   /**
@@ -42,7 +31,7 @@ public class Battle {
    * are set up or change, after speed changes, etc.
    */
   public void set() throws BattleEndException {
-
+    /** TODO
     // tie goes to the enemy for speed
     if (user.leader.speed.cur > enemy.leader.speed.cur) {
       fast = user;
@@ -63,13 +52,13 @@ public class Battle {
     checkAwake();
 
     if (!participants.contains(user.leader)) {
-      Driver.log(Battle.class, user.leader.name + " added to participants.");
       participants.add(user.leader);
     }
 
     if (window != null) window.reload();
 
     player.dex.saw(enemy.leader);
+    **/
   }
 
   /**
@@ -78,30 +67,25 @@ public class Battle {
    * @throws BattleEndException to end the battle
    */
   public void fight() throws BattleEndException {
-    Driver.log(Battle.class, "Fight selected");
-
+    /** TODO
     // Choose moves. If cancelled, back out of the fight choice
     if (!user.chooseMove()) {
-      Driver.log(Battle.class, "No move selected. Fight cancelled.");
       return;
     }
     enemy.chooseMove();
 
     // Quick Attack fixes
     if (user.getMove().number == 100) {
-      Driver.log(Battle.class, "User set to fast because of Quick Attack");
       fast = user;
       slow = enemy;
     }
     // Enemy still gets speed advantage
     if (enemy.getMove().number == 100) {
-      Driver.log(Battle.class, "Enemy set to fast because of Quick Attack");
       fast = enemy;
       slow = user;
     }
 
     // Attacks
-    Driver.log(Battle.class, fast.leader.name + " is fastest this round.");
     fast.attack();
     applyEffects(fast);
     slow.attack();
@@ -110,96 +94,37 @@ public class Battle {
     set();
 
     if (user.leader.condition.contains(Issue.WAIT)) {
-      Driver.log(Battle.class, "Leader (" + user.leader.name
-          + ") contains wait effect in " + user.leader.condition.toString()
-          + ". Calling fight recursively.");
       fight();
     }
+    **/
   }
 
-  /**
-   * Apply status effects at the end of the turn, using the slot specified as
-   * the user's slot.
-   * 
-   * @throws BattleEndException If applying effects ended the battle
-   */
-  private void applyEffects(Slot s) throws BattleEndException {
-    s.applyCurrentMoveEffects(s == fast);
-    checkAwake();
-  }
+  public void item(Slot slot) throws BattleEndException {
+    Pokemon user = slot.getLeader();
+    Item i = null; // TODO Ask for item
 
-  public void addEnemy(Pokemon p) throws BattleEndException {
-    if (!enemy.party.add(p))
-      Driver.crash(Battle.class,
-          "More than 6 Pokemon attempted added to enemy party : " + p.name);
-    Driver.log(Battle.class, p.name + " added to enemy party");
-    set();
-  }
-
-  public void item() throws BattleEndException {
-    Driver.log(Battle.class, "Item selected");
-    // Get item to use
-    Item i = Tools.item(player.bag);
-
-    // If they cancelled, exit
-    if (i == null) {
-      Driver.log(Battle.class, "Item selection cancelled.");
-      return;
-    }
-    else if (i.getQuantity() == 0) {
-      Driver.log(Battle.class,
-          "Item selection failed. Not enough of: " + i.toString());
-      Tools.notify("err", "Uh...", "You don't have enough of " + i.getName()
-          + ".", "Item use cancelled.");
-      return;
-    }
-    Driver.log(Battle.class, "Item selected = " + i.name());
+    if (i == null || i.getQuantity() == 0) return;
 
     // Items used on self : Potion, Machine, XStat, Stone
-    if (i.target == Target.SELF) {
-
-      // Don't allow Stones or Machines in battle
-      if (i instanceof Stone || i instanceof Machine) {
-        Driver.log(Battle.class, i.getName() + "s cannot be used in battle.");
-        Tools.notify(i, i.name(), i.getName() + "s cannot be used in battle!");
-        return;
-      }
-
-      // Select target pokemon
-      Tools.notify(i.name(), i.name(), "Who do you want to use this on?");
-      int target = Tools.selectFromParty("Who do you want to use this on?",
-          user.party);
+    if (i instanceof Potion) {
+      int target = -1; // TODO Ask who they want to use it on
 
       // If they cancelled, exit
-      if (target == -1) {
-        Driver.log(Battle.class, "Use cancelled for item = " + i.name());
-        return;
-      }
+      if (target == -1) return;
 
       // Effect the target
-      i.effect(user.party.pkmn[target]);
+      i.effect(user.get(target));
 
       // Enemy attacks
       enemy.chooseMove();
       enemy.attack();
       checkAwake();
       applyEffects(enemy);
-
     }
-    // Items used on enemy : Ball
-    else {
+    else if (i instanceof Ball) {
+      if (!wild) return;
 
-      // Can only catch wild pokemon!
-      if (!wild) {
-        Tools.notify(enemy.leader, "PLAY FAIR!",
-            "You can only catch wild Pokemon!");
-        return;
-      }
-
-      // Success
       if (i.effect(enemy.leader)) {
-        Tools.notify(enemy.leader, "SUCCESS", enemy.leader.name
-            + " was caught!");
         if (!user.party.add(enemy.leader)) player.box.add(enemy.leader);
         player.dex.caught(enemy.leader);
         enemy.party.remove(enemy.leader);
@@ -208,15 +133,11 @@ public class Battle {
         // Essentially the same as checkAwake, but you don't win()
         if (enemy.party.countAwake() == 0)
           throw new BattleEndException(0);
-        else if (!enemy.doSwap()) {
-          Driver.crash(Battle.class, "party.countAwake reported != 0, but "
-              + "Slot.doSwap() didn't perform swap for AI.");
-        }
+        else
+          enemy.doSwap();
       }
       // Failure
       else {
-        Tools.notify(enemy.leader, "FAILURE", "Y U NO GET CAUGHT!?");
-
         // Enemy attacks
         enemy.chooseMove();
         enemy.attack();
@@ -232,13 +153,14 @@ public class Battle {
    * @throws BattleEndException If the battle ends
    */
   public void swap() throws BattleEndException {
-    Driver.log(Battle.class, "Swap selected.");
+    /** TODO
     if (user.doSwap()) {
       enemy.chooseMove();
       enemy.attack();
       applyEffects(enemy);
     }
     set();
+    **/
   }
 
   /**
@@ -248,7 +170,7 @@ public class Battle {
    * @throws BattleEndException If the battle ends
    */
   public void run() throws BattleEndException {
-    Driver.log(Battle.class, "Run selected");
+    /** TODO
     double chance = user.leader.speed.cur * 32;
     chance /= enemy.leader.speed.cur;
     chance += 30;
@@ -264,6 +186,7 @@ public class Battle {
       checkAwake();
       applyEffects(enemy);
     }
+    **/
   }
 
   /**
@@ -274,35 +197,44 @@ public class Battle {
    * @param victim Victim of the move
    * @return Integer value of the move
    */
-  public static int computeDamage(Move move, Pokemon user, Pokemon victim) {
-    double damage = 1.0, L = user.level, A = 1.0, P = move.power, D = 0, STAB = move
+  public static int computeDamage(Move move, Pokemon victim) {
+    Pokemon user = move.pkmn;
+
+    double damage = 1.0, L = user.level(), A = 1.0, P = move.power(), D = 0, STAB = move
         .STAB(), E = move.effectiveness(victim), R = Math.random() * .15 + .85;
-    if (move.style == MoveStyle.SPECIAL) {
-      A = user.specattack.cur;
-      D = victim.specdefense.cur;
+
+    if (move.style() == MoveStyle.SPECIAL) {
+      A = user.stats.stk.cur();
+      D = victim.stats.sdf.cur();
     }
-    else if (move.style == MoveStyle.PHYSICAL) {
-      A = user.attack.cur;
-      D = victim.defense.cur;
+    else if (move.style() == MoveStyle.PHYSICAL) {
+      A = user.stats.atk.cur();
+      D = victim.stats.def.cur();
     }
-    else if (move.style == MoveStyle.OHKO) {
+    else if (move.style() == MoveStyle.OHKO) {
       A = 10000000;
       D = 1;
     }
-    else if (move.style == MoveStyle.DELAY) {
-      A = user.attack.cur > user.specattack.cur ? user.attack.cur
-          : user.specattack.cur;
-      D = victim.defense.cur > victim.specdefense.cur ? victim.defense.cur
-          : victim.specdefense.cur;
+    else if (move.style() == MoveStyle.DELAY) {
+      if (user.stats.atk.cur() > user.stats.stk.cur())
+        A = user.stats.atk.cur();
+      else
+        A = user.stats.stk.cur();
+      if (victim.stats.def.cur() > victim.stats.sdf.cur())
+        D = victim.stats.def.cur();
+      else
+        D = victim.stats.sdf.cur();
     }
+
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R;
+
     if (damage < 1 && E != 0) damage = 1;
+
     return (int) damage;
   }
 
   private boolean checkAwake() throws BattleEndException {
     if (!user.leader.awake) {
-      Driver.log(Battle.class, user.leader.name + " is unconscious.");
       if (user.party.countAwake() == 0)
         lose();
       else
@@ -310,13 +242,12 @@ public class Battle {
     }
 
     if (!enemy.leader.awake) {
-      Driver.log(Battle.class, enemy.leader.name + " is defeated.");
       payxp();
       if (enemy.party.countAwake() == 0)
         win();
       else if (!enemy.doSwap()) {
-        Driver.crash(Battle.class, "countAwake reported != 0, but "
-            + "Slot.doSwap() didn't perform swap for AI.");
+        // Driver.crash(Battle.class, "countAwake reported != 0, but "
+        // + "Slot.doSwap() didn't perform swap for AI.");
       }
     }
 
@@ -327,13 +258,9 @@ public class Battle {
     int xpwon = enemy.leader.xpGiven();
     if (!wild) xpwon *= 1.5;
 
-    Driver.log(Battle.class, xpwon + "xp per " + participants.countAwake()
-        + " participants = " + (xpwon /= participants.countAwake()));
-
     for (Pokemon p : participants.pkmn) {
       if (p != null && p.awake) {
-        Driver.log(Battle.class, "xp payed to : " + p.name
-            + (p.awake ? " awake" : " asleep"));
+
         p.gainExperience(xpwon);
       }
     }
@@ -386,4 +313,7 @@ public class Battle {
     double L = p.level, A = p.attack.cur, P = 40, D = p.defense.cur, STAB = 1, E = 1, R = 1.00;
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
+
+  private Map
+  private List<Turn> _turns;
 }

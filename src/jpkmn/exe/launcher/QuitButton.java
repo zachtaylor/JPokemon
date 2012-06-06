@@ -1,4 +1,4 @@
-package jpkmn.exe.gui.splash;
+package jpkmn.exe.launcher;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

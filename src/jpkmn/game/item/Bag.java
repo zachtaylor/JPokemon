@@ -18,11 +18,11 @@ public class Bag {
     balls[3] = new Ball(2550, 0, "Master Ball");
     
     xstat = new XStat[5];
-    xstat[0] = new XStat(0, 0, XStat.Type.ATTACK);
-    xstat[1] = new XStat(0, 0, XStat.Type.SATTACK);
-    xstat[2] = new XStat(0, 0, XStat.Type.DEFENSE);
-    xstat[3] = new XStat(0, 0, XStat.Type.SDEFENSE);
-    xstat[4] = new XStat(0, 0, XStat.Type.SPEED);
+    xstat[0] = new XStat(0, 0, XStat.Kind.ATTACK);
+    xstat[1] = new XStat(0, 0, XStat.Kind.SATTACK);
+    xstat[2] = new XStat(0, 0, XStat.Kind.DEFENSE);
+    xstat[3] = new XStat(0, 0, XStat.Kind.SDEFENSE);
+    xstat[4] = new XStat(0, 0, XStat.Kind.SPEED);
 
     stone = new Stone[5];
     stone[0] = new Stone(0, 0, Stone.Type.FIRE);

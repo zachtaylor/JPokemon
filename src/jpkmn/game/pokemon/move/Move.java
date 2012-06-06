@@ -31,7 +31,7 @@ public class Move {
     _accuracy = base.getAccuracy();
     _type = Type.valueOf(base.getType());
     _style = MoveStyle.valueOf(base.getStyle());
-
+    
     setBonusEffects();
   }
 
@@ -132,6 +132,10 @@ public class Move {
     return _number == ((Move) o)._number;
   }
 
+  public List<MoveEffect> getMoveEffects() {
+    return _effects;
+  }
+  
   /**
    * Loads and sets all the bonus effects for a move
    */
@@ -151,7 +155,7 @@ public class Move {
       _effects.add(current);
     }
   }
-
+  
   private String _name;
   private int _number, _power, _ppcur, _ppmax;
   private double _accuracy;
