@@ -11,15 +11,14 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.Party;
 import jpkmn.game.pokemon.storage.PCStorage;
 
-public class Player {
+public class Player extends Trainer {
   public final Bag bag;
   public final PCStorage box;
-  public final Party party;
   public final Pokedex dex;
-  
-  public static int UNIQUE_ID = 0;
 
   public Player(String serial) throws LoadException {
+    super(); 
+    
     if (!serial.equals(Driver.officialSerial))
       throw new LoadException("Improper file version: " + _serial);
 
@@ -27,15 +26,6 @@ public class Player {
     dex = new Pokedex();
     bag = new Bag();
     box = new PCStorage();
-    party = new Party();
-  }
-
-  public String name() {
-    return _name;
-  }
-
-  public void setName(String s) {
-    _name = s;
   }
 
   public int cash() {
@@ -81,7 +71,6 @@ public class Player {
 
     for (Pokemon pkmn : box)
       p.println(pkmn.saveToString());
-
   }
 
   public boolean equals(Object o) {
@@ -91,6 +80,6 @@ public class Player {
   }
   
   int _id;
-  private String _name, _serial;
+  private String _serial;
   private int _cash, _badge;
 }

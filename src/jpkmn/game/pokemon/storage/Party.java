@@ -43,6 +43,7 @@ public class Party implements Iterable<Pokemon> {
   public boolean swap(int index1, int index2) {
     if (index1 < 0 || index2 < 0) return false;
     if (index1 >= amount || index2 >= amount) return false;
+    if (index1 == index2) return false;
 
     Pokemon swap = pkmn[index1];
     pkmn[index1] = pkmn[index2];
@@ -81,7 +82,6 @@ public class Party implements Iterable<Pokemon> {
 
     pkmn[amount++] = p;
     return true;
-
   }
 
   /**

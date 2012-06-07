@@ -1,20 +1,21 @@
 package jpkmn.game.battle;
 
-import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveEffect;
 
 public class Turn {
+  private int a; 
+  
   public Turn(Move m, Slot target) {
     _move = m;
-    _target = target;
+    _slot = target;
     _mode = Mode.ATTACK;
   }
 
-  public Turn(Item i, Slot target) {
-    _mode = Mode.ITEM;
+  public int damage() {
+    return _strength;
   }
 
   public void setAbsoluteDamage(int d) {
@@ -22,23 +23,21 @@ public class Turn {
     _absolute = true;
   }
 
-  public int damage() {
-    return _strength;
-  }
-
   public void nullify(String reason) {
     // TODO
   }
 
   public void execute() {
-    _strength = Battle.computeDamage(_move, _target.getLeader());
+    if (_mode == Mode.ATTACK) {
+      _strength = Battle.computeDamage(_move, _slot.getLeader());
 
-    if (_absolute)
-      _target.takeDamageAbsolute(_strength);
-    else
-      _target.takeDamage(this);
+      if (_absolute)
+        _slot.takeDamageAbsolute(_strength);
+      else
+        _slot.takeDamage(this);
 
-    applyMoveEffects();
+      applyMoveEffects();
+    }
 
     sendNotifications();
   }
@@ -49,7 +48,7 @@ public class Turn {
 
   private void applyMoveEffects() {
     Pokemon leader = _move.pkmn;
-    Pokemon enemy = _target.getLeader();
+    Pokemon enemy = _slot.getLeader();
 
     for (MoveEffect be : _move.getMoveEffects()) {
       // Move # 73 (Leech Seed) fix cause it targets both user and enemy
@@ -65,12 +64,13 @@ public class Turn {
   }
 
   private enum Mode {
-    SWAP, ITEM, RUN, ATTACK;
+    SWAP, ITEM, ATTACK;
   }
 
   private Move _move;
-  private Mode _mode;
-  private Slot _target;
+  private Slot _slot;
   private int _strength;
   private boolean _absolute;
+  
+  private Mode _mode;
 }

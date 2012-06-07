@@ -1,6 +1,5 @@
 package jpkmn.game.battle;
 
-import jpkmn.game.Player;
 import jpkmn.game.pokemon.Condition.Issue;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
@@ -8,9 +7,10 @@ import jpkmn.game.pokemon.move.MoveStyle;
 import jpkmn.game.pokemon.storage.Party;
 
 public class Slot {
-  public Slot(Player player) {
-    _player = player;
-    _party = player.party;
+  private int a;
+  
+  public Slot(Party p) {
+    _party = p;
     _field = new Field(this);
     _bide = false;
     _human = false; // TODO getLeader().isAskable();
@@ -26,11 +26,10 @@ public class Slot {
 
   public boolean chooseMove() {
     Pokemon leader = getLeader();
+    int position;
 
     // Must keep using the same move
     if (leader.condition.contains(Issue.WAIT)) return true;
-
-    int position;
 
     if (_human) {
       position = 0; // TODO Ask for position
@@ -45,13 +44,26 @@ public class Slot {
   }
 
   public boolean chooseItem() {
+    // TODO
 
     return true;
   }
 
-  public boolean chooseTarget() {
+  public boolean chooseSwapPosition() {
     // TODO
 
+    return true;
+  }
+
+  public boolean chooseAttackTarget() {
+    // TODO
+
+    return true;
+  }
+  
+  public boolean chooseItemTarget() {
+    // TODO
+    
     return true;
   }
 
@@ -109,11 +121,22 @@ public class Slot {
     return turn;
   }
 
-  public void item() {
-    Pokemon leader = getLeader();
-    Turn turn = new Turn(move, _target);
+  public Turn item() {
+    // TODO
+    return null;
   }
 
+  public Turn swap() {
+    // TODO
+    return null;
+  }
+
+  public boolean run() {
+    // TODO
+    
+    return true;
+  }
+  
   public void takeDamage(Turn turn) {
     _field.effect(turn);
     takeDamageAbsolute(turn.damage());
@@ -127,40 +150,10 @@ public class Slot {
     _field.rollDownDuration();
   }
 
-  public void applyEffects() {
-    getLeader().condition.applyEffects();
-  }
-
-  /**
-   * Calls party.doSwap(). Necessary to abstract human/AI. For AI, steps
-   * through to find the first awake Pokemon, and switches with the leader.
-   * 
-   * @return True if a swap was made
-   */
-  public boolean doSwap() {
-    if (_human) {
-      // TODO Ask position
-      int position = 0;
-      return _party.swap(0, position);
-    }
-    else if (getLeader().condition.getAwake()) {
-      if (_party.size() > 1) {
-        int position = 2 + (int) (Math.random() * (_party.size() - 1));
-        return _party.swap(0, position);
-      }
-      else
-        return false;
-    }
-    else {
-      return _party.forceAwakeLeader();
-    }
-  }
-
   private Move move;
   private Party _party;
   private Field _field;
   private Slot _target;
-  private Player _player;
   private int _bidedamage;
   private boolean _human, _bide;
 }
