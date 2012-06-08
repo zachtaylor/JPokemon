@@ -25,6 +25,7 @@ public class Turn {
 
   public void nullify(String reason) {
     // TODO
+    _mode = Mode.NULL;
   }
 
   public void execute() {
@@ -64,7 +65,7 @@ public class Turn {
   }
 
   private enum Mode {
-    SWAP, ITEM, ATTACK;
+    SWAP, ITEM, ATTACK, NULL;
   }
 
   private Move _move;
