@@ -32,6 +32,7 @@ public class Turn {
 
   public void nullify(String reason) {
     // TODO
+    _mode = Mode.NULL;
   }
 
   public void execute() {
@@ -90,7 +91,11 @@ public class Turn {
   }
 
   private enum Mode {
+<<<<<<< HEAD
     RUN, SWAP, ITEM, ATTACK;
+=======
+    SWAP, ITEM, ATTACK, NULL;
+>>>>>>> 16d7dd412f87ae2be13a1e813aed1d349c22105c
   }
 
   private Move _move;
