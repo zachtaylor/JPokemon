@@ -1,14 +1,14 @@
-package jpkmn.gui;
+package jpkmn.exe.gui;
 
 import java.awt.Image;
 import java.net.URL;
 
 import javax.swing.*;
 
-import jpkmn.item.*;
-import jpkmn.pokemon.*;
-import jpkmn.pokemon.move.Move;
-
+import jpkmn.game.item.*;
+import jpkmn.game.pokemon.*;
+import jpkmn.game.pokemon.move.Move;
+import jpkmn.game.pokemon.storage.Party;
 
 public class Tools {
   static GameWindow game;
@@ -50,7 +50,7 @@ public class Tools {
     // We have to build the message to vary depending on
     // how many moves the active Pokemon has
     for (int i = 0; i < userparty.size(); ++i) {
-      if (userparty.pkmn[i] != null) {
+      if (userparty.get(i) != null) {
         partyCount++;
         list.append(i + ": " + userparty.pkmn[i].toString() + "\n");
       }

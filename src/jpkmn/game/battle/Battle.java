@@ -2,58 +2,58 @@ package jpkmn.game.battle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
-import jpkmn.exceptions.BattleEndException;
-import jpkmn.game.pokemon.*;
-import jpkmn.game.pokemon.move.*;
+import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.pokemon.move.Move;
+import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Battle {
-  boolean wild = true, gym = false;
-
   public Battle() {
-    _turns = new ArrayList<Turn>();
+    _ready = false;
+    _slots = new ArrayList<Slot>();
+    _rounds = new ArrayBlockingQueue<Round>(2, true);
   }
 
-  /**
-   * Chooses moves and attacks.
-   * 
-   * @throws BattleEndException to end the battle
-   */
-  public void fight(Slot slot)  {
+  public List<Slot> getSlots() {
+    return _slots;
+  }
+
+  public void start() {
+    _ready = true;
+  }
+
+  public void fight(Slot slot) {
+    if (!_ready) return;
+
     if (!slot.chooseMove()) return;
     if (!slot.chooseAttackTarget()) return;
 
-    _turns.add(slot.attack());
+    _rounds.peek().add(slot.attack());
   }
 
   public void item(Slot slot) {
+    if (!_ready) return;
+
     if (!slot.chooseItem()) return;
     if (!slot.chooseItemTarget()) return;
 
-    _turns.add(slot.item());
+    _rounds.peek().add(slot.item());
   }
 
-  /**
-   * Asks the user about swapping Pokemon. If they swap, then the enemy attacks
-   * 
-   * @throws BattleEndException If the battle ends
-   */
   public void swap(Slot slot) {
+    if (!_ready) return;
+
     if (!slot.chooseSwapPosition()) return;
-    
-    _turns.add(slot.swap());
+
+    _rounds.peek().add(slot.swap());
   }
 
-  /**
-   * Calculates if the user escapes on a run attempt. If not, then the enemy
-   * attacks.
-   * 
-   * @throws BattleEndException If the battle ends
-   */
   public void run(Slot slot) {
-    if (!slot.run()) return;
-    
-    // TODO Remove the slot from the battle
+    if (!_ready) return;
+
+    _rounds.peek().add(slot.run());
   }
 
   /**
@@ -113,5 +113,7 @@ public class Battle {
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
-  private List<Turn> _turns;
+  private boolean _ready;
+  private List<Slot> _slots;
+  private Queue<Round> _rounds;
 }

@@ -24,6 +24,10 @@ public class Slot {
     return _party;
   }
 
+  public Slot getTarget() {
+    return _target;
+  }
+  
   public boolean chooseMove() {
     Pokemon leader = getLeader();
     int position;
@@ -32,7 +36,8 @@ public class Slot {
     if (leader.condition.contains(Issue.WAIT)) return true;
 
     if (_human) {
-      position = 0; // TODO Ask for position
+      // TODO Ask for position
+      position = 0;
       if (position == -1) return false;
     }
     else {
@@ -50,9 +55,9 @@ public class Slot {
   }
 
   public boolean chooseSwapPosition() {
-    // TODO
-
-    return true;
+    _index = 0; // TODO Ask the user
+    
+    return _index > 0;
   }
 
   public boolean chooseAttackTarget() {
@@ -69,7 +74,7 @@ public class Slot {
 
   public Turn attack() {
     Pokemon leader = getLeader();
-    Turn turn = new Turn(move, _target);
+    Turn turn = new Turn(move, this);
 
     if (_bide) {
       turn.setAbsoluteDamage(_bidedamage);
@@ -131,10 +136,9 @@ public class Slot {
     return null;
   }
 
-  public boolean run() {
+  public Turn run() {
     // TODO
-    
-    return true;
+    return null;
   }
   
   public void takeDamage(Turn turn) {
@@ -154,6 +158,6 @@ public class Slot {
   private Party _party;
   private Field _field;
   private Slot _target;
-  private int _bidedamage;
+  private int _bidedamage, _index;
   private boolean _human, _bide;
 }

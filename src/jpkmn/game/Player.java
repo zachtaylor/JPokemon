@@ -8,7 +8,6 @@ import jpkmn.exe.Driver;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.Party;
 import jpkmn.game.pokemon.storage.PCStorage;
 
 public class Player extends Trainer {

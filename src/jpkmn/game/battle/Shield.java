@@ -3,15 +3,13 @@ package jpkmn.game.battle;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.game.pokemon.Type;
-import jpkmn.game.pokemon.move.MoveStyle;
-
 public class Shield {
   private int a;
 
-  public Shield(MoveStyle style, int duration) {
-    _style = style;
+  public Shield(Field.Effect type, int duration, double reduction) {
+    _type = type;
     _duration = duration;
+    _reduction = reduction;
     _exceptions = new ArrayList<String>();
   }
 
@@ -20,16 +18,16 @@ public class Shield {
       _exceptions.add(exception);
   }
 
-  public int reduceDamage(int d, Type t) {
+  public void reduceDamage(Turn t) {
     // TODO
-    return d;
   }
 
   public boolean reduceDuration() {
     return _duration-- > 0;
   }
 
-  private MoveStyle _style;
   private int _duration;
+  private double _reduction;
+  private Field.Effect _type;
   private List<String> _exceptions;
 }

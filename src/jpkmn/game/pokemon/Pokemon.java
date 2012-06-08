@@ -15,14 +15,6 @@ public class Pokemon {
   public final StatBlock stats;
   public final MoveBlock moves;
 
-  private static long CURRENT_ID = 0;
-
-  /**
-   * Makes a new Pokemon of the specified number. All stats are stock.
-   * 
-   * @param num number of the pokemon
-   * @param lvl level of the pokemon
-   */
   public Pokemon(int num, int lvl) {
     number = num;
     level = lvl;
@@ -39,12 +31,6 @@ public class Pokemon {
 
     unique_id = CURRENT_ID++;
   }
-
-  // public Pokemon clone() {
-  // Pokemon p = new Pokemon(number, level);
-  // p.stats.hp.set(this.stats.hp.cur());
-  // return p;
-  // }
 
   /**
    * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
@@ -197,7 +183,7 @@ public class Pokemon {
 
         p.name = scan.nextLine();
         p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
-        
+
         return p;
 
       } catch (Throwable t) {
@@ -261,4 +247,6 @@ public class Pokemon {
   private String name, species;
   private Type type1, type2;
   private long unique_id;
+
+  private static long CURRENT_ID = 0;
 }

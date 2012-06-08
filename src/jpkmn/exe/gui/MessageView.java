@@ -1,9 +1,11 @@
-package jpkmn.gui;
+package jpkmn.exe.gui;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+
+import jpkmn.img.ImageFinder;
 
 public class MessageView extends JPanel {
   private static final long serialVersionUID = 1L;
@@ -16,7 +18,7 @@ public class MessageView extends JPanel {
     frame.getContentPane().add(scroll, BorderLayout.CENTER);
     frame.setSize(new Dimension(350, 200));
     frame.setResizable(false);
-    frame.setIconImage(Tools.findImage("mail"));
+    frame.setIconImage(ImageFinder.find("mail"));
     frame.setTitle("Message Center");
     frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     frame.setVisible(true);
@@ -59,7 +61,7 @@ public class MessageView extends JPanel {
 
   private class Message extends JPanel {
     public Message(String... message) {
-      this(Tools.findImage("err"), message);
+      this(ImageFinder.find("err"), message);
     }
 
     public Message(Image image, String... message) {
@@ -79,7 +81,7 @@ public class MessageView extends JPanel {
 
   private class CloseButton extends JButton implements ActionListener {
     public CloseButton(Message m) {
-      super(new ImageIcon(Tools.findImage("close")));
+      super(new ImageIcon(ImageFinder.find("close")));
       message = m;
       addActionListener(this);
     }

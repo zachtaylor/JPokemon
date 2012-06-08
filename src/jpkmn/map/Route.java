@@ -3,8 +3,7 @@ package jpkmn.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.pokemon.Pokemon;
-
+import jpkmn.game.pokemon.Pokemon;
 
 /**
  * Maintains a list of Pokemon which appear, and level range they appear in.

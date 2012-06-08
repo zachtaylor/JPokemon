@@ -3,8 +3,7 @@ package jpkmn.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.pokemon.Pokemon;
-
+import jpkmn.game.pokemon.Pokemon;
 
 /**
  * Works the same as a Route, but Water can be applied to any area. Also, Water

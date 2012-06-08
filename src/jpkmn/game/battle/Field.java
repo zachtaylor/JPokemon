@@ -30,8 +30,14 @@ public class Field {
    * @param exceptions Names of attacks that are exempt from invulnerable
    */
   public void add(Effect e, int d, double s, String... exceptions) {
-    // TODO Make it respect shields, and handle seeding
-
+    if (e == Effect.SEEDS || e == Effect.SEEDED) {
+      _effects.add(e);
+    }
+    else {
+      Shield shield = new Shield(e, d, s);
+      shield.addException(exceptions);
+      _shields.add(shield);
+    }
   }
 
   public void effect(Turn turn) {
@@ -42,10 +48,12 @@ public class Field {
   public void rollDownDuration() {
     for (int i = 0; i < _shields.size(); i++)
       if (!_shields.get(i).reduceDuration()) _shields.remove(i--);
+    // TODO Injure from Seeded, heal from Seeds
   }
 
   private void applyShielding(Turn turn) {
-    // TODO reduce the damage;
+    for (Shield shield : _shields) 
+      shield.reduceDamage(turn);
   }
 
   public boolean contains(Effect e) {

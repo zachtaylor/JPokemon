@@ -3,8 +3,7 @@ package jpkmn.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.pokemon.Pokemon;
-
+import jpkmn.game.pokemon.Pokemon;
 
 /**
  * Represents a game area where the player can "be." Areas can contain
