@@ -13,10 +13,11 @@ public class ConnectButton extends JButton implements ActionListener {
     super("Connect");
 
     _launcher = l;
-
-    setBackground(new Color(77, 206, 77));
-    setBorderPainted(false);
+    
     setFocusable(false);
+    setBorderPainted(false);
+    setBounds(550, 100, 110, 30);
+    setBackground(new Color(77, 206, 77));
 
     addActionListener(this);
   }

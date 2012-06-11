@@ -20,6 +20,10 @@ public class Turn {
   public int damage() {
     return _strength;
   }
+  
+  public void setDamage(int d) {
+    _strength = d;
+  }
 
   public Slot getUserSlot() {
     return _user;
@@ -50,7 +54,7 @@ public class Turn {
     }
   }
 
-  private List<String> getNotifications() {
+  public List<String> getNotifications() {
     // TODO Return notifications.
     // Generate them from execute and nullify
     return null;

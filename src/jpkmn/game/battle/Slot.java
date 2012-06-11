@@ -44,10 +44,14 @@ public class Slot {
       position = (int) (Math.random() * leader.moves.amount());
     }
 
-    move = leader.moves.get(position);
+    _move = leader.moves.get(position);
     return true;
   }
 
+  public Move getMove() {
+    return _move;
+  }
+  
   public boolean chooseItem() {
     // TODO
 
@@ -74,7 +78,7 @@ public class Slot {
 
   public Turn attack() {
     Pokemon leader = getLeader();
-    Turn turn = new Turn(move, this);
+    Turn turn = new Turn(_move, this);
 
     if (_bide) {
       turn.setAbsoluteDamage(_bidedamage);
@@ -88,14 +92,14 @@ public class Slot {
       if (!leader.canAttack()) turn.nullify(leader.condition.toString());
 
       // 2 Reduce and measure PP
-      if (!move.use()) turn.nullify("There is not enough PP!");
+      if (!_move.use()) turn.nullify("There is not enough PP!");
 
       // 3 Measure accuracy
-      if (!move.hits(_target._party.getLeader())) {
+      if (!_move.hits(_target._party.getLeader())) {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
-        if (move.number() == 60 || move.number() == 69) {
-          int damage = Battle.computeDamage(move, _target._party.getLeader());
+        if (_move.number() == 60 || _move.number() == 69) {
+          int damage = Battle.computeDamage(_move, _target._party.getLeader());
           damage /= 8;
           takeDamageAbsolute(damage);
         }
@@ -104,22 +108,22 @@ public class Slot {
       }
     }
 
-    if (move.style() == MoveStyle.DELAY) {
+    if (_move.style() == MoveStyle.DELAY) {
       if (leader.condition.contains(Issue.WAIT)) {
         leader.condition.remove(Issue.WAIT); // take away 1 wait
 
         if (leader.condition.contains(Issue.WAIT) // still waiting?
-            || move.style().attackBeforeDelay()) // or already attacked
+            || _move.style().attackBeforeDelay()) // or already attacked
           turn.nullify("Resting this turn.");
       }
       else {
-        for (int i = 0; i < move.style().delay(); ++i)
+        for (int i = 0; i < _move.style().delay(); ++i)
           leader.condition.addIssue(Issue.WAIT); // add all the waits
 
-        if (move.style().attackAfterDelay()) turn.nullify("Resting this turn");
+        if (_move.style().attackAfterDelay()) turn.nullify("Resting this turn");
       }
     }
-    else if (move.style() == MoveStyle.MISC) { // Misc
+    else if (_move.style() == MoveStyle.MISC) { // Misc
       turn.nullify("This doesn't work yet. Sorry about that!");
     }
 
@@ -154,7 +158,7 @@ public class Slot {
     _field.rollDownDuration();
   }
 
-  private Move move;
+  private Move _move;
   private Party _party;
   private Field _field;
   private Slot _target;

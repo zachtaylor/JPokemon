@@ -25,7 +25,7 @@ public class Battle {
   }
 
   public void fight(Slot slot) {
-    if (!_ready) return;
+    if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseMove()) return;
     if (!slot.chooseAttackTarget()) return;
@@ -34,7 +34,7 @@ public class Battle {
   }
 
   public void item(Slot slot) {
-    if (!_ready) return;
+    if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseItem()) return;
     if (!slot.chooseItemTarget()) return;
@@ -43,7 +43,7 @@ public class Battle {
   }
 
   public void swap(Slot slot) {
-    if (!_ready) return;
+    if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseSwapPosition()) return;
 
@@ -51,7 +51,7 @@ public class Battle {
   }
 
   public void run(Slot slot) {
-    if (!_ready) return;
+    if (!_ready || !_slots.contains(slot)) return;
 
     _rounds.peek().add(slot.run());
   }

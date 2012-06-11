@@ -14,9 +14,10 @@ public class PlayButton extends JButton implements ActionListener {
 
     _launcher = l;
 
-    setBackground(new Color(206, 77, 77));
-    setBorderPainted(false);
     setFocusable(false);
+    setBorderPainted(false);
+    setBounds(550, 60, 110, 30);
+    setBackground(new Color(206, 77, 77));
 
     addActionListener(this);
   }

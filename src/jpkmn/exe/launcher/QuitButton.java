@@ -12,9 +12,10 @@ public class QuitButton extends JButton implements ActionListener {
 
     _launcher = l;
 
-    setBackground(new Color(83, 83, 221));
-    setBorderPainted(false);
     setFocusable(false);
+    setBorderPainted(false);
+    setBounds(550, 140, 110, 30);
+    setBackground(new Color(83, 83, 221));
 
     addActionListener(this);
   }

@@ -16,24 +16,12 @@ public class Launcher extends JFrame {
 
     JLabel img = new JLabel(new ImageIcon(ImageFinder.find("splash")));
     img.setBounds(10, 10, 700, 437);
-    pane.add(img, new Integer(-1));
-
-    // Load Button
-    PlayButton play = new PlayButton(this);
-    play.setBounds(550, 60, 110, 30); // 10px border on all sides
-    pane.add(play, new Integer(0));
-
-    // New Game Button
-    ConnectButton connect = new ConnectButton(this);
-    connect.setBounds(550, 100, 110, 30);
-    pane.add(connect, new Integer(0));
-
-    // Exit Game Button
-    QuitButton quit = new QuitButton(this);
-    quit.setBounds(550, 140, 110, 30);
-    pane.add(quit, new Integer(0));
-
+    pane.add(img, -1);
+    pane.add(new PlayButton(this), 0);
+    pane.add(new ConnectButton(this), 0);
+    pane.add(new QuitButton(this), 0);
     add(pane);
+    
     setLocationRelativeTo(null);
     setVisible(true);
   }
