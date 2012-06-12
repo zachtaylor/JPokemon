@@ -17,14 +17,13 @@ public class Round {
     if (_haveSelectedTurn.contains(t.getUserSlot())) return;
     _haveSelectedTurn.add(t.getUserSlot());
     _turns.add(t);
-    
+
     run();
   }
-  
+
   private void run() {
-    if (_turns.size() != _battle.getSlots().size())
-      return;
-    
+    if (_turns.size() != _battle.getSlots().size()) return;
+
     // TODO the hard stuff - execute each
   }
 

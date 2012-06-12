@@ -7,8 +7,6 @@ import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Shield {
-  private int a;
-
   public Shield(Field.Effect type, int duration, double reduction) {
     _type = type;
     _duration = duration;
@@ -33,11 +31,11 @@ public class Shield {
     }
     else if (_type == Field.Effect.PHYSSHIELD
         && move.style() == MoveStyle.PHYSICAL) {
-      // TODO
+      t.setDamage((int) (t.damage() * (1 - _reduction)));
     }
     else if (_type == Field.Effect.SPECSHIELD
         && move.style() == MoveStyle.SPECIAL) {
-      // TODO
+      t.setDamage((int) (t.damage() * (1 - _reduction)));
     }
   }
 

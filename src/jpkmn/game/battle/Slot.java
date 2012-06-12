@@ -1,5 +1,6 @@
 package jpkmn.game.battle;
 
+import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Condition.Issue;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
@@ -8,12 +9,11 @@ import jpkmn.game.pokemon.storage.Party;
 
 public class Slot {
   private int a;
-  
+
   public Slot(Party p) {
     _party = p;
     _field = new Field(this);
     _bide = false;
-    _human = false; // TODO getLeader().isAskable();
   }
 
   public Pokemon getLeader() {
@@ -27,7 +27,7 @@ public class Slot {
   public Slot getTarget() {
     return _target;
   }
-  
+
   public boolean chooseMove() {
     Pokemon leader = getLeader();
     int position;
@@ -35,7 +35,7 @@ public class Slot {
     // Must keep using the same move
     if (leader.condition.contains(Issue.WAIT)) return true;
 
-    if (_human) {
+    if (Math.random() > .5) { // TODO leader.isAskable()) {
       // TODO Ask for position
       position = 0;
       if (position == -1) return false;
@@ -51,16 +51,23 @@ public class Slot {
   public Move getMove() {
     return _move;
   }
-  
-  public boolean chooseItem() {
-    // TODO
 
-    return true;
+  public boolean chooseItem() {
+    _item = null; // TODO Ask
+
+    if (_item == null)
+      return false;
+    else
+      return true;
+  }
+
+  public Item getItem() {
+    return _item;
   }
 
   public boolean chooseSwapPosition() {
     _index = 0; // TODO Ask the user
-    
+
     return _index > 0;
   }
 
@@ -69,10 +76,13 @@ public class Slot {
 
     return true;
   }
-  
+
   public boolean chooseItemTarget() {
-    // TODO
-    
+    if (_item.target == Target.ENEMY)
+      // TODO Ask
+      _target = null;
+    else
+      _target = this;
     return true;
   }
 
@@ -99,7 +109,7 @@ public class Slot {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (_move.number() == 60 || _move.number() == 69) {
-          int damage = Battle.computeDamage(_move, _target._party.getLeader());
+          int damage = Battle.computeDamage(_move, _target.getLeader());
           damage /= 8;
           takeDamageAbsolute(damage);
         }
@@ -120,7 +130,8 @@ public class Slot {
         for (int i = 0; i < _move.style().delay(); ++i)
           leader.condition.addIssue(Issue.WAIT); // add all the waits
 
-        if (_move.style().attackAfterDelay()) turn.nullify("Resting this turn");
+        if (_move.style().attackAfterDelay())
+          turn.nullify("Resting this turn");
       }
     }
     else if (_move.style() == MoveStyle.MISC) { // Misc
@@ -144,7 +155,7 @@ public class Slot {
     // TODO
     return null;
   }
-  
+
   public void takeDamage(Turn turn) {
     _field.effect(turn);
     takeDamageAbsolute(turn.damage());
@@ -158,10 +169,19 @@ public class Slot {
     _field.rollDownDuration();
   }
 
-  private Move _move;
+  // Slot
   private Party _party;
   private Field _field;
   private Slot _target;
-  private int _bidedamage, _index;
-  private boolean _human, _bide;
+
+  // Move
+  private Move _move;
+  private boolean _bide;
+  private int _bidedamage;
+
+  // Item
+  private Item _item;
+
+  // Swap
+  private int _index;
 }

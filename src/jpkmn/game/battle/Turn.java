@@ -1,5 +1,6 @@
 package jpkmn.game.battle;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,12 +16,13 @@ public class Turn {
     _move = m;
     _user = user;
     _mode = Mode.ATTACK;
+    _messages = new ArrayList<String>();
   }
 
   public int damage() {
     return _strength;
   }
-  
+
   public void setDamage(int d) {
     _strength = d;
   }
@@ -102,6 +104,7 @@ public class Turn {
   private Slot _user;
   private int _strength;
   private boolean _absolute;
+  private List<String> _messages;
 
   private Mode _mode;
 }
