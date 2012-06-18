@@ -48,11 +48,17 @@ public class Field {
   public void rollDownDuration() {
     for (int i = 0; i < _shields.size(); i++)
       if (!_shields.get(i).reduceDuration()) _shields.remove(i--);
-    // TODO Injure from Seeded, heal from Seeds
+    for (Effect e : _effects) {
+      if (e == Effect.SEEDED)
+        _slot.takeDamageAbsolute(_slot.getLeader().stats.hp.max() / 16);
+      else
+        _slot.getLeader().healDamage(
+            _slot.getTarget().getLeader().stats.hp.max() / 16);
+    }
   }
 
   private void applyShielding(Turn turn) {
-    for (Shield shield : _shields) 
+    for (Shield shield : _shields)
       shield.reduceDamage(turn);
   }
 

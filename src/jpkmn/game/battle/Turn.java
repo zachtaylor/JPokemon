@@ -17,6 +17,8 @@ public class Turn {
     _user = user;
     _mode = Mode.ATTACK;
     _messages = new ArrayList<String>();
+
+    _messages.add(_user.getLeader().name() + " used " + _move.name() + "!");
   }
 
   public int damage() {
@@ -37,8 +39,13 @@ public class Turn {
   }
 
   public void nullify(String reason) {
-    // TODO
     _mode = Mode.NULL;
+    _messages.add(reason);
+  }
+
+  public void destroy() {
+    _mode = Mode.NULL;
+    _messages = null;
   }
 
   public void execute() {
@@ -57,9 +64,22 @@ public class Turn {
   }
 
   public List<String> getNotifications() {
-    // TODO Return notifications.
-    // Generate them from execute and nullify
-    return null;
+    Pokemon target = _user.getTarget().getLeader();
+
+    if (_mode == Mode.ATTACK) {
+      _messages.add(target.name() + " took " + _strength + " damage!");
+    }
+    else if (_mode == Mode.ITEM) {
+      
+    }
+    else if (_mode == Mode.SWAP) {
+      
+    }
+    else if (_mode == Mode.RUN) {
+      
+    }
+
+    return _messages;
   }
 
   private void applyMoveEffects() {
