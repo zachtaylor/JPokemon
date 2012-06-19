@@ -5,12 +5,12 @@ import jpkmn.game.pokemon.Condition.Issue;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
-import jpkmn.game.pokemon.storage.Party;
+import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Slot {
   private int a;
 
-  public Slot(Party p) {
+  public Slot(AbstractParty p) {
     _party = p;
     _field = new Field(this);
     _bide = false;
@@ -20,7 +20,7 @@ public class Slot {
     return getParty().get(0);
   }
 
-  public Party getParty() {
+  public AbstractParty getParty() {
     return _party;
   }
 
@@ -99,7 +99,8 @@ public class Slot {
     // Don't perform any if they didn't choose this move
     if (!leader.condition.contains(Issue.WAIT)) {
       // 1 Measure if the user can attack
-      if (!leader.canAttack()) turn.nullify(leader.condition.toString());
+      if (!leader.condition.canAttack())
+        turn.nullify(leader.condition.toString());
 
       // 2 Reduce and measure PP
       if (!_move.use()) turn.nullify("There is not enough PP!");
@@ -170,9 +171,9 @@ public class Slot {
   }
 
   // Slot
-  private Party _party;
   private Field _field;
   private Slot _target;
+  private AbstractParty _party;
 
   // Move
   private Move _move;

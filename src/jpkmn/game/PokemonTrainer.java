@@ -1,15 +1,17 @@
 package jpkmn.game;
 
+import java.util.List;
+
 import jpkmn.game.pokemon.storage.Party;
 
-public class Trainer {
-  public Trainer() {
-    party = new Party();
+public abstract class PokemonTrainer {
+  public PokemonTrainer() {
+    party = new Party(this);
   }
   
-  public Trainer(String name) {
+  public PokemonTrainer(String name) {
     this();
-    _name = name;
+    setName(name);
   }
 
   public String name() {
@@ -19,7 +21,9 @@ public class Trainer {
   public void setName(String s) {
     _name = s;
   }
-
+  
+  public abstract void notify(List<String> s);
+  
   public final Party party;
   protected String _name;
 }

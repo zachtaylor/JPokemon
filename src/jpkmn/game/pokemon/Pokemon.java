@@ -5,6 +5,7 @@ import java.util.*;
 import lib.PokemonBase;
 
 import jpkmn.exceptions.LoadException;
+import jpkmn.game.PokemonTrainer;
 import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
 
@@ -32,34 +33,6 @@ public class Pokemon {
     unique_id = CURRENT_ID++;
   }
 
-  /**
-   * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
-   * points, sets xp = 0, stats adjusted.
-   */
-  public boolean changeSpecies(int... num) {
-    // TODO Ask the user if they want to cancel?
-
-    if (num == null || num.length == 0)
-      number++;
-    else
-      number = num[0];
-
-    PokemonBase base = PokemonBase.getBaseForNumber(number);
-    evolutionlevel = base.getEvolutionlevel();
-    type1 = Type.valueOf(base.getType1());
-    type2 = Type.valueOf(base.getType2());
-
-    if (name.equals(species))
-      name = species = base.getName();
-    else
-      species = base.getName();
-
-    stats.changeSpecies(num);
-    moves.check();
-
-    return true;
-  }
-
   public int number() {
     return number;
   }
@@ -72,16 +45,8 @@ public class Pokemon {
     name = s;
   }
 
-  public String species() {
-    return species;
-  }
-
   public int level() {
     return level;
-  }
-
-  public boolean isAwake() {
-    return condition.getAwake();
   }
 
   public Type type1() {
@@ -144,8 +109,16 @@ public class Pokemon {
     stats.hp.effect(heal);
   }
 
-  public boolean canAttack() {
-    return condition.canAttack();
+  public void setOwner(PokemonTrainer owner) {
+    _owner = owner;
+  }
+
+  public PokemonTrainer getOwner() {
+    return _owner;
+  }
+
+  public boolean hasOwner() {
+    return _owner != null;
   }
 
   /**
@@ -243,10 +216,42 @@ public class Pokemon {
     if (level == evolutionlevel) changeSpecies();
   }
 
-  private int number, level, xp, evolutionlevel;
-  private String name, species;
-  private Type type1, type2;
+  /**
+   * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
+   * points, sets xp = 0, stats adjusted.
+   */
+  public boolean changeSpecies(int... num) {
+    if (hasOwner()) {
+      // TODO Ask owner
+    }
+
+    if (num == null || num.length == 0)
+      number++;
+    else
+      number = num[0];
+
+    PokemonBase base = PokemonBase.getBaseForNumber(number);
+    evolutionlevel = base.getEvolutionlevel();
+    type1 = Type.valueOf(base.getType1());
+    type2 = Type.valueOf(base.getType2());
+
+    if (name.equals(species))
+      name = species = base.getName();
+    else
+      species = base.getName();
+
+    stats.changeSpecies(num);
+    moves.check();
+
+    return true;
+  }
+
   private long unique_id;
+  private Type type1, type2;
+  private String name, species;
+  private PokemonTrainer _owner;
+  private int number, level, xp, evolutionlevel;
 
   private static long CURRENT_ID = 0;
+
 }

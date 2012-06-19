@@ -17,7 +17,7 @@ public class Turn {
     _user = user;
     _mode = Mode.ATTACK;
     _messages = new ArrayList<String>();
-
+    
     _messages.add(_user.getLeader().name() + " used " + _move.name() + "!");
   }
 

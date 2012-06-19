@@ -1,13 +1,13 @@
 package jpkmn.game.pokemon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Condition {
   private int a; // flag to do work
 
   public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE,
-    FLINCH, WAIT;
+    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE, FLINCH, WAIT;
   }
 
   /**
@@ -57,8 +57,6 @@ public class Condition {
     else if (!issues.contains(i)) {
       issues.add(i);
 
-      // TODO Notify that effect is added
-
       pkmn.stats.effectBy(i);
     }
   }
@@ -90,22 +88,22 @@ public class Condition {
    * Applies issues. DOTs hurt, Flinch is removed, volatile effects have a
    * chance to dispel.
    */
-  public void applyEffects() {
-    // TODO Notifications for all status things
+  public List<String> applyEffects() {
+    List<String> messages = new ArrayList<String>();
 
     for (Issue current : issues) {
       if (current == Issue.BURN) {
         pkmn.takeDamage(pkmn.stats.hp.max() / 10);
-        // TODO Hurt by burn
+        messages.add(pkmn.name() + " was injured by it's burn!");
       }
       else if (current == Issue.WRAP) {
         if (Math.random() > .66666) {
           issues.remove(Issue.WRAP);
-          // TODO No longer wrapped
+          messages.add(pkmn.name() + " freed itself!");
         }
         else {
           pkmn.takeDamage(pkmn.stats.hp.max() / 10);
-          // TODO Hurt by wrap
+          messages.add(pkmn.name() + " was injured by the binding!");
         }
       }
       else if (current == Issue.CONFUSE) {
@@ -115,43 +113,35 @@ public class Condition {
         }
         else if (Math.random() > .66666) {
           issues.remove(Issue.CONFUSE);
-          // TODO No longer confused
+          messages.add(pkmn.name() + " is no longer confused!");
         }
       }
       else if (current == Issue.FLINCH) {
         issues.remove(Issue.FLINCH);
       }
-      else if (current == Issue.FREEZE) {
-        if (Math.random() > .8) {
-          issues.remove(Issue.FREEZE);
-          // TODO No longer frozen
-        }
-        else {
-          // TODO Still frozen
-        }
+      else if (current == Issue.FREEZE && Math.random() > .8) {
+        issues.remove(Issue.FREEZE);
+        messages.add(pkmn.name() + " broke out of the ice!");
       }
       else if (current == Issue.SEEDED) {
         pkmn.takeDamage(pkmn.stats.hp.max() / 10);
-        // TODO Leeched by seeds
+        messages.add(pkmn.name() + " was injured by the seeds!");
       }
       else if (current == Issue.SEEDUSR) {
         pkmn.healDamage(pkmn.stats.hp.max() / 12);
-        // TODO Recover health from leech seed
+        messages.add(pkmn.name() + " recovered health!");
       }
       else if (current == Issue.POISON) {
         pkmn.takeDamage(pkmn.stats.hp.max() / 10);
-        // TODO Hurt by poison
+        messages.add(pkmn.name() + " was injured by the poison!");
       }
-      else if (current == Issue.SLEEP) {
-        if (Math.random() > .333333) {
-          issues.remove(Issue.SLEEP);
-          // TODO No longer sleeping
-        }
-        else {
-          // TODO Still sleeping
-        }
+      else if (current == Issue.SLEEP && Math.random() > .333333) {
+        issues.remove(Issue.SLEEP);
+        messages.add(pkmn.name()+ " woke up!");
       }
     }
+
+    return messages;
   }
 
   /**

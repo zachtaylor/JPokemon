@@ -1,6 +1,7 @@
 package jpkmn.game;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
@@ -10,7 +11,7 @@ import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 
-public class Player extends Trainer {
+public class Player extends PokemonTrainer {
   public final Bag bag;
   public final PCStorage box;
   public final Pokedex dex;
@@ -76,6 +77,11 @@ public class Player extends Trainer {
     if (!(o instanceof Player))
       return false;
     return ((Player) o)._id == _id;
+  }
+
+  @Override
+  public void notify(List<String> s) {
+    // TODO Complete this
   }
   
   int _id;

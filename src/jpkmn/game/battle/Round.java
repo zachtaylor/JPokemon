@@ -8,8 +8,6 @@ import java.util.Queue;
 import jpkmn.game.pokemon.Condition.Issue;
 
 public class Round {
-  private int a;
-  
   public Round(Battle b) {
     _battle = b;
     _turns = new PriorityQueue<Turn>(b.getSlots().size(),
@@ -21,7 +19,7 @@ public class Round {
   public int size() {
     return _turns.size();
   }
-  
+
   public void add(Turn t) {
     if (_haveSelectedTurn.contains(t.getUserSlot())) return;
     _haveSelectedTurn.add(t.getUserSlot());
@@ -41,12 +39,13 @@ public class Round {
   }
 
   private void verifyTurnList() {
-    Slot slot;
+    Slot slot, target;
 
     for (Turn turn : _turns) {
       slot = turn.getUserSlot();
+      target = slot.getTarget(); // TODO measure this and do something
 
-      if (!slot.getLeader().isAwake()) {
+      if (!slot.getLeader().condition.getAwake()) {
         if (slot.getParty().countAwake() > 0)
           turn.changeToSwap();
         else {

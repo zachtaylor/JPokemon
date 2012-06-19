@@ -68,6 +68,14 @@ public class Battle {
     Round round = _round;
     _round = new Round(this);
     round.play();
+    executeConditionEffects();
+  }
+  
+  private void executeConditionEffects() {
+    for (Slot slot : _slots) {
+      // TODO Get the messages and alert all
+      slot.getLeader().condition.applyEffects();
+    }
   }
 
   public void remove(Slot user) {
