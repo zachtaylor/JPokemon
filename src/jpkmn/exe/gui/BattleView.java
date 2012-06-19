@@ -222,7 +222,7 @@ public class BattleView extends JPanel {
 
     public void actionPerformed(ActionEvent arg0) {
       try {
-        battle.run();
+        battle.play();
       } catch (BattleEndException e) {
         exit(e);
       }

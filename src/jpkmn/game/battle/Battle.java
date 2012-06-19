@@ -2,18 +2,18 @@ package jpkmn.game.battle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Battle {
+  private int a;
+  
   public Battle() {
     _ready = false;
     _slots = new ArrayList<Slot>();
-    _rounds = new ArrayBlockingQueue<Round>(2, true);
+    _round = new Round(this);
   }
 
   public List<Slot> getSlots() {
@@ -30,7 +30,9 @@ public class Battle {
     if (!slot.chooseMove()) return;
     if (!slot.chooseAttackTarget()) return;
 
-    _rounds.peek().add(slot.attack());
+    _round.add(slot.attack());
+
+    if (_round.size() == _slots.size()) executeRound();
   }
 
   public void item(Slot slot) {
@@ -39,7 +41,9 @@ public class Battle {
     if (!slot.chooseItem()) return;
     if (!slot.chooseItemTarget()) return;
 
-    _rounds.peek().add(slot.item());
+    _round.add(slot.item());
+
+    if (_round.size() == _slots.size()) executeRound();
   }
 
   public void swap(Slot slot) {
@@ -47,13 +51,27 @@ public class Battle {
 
     if (!slot.chooseSwapPosition()) return;
 
-    _rounds.peek().add(slot.swap());
+    _round.add(slot.swap());
+
+    if (_round.size() == _slots.size()) executeRound();
   }
 
   public void run(Slot slot) {
     if (!_ready || !_slots.contains(slot)) return;
 
-    _rounds.peek().add(slot.run());
+    _round.add(slot.run());
+
+    if (_round.size() == _slots.size()) executeRound();
+  }
+
+  private void executeRound() {
+    Round round = _round;
+    _round = new Round(this);
+    round.play();
+  }
+
+  public void remove(Slot user) {
+    // TODO Apply losing stuff to the slot
   }
 
   /**
@@ -115,5 +133,5 @@ public class Battle {
 
   private boolean _ready;
   private List<Slot> _slots;
-  private Queue<Round> _rounds;
+  private Round _round;
 }

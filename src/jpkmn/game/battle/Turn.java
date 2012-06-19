@@ -43,6 +43,10 @@ public class Turn {
     _messages.add(reason);
   }
 
+  public void changeToSwap() {
+    // TODO Depends on Slot's implementation of Swap
+  }
+
   public void destroy() {
     _mode = Mode.NULL;
     _messages = null;
