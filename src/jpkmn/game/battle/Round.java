@@ -30,8 +30,12 @@ public class Round {
     for (Turn turn : _turns) {
       // TODO Execute each
 
+      
+      _battle.notifyAll(turn.getNotifications());
+      
       if (turn.getUserSlot().getLeader().condition.contains(Issue.WAIT))
         _forceNextAttack.add(turn.getUserSlot());
+      
       verifyTurnList();
     }
 

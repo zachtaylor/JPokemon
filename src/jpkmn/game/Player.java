@@ -1,7 +1,6 @@
 package jpkmn.game;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
@@ -12,13 +11,15 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 
 public class Player extends PokemonTrainer {
+  private int a;
+
   public final Bag bag;
   public final PCStorage box;
   public final Pokedex dex;
 
   public Player(String serial) throws LoadException {
-    super(); 
-    
+    super();
+
     if (!serial.equals(Driver.officialSerial))
       throw new LoadException("Improper file version: " + _serial);
 
@@ -74,16 +75,15 @@ public class Player extends PokemonTrainer {
   }
 
   public boolean equals(Object o) {
-    if (!(o instanceof Player))
-      return false;
+    if (!(o instanceof Player)) return false;
     return ((Player) o)._id == _id;
   }
 
   @Override
-  public void notify(List<String> s) {
+  public void notify(String... s) {
     // TODO Complete this
   }
-  
+
   int _id;
   private String _serial;
   private int _cash, _badge;

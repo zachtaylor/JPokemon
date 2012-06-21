@@ -88,7 +88,7 @@ public class Condition {
    * Applies issues. DOTs hurt, Flinch is removed, volatile effects have a
    * chance to dispel.
    */
-  public List<String> applyEffects() {
+  public String[] applyEffects() {
     List<String> messages = new ArrayList<String>();
 
     for (Issue current : issues) {
@@ -141,7 +141,7 @@ public class Condition {
       }
     }
 
-    return messages;
+    return (String[]) messages.toArray();
   }
 
   /**

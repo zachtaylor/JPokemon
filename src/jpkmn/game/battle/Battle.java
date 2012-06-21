@@ -73,8 +73,7 @@ public class Battle {
   
   private void executeConditionEffects() {
     for (Slot slot : _slots) {
-      // TODO Get the messages and alert all
-      slot.getLeader().condition.applyEffects();
+      notifyAll(slot.getLeader().condition.applyEffects());
     }
   }
 
@@ -139,6 +138,12 @@ public class Battle {
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
+  void notifyAll(String... s) {
+    for (Slot slot : _slots) {
+      slot.getLeader().getOwner().notify(s);
+    }
+  }
+  
   private boolean _ready;
   private List<Slot> _slots;
   private Round _round;

@@ -14,6 +14,8 @@ import jpkmn.exe.Driver;
 import jpkmn.game.pokemon.Pokemon;
 
 public class PlayerRegistry {
+  private int a;
+  
   public static int UNIQUE_ID;
   
   public static Player createNew() {
@@ -28,7 +30,7 @@ public class PlayerRegistry {
       return newPlayer;
 
     } catch (LoadException l) {
-      // TODO Invalid file format
+      // Something failed...
     }
 
     return null;
@@ -59,8 +61,9 @@ public class PlayerRegistry {
       return newPlayer;
 
     } catch (FileNotFoundException f) {
-      // TODO That player doesn't exist on the system
+      // TODO That player doesn't exist on the system.
     } catch (LoadException l) {
+      // TODO Problem loading player
       l.printStackTrace();
       System.out.println("\n" + l.getMessage());
     }

@@ -1,7 +1,5 @@
 package jpkmn.game;
 
-import java.util.List;
-
 import jpkmn.game.pokemon.storage.Party;
 
 public abstract class PokemonTrainer {
@@ -22,7 +20,7 @@ public abstract class PokemonTrainer {
     _name = s;
   }
   
-  public abstract void notify(List<String> s);
+  public abstract void notify(String... s);
   
   public final Party party;
   protected String _name;

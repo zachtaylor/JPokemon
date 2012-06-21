@@ -221,6 +221,8 @@ public class Pokemon {
    * points, sets xp = 0, stats adjusted.
    */
   public boolean changeSpecies(int... num) {
+    String speciesUpdate = species + " evolved into ";
+
     if (hasOwner()) {
       // TODO Ask owner
     }
@@ -242,6 +244,9 @@ public class Pokemon {
 
     stats.changeSpecies(num);
     moves.check();
+
+    speciesUpdate += species + "!";
+    getOwner().notify("Congratulations!", speciesUpdate);
 
     return true;
   }

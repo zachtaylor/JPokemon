@@ -67,7 +67,7 @@ public class Turn {
     }
   }
 
-  public List<String> getNotifications() {
+  public String[] getNotifications() {
     Pokemon target = _user.getTarget().getLeader();
 
     if (_mode == Mode.ATTACK) {
@@ -83,7 +83,7 @@ public class Turn {
       
     }
 
-    return _messages;
+    return (String[]) _messages.toArray();
   }
 
   private void applyMoveEffects() {
