@@ -4,29 +4,56 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.Player;
+import jpkmn.game.item.Ball;
+import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Condition;
+import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveEffect;
 
 public class Turn {
   private int a;
 
+  public Turn(Slot user) {
+    _user = user;
+    _mode = Mode.RUN;
+
+    _messages = new ArrayList<String>();
+  }
+
   public Turn(Move m, Slot user) {
     _move = m;
     _user = user;
     _mode = Mode.ATTACK;
     _messages = new ArrayList<String>();
-    
+
     _messages.add(_user.getLeader().name() + " used " + _move.name() + "!");
   }
 
+  public Turn(int index, Slot user) {
+    _user = user;
+    _integer = index;
+    _mode = Mode.SWAP;
+    _messages = new ArrayList<String>();
+
+    _messages.add("Come back, " + user.getLeader().name() + "!");
+  }
+
+  public Turn(Item i, int index, Slot user) {
+    _item = i;
+    _user = user;
+    _mode = Mode.ITEM;
+    _messages = new ArrayList<String>();
+
+  }
+
   public int damage() {
-    return _strength;
+    return _integer;
   }
 
   public void setDamage(int d) {
-    _strength = d;
+    _integer = d;
   }
 
   public Slot getUserSlot() {
@@ -34,7 +61,7 @@ public class Turn {
   }
 
   public void setAbsoluteDamage(int d) {
-    _strength = d;
+    _integer = d;
     _absolute = true;
   }
 
@@ -44,7 +71,12 @@ public class Turn {
   }
 
   public void changeToSwap() {
-    // TODO Depends on Slot's implementation of Swap
+    _integer = 0;
+    _mode = Mode.SWAP;
+
+    while (!_user.getParty().get(_integer).condition.getAwake()) {
+      // TODO Ask the user for position
+    }
   }
 
   public void destroy() {
@@ -56,14 +88,41 @@ public class Turn {
     if (_mode == Mode.ATTACK) {
       Slot enemy = _user.getTarget();
 
-      _strength = Battle.computeDamage(_move, enemy.getLeader());
+      _integer = Battle.computeDamage(_move, enemy.getLeader());
 
       if (_absolute)
-        enemy.takeDamageAbsolute(_strength);
+        enemy.takeDamageAbsolute(_integer);
       else
         enemy.takeDamage(this);
 
       applyMoveEffects();
+    }
+    else if (_mode == Mode.SWAP) {
+      _user.getParty().swap(0, _integer);
+    }
+    else if (_mode == Mode.ITEM) {
+      Pokemon target;
+      
+      if (_item.target == Target.SELF) {
+        target = _user.getParty().get(_integer);
+      }
+      else {
+        target = _user.getTarget().getLeader();
+      }
+      
+      if (_item.effect(target)) {
+        if (_item instanceof Ball) {
+          if (!_user.getParty().add(target))
+            ((Player) (_user.getLeader().getOwner())).box.add(target);
+          _user.getTarget().getParty().remove(target);
+        }
+        else {
+
+        }
+      }
+    }
+    else if (_mode == Mode.RUN) {
+
     }
   }
 
@@ -71,16 +130,16 @@ public class Turn {
     Pokemon target = _user.getTarget().getLeader();
 
     if (_mode == Mode.ATTACK) {
-      _messages.add(target.name() + " took " + _strength + " damage!");
+      _messages.add(target.name() + " took " + _integer + " damage!");
     }
     else if (_mode == Mode.ITEM) {
-      
+
     }
     else if (_mode == Mode.SWAP) {
-      
+
     }
     else if (_mode == Mode.RUN) {
-      
+
     }
 
     return (String[]) _messages.toArray();
@@ -124,11 +183,13 @@ public class Turn {
     RUN, SWAP, ITEM, ATTACK, NULL;
   }
 
+  private Mode _mode;
   private Move _move;
+  private Item _item;
   private Slot _user;
-  private int _strength;
   private boolean _absolute;
   private List<String> _messages;
 
-  private Mode _mode;
+  // Used as: swap index, item on index in user party, calculated move power
+  private int _integer;
 }

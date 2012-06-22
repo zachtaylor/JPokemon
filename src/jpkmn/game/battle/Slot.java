@@ -148,13 +148,11 @@ public class Slot {
   }
 
   public Turn swap() {
-    // TODO
-    return null;
+    return new Turn(_index, this);
   }
 
   public Turn run() {
-    // TODO
-    return null;
+    return new Turn(this);
   }
 
   public void takeDamage(Turn turn) {
