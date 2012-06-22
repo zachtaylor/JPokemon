@@ -116,9 +116,9 @@ public class Pokemon {
   public PokemonTrainer getOwner() {
     return _owner;
   }
-
-  public boolean hasOwner() {
-    return _owner != null;
+  
+  public void notify(String... s) {
+    if (_owner != null) _owner.notify(s);
   }
 
   /**
@@ -221,11 +221,9 @@ public class Pokemon {
    * points, sets xp = 0, stats adjusted.
    */
   public boolean changeSpecies(int... num) {
-    String speciesUpdate = species + " evolved into ";
+    String speciesUpdate = "Your " + species + " evolved into ";
 
-    if (hasOwner()) {
-      // TODO Ask owner
-    }
+    // TODO Ask the owner
 
     if (num == null || num.length == 0)
       number++;
@@ -246,7 +244,7 @@ public class Pokemon {
     moves.check();
 
     speciesUpdate += species + "!";
-    getOwner().notify("Congratulations!", speciesUpdate);
+    notify("Congratulations!", speciesUpdate);
 
     return true;
   }

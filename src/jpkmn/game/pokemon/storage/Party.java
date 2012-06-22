@@ -27,7 +27,6 @@ public class Party extends AbstractParty {
       _data[i] = _data[i + 1];
 
     _data[--_amount].setOwner(null);
-    
     _data[_amount] = null;
 
     return true;

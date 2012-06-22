@@ -140,7 +140,7 @@ public class Battle {
 
   void notifyAll(String... s) {
     for (Slot slot : _slots) {
-      slot.getLeader().getOwner().notify(s);
+      slot.getLeader().notify(s);
     }
   }
   
