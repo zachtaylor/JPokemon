@@ -28,8 +28,7 @@ public class Round {
 
   public void play() {
     for (Turn turn : _turns) {
-      // TODO Execute each
-
+      turn.execute();
       
       _battle.notifyAll(turn.getNotifications());
       
