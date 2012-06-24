@@ -9,7 +9,7 @@ import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Battle {
   private int a;
-  
+
   public Battle() {
     _ready = false;
     _slots = new ArrayList<Slot>();
@@ -59,7 +59,7 @@ public class Battle {
   public void run(Slot slot) {
     if (!_ready || !_slots.contains(slot)) return;
 
-    _round.add(slot.run());
+    _round.add(slot.run((Slot[]) getSlots().toArray()));
 
     if (_round.size() == _slots.size()) executeRound();
   }
@@ -70,25 +70,13 @@ public class Battle {
     round.play();
     executeConditionEffects();
   }
-  
+
   private void executeConditionEffects() {
     for (Slot slot : _slots) {
-      notifyAll(slot.getLeader().condition.applyEffects());
+      notifyAll(slot.leader().condition.applyEffects());
     }
   }
 
-  public void remove(Slot user) {
-    // TODO Apply losing stuff to the slot
-  }
-
-  /**
-   * Computes damage through formula
-   * 
-   * @param move Move used
-   * @param user User of the move
-   * @param victim Victim of the move
-   * @return Integer value of the move
-   */
   public static int computeDamage(Move move, Pokemon victim) {
     Pokemon user = move.pkmn;
 
@@ -140,10 +128,10 @@ public class Battle {
 
   void notifyAll(String... s) {
     for (Slot slot : _slots) {
-      slot.getLeader().notify(s);
+      slot.leader().notify(s);
     }
   }
-  
+
   private boolean _ready;
   private List<Slot> _slots;
   private Round _round;

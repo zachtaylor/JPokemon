@@ -33,7 +33,7 @@ public class Round {
       
       _battle.notifyAll(turn.getNotifications());
       
-      if (turn.getUserSlot().getLeader().condition.contains(Issue.WAIT))
+      if (turn.getUserSlot().leader().condition.contains(Issue.WAIT))
         _forceNextAttack.add(turn.getUserSlot());
       
       verifyTurnList();
@@ -49,12 +49,12 @@ public class Round {
       slot = turn.getUserSlot();
       target = slot.getTarget(); // TODO measure this and do something
 
-      if (!slot.getLeader().condition.getAwake()) {
+      if (!slot.leader().condition.getAwake()) {
         if (slot.getParty().countAwake() > 0)
           turn.changeToSwap();
         else {
           _turns.remove(turn);
-          _battle.remove(turn.getUserSlot());
+          // TODO Remove the user from the battle
         }
       }
     }

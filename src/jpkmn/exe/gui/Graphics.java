@@ -1,12 +1,16 @@
-package jpkmn.gui;
+package jpkmn.exe.gui;
 
 import java.awt.Image;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import jpkmn.item.*;
-import jpkmn.pokemon.Pokemon;
+import jpkmn.game.item.Ball;
+import jpkmn.game.item.Item;
+import jpkmn.game.item.Machine;
+import jpkmn.game.item.Potion;
+import jpkmn.game.item.Stone;
+import jpkmn.game.pokemon.Pokemon;
 
 // Wrapper class for all graphics
 

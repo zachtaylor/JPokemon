@@ -50,10 +50,10 @@ public class Field {
       if (!_shields.get(i).reduceDuration()) _shields.remove(i--);
     for (Effect e : _effects) {
       if (e == Effect.SEEDED)
-        _slot.takeDamageAbsolute(_slot.getLeader().stats.hp.max() / 16);
+        _slot.takeDamageAbsolute(_slot.leader().stats.hp.max() / 16);
       else
-        _slot.getLeader().healDamage(
-            _slot.getTarget().getLeader().stats.hp.max() / 16);
+        _slot.leader().healDamage(
+            _slot.getTarget().leader().stats.hp.max() / 16);
     }
   }
 

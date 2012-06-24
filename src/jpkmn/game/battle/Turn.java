@@ -7,6 +7,8 @@ import java.util.List;
 import jpkmn.game.Player;
 import jpkmn.game.item.Ball;
 import jpkmn.game.item.Item;
+import jpkmn.game.item.Machine;
+import jpkmn.game.item.Stone;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
@@ -15,11 +17,20 @@ import jpkmn.game.pokemon.move.MoveEffect;
 public class Turn {
   private int a;
 
-  public Turn(Slot user) {
+  public Turn(Slot[] slots, Slot user) {
     _user = user;
+    _integer = 100;
     _mode = Mode.RUN;
 
+    for (Slot s : slots) {
+      if (_user.leader().level() < s.leader().level())
+        _integer -= 10 * (s.leader().level() - _user.leader().level());
+      else
+        _integer += 7 * (_user.leader().level() - s.leader().level());
+    }
+
     _messages = new ArrayList<String>();
+    _messages.add(_user.leader().getOwner().name() + " tried to run!");
   }
 
   public Turn(Move m, Slot user) {
@@ -28,24 +39,26 @@ public class Turn {
     _mode = Mode.ATTACK;
     _messages = new ArrayList<String>();
 
-    _messages.add(_user.getLeader().name() + " used " + _move.name() + "!");
+    _messages.add(_user.leader().name() + " used " + _move.name() + "!");
   }
 
   public Turn(int index, Slot user) {
     _user = user;
     _integer = index;
     _mode = Mode.SWAP;
-    _messages = new ArrayList<String>();
 
-    _messages.add("Come back, " + user.getLeader().name() + "!");
+    _messages = new ArrayList<String>();
+    _messages.add("Come back, " + user.leader().name() + "!");
   }
 
   public Turn(Item i, int index, Slot user) {
     _item = i;
     _user = user;
+    _integer = index;
     _mode = Mode.ITEM;
-    _messages = new ArrayList<String>();
 
+    _messages = new ArrayList<String>();
+    _messages.add(_user.leader().getOwner().name() + " used " + i.getName());
   }
 
   public int damage() {
@@ -76,6 +89,7 @@ public class Turn {
 
     while (!_user.getParty().get(_integer).condition.getAwake()) {
       // TODO Ask the user for position
+      break;
     }
   }
 
@@ -88,7 +102,7 @@ public class Turn {
     if (_mode == Mode.ATTACK) {
       Slot enemy = _user.getTarget();
 
-      _integer = Battle.computeDamage(_move, enemy.getLeader());
+      _integer = Battle.computeDamage(_move, enemy.leader());
 
       if (_absolute)
         enemy.takeDamageAbsolute(_integer);
@@ -102,44 +116,58 @@ public class Turn {
     }
     else if (_mode == Mode.ITEM) {
       Pokemon target;
-      
+
       if (_item.target == Target.SELF) {
         target = _user.getParty().get(_integer);
+
+        if (_item instanceof Machine)
+          _messages.add("Machines aren't allowed in battle!");
+        else if (_item instanceof Stone)
+          _messages.add("Stones aren't allowed in battle!");
+        else
+          _item.effect(target);
       }
       else {
-        target = _user.getTarget().getLeader();
-      }
-      
-      if (_item.effect(target)) {
-        if (_item instanceof Ball) {
-          if (!_user.getParty().add(target))
-            ((Player) (_user.getLeader().getOwner())).box.add(target);
-          _user.getTarget().getParty().remove(target);
-        }
-        else {
+        target = _user.getTarget().leader();
 
+        if (_item instanceof Ball) {
+          // TODO check if target is wild
+
+          if (_item.effect(target)) {
+            if (!_user.getParty().add(target))
+              ((Player) (_user.leader().getOwner())).box.add(target);
+            _user.getTarget().getParty().remove(target);
+
+            _messages.add(target.name() + "was caught!");
+          }
+          else
+            _messages.add(target.name() + "broke free!");
         }
       }
     }
     else if (_mode == Mode.RUN) {
-
+      if ((_integer / 250.0) > Math.random()) {
+        // TODO run success
+        _messages.add("Got away successfully!");
+      }
+      else
+        _messages.add("Didn't get away!");
     }
   }
 
   public String[] getNotifications() {
-    Pokemon target = _user.getTarget().getLeader();
+    Pokemon p;
 
     if (_mode == Mode.ATTACK) {
-      _messages.add(target.name() + " took " + _integer + " damage!");
+      p = _user.getTarget().leader();
+      _messages.add(p.name() + " took " + _integer + " damage!");
     }
     else if (_mode == Mode.ITEM) {
 
     }
     else if (_mode == Mode.SWAP) {
-
-    }
-    else if (_mode == Mode.RUN) {
-
+      p = _user.leader();
+      _messages.add(p.getOwner().name() + " sent out " + p.name());
     }
 
     return (String[]) _messages.toArray();
@@ -147,7 +175,7 @@ public class Turn {
 
   private void applyMoveEffects() {
     Pokemon leader = _move.pkmn;
-    Pokemon enemy = _user.getLeader();
+    Pokemon enemy = _user.leader();
 
     for (MoveEffect be : _move.getMoveEffects()) {
       // Move # 73 (Leech Seed) fix cause it targets both user and enemy
@@ -190,6 +218,9 @@ public class Turn {
   private boolean _absolute;
   private List<String> _messages;
 
-  // Used as: swap index, item on index in user party, calculated move power
+  // Attack: calculated move power
+  // Item: index in party for user
+  // Swap: index in party
+  // Run: Odds of being able to run away
   private int _integer;
 }

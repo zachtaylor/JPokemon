@@ -16,7 +16,7 @@ public class Slot {
     _bide = false;
   }
 
-  public Pokemon getLeader() {
+  public Pokemon leader() {
     return getParty().get(0);
   }
 
@@ -29,7 +29,7 @@ public class Slot {
   }
 
   public boolean chooseMove() {
-    Pokemon leader = getLeader();
+    Pokemon leader = leader();
     int position;
 
     // Must keep using the same move
@@ -87,7 +87,7 @@ public class Slot {
   }
 
   public Turn attack() {
-    Pokemon leader = getLeader();
+    Pokemon leader = leader();
     Turn turn = new Turn(_move, this);
 
     if (_bide) {
@@ -110,7 +110,7 @@ public class Slot {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (_move.number() == 60 || _move.number() == 69) {
-          int damage = Battle.computeDamage(_move, _target.getLeader());
+          int damage = Battle.computeDamage(_move, _target.leader());
           damage /= 8;
           takeDamageAbsolute(damage);
         }
@@ -151,8 +151,8 @@ public class Slot {
     return new Turn(_index, this);
   }
 
-  public Turn run() {
-    return new Turn(this);
+  public Turn run(Slot[] slots) {
+    return new Turn(slots, this);
   }
 
   public void takeDamage(Turn turn) {
@@ -163,7 +163,7 @@ public class Slot {
   public void takeDamageAbsolute(int damage) {
     if (_bide) _bidedamage += damage;
 
-    getLeader().takeDamage(damage);
+    leader().takeDamage(damage);
 
     _field.rollDownDuration();
   }
