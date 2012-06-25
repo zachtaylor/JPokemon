@@ -13,6 +13,7 @@ import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveEffect;
+import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Turn {
   private int a;
@@ -103,6 +104,13 @@ public class Turn {
       Slot enemy = _user.getTarget();
 
       _integer = Battle.computeDamage(_move, enemy.leader());
+
+      if (_move.style() == MoveStyle.REPEAT) {
+        int reps = _move.style().getRepetitionAmount();
+
+        _integer *= reps;
+        _messages.add("It hit " + reps + "times!");
+      }
 
       if (_absolute)
         enemy.takeDamageAbsolute(_integer);
