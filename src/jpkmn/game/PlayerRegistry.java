@@ -15,9 +15,9 @@ import jpkmn.game.pokemon.Pokemon;
 
 public class PlayerRegistry {
   private int a;
-  
+
   public static int UNIQUE_ID;
-  
+
   public static Player createNew() {
     try {
       Player newPlayer = new Player(Driver.officialSerial);
@@ -43,7 +43,7 @@ public class PlayerRegistry {
       Scanner scan = new Scanner(playerFile);
 
       Player newPlayer = new Player(scan.nextLine());
-      newPlayer.setName(scan.nextLine());
+      newPlayer.name(scan.nextLine());
       newPlayer.setCash(Integer.parseInt(scan.nextLine()));
       newPlayer.setBadge(Integer.parseInt(scan.nextLine()));
 
