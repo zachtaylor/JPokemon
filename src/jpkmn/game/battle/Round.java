@@ -42,19 +42,26 @@ public class Round {
   }
 
   private void verifyTurnList() {
-    Slot slot, target;
+    Slot slot;
 
     for (Turn turn : _turns) {
       slot = turn.getUserSlot();
-      target = slot.getTarget(); // TODO measure this and do something
 
       if (!slot.leader().condition.getAwake()) {
         if (slot.getParty().countAwake() > 0)
           turn.changeToSwap();
         else {
           _turns.remove(turn);
-          // TODO Remove the user from the battle
+          _battle.removeLoser(turn.getUserSlot());
         }
+      }
+    }
+    
+    for (Turn turn : _turns) {
+      slot = turn.getUserSlot().getTarget();
+
+      if (!_battle.getSlots().contains(slot)) {
+        // TODO shit bricks
       }
     }
   }

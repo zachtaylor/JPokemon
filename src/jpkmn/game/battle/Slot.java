@@ -1,6 +1,5 @@
 package jpkmn.game.battle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jpkmn.exceptions.CancelException;
@@ -68,9 +67,7 @@ public class Slot {
     }
   }
 
-  public boolean chooseAttackTarget(List<Slot> allSlots) {
-    List<Slot> enemySlots = getEnemySlots(allSlots);
-
+  public boolean chooseAttackTarget(List<Slot> enemySlots) {
     try {
       _target = leader().owner().screen.getTargetSlot(enemySlots);
       return true;
@@ -79,7 +76,7 @@ public class Slot {
     }
   }
 
-  public boolean chooseItemTarget(List<Slot> allSlots) {
+  public boolean chooseItemTarget(List<Slot> enemySlots) {
     try {
       if (_item.target == Target.SELF) {
         _target = this;
@@ -87,8 +84,7 @@ public class Slot {
         return true;
       }
       else {
-        _target = leader().owner().screen
-            .getTargetSlot(getEnemySlots(allSlots));
+        _target = leader().owner().screen.getTargetSlot(enemySlots);
         _index = -1;
         return true;
       }
@@ -161,8 +157,8 @@ public class Slot {
     return new Turn(_index, this);
   }
 
-  public Turn run(Slot[] slots) {
-    return new Turn(slots, this);
+  public Turn run(Battle b) {
+    return new Turn(b, this);
   }
 
   public void takeDamage(Turn turn) {
@@ -176,15 +172,6 @@ public class Slot {
     leader().takeDamage(damage);
 
     _field.rollDownDuration();
-  }
-
-  private List<Slot> getEnemySlots(List<Slot> allSlots) {
-    List<Slot> enemySlots = new ArrayList<Slot>();
-
-    for (Slot s : allSlots)
-      if (s != this) enemySlots.add(s);
-
-    return enemySlots;
   }
 
   // Slot

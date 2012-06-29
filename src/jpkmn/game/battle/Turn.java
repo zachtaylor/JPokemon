@@ -16,14 +16,13 @@ import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveEffect;
 
 public class Turn {
-  private int a;
-
-  public Turn(Slot[] slots, Slot user) {
+  public Turn(Battle b, Slot user) {
+    _battle = b;
     _user = user;
     _integer = 100;
     _mode = Mode.RUN;
 
-    for (Slot s : slots) {
+    for (Slot s : _battle.getSlots()) {
       if (_user.leader().level() < s.leader().level())
         _integer -= 10 * (s.leader().level() - _user.leader().level());
       else
@@ -153,7 +152,8 @@ public class Turn {
     }
     else if (_mode == Mode.RUN) {
       if ((_integer / 250.0) > Math.random()) {
-        // TODO run success
+        _battle.remove(_user);
+        _battle = null; // careful
         _messages.add("Got away successfully!");
       }
       else
@@ -221,6 +221,7 @@ public class Turn {
   private Move _move;
   private Item _item;
   private Slot _user;
+  private Battle _battle;
   private boolean _absolute;
   private List<String> _messages;
 

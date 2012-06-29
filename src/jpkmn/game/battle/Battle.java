@@ -3,15 +3,36 @@ package jpkmn.game.battle;
 import java.util.ArrayList;
 import java.util.List;
 
+import jpkmn.game.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
+import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Battle {
   public Battle() {
     _ready = false;
     _slots = new ArrayList<Slot>();
     _round = new Round(this);
+  }
+
+  public void add(AbstractParty p) {
+    _slots.add(new Slot(p));
+  }
+
+  public void removeLoser(Slot s) {
+    lostBattle(s.leader().owner());
+
+    // REWARD PARTICIPANTS HERE
+
+    remove(s);
+  }
+
+  public void remove(Slot s) {
+    _slots.remove(s);
+    if (_slots.size() == 1) {
+      // Battle is over
+    }
   }
 
   public List<Slot> getSlots() {
@@ -26,7 +47,7 @@ public class Battle {
     if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseMove()) return;
-    if (!slot.chooseAttackTarget(getSlots())) return;
+    if (!slot.chooseAttackTarget(getEnemySlotsForSlot(slot))) return;
 
     _round.add(slot.attack());
 
@@ -37,7 +58,7 @@ public class Battle {
     if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseItem()) return;
-    if (!slot.chooseItemTarget(getSlots())) return;
+    if (!slot.chooseItemTarget(getEnemySlotsForSlot(slot))) return;
 
     _round.add(slot.item());
 
@@ -57,15 +78,15 @@ public class Battle {
   public void run(Slot slot) {
     if (!_ready || !_slots.contains(slot)) return;
 
-    _round.add(slot.run((Slot[]) getSlots().toArray()));
+    _round.add(slot.run(this));
 
     if (_round.size() == _slots.size()) executeRound();
   }
 
   private void executeRound() {
-    Round round = _round;
+    Round current = _round;
     _round = new Round(this);
-    round.play();
+    current.play();
     executeConditionEffects();
   }
 
@@ -128,6 +149,20 @@ public class Battle {
     for (Slot slot : _slots) {
       slot.leader().notify(s);
     }
+  }
+
+  private void lostBattle(Player p) {
+    p.setCash(p.cash() / 2);
+  }
+
+  // Later used to implement teams
+  private List<Slot> getEnemySlotsForSlot(Slot slot) {
+    List<Slot> enemySlots = new ArrayList<Slot>();
+
+    for (Slot s : _slots)
+      if (s != slot) enemySlots.add(s);
+
+    return enemySlots;
   }
 
   private boolean _ready;

@@ -3,13 +3,11 @@ package jpkmn.game.pokemon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Condition {
-  private int a; // flag to do work
+import jpkmn.game.battle.Battle;
 
+public class Condition {
   public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE,
-    FLINCH, WAIT;
-    ;
+    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE, FLINCH, WAIT;
   }
 
   /**
@@ -110,7 +108,7 @@ public class Condition {
       }
       else if (current == Issue.CONFUSE) {
         if (attackself) {
-          // TODO Make pokemon attack itself
+          pkmn.takeDamage(Battle.confusedDamage(pkmn));
           attackself = false;
         }
         else if (Math.random() > .66666) {
