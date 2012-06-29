@@ -29,12 +29,12 @@ public class Round {
   public void play() {
     for (Turn turn : _turns) {
       turn.execute();
-      
+
       _battle.notifyAll(turn.getNotifications());
-      
+
       if (turn.getUserSlot().leader().condition.contains(Issue.WAIT))
         _forceNextAttack.add(turn.getUserSlot());
-      
+
       verifyTurnList();
     }
 

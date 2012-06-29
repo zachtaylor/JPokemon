@@ -1,6 +1,10 @@
 package jpkmn.exe.launcher;
 
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
 import jpkmn.img.ImageFinder;
 
