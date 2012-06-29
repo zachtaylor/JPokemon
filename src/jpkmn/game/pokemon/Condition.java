@@ -7,7 +7,9 @@ public class Condition {
   private int a; // flag to do work
 
   public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE, FLINCH, WAIT;
+    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE,
+    FLINCH, WAIT;
+    ;
   }
 
   /**
@@ -137,7 +139,7 @@ public class Condition {
       }
       else if (current == Issue.SLEEP && Math.random() > .333333) {
         issues.remove(Issue.SLEEP);
-        messages.add(pkmn.name()+ " woke up!");
+        messages.add(pkmn.name() + " woke up!");
       }
     }
 
