@@ -1,17 +1,15 @@
 package jpkmn.game.pokemon;
 
-import java.util.*;
+import java.util.Scanner;
 
-import lib.PokemonBase;
-
+import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.PokemonTrainer;
+import jpkmn.game.Player;
 import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
+import lib.PokemonBase;
 
 public class Pokemon {
-  private int a; // flag to do work
-
   public final Condition condition;
   public final StatBlock stats;
   public final MoveBlock moves;
@@ -41,7 +39,7 @@ public class Pokemon {
     return name;
   }
 
-  public void nickname(String s) {
+  public void name(String s) {
     name = s;
   }
 
@@ -109,14 +107,14 @@ public class Pokemon {
     stats.hp.effect(heal);
   }
 
-  public void setOwner(PokemonTrainer owner) {
+  public void owner(Player owner) {
     _owner = owner;
   }
 
-  public PokemonTrainer getOwner() {
+  public Player owner() {
     return _owner;
   }
-  
+
   public void notify(String... s) {
     if (_owner != null) _owner.notify(s);
   }
@@ -223,7 +221,11 @@ public class Pokemon {
   public boolean changeSpecies(int... num) {
     String speciesUpdate = "Your " + species + " evolved into ";
 
-    // TODO Ask the owner
+    try {
+      if (!_owner.screen.isEvolutionOkay(this)) return false;
+    } catch (CancelException c) {
+      return false;
+    }
 
     if (num == null || num.length == 0)
       number++;
@@ -252,7 +254,7 @@ public class Pokemon {
   private long unique_id;
   private Type type1, type2;
   private String name, species;
-  private PokemonTrainer _owner;
+  private Player _owner;
   private int number, level, xp, evolutionlevel;
 
   private static long CURRENT_ID = 0;

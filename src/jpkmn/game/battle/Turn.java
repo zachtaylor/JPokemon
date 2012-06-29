@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import jpkmn.exceptions.CancelException;
 import jpkmn.game.Player;
 import jpkmn.game.item.Ball;
 import jpkmn.game.item.Item;
@@ -13,7 +14,6 @@ import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveEffect;
-import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Turn {
   private int a;
@@ -31,7 +31,7 @@ public class Turn {
     }
 
     _messages = new ArrayList<String>();
-    _messages.add(_user.leader().getOwner().name() + " tried to run!");
+    _messages.add(_user.leader().owner().name() + " tried to run!");
   }
 
   public Turn(Move m, Slot user) {
@@ -59,7 +59,7 @@ public class Turn {
     _mode = Mode.ITEM;
 
     _messages = new ArrayList<String>();
-    _messages.add(_user.leader().getOwner().name() + " used " + i.getName());
+    _messages.add(_user.leader().owner().name() + " used " + i.getName());
   }
 
   public int damage() {
@@ -89,8 +89,13 @@ public class Turn {
     _mode = Mode.SWAP;
 
     while (!_user.getParty().get(_integer).condition.getAwake()) {
-      // TODO Ask the user for position
-      break;
+      try {
+        _integer = _user.leader().owner().screen.getPartyIndex("swap");
+      } catch (CancelException c) {
+        // Do nothing
+      }
+
+      break; // Do this so it doesn't inifite loop
     }
   }
 
@@ -104,13 +109,6 @@ public class Turn {
       Slot enemy = _user.getTarget();
 
       _integer = Battle.computeDamage(_move, enemy.leader());
-
-      if (_move.style() == MoveStyle.REPEAT) {
-        int reps = _move.style().getRepetitionAmount();
-
-        _integer *= reps;
-        _messages.add("It hit " + reps + "times!");
-      }
 
       if (_absolute)
         enemy.takeDamageAbsolute(_integer);
@@ -143,7 +141,7 @@ public class Turn {
 
           if (_item.effect(target)) {
             if (!_user.getParty().add(target))
-              ((Player) (_user.leader().getOwner())).box.add(target);
+              ((Player) (_user.leader().owner())).box.add(target);
             _user.getTarget().getParty().remove(target);
 
             _messages.add(target.name() + "was caught!");
@@ -175,7 +173,7 @@ public class Turn {
     }
     else if (_mode == Mode.SWAP) {
       p = _user.leader();
-      _messages.add(p.getOwner().name() + " sent out " + p.name());
+      _messages.add(p.owner().name() + " sent out " + p.name());
     }
 
     return (String[]) _messages.toArray();

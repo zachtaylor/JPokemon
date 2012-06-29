@@ -1,5 +1,9 @@
 package jpkmn.game.battle;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jpkmn.exceptions.CancelException;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Condition.Issue;
 import jpkmn.game.pokemon.Pokemon;
@@ -8,8 +12,6 @@ import jpkmn.game.pokemon.move.MoveStyle;
 import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Slot {
-  private int a;
-
   public Slot(AbstractParty p) {
     _party = p;
     _field = new Field(this);
@@ -29,36 +31,27 @@ public class Slot {
   }
 
   public boolean chooseMove() {
-    Pokemon leader = leader();
-    int position;
+    if (leader().condition.contains(Issue.WAIT)) return true;
 
-    // Must keep using the same move
-    if (leader.condition.contains(Issue.WAIT)) return true;
-
-    if (Math.random() > .5) { // TODO leader.isAskable()) {
-      // TODO Ask for position
-      position = 0;
-      if (position == -1) return false;
+    try {
+      _index = leader().owner().screen.getMoveIndex("attack", leader());
+      return true;
+    } catch (CancelException c) {
+      return false;
     }
-    else {
-      position = (int) (Math.random() * leader.moves.amount());
-    }
-
-    _move = leader.moves.get(position);
-    return true;
   }
 
   public Move getMove() {
-    return _move;
+    return leader().moves.get(_index);
   }
 
   public boolean chooseItem() {
-    _item = null; // TODO Ask
-
-    if (_item == null)
-      return false;
-    else
+    try {
+      _item = leader().owner().screen.getItemChoice();
       return true;
+    } catch (CancelException c) {
+      return false;
+    }
   }
 
   public Item getItem() {
@@ -66,29 +59,48 @@ public class Slot {
   }
 
   public boolean chooseSwapPosition() {
-    _index = 0; // TODO Ask the user
+    try {
+      _index = leader().owner().screen.getPartyIndex("swap");
 
-    return _index > 0;
+      return true;
+    } catch (CancelException c) {
+      return false;
+    }
   }
 
-  public boolean chooseAttackTarget() {
-    // TODO
+  public boolean chooseAttackTarget(List<Slot> allSlots) {
+    List<Slot> enemySlots = getEnemySlots(allSlots);
 
-    return true;
+    try {
+      _target = leader().owner().screen.getTargetSlot(enemySlots);
+      return true;
+    } catch (CancelException c) {
+      return false;
+    }
   }
 
-  public boolean chooseItemTarget() {
-    if (_item.target == Target.ENEMY)
-      // TODO Ask
-      _target = null;
-    else
-      _target = this;
-    return true;
+  public boolean chooseItemTarget(List<Slot> allSlots) {
+    try {
+      if (_item.target == Target.SELF) {
+        _target = this;
+        _index = leader().owner().screen.getPartyIndex("item");
+        return true;
+      }
+      else {
+        _target = leader().owner().screen
+            .getTargetSlot(getEnemySlots(allSlots));
+        _index = -1;
+        return true;
+      }
+    } catch (CancelException c) {
+      return false;
+    }
   }
 
   public Turn attack() {
     Pokemon leader = leader();
-    Turn turn = new Turn(_move, this);
+    Move move = getMove();
+    Turn turn = new Turn(move, this);
 
     if (_bide) {
       turn.setAbsoluteDamage(_bidedamage);
@@ -103,14 +115,14 @@ public class Slot {
         turn.nullify(leader.condition.toString());
 
       // 2 Reduce and measure PP
-      if (!_move.use()) turn.nullify("There is not enough PP!");
+      if (!move.use()) turn.nullify("There is not enough PP!");
 
       // 3 Measure accuracy
-      if (!_move.hits(_target._party.getLeader())) {
+      if (!move.hits(_target._party.getLeader())) {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
-        if (_move.number() == 60 || _move.number() == 69) {
-          int damage = Battle.computeDamage(_move, _target.leader());
+        if (move.number() == 60 || move.number() == 69) {
+          int damage = Battle.computeDamage(move, _target.leader());
           damage /= 8;
           takeDamageAbsolute(damage);
         }
@@ -119,23 +131,22 @@ public class Slot {
       }
     }
 
-    if (_move.style() == MoveStyle.DELAY) {
+    if (move.style() == MoveStyle.DELAY) {
       if (leader.condition.contains(Issue.WAIT)) {
         leader.condition.remove(Issue.WAIT); // take away 1 wait
 
         if (leader.condition.contains(Issue.WAIT) // still waiting?
-            || _move.style().attackBeforeDelay()) // or already attacked
+            || move.style().attackBeforeDelay()) // or already attacked
           turn.nullify("Resting this turn.");
       }
       else {
-        for (int i = 0; i < _move.style().delay(); ++i)
+        for (int i = 0; i < move.style().delay(); ++i)
           leader.condition.addIssue(Issue.WAIT); // add all the waits
 
-        if (_move.style().attackAfterDelay())
-          turn.nullify("Resting this turn");
+        if (move.style().attackAfterDelay()) turn.nullify("Resting this turn");
       }
     }
-    else if (_move.style() == MoveStyle.MISC) { // Misc
+    else if (move.style() == MoveStyle.MISC) { // Misc
       turn.nullify("This doesn't work yet. Sorry about that!");
     }
 
@@ -143,8 +154,7 @@ public class Slot {
   }
 
   public Turn item() {
-    // TODO
-    return null;
+    return new Turn(_item, _index, this);
   }
 
   public Turn swap() {
@@ -168,19 +178,29 @@ public class Slot {
     _field.rollDownDuration();
   }
 
+  private List<Slot> getEnemySlots(List<Slot> allSlots) {
+    List<Slot> enemySlots = new ArrayList<Slot>();
+
+    for (Slot s : allSlots)
+      if (s != this) enemySlots.add(s);
+
+    return enemySlots;
+  }
+
   // Slot
   private Field _field;
   private Slot _target;
   private AbstractParty _party;
 
   // Move
-  private Move _move;
   private boolean _bide;
   private int _bidedamage;
 
   // Item
   private Item _item;
 
-  // Swap
+  // Attack: Move index
+  // Item: index in party for user
+  // Swap: index in party
   private int _index;
 }

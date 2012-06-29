@@ -2,14 +2,12 @@ package jpkmn.game.pokemon.move;
 
 import java.util.ArrayList;
 
+import jpkmn.Constants;
+import jpkmn.exceptions.CancelException;
+import jpkmn.game.pokemon.Pokemon;
 import lib.MoveMap;
 
-import jpkmn.Constants;
-import jpkmn.game.pokemon.Pokemon;
-
 public class MoveBlock {
-  private int a; // Flag to do work
-
   public MoveBlock(Pokemon p) {
     pkmn = p;
     moves = new Move[Constants.MOVENUMBER];
@@ -54,13 +52,21 @@ public class MoveBlock {
   public boolean add(int number) {
     int position;
 
-    if (amount < moves.length)
+    if (amount < moves.length) {
       position = amount++;
-    else
-      position = 0; // TODO Ask user what position
+    }
+    else {
+      try {
+        position = pkmn.owner().screen.getMoveIndex("replace", pkmn);
+      } catch (CancelException c) {
+        return false;
+      }
+    }
 
-    if (position > -1) return add(number, position);
-    else return false;
+    if (position > -1)
+      return add(number, position);
+    else
+      return false;
   }
 
   public boolean add(int number, int position) {

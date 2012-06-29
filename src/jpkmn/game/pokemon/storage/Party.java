@@ -1,13 +1,13 @@
 package jpkmn.game.pokemon.storage;
 
 import jpkmn.Constants;
-import jpkmn.game.PokemonTrainer;
+import jpkmn.game.Player;
 import jpkmn.game.pokemon.Pokemon;
 
 public class Party extends AbstractParty {
-  public Party(PokemonTrainer pt) {
+  public Party(Player p) {
     super();
-    _owner = pt;
+    _owner = p;
   }
 
   public boolean add(Pokemon p) {
@@ -15,7 +15,7 @@ public class Party extends AbstractParty {
       return false;
 
     _data[_amount++] = p;
-    p.setOwner(_owner);
+    p.owner(_owner);
     
     return true;
   }
@@ -26,11 +26,11 @@ public class Party extends AbstractParty {
     for (int i = index; i < _amount - 1; i++)
       _data[i] = _data[i + 1];
 
-    _data[--_amount].setOwner(null);
+    _data[--_amount].owner(null);
     _data[_amount] = null;
 
     return true;
   }
 
-  private PokemonTrainer _owner;
+  private Player _owner;
 }

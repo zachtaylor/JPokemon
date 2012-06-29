@@ -8,8 +8,6 @@ import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
 
 public class Battle {
-  private int a;
-
   public Battle() {
     _ready = false;
     _slots = new ArrayList<Slot>();
@@ -28,7 +26,7 @@ public class Battle {
     if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseMove()) return;
-    if (!slot.chooseAttackTarget()) return;
+    if (!slot.chooseAttackTarget(getSlots())) return;
 
     _round.add(slot.attack());
 
@@ -39,7 +37,7 @@ public class Battle {
     if (!_ready || !_slots.contains(slot)) return;
 
     if (!slot.chooseItem()) return;
-    if (!slot.chooseItemTarget()) return;
+    if (!slot.chooseItemTarget(getSlots())) return;
 
     _round.add(slot.item());
 

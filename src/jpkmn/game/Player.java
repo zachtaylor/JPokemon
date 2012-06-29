@@ -9,24 +9,34 @@ import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
+import jpkmn.game.pokemon.storage.Party;
 
-public class Player extends PokemonTrainer {
-  private int a;
-
+public class Player {
   public final Bag bag;
-  public final PCStorage box;
   public final Pokedex dex;
+  public final Party party;
+  public final PCStorage box;
+  public final GraphicsHandler screen;
 
   public Player(String serial) throws LoadException {
-    super();
-
     if (!serial.equals(Driver.officialSerial))
       throw new LoadException("Improper file version: " + _serial);
 
     _serial = serial;
-    dex = new Pokedex();
+
     bag = new Bag();
+    dex = new Pokedex();
     box = new PCStorage();
+    party = new Party(this);
+    screen = new GraphicsHandler(this);
+  }
+
+  public String name() {
+    return _name;
+  }
+
+  public void name(String s) {
+    _name = s;
   }
 
   public int cash() {
@@ -79,12 +89,11 @@ public class Player extends PokemonTrainer {
     return ((Player) o)._id == _id;
   }
 
-  @Override
   public void notify(String... s) {
-    // TODO Complete this
+    screen.notify(s);
   }
 
   int _id;
-  private String _serial;
   private int _cash, _badge;
+  private String _serial, _name;
 }
