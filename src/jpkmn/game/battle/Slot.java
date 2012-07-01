@@ -96,10 +96,10 @@ public class Slot {
   public Turn attack() {
     Pokemon leader = leader();
     Move move = getMove();
-    Turn turn = new Turn(move, this);
+    Turn turn = new Turn(this, _index);
 
     if (_bide) {
-      turn.setAbsoluteDamage(_bidedamage);
+      turn.damageAbsolute(_bidedamage);
       _bide = false;
       _bidedamage = 0;
     }
@@ -150,15 +150,15 @@ public class Slot {
   }
 
   public Turn item() {
-    return new Turn(_item, _index, this);
+    return new Turn(this, _item, _index);
   }
 
   public Turn swap() {
-    return new Turn(_index, this);
+    return new Turn(this, 0, _index);
   }
 
   public Turn run(Battle b) {
-    return new Turn(b, this);
+    return new Turn(this, b);
   }
 
   public void takeDamage(Turn turn) {

@@ -24,18 +24,18 @@ public class Shield {
 
     if (_exceptions.contains(move.name())) {
       // That move is an exception to this shield
-      t.setDamage(t.damage() * 2);
+      t.damage(t.damage() * 2);
     }
     else if (_type == Field.Effect.INVULNERABLE) {
       t.nullify("It didn't work");
     }
     else if (_type == Field.Effect.PHYSSHIELD
         && move.style() == MoveStyle.PHYSICAL) {
-      t.setDamage((int) (t.damage() * (1 - _reduction)));
+      t.damage((int) (t.damage() * (1 - _reduction)));
     }
     else if (_type == Field.Effect.SPECSHIELD
         && move.style() == MoveStyle.SPECIAL) {
-      t.setDamage((int) (t.damage() * (1 - _reduction)));
+      t.damage((int) (t.damage() * (1 - _reduction)));
     }
   }
 

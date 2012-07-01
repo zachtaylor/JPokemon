@@ -16,65 +16,67 @@ import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveEffect;
 
 public class Turn {
-  public Turn(Battle b, Slot user) {
+  public Turn(Slot user, Battle b) {
+    _int1 = 100;
     _battle = b;
     _user = user;
-    _integer = 100;
     _mode = Mode.RUN;
 
     for (Slot s : _battle.getSlots()) {
       if (_user.leader().level() < s.leader().level())
-        _integer -= 10 * (s.leader().level() - _user.leader().level());
+        _int1 -= 10 * (s.leader().level() - _user.leader().level());
       else
-        _integer += 7 * (_user.leader().level() - s.leader().level());
+        _int1 += 7 * (_user.leader().level() - s.leader().level());
     }
 
     _messages = new ArrayList<String>();
     _messages.add(_user.leader().owner().name() + " tried to run!");
   }
 
-  public Turn(Move m, Slot user) {
-    _move = m;
+  public Turn(Slot user, int moveIndex) {
     _user = user;
+    _int1 = moveIndex;
     _mode = Mode.ATTACK;
     _messages = new ArrayList<String>();
 
-    _messages.add(_user.leader().name() + " used " + _move.name() + "!");
+    _messages.add(_user.leader().name() + " used "
+        + _user.leader().moves.get(_int1).name() + "!");
   }
 
-  public Turn(int index, Slot user) {
+  public Turn(Slot user, int swap1, int swap2) {
     _user = user;
-    _integer = index;
+    _int1 = swap1;
+    _int2 = swap2;
     _mode = Mode.SWAP;
 
     _messages = new ArrayList<String>();
-    _messages.add("Come back, " + user.leader().name() + "!");
+    _messages.add("Come back, " + user.getParty().get(_int1) + "!");
   }
 
-  public Turn(Item i, int index, Slot user) {
-    _item = i;
+  public Turn(Slot user, Item item, int index) {
     _user = user;
-    _integer = index;
+    _item = item;
+    _int1 = index;
     _mode = Mode.ITEM;
 
     _messages = new ArrayList<String>();
-    _messages.add(_user.leader().owner().name() + " used " + i.getName());
+    _messages.add(_user.leader().owner().name() + " used " + item.getName());
   }
 
   public int damage() {
-    return _integer;
+    return _int2;
   }
 
-  public void setDamage(int d) {
-    _integer = d;
+  public void damage(int d) {
+    _int2 = d;
   }
 
   public Slot getUserSlot() {
     return _user;
   }
 
-  public void setAbsoluteDamage(int d) {
-    _integer = d;
+  public void damageAbsolute(int d) {
+    _int2 = d;
     _absolute = true;
   }
 
@@ -84,12 +86,12 @@ public class Turn {
   }
 
   public void changeToSwap() {
-    _integer = 0;
+    _int2 = 0;
     _mode = Mode.SWAP;
 
-    while (!_user.getParty().get(_integer).condition.getAwake()) {
+    while (!_user.getParty().get(_int2).condition.getAwake()) {
       try {
-        _integer = _user.leader().owner().screen.getPartyIndex("swap");
+        _int2 = _user.leader().owner().screen.getPartyIndex("swap");
       } catch (CancelException c) {
         // Do nothing
       }
@@ -106,24 +108,24 @@ public class Turn {
   public void execute() {
     if (_mode == Mode.ATTACK) {
       Slot enemy = _user.getTarget();
-
-      _integer = Battle.computeDamage(_move, enemy.leader());
+      Move move = _user.leader().moves.get(_int1);
+      _int2 = Battle.computeDamage(move, enemy.leader());
 
       if (_absolute)
-        enemy.takeDamageAbsolute(_integer);
+        enemy.takeDamageAbsolute(_int2);
       else
         enemy.takeDamage(this);
 
       applyMoveEffects();
     }
     else if (_mode == Mode.SWAP) {
-      _user.getParty().swap(0, _integer);
+      _user.getParty().swap(_int1, _int2);
     }
     else if (_mode == Mode.ITEM) {
       Pokemon target;
 
       if (_item.target == Target.SELF) {
-        target = _user.getParty().get(_integer);
+        target = _user.getParty().get(_int1);
 
         if (_item instanceof Machine)
           _messages.add("Machines aren't allowed in battle!");
@@ -151,7 +153,7 @@ public class Turn {
       }
     }
     else if (_mode == Mode.RUN) {
-      if ((_integer / 250.0) > Math.random()) {
+      if ((_int1 / 250.0) > Math.random()) {
         _battle.remove(_user);
         _battle = null; // careful
         _messages.add("Got away successfully!");
@@ -166,7 +168,7 @@ public class Turn {
 
     if (_mode == Mode.ATTACK) {
       p = _user.getTarget().leader();
-      _messages.add(p.name() + " took " + _integer + " damage!");
+      _messages.add(p.name() + " took " + _int2 + " damage!");
     }
     else if (_mode == Mode.ITEM) {
 
@@ -179,11 +181,30 @@ public class Turn {
     return (String[]) _messages.toArray();
   }
 
-  private void applyMoveEffects() {
-    Pokemon leader = _move.pkmn;
-    Pokemon enemy = _user.leader();
+  public static class TurnComparator implements Comparator<Turn> {
+    public int compare(Turn o1, Turn o2) {
+      if (o1._mode.ordinal() < o2._mode.ordinal())
+        return -1;
+      else if (o1._mode == o2._mode) {
+        if (o1._mode == Mode.ATTACK) {
+          Pokemon p1 = o1._user.leader(), p2 = o2._user.leader();
 
-    for (MoveEffect be : _move.getMoveEffects()) {
+          return p2.stats.spd.cur() - p1.stats.spd.cur();
+        }
+        else {
+          return 0;
+        }
+      }
+      else
+        return 1;
+    }
+  }
+
+  private void applyMoveEffects() {
+    Pokemon leader = _user.leader(), enemy = _user.getTarget().leader();
+    Move move = leader.moves.get(_int1);
+
+    for (MoveEffect be : move.getMoveEffects()) {
       // Move # 73 (Leech Seed) fix cause it targets both user and enemy
       if (be == MoveEffect.LEECH) {
         enemy.condition.addIssue(Condition.Issue.SEEDED);
@@ -196,38 +217,20 @@ public class Turn {
     }
   }
 
-  public static class TurnComparator implements Comparator<Turn> {
-    public int compare(Turn o1, Turn o2) {
-      if (o1._mode.ordinal() < o2._mode.ordinal())
-        return -1;
-      else if (o1._mode == o2._mode) {
-        if (o1._mode == Mode.ATTACK) {
-          return o2._move.pkmn.stats.spd.cur() - o1._move.pkmn.stats.spd.cur();
-        }
-        else {
-          return 0;
-        }
-      }
-      else
-        return 1;
-    }
-  }
-
   private enum Mode {
     RUN, SWAP, ITEM, ATTACK, NULL;
   }
 
   private Mode _mode;
-  private Move _move;
   private Item _item;
   private Slot _user;
   private Battle _battle;
   private boolean _absolute;
   private List<String> _messages;
 
-  // Attack: calculated move power
-  // Item: index in party for user
-  // Swap: index in party
-  // Run: Odds of being able to run away
-  private int _integer;
+  // Attack: Index of move, power of move
+  // Item: index in party for user, not used
+  // Swap: index in party 1, index in party 2
+  // Run: Odds of being able to run away, not used
+  private int _int1, _int2;
 }
