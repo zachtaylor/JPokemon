@@ -16,6 +16,8 @@ public class Battle {
     _round = new Round(this);
   }
 
+  // Adding comment to test Github for Windows diff
+
   public void add(AbstractParty p) {
     _slots.add(new Slot(p));
   }
