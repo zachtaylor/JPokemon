@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.Driver;
+import jpkmn.exe.gui.GraphicsHandler;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
