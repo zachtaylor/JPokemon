@@ -1,6 +1,7 @@
 package jpkmn.game.pokemon.move;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.CancelException;
@@ -30,15 +31,15 @@ public class MoveBlock {
     }
   }
 
-  public String list() {
-    String response = "[";
+  public String[] list() {
+    List<String> response = new ArrayList<String>();
 
-    for (int i = 0; i < amount; ++i) {
-      if (moves[i] != null) response += moves[i].name();
-      if (i != 3) response += " ";
+    for (Move m : moves) {
+      if (m != null)
+        response.add(m.name() + " (" + m.ppcur() + "/" + m.ppmax() + ")");
     }
 
-    return response + "]";
+    return response.toArray(new String[amount]);
   }
 
   public void check() {

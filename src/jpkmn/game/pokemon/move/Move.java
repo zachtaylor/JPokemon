@@ -31,7 +31,7 @@ public class Move {
     _accuracy = base.getAccuracy();
     _type = Type.valueOf(base.getType());
     _style = MoveStyle.valueOf(base.getStyle());
-    
+
     setBonusEffects();
   }
 
@@ -53,6 +53,14 @@ public class Move {
 
   public Type type() {
     return _type;
+  }
+
+  public int ppcur() {
+    return _ppcur;
+  }
+
+  public int ppmax() {
+    return _ppmax;
   }
 
   /**
@@ -105,8 +113,7 @@ public class Move {
   public boolean hits(Pokemon target) {
 
     // Move # 141 (Swift) never misses
-    if (_number == 141)
-      return true;
+    if (_number == 141) return true;
 
     if (_style == MoveStyle.OHKO) {
       int levelDiff = pkmn.level() - target.level();
@@ -135,7 +142,7 @@ public class Move {
   public List<MoveEffect> getMoveEffects() {
     return _effects;
   }
-  
+
   /**
    * Loads and sets all the bonus effects for a move
    */
@@ -155,7 +162,7 @@ public class Move {
       _effects.add(current);
     }
   }
-  
+
   private String _name;
   private int _number, _power, _ppcur, _ppmax;
   private double _accuracy;

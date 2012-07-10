@@ -38,8 +38,13 @@ public class GraphicsHandler {
   }
 
   public int getMoveIndex(String message, Pokemon p) throws CancelException {
-    // TODO
-    return 0;
+    String[] moveNames = p.moves.list();
+    String title = "Select Move Index";
+    Icon icon = new ImageIcon(ImageFinder.find(p));
+
+    return JOptionPane.showOptionDialog(null, message, title,
+        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, icon,
+        moveNames, null);
   }
 
   public int getPartyIndex(String message) throws CancelException {
