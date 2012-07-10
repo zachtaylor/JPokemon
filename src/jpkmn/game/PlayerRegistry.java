@@ -36,7 +36,7 @@ public class PlayerRegistry {
     return null;
   }
 
-  public static Player fromFile(String s) {
+  public static Player fromFile(String s) throws LoadException {
     try {
       Preferences pref = Constants.prefs;
       File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
@@ -61,14 +61,8 @@ public class PlayerRegistry {
       return newPlayer;
 
     } catch (FileNotFoundException f) {
-      // TODO That player doesn't exist on the system.
-    } catch (LoadException l) {
-      // TODO Problem loading player
-      l.printStackTrace();
-      System.out.println("\n" + l.getMessage());
+      throw new LoadException("That player does not exist.");
     }
-
-    return null;
   }
 
   private static void register(Player p) throws LoadException {

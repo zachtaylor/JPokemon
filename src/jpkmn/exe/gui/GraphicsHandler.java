@@ -22,7 +22,7 @@ public class GraphicsHandler {
     _inbox = new MessageView();
   }
 
-  public void notify(String[] s) {
+  public void notify(String... s) {
     if (_player == null) return;
     _inbox.addMessage(s);
   }
