@@ -13,19 +13,19 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import jpkmn.img.ImageFinder;
 
 public class MessageView extends JPanel {
-  private static final long serialVersionUID = 1L;
-  private static MyFrame frame;
-
   public MessageView() {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     frame = new MyFrame(this);
-    JScrollPane scroll = new JScrollPane(this);
+    scroll = new JScrollPane(this);
+    scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
     frame.getContentPane().add(scroll, BorderLayout.CENTER);
     frame.setSize(new Dimension(350, 200));
     frame.setResizable(false);
@@ -58,6 +58,9 @@ public class MessageView extends JPanel {
   private void refresh() {
     setVisible(false);
     setVisible(true);
+    
+    JScrollBar bar = scroll.getVerticalScrollBar();
+    bar.setValue(bar.getMaximum());
   }
 
   private void addMessage(Message m) {
@@ -123,4 +126,8 @@ public class MessageView extends JPanel {
     private MessageView _m;
     private static final long serialVersionUID = 1L;
   }
+
+  private MyFrame frame;
+  private JScrollPane scroll;
+  private static final long serialVersionUID = 1L;
 }

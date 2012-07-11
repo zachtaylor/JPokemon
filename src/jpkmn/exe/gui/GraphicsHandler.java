@@ -23,7 +23,7 @@ public class GraphicsHandler {
     GraphicsHandler g;
 
     try {
-      zach = PlayerRegistry.fromFile("Zach");
+      zach = PlayerRegistry.fromFile("newfile");
 
     } catch (LoadException le) {
       return;
