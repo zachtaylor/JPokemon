@@ -7,13 +7,64 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import jpkmn.exceptions.CancelException;
+import jpkmn.exceptions.LoadException;
 import jpkmn.game.Player;
+import jpkmn.game.PlayerRegistry;
 import jpkmn.game.battle.Slot;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
 
 public class GraphicsHandler {
+  public static void main(String[] args) {
+    Player zach;
+    Party party;
+    GraphicsHandler g;
+
+    try {
+      zach = PlayerRegistry.fromFile("Zach");
+
+    } catch (LoadException le) {
+      return;
+    }
+
+    g = zach.screen;
+    party = zach.party;
+
+    g.notify("Test Notification", "Line1", "Line2");
+
+    try {
+      if (g.isEvolutionOkay(party.getLeader())) {
+        g.notify("Evolutioin allowed");
+      }
+      else {
+        g.notify("Evolution not allowed");
+      }
+    } catch (CancelException e) {
+      g.notify("Evolution exception");
+      return;
+    }
+
+    try {
+      int index = g.getMoveIndex("Select a move", party.getLeader());
+
+      g.notify("Move Selected", party.getLeader().moves.get(index).name());
+    } catch (CancelException c) {
+      g.notify("Move Selection exception");
+      return;
+    }
+
+    try {
+      int index = g.getPartyIndex("Select a pokemon");
+
+      g.notify("Pokemon Selected", party.get(index).name());
+    } catch (CancelException c) {
+      g.notify("Pokemon Selection exception");
+      return;
+    }
+  }
+
   public GraphicsHandler() {
   }
 
@@ -48,8 +99,16 @@ public class GraphicsHandler {
   }
 
   public int getPartyIndex(String message) throws CancelException {
-    // TODO
-    return 0;
+    String[] options = new String[_player.party.size()];
+
+    for (int i = _player.party.size() - 1; i >= 0; i--) {
+      Pokemon p = _player.party.get(i);
+      options[i] = p.name() + " " + p.stats.hp.cur() + "/" + p.stats.hp.max();
+    }
+
+    return JOptionPane.showOptionDialog(null, message, "Select From Party",
+        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+        options, null);
   }
 
   public Slot getTargetSlot(List<Slot> enemySlots) throws CancelException {

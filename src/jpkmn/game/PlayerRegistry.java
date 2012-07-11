@@ -37,6 +37,10 @@ public class PlayerRegistry {
   }
 
   public static Player fromFile(String s) throws LoadException {
+    if (!s.endsWith(".jpkmn")) {
+      s += ".jpkmn";
+    }
+    
     try {
       Preferences pref = Constants.prefs;
       File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
