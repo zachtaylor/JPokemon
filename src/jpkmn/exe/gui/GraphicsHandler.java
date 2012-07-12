@@ -63,6 +63,15 @@ public class GraphicsHandler {
       g.notify("Pokemon Selection exception");
       return;
     }
+
+    try {
+      Item item = g.getItemChoice("item");
+
+      g.notify("Item Selected", item.name());
+    } catch (CancelException c) {
+      g.notify("Item Selection exception");
+      return;
+    }
   }
 
   public GraphicsHandler() {
@@ -99,12 +108,10 @@ public class GraphicsHandler {
   }
 
   public int getPartyIndex(String message) throws CancelException {
-    String[] options = new String[_player.party.size()];
+    ImageIcon[] options = new ImageIcon[_player.party.size()];
 
-    for (int i = _player.party.size() - 1; i >= 0; i--) {
-      Pokemon p = _player.party.get(i);
-      options[i] = p.name() + " " + p.stats.hp.cur() + "/" + p.stats.hp.max();
-    }
+    for (int i = _player.party.size() - 1; i >= 0; i--)
+      options[i] = new ImageIcon(ImageFinder.find(_player.party.get(i)));
 
     return JOptionPane.showOptionDialog(null, message, "Select From Party",
         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -118,8 +125,63 @@ public class GraphicsHandler {
     return null;
   }
 
-  public Item getItemChoice() throws CancelException {
-    // TODO
+  public Item getItemChoice(String message) throws CancelException {
+    String[] options = { "Balls", "Potions", "Stones", "Machines" };
+
+    int itemFamily = JOptionPane.showOptionDialog(null, message,
+        "Select An Item", JOptionPane.DEFAULT_OPTION,
+        JOptionPane.QUESTION_MESSAGE, null, options, null);
+
+    if (itemFamily == -1)
+      throw new CancelException("");
+    else if (itemFamily == 0) {
+      ImageIcon[] ballOptions = {
+          new ImageIcon(ImageFinder.find("item/ball/g")),
+          new ImageIcon(ImageFinder.find("item/ball/m")),
+          new ImageIcon(ImageFinder.find("item/ball/p")),
+          new ImageIcon(ImageFinder.find("item/ball/u")) };
+
+      int ball = JOptionPane.showOptionDialog(null, message, "Select An Item",
+          JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+          ballOptions, null);
+
+      if (ball != -1) return _player.bag.ball(ball);
+    }
+    else if (itemFamily == 1) {
+      ImageIcon[] potionOptions = {
+          new ImageIcon(ImageFinder.find("item/potion/f")),
+          new ImageIcon(ImageFinder.find("item/potion/h")),
+          new ImageIcon(ImageFinder.find("item/potion/p")),
+          new ImageIcon(ImageFinder.find("item/potion/s")) };
+
+      int potion = JOptionPane.showOptionDialog(null, message,
+          "Select An Item", JOptionPane.DEFAULT_OPTION,
+          JOptionPane.QUESTION_MESSAGE, null, potionOptions, null);
+
+      if (potion != -1) return _player.bag.potion(potion);
+    }
+    else if (itemFamily == 2) {
+      ImageIcon[] stoneOptions = {
+          new ImageIcon(ImageFinder.find("item/stone/f")),
+          new ImageIcon(ImageFinder.find("item/stone/l")),
+          new ImageIcon(ImageFinder.find("item/stone/m")),
+          new ImageIcon(ImageFinder.find("item/stone/t")),
+          new ImageIcon(ImageFinder.find("item/stone/w")) };
+
+      int stone = JOptionPane.showOptionDialog(null, message, "Select An Item",
+          JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+          stoneOptions, null);
+
+      if (stone == 0)
+        return _player.bag.stone("fire");
+      else if (stone == 1)
+        return _player.bag.stone("leaf");
+      else if (stone == 2)
+        return _player.bag.stone("moon");
+      else if (stone == 3)
+        return _player.bag.stone("thunder");
+      else if (stone == 4) return _player.bag.stone("water");
+    }
     return null;
   }
 

@@ -46,7 +46,7 @@ public class Slot {
 
   public boolean chooseItem() {
     try {
-      _item = leader().owner().screen.getItemChoice();
+      _item = leader().owner().screen.getItemChoice("item");
       return true;
     } catch (CancelException c) {
       return false;
