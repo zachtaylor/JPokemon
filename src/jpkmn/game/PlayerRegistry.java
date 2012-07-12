@@ -14,33 +14,20 @@ import jpkmn.exe.Driver;
 import jpkmn.game.pokemon.Pokemon;
 
 public class PlayerRegistry {
-  private int a;
-
   public static int UNIQUE_ID;
 
-  public static Player createNew() {
-    try {
-      Player newPlayer = new Player(Driver.officialSerial);
-
-      // TODO Name the new player
-
-      // TODO Ask the new player for a starter pokemon
-
-      register(newPlayer);
-      return newPlayer;
-
-    } catch (LoadException l) {
-      // Something failed...
-    }
-
-    return null;
+  public static Player create(String name, int start) throws LoadException {
+    Player newPlayer = new Player(Driver.officialSerial);
+    newPlayer.name(name);
+    newPlayer.party.add(new Pokemon(start, 5));
+    return register(newPlayer);
   }
 
   public static Player fromFile(String s) throws LoadException {
     if (!s.endsWith(".jpkmn")) {
       s += ".jpkmn";
     }
-    
+
     try {
       Preferences pref = Constants.prefs;
       File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
@@ -61,23 +48,22 @@ public class PlayerRegistry {
       while (scan.hasNext())
         newPlayer.box.add(Pokemon.createFromString(scan.nextLine()));
 
-      register(newPlayer);
-      return newPlayer;
-
+      return register(newPlayer);
     } catch (FileNotFoundException f) {
       throw new LoadException("That player does not exist.");
     }
   }
 
-  private static void register(Player p) throws LoadException {
+  private static Player register(Player p) throws LoadException {
     if (names == null)
       names = new ArrayList<String>();
-
     else if (names.contains(p.name()))
       throw new LoadException("Player is already registered: " + p.name());
 
     p._id = UNIQUE_ID++;
     names.add(p.name());
+
+    return p;
   }
 
   private static List<String> names;
