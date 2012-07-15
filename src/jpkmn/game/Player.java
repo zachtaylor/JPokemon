@@ -11,6 +11,7 @@ import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 import jpkmn.game.pokemon.storage.Party;
+import jpkmn.map.Area;
 
 public class Player {
   public final Bag bag;
@@ -44,23 +45,23 @@ public class Player {
     return _cash;
   }
 
-  public void addCash(int change) {
-    _cash += change;
-  }
-
-  public void setCash(int c) {
+  public void cash(int c) {
     _cash = c;
   }
 
-  public int badges() {
+  public Area area() {
+    return _area;
+  }
+
+  public void area(Area a) {
+    _area = a;
+  }
+
+  public int badge() {
     return _badge;
   }
 
-  public int addBadge() {
-    return ++_badge;
-  }
-
-  public void setBadge(int b) {
+  public void badge(int b) {
     _badge = b;
   }
 
@@ -69,6 +70,7 @@ public class Player {
     p.println(_name);
     p.println(_cash);
     p.println(_badge);
+    p.println(_area.id);
 
     for (int i = 0; i < Constants.PARTYSIZE; i++)
       if (party.get(i) != null)
@@ -95,6 +97,7 @@ public class Player {
   }
 
   int _id;
+  private Area _area;
   private int _cash, _badge;
   private String _serial, _name;
 }

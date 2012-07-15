@@ -152,7 +152,7 @@ public class Battle {
   }
 
   private void lostBattle(Player p) {
-    p.setCash(p.cash() / 2);
+    p.cash(p.cash() / 2);
   }
 
   // Later used to implement teams

@@ -1,8 +1,5 @@
 package jpkmn.map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jpkmn.Constants;
 
 /**
@@ -12,16 +9,24 @@ import jpkmn.Constants;
  */
 public class AreaManager {
   public static void init() {
-    areas = new ArrayList<Area>();
+    areas = new Area[Constants.CITYNUMBER + Constants.ROUTENUMBER];
 
-    for (int i = 1; i <= Constants.ROUTENUMBER; i++) {
-      areas.add(new Route(i));
+    for (int i = 0; i < Constants.AREANUMBER; i++) {
+      if (i < Constants.CITYNUMBER) areas[i] = new City(i);
+      else areas[i] = new Route(i);
     }
-
-    for (int i = 1; i <= Constants.CITYNUMBER; i++) {
-      areas.add(new City(i));
-    }
+    
+    areas[0].connect(areas[10]); // Pallet - Route 1
+    areas[1].connect(areas[10]); // Viridian City - Route 1
+    areas[1].connect(areas[11]); // Viridian City - Route 2
+    areas[1].connect(areas[12]); // Viridian City - Route 22
+    areas[12].connect(areas[13]); // Route 22 - Viridian Forest
+    areas[2].connect(areas[13]); // Pewter City - Viridian Forest
+  }
+  
+  public static Area get(int id) {
+    return areas[id];
   }
 
-  private static List<Area> areas;
+  private static Area[] areas;
 }

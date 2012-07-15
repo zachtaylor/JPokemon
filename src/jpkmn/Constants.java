@@ -13,9 +13,9 @@ public class Constants {
   public static final int STATCHANGEMAX = 6;
   public static final double TYPEADVANTAGE = 2.0;
 
-  public static final int AREANUMBER = 0;
-  public static final int CITYNUMBER = 0;
-  public static final int ROUTENUMBER = 0;
+  public static final int CITYNUMBER = 10;
+  public static final int ROUTENUMBER = 12;
+  public static final int AREANUMBER = CITYNUMBER + ROUTENUMBER;
 
   public static final Preferences prefs = Preferences
       .systemNodeForPackage(Constants.class);

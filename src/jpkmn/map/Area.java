@@ -13,8 +13,11 @@ import jpkmn.game.pokemon.Pokemon;
  * @author Zach
  */
 public abstract class Area {
-  public Area() {
+  public Area(int areaNumber) {
+    id = areaNumber;
+
     _buildings = new ArrayList<Building>();
+    _neighbors = new ArrayList<AreaConnection>();
   }
 
   public void name(String s) {
@@ -33,6 +36,17 @@ public abstract class Area {
     if (!_buildings.contains(b)) _buildings.add(b);
   }
 
+  public List<AreaConnection> neighbors() {
+    return _neighbors;
+  }
+
+  public void connect(Area a) {
+    if (id < a.id) {
+      _neighbors.add(new AreaConnection(a.id));
+      a._neighbors.add(new AreaConnection(id));
+    }
+  }
+
   public void water(Water w) {
     _water = w;
   }
@@ -49,8 +63,11 @@ public abstract class Area {
     return _rivalBattle;
   }
 
+  public final int id;
+
   protected String _name;
-  protected List<Building> _buildings;
   protected Water _water;
   protected int _rivalBattle = 0;
+  protected List<Building> _buildings;
+  protected List<AreaConnection> _neighbors;
 }

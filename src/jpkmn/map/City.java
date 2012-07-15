@@ -7,7 +7,9 @@ package jpkmn.map;
  */
 public class City extends Area {
   public City(int cityNumber) {
-    if (cityNumber == 1) {
+    super(cityNumber);
+    
+    if (cityNumber == 0) {
       name("Pallet Town");
       buildings(Building.HOME);
       buildings(Building.EVENTHOUSE); // Map
@@ -19,7 +21,7 @@ public class City extends Area {
       water.species(120, 1); // Staryu
       water(water);
     }
-    else if (cityNumber == 2) {
+    else if (cityNumber == 1) {
       name("Viridian City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -30,14 +32,14 @@ public class City extends Area {
       water.species(72, 1); // Tentacool
       water(water);
     }
-    else if (cityNumber == 3) {
+    else if (cityNumber == 2) {
       name("Pewter City");
       buildings(Building.CENTER);
       buildings(Building.MART);
       buildings(Building.GYM); // TODO Gym 1
       buildings(Building.EVENTHOUSE); // Science Museum
     }
-    else if (cityNumber == 4) {
+    else if (cityNumber == 3) {
       name("Cerulean City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -51,7 +53,7 @@ public class City extends Area {
       water.species(119, 1); // Seaking
       water(water);
     }
-    else if (cityNumber == 5) {
+    else if (cityNumber == 4) {
       name("Vermilion City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -67,13 +69,13 @@ public class City extends Area {
       water.species(116, 2); // Horsea
       water(water);
     }
-    else if (cityNumber == 6) {
+    else if (cityNumber == 5) {
       name("Lavender Town");
       buildings(Building.CENTER);
       buildings(Building.MART);
       buildings(Building.EVENTHOUSE); // Pokemon Tower
     }
-    else if (cityNumber == 7) {
+    else if (cityNumber == 6) {
       name("Celadon City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -99,7 +101,7 @@ public class City extends Area {
       buildings(Building.EVENTHOUSE); // good rod
       buildings(Building.EVENTHOUSE); // Safari Zone - Strength
     }
-    else if (cityNumber == 8) {
+    else if (cityNumber == 9) {
       name("Cinnabar Island");
       buildings(Building.CENTER);
       buildings(Building.MART);

@@ -12,6 +12,7 @@ import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.Driver;
 import jpkmn.game.pokemon.Pokemon;
+import jpkmn.map.AreaManager;
 
 public class PlayerRegistry {
   public static int UNIQUE_ID;
@@ -35,8 +36,9 @@ public class PlayerRegistry {
 
       Player newPlayer = new Player(scan.nextLine());
       newPlayer.name(scan.nextLine());
-      newPlayer.setCash(Integer.parseInt(scan.nextLine()));
-      newPlayer.setBadge(Integer.parseInt(scan.nextLine()));
+      newPlayer.cash(Integer.parseInt(scan.nextLine()));
+      newPlayer.badge(Integer.parseInt(scan.nextLine()));
+      newPlayer.area(AreaManager.get(Integer.parseInt(scan.nextLine())));
 
       for (int i = 0; i < Constants.PARTYSIZE; i++)
         newPlayer.party.add(Pokemon.createFromString(scan.nextLine()));
