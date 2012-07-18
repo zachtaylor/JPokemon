@@ -23,7 +23,7 @@ public abstract class AbstractParty implements Iterable<Pokemon> {
     int answer = 0;
 
     for (int i = 0; i < _amount; i++) {
-      if (_data[i].condition.getAwake()) answer++;
+      if (_data[i].condition.awake()) answer++;
     }
 
     return answer;

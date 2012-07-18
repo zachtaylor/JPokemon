@@ -47,12 +47,12 @@ public class Round {
     for (Turn turn : _turns) {
       slot = turn.getUserSlot();
 
-      if (!slot.leader().condition.getAwake()) {
+      if (!slot.leader().condition.awake()) {
         if (slot.getParty().countAwake() > 0)
           turn.changeToSwap();
         else {
           _turns.remove(turn);
-          _battle.removeLoser(turn.getUserSlot());
+          _battle.removeLoser(turn.getUserSlot().id());
         }
       }
     }
@@ -68,7 +68,7 @@ public class Round {
 
   private void setForcedNextAttacks() {
     for (Slot slot : _forceNextAttack)
-      _battle.fight(slot);
+      _battle.fight(slot.id());
   }
 
   private Battle _battle;

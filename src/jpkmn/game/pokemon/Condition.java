@@ -7,7 +7,8 @@ import jpkmn.game.battle.Battle;
 
 public class Condition {
   public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE, FLINCH, WAIT;
+    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE,
+    FLINCH, WAIT;
   }
 
   /**
@@ -20,11 +21,11 @@ public class Condition {
     awake = true;
   }
 
-  public boolean getAwake() {
+  public boolean awake() {
     return awake;
   }
 
-  public void setAwake(boolean b) {
+  public void awake(boolean b) {
     awake = b;
   }
 
@@ -166,7 +167,7 @@ public class Condition {
     issues.remove(i);
   }
 
-  private ArrayList<Issue> issues = new ArrayList<Issue>();
+  private List<Issue> issues = new ArrayList<Issue>();
   private Pokemon pkmn;
   private boolean awake, attackself;
 }

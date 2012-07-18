@@ -1,7 +1,10 @@
 package jpkmn.game.battle;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jpkmn.game.Player;
 import jpkmn.game.pokemon.Pokemon;
@@ -11,46 +14,54 @@ import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Battle {
   public Battle() {
-    _slots = new ArrayList<Slot>();
+    _slots = new HashMap<Integer, Slot>();
     _round = new Round(this);
   }
 
   public void add(AbstractParty p) {
-    _slots.add(new Slot(p));
+    _slots.put(_slotCount, new Slot(p, _slotCount++));
   }
 
-  public void removeLoser(Slot s) {
+  public void removeLoser(int slotID) {
+    Slot s = _slots.get(slotID);
+
     lostBattle(s.leader().owner());
 
-    for (Slot slot : _slots) {
+    for (Slot slot : _slots.values()) {
       if (slot != s) {
         // REWARD PARTICIPANTS HERE
       }
     }
 
-    remove(s);
+    remove(slotID);
   }
 
-  public void remove(Slot s) {
-    _slots.remove(s);
+  public void remove(int slotID) {
+    _slots.remove(slotID);
 
     if (_slots.size() == 1) BattleRegistry.remove(_id);
   }
 
-  public List<Slot> getSlots() {
-    return _slots;
+  public Collection<Slot> getSlots() {
+    return _slots.values();
   }
 
   public void start(int battleID) {
     _id = battleID;
   }
 
+  public int id() {
+    return _id;
+  }
+
   public void id(int battleID) {
     _id = battleID;
   }
 
-  public void fight(Slot slot) {
-    if (!ready() || !_slots.contains(slot)) return;
+  public void fight(int slotID) {
+    Slot slot = _slots.get(slotID);
+
+    if (!ready() || slot == null) return;
 
     if (!slot.chooseMove()) return;
     if (!slot.chooseAttackTarget(getEnemySlotsForSlot(slot))) return;
@@ -60,8 +71,10 @@ public class Battle {
     if (_round.size() == _slots.size()) executeRound();
   }
 
-  public void item(Slot slot) {
-    if (!ready() || !_slots.contains(slot)) return;
+  public void item(int slotID) {
+    Slot slot = _slots.get(slotID);
+
+    if (!ready() || slot == null) return;
 
     if (!slot.chooseItem()) return;
     if (!slot.chooseItemTarget(getEnemySlotsForSlot(slot))) return;
@@ -71,8 +84,10 @@ public class Battle {
     if (_round.size() == _slots.size()) executeRound();
   }
 
-  public void swap(Slot slot) {
-    if (!ready() || !_slots.contains(slot)) return;
+  public void swap(int slotID) {
+    Slot slot = _slots.get(slotID);
+
+    if (!ready() || slot == null) return;
 
     if (!slot.chooseSwapPosition()) return;
 
@@ -81,8 +96,10 @@ public class Battle {
     if (_round.size() == _slots.size()) executeRound();
   }
 
-  public void run(Slot slot) {
-    if (!ready() || !_slots.contains(slot)) return;
+  public void run(int slotID) {
+    Slot slot = _slots.get(slotID);
+
+    if (!ready() || slot == null) return;
 
     _round.add(slot.run(this));
 
@@ -97,7 +114,7 @@ public class Battle {
   }
 
   private void executeConditionEffects() {
-    for (Slot slot : _slots) {
+    for (Slot slot : _slots.values()) {
       notifyAll(slot.leader().condition.applyEffects());
     }
   }
@@ -139,8 +156,8 @@ public class Battle {
   }
 
   /**
-   * Calculates the confused damage a Pokemon does to itself. This method exists
-   * here to unify all damage calculations.
+   * Calculates the confused damage a Pokemon does to itself. This method
+   * exists here to unify all damage calculations.
    * 
    * @param p Pokemon to calculate for
    * @return Damage done
@@ -152,7 +169,7 @@ public class Battle {
   }
 
   void notifyAll(String... s) {
-    for (Slot slot : _slots) {
+    for (Slot slot : _slots.values()) {
       slot.leader().notify(s);
     }
   }
@@ -165,7 +182,7 @@ public class Battle {
   private List<Slot> getEnemySlotsForSlot(Slot slot) {
     List<Slot> enemySlots = new ArrayList<Slot>();
 
-    for (Slot s : _slots)
+    for (Slot s : _slots.values())
       if (s != slot) enemySlots.add(s);
 
     return enemySlots;
@@ -175,7 +192,8 @@ public class Battle {
     return _id != Integer.MIN_VALUE;
   }
 
+  private int _slotCount;
   private Round _round;
-  private List<Slot> _slots;
+  private Map<Integer, Slot> _slots;
   private int _id = Integer.MIN_VALUE;
 }

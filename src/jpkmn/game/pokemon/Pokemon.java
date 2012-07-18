@@ -17,7 +17,7 @@ public class Pokemon {
   public Pokemon(int num, int lvl) {
     number = num;
     level = lvl;
-    xp = 0;
+    _xp = 0;
     condition = new Condition(this);
     stats = new StatBlock(this);
     moves = new MoveBlock(this);
@@ -55,14 +55,13 @@ public class Pokemon {
     return type2;
   }
 
-  /**
-   * Pokemon gains the experience amount. If it gains enough, it will level up.
-   * 
-   * @param amount The amount of xp gained
-   */
-  public void gainXP(int amount) {
-    xp += amount;
-    if (xp >= getXPNeeded()) levelUp();
+  public int xp() {
+    return _xp;
+  }
+
+  public void xp(int amount) {
+    _xp += amount;
+    if (_xp >= getXPNeeded()) levelUp();
   }
 
   /**
@@ -93,7 +92,7 @@ public class Pokemon {
    */
   public void takeDamage(int damage) {
     stats.hp.effect(-damage);
-    if (stats.hp.cur() == 0) condition.setAwake(false);
+    if (stats.hp.cur() == 0) condition.awake(false);
   }
 
   /**
@@ -103,7 +102,7 @@ public class Pokemon {
    * @param heal The amount healed by
    */
   public void healDamage(int heal) {
-    condition.setAwake(true);
+    condition.awake(true);
     stats.hp.effect(heal);
   }
 
@@ -135,7 +134,7 @@ public class Pokemon {
 
         Pokemon p = new Pokemon(scan.nextInt(), scan.nextInt());
         p.stats.setPoints(scan.nextInt());
-        p.xp = scan.nextInt();
+        p._xp = scan.nextInt();
 
         if (!scan.next().equals(")")) throw new Exception();
 
@@ -172,7 +171,7 @@ public class Pokemon {
     StringBuilder save = new StringBuilder();
 
     save.append("|( ");
-    save.append(number + " " + level + " " + stats.getPoints() + " " + xp
+    save.append(number + " " + level + " " + stats.getPoints() + " " + _xp
         + " ) ");
     save.append(stats.atk.pts() + " ");
     save.append(stats.stk.pts() + " ");
@@ -206,7 +205,7 @@ public class Pokemon {
    * about the level up.
    */
   private void levelUp() {
-    xp -= getXPNeeded();
+    _xp -= getXPNeeded();
     level++;
     moves.check();
     stats.levelUp();
@@ -255,7 +254,7 @@ public class Pokemon {
   private Type type1, type2;
   private String name, species;
   private Player _owner;
-  private int number, level, xp, evolutionlevel;
+  private int number, level, _xp, evolutionlevel;
 
   private static long CURRENT_ID = 0;
 

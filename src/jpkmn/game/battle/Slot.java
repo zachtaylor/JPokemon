@@ -11,12 +11,17 @@ import jpkmn.game.pokemon.move.MoveStyle;
 import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Slot {
-  public Slot(AbstractParty p) {
+  public Slot(AbstractParty p, int id) {
+    _id = id;
     _party = p;
     _field = new Field(this);
     _bide = false;
   }
 
+  public int id() {
+    return _id;
+  }
+  
   public Pokemon leader() {
     return getParty().get(0);
   }
@@ -175,6 +180,7 @@ public class Slot {
   }
 
   // Slot
+  private int _id;
   private Field _field;
   private Slot _target;
   private AbstractParty _party;

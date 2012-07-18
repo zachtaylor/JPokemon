@@ -1,0 +1,89 @@
+package jpkmn.exe.gui.battle;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+
+import jpkmn.Constants;
+import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.pokemon.storage.AbstractParty;
+import jpkmn.img.ImageFinder;
+
+public class PartyPanel extends JPanel {
+  public PartyPanel(AbstractParty p, boolean showXP) {
+    _party = p;
+
+    info = new JPanel();
+    partyStatus = new JPanel();
+
+    hpBar = new JProgressBar();
+    xpBar = new JProgressBar();
+
+    title = new JLabel();
+    condition = new JLabel();
+    leaderPicture = new JLabel();
+
+    setLayout(new FlowLayout());
+
+    info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
+    partyStatus.setPreferredSize(new Dimension(40, 50));
+
+    hpBar.setMinimum(0);
+    hpBar.setForeground(Color.PINK);
+    hpBar.setBackground(Color.GRAY);
+    hpBar.setStringPainted(true);
+    hpBar.setBorderPainted(false);
+
+    xpBar.setMinimum(0);
+    xpBar.setForeground(Color.CYAN);
+    xpBar.setBackground(Color.GRAY);
+    xpBar.setStringPainted(true);
+    xpBar.setBorderPainted(false);
+
+    info.add(title);
+    info.add(hpBar);
+    if (showXP) info.add(xpBar);
+    info.add(condition);
+
+    add(partyStatus);
+    add(leaderPicture);
+    add(info);
+
+    refresh();
+  }
+
+  public void refresh() {
+    Pokemon lead = _party.getLeader(); // shortcut
+
+    partyStatus.removeAll();
+    for (int i = 0; i < Constants.PARTYSIZE; i++) {
+      if (_party.get(i) != null && _party.get(i).condition.awake())
+        partyStatus.add(new JLabel(new ImageIcon(ImageFinder.find("aslot"))));
+      else
+        partyStatus.add(new JLabel(new ImageIcon(ImageFinder.find("eslot"))));
+    }
+
+    leaderPicture.setIcon(new ImageIcon(ImageFinder.find(lead)));
+
+    title.setText(lead.name() + " Lvl." + lead.level());
+    hpBar.setMaximum(lead.stats.hp.max());
+    hpBar.setValue(lead.stats.hp.cur());
+    xpBar.setMaximum(lead.getXPNeeded());
+    xpBar.setValue(lead.xp());
+
+    condition.setText(lead.condition.toString());
+  }
+
+  private AbstractParty _party;
+
+  private JPanel info, partyStatus;
+  private JProgressBar hpBar, xpBar;
+  private JLabel title, condition, leaderPicture;
+  private static final long serialVersionUID = 1L;
+}

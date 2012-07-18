@@ -89,7 +89,7 @@ public class Turn {
     _int2 = 0;
     _mode = Mode.SWAP;
 
-    while (!_user.getParty().get(_int2).condition.getAwake()) {
+    while (!_user.getParty().get(_int2).condition.awake()) {
       try {
         _int2 = _user.leader().owner().screen.getPartyIndex("swap");
       } catch (CancelException c) {
@@ -154,7 +154,7 @@ public class Turn {
     }
     else if (_mode == Mode.RUN) {
       if ((_int1 / 250.0) > Math.random()) {
-        _battle.remove(_user);
+        _battle.remove(_user.id());
         _battle = null; // careful
         _messages.add("Got away successfully!");
       }
