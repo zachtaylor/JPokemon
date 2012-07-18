@@ -11,7 +11,6 @@ import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Battle {
   public Battle() {
-    _ready = false;
     _slots = new ArrayList<Slot>();
     _round = new Round(this);
   }
@@ -23,28 +22,35 @@ public class Battle {
   public void removeLoser(Slot s) {
     lostBattle(s.leader().owner());
 
-    // REWARD PARTICIPANTS HERE
+    for (Slot slot : _slots) {
+      if (slot != s) {
+        // REWARD PARTICIPANTS HERE
+      }
+    }
 
     remove(s);
   }
 
   public void remove(Slot s) {
     _slots.remove(s);
-    if (_slots.size() == 1) {
-      // Battle is over
-    }
+
+    if (_slots.size() == 1) BattleRegistry.remove(_id);
   }
 
   public List<Slot> getSlots() {
     return _slots;
   }
 
-  public void start() {
-    _ready = true;
+  public void start(int battleID) {
+    _id = battleID;
+  }
+
+  public void id(int battleID) {
+    _id = battleID;
   }
 
   public void fight(Slot slot) {
-    if (!_ready || !_slots.contains(slot)) return;
+    if (!ready() || !_slots.contains(slot)) return;
 
     if (!slot.chooseMove()) return;
     if (!slot.chooseAttackTarget(getEnemySlotsForSlot(slot))) return;
@@ -55,7 +61,7 @@ public class Battle {
   }
 
   public void item(Slot slot) {
-    if (!_ready || !_slots.contains(slot)) return;
+    if (!ready() || !_slots.contains(slot)) return;
 
     if (!slot.chooseItem()) return;
     if (!slot.chooseItemTarget(getEnemySlotsForSlot(slot))) return;
@@ -66,7 +72,7 @@ public class Battle {
   }
 
   public void swap(Slot slot) {
-    if (!_ready || !_slots.contains(slot)) return;
+    if (!ready() || !_slots.contains(slot)) return;
 
     if (!slot.chooseSwapPosition()) return;
 
@@ -76,7 +82,7 @@ public class Battle {
   }
 
   public void run(Slot slot) {
-    if (!_ready || !_slots.contains(slot)) return;
+    if (!ready() || !_slots.contains(slot)) return;
 
     _round.add(slot.run(this));
 
@@ -133,8 +139,8 @@ public class Battle {
   }
 
   /**
-   * Calculates the confused damage a Pokemon does to itself. This method
-   * exists here to unify all damage calculations.
+   * Calculates the confused damage a Pokemon does to itself. This method exists
+   * here to unify all damage calculations.
    * 
    * @param p Pokemon to calculate for
    * @return Damage done
@@ -165,7 +171,11 @@ public class Battle {
     return enemySlots;
   }
 
-  private boolean _ready;
-  private List<Slot> _slots;
+  private boolean ready() {
+    return _id != Integer.MIN_VALUE;
+  }
+
   private Round _round;
+  private List<Slot> _slots;
+  private int _id = Integer.MIN_VALUE;
 }
