@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import jpkmn.Constants;
 import jpkmn.game.pokemon.Condition.Issue;
 
 public class Round {
   public Round(Battle b) {
     _battle = b;
-    _turns = new PriorityQueue<Turn>(b.getSlots().size(),
+    _turns = new PriorityQueue<Turn>(Constants.MAXBATTLESIZE,
         new Turn.TurnComparator());
     _haveSelectedTurn = new ArrayList<Slot>();
     _forceNextAttack = new ArrayList<Slot>();
@@ -27,8 +28,10 @@ public class Round {
   }
 
   public void play() {
-    for (Turn turn : _turns) {
-      turn.execute();
+    Turn turn;
+
+    while (!_turns.isEmpty()) {
+      turn = _turns.remove();
 
       _battle.notifyAll(turn.getNotifications());
 
@@ -52,15 +55,15 @@ public class Round {
           turn.changeToSwap();
         else {
           _turns.remove(turn);
-          _battle.removeLoser(turn.getUserSlot().id());
+          _battle.removeLoser(slot.id());
         }
       }
     }
-    
+
     for (Turn turn : _turns) {
       slot = turn.getUserSlot().getTarget();
 
-      if (!_battle.getSlots().contains(slot)) {
+      if (_battle.get(slot.id()) == null) {
         // TODO shit bricks
       }
     }

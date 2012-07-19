@@ -1,25 +1,28 @@
 package jpkmn.game.battle;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.Constants;
 import jpkmn.game.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
 import jpkmn.game.pokemon.storage.AbstractParty;
 
-public class Battle {
+public class Battle implements Iterable<Slot> {
   public Battle() {
     _slots = new HashMap<Integer, Slot>();
     _round = new Round(this);
   }
 
   public void add(AbstractParty p) {
-    _slots.put(_slotCount, new Slot(p, _slotCount++));
+    if (ready() || _slots.size() == Constants.MAXBATTLESIZE) return;
+
+    _slots.put(_slots.size(), new Slot(p, _slots.size()));
   }
 
   public void removeLoser(int slotID) {
@@ -27,7 +30,7 @@ public class Battle {
 
     lostBattle(s.leader().owner());
 
-    for (Slot slot : _slots.values()) {
+    for (Slot slot : this) {
       if (slot != s) {
         // REWARD PARTICIPANTS HERE
       }
@@ -42,10 +45,6 @@ public class Battle {
     if (_slots.size() == 1) BattleRegistry.remove(_id);
   }
 
-  public Collection<Slot> getSlots() {
-    return _slots.values();
-  }
-
   public void start(int battleID) {
     _id = battleID;
   }
@@ -56,6 +55,10 @@ public class Battle {
 
   public void id(int battleID) {
     _id = battleID;
+  }
+
+  public Slot get(int slotID) {
+    return _slots.get(slotID);
   }
 
   public void fight(int slotID) {
@@ -168,6 +171,11 @@ public class Battle {
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
+  @Override
+  public Iterator<Slot> iterator() {
+    return _slots.values().iterator();
+  }
+
   void notifyAll(String... s) {
     for (Slot slot : _slots.values()) {
       slot.leader().notify(s);
@@ -192,7 +200,6 @@ public class Battle {
     return _id != Integer.MIN_VALUE;
   }
 
-  private int _slotCount;
   private Round _round;
   private Map<Integer, Slot> _slots;
   private int _id = Integer.MIN_VALUE;

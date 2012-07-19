@@ -10,6 +10,7 @@ public class Constants {
 
   public static final int MOVENUMBER = 4;
 
+  public static final int MAXBATTLESIZE = 4;
   public static final int STATCHANGEMAX = 6;
   public static final double TYPEADVANTAGE = 2.0;
 

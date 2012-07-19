@@ -6,16 +6,20 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class SwapButton extends JButton implements ActionListener {
-  public SwapButton() {
+  public SwapButton(BattleView view) {
     super("SWAP");
+
+    _view = view;
+
     addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent arg0) {
-    // TODO Auto-generated method stub
-    
+    _view.swap();
   }
+
+  private BattleView _view;
 
   private static final long serialVersionUID = 1L;
 }

@@ -22,7 +22,7 @@ public class Turn {
     _user = user;
     _mode = Mode.RUN;
 
-    for (Slot s : _battle.getSlots()) {
+    for (Slot s : _battle) {
       if (_user.leader().level() < s.leader().level())
         _int1 -= 10 * (s.leader().level() - _user.leader().level());
       else
@@ -93,10 +93,7 @@ public class Turn {
       try {
         _int2 = _user.leader().owner().screen.getPartyIndex("swap");
       } catch (CancelException c) {
-        // Do nothing
       }
-
-      break; // Do this so it doesn't inifite loop
     }
   }
 

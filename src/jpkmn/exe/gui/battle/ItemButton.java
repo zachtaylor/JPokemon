@@ -6,16 +6,20 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 public class ItemButton extends JButton implements ActionListener {
-  public ItemButton() {
+  public ItemButton(BattleView view) {
     super("Item");
+
+    _view = view;
+
     addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent arg0) {
-    // TODO Auto-generated method stub
-    
+    _view.item();
   }
+
+  private BattleView _view;
 
   private static final long serialVersionUID = 1L;
 }
