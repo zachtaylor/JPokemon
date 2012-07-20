@@ -28,7 +28,7 @@ public class Pokemon {
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
 
-    unique_id = CURRENT_ID++;
+    _id = CURRENT_ID++;
   }
 
   public int number() {
@@ -71,16 +71,6 @@ public class Pokemon {
    */
   public int getXPNeeded() {
     return (int) (Math.log((double) level) * level * level * .35);
-  }
-
-  /**
-   * XP this Pokemon gives if it is defeated
-   * 
-   * @return a randomly generated amount of XP
-   */
-  public int getXPAwarded() {
-    double factor = (Math.random() * .5 + 2);
-    return (int) (factor * level);
   }
 
   /**
@@ -196,7 +186,7 @@ public class Pokemon {
     if (!(o instanceof Pokemon))
       return false;
     else
-      return ((Pokemon) o).unique_id == this.unique_id;
+      return ((Pokemon) o)._id == this._id;
   }
 
   /**
@@ -250,12 +240,15 @@ public class Pokemon {
     return true;
   }
 
-  private long unique_id;
+  public int hashCode() {
+    return _id;
+  }
+
+  private int _id;
   private Type type1, type2;
   private String name, species;
   private Player _owner;
   private int number, level, _xp, evolutionlevel;
 
-  private static long CURRENT_ID = 0;
-
+  private static int CURRENT_ID;
 }

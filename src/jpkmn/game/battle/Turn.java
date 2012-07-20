@@ -135,9 +135,10 @@ public class Turn {
         target = _user.getTarget().leader();
 
         if (_item instanceof Ball) {
-          // TODO check if target is wild
-
-          if (_item.effect(target)) {
+          if (_user.getTarget().type() != SlotType.WILD) {
+            _messages.add("Cannot use a ball against " + target.name() + "!");
+          }
+          else if (_item.effect(target)) {
             if (!_user.getParty().add(target))
               ((Player) (_user.leader().owner())).box.add(target);
             _user.getTarget().getParty().remove(target);

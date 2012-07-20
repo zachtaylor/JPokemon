@@ -1,6 +1,9 @@
 package jpkmn.game.battle;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jpkmn.exceptions.CancelException;
 import jpkmn.game.item.Item;
@@ -11,17 +14,24 @@ import jpkmn.game.pokemon.move.MoveStyle;
 import jpkmn.game.pokemon.storage.AbstractParty;
 
 public class Slot {
-  public Slot(AbstractParty p, int id) {
+  public Slot(int id, SlotType t, AbstractParty p) {
     _id = id;
+    _type = t;
     _party = p;
-    _field = new Field(this);
     _bide = false;
+
+    _field = new Field(this);
+    _rivals = new HashMap<Pokemon, List<Pokemon>>();
   }
 
   public int id() {
     return _id;
   }
-  
+
+  public SlotType type() {
+    return _type;
+  }
+
   public Pokemon leader() {
     return getParty().get(0);
   }
@@ -179,11 +189,52 @@ public class Slot {
     _field.rollDownDuration();
   }
 
+  public int getXPAwarded() {
+    double factor = _type.getXPFactor();
+    factor *= (Math.random() * .5 + 2);
+    return (int) (factor * leader().level());
+  }
+
+  public void rival(Pokemon p) {
+    if (_rivals.get(leader()) == null)
+      _rivals.put(leader(), new ArrayList<Pokemon>());
+
+    List<Pokemon> rivals = _rivals.get(leader());
+
+    if (!rivals.contains(p)) rivals.add(p);
+  }
+
+  public void rival(Slot s) {
+    if (s.id() == id()) return;
+
+    Pokemon p = s.leader();
+    int xp = s.getXPAwarded(), count = 0;
+    List<Pokemon> rivals, earners = new ArrayList<Pokemon>();
+
+    for (Pokemon cur : _party) {
+      rivals = _rivals.get(cur);
+
+      if (rivals == null) continue;
+      if (rivals.contains(p)) {
+        count++;
+        earners.add(cur);
+        rivals.remove(p);
+      }
+      if (rivals.isEmpty()) _rivals.remove(cur);
+    }
+
+    for (Pokemon cur : earners) {
+      cur.xp(xp / count > 0 ? xp / count : 1);
+    }
+  }
+
   // Slot
   private int _id;
   private Field _field;
   private Slot _target;
+  private SlotType _type;
   private AbstractParty _party;
+  private Map<Pokemon, List<Pokemon>> _rivals;
 
   // Move
   private boolean _bide;

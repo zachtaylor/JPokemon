@@ -30,8 +30,17 @@ public class Round {
   public void play() {
     Turn turn;
 
+    // Setup rivals
+    for (Slot a : _battle) {
+      for (Slot b : _battle) {
+        if (a.id() != b.id()) a.rival(b.leader());
+      }
+    }
+
     while (!_turns.isEmpty()) {
       turn = _turns.remove();
+
+      turn.execute();
 
       _battle.notifyAll(turn.getNotifications());
 
@@ -51,11 +60,13 @@ public class Round {
       slot = turn.getUserSlot();
 
       if (!slot.leader().condition.awake()) {
+        _battle.rewardFrom(slot.id());
+
         if (slot.getParty().countAwake() > 0)
           turn.changeToSwap();
         else {
           _turns.remove(turn);
-          _battle.removeLoser(slot.id());
+          _battle.remove(slot.id());
         }
       }
     }

@@ -14,8 +14,8 @@ public class BattleRegistry {
 
     wp.add(wildEnemy);
 
-    b.add(player.party);
-    b.add(wp);
+    b.add(SlotType.PLAYER, player.party);
+    b.add(SlotType.WILD, wp);
 
     start(b);
   }
@@ -33,7 +33,7 @@ public class BattleRegistry {
 
     if (b == null) return false;
 
-    b.add(player.party);
+    b.add(SlotType.PLAYER, player.party);
 
     return true;
   }

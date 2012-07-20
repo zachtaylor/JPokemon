@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import jpkmn.Constants;
-import jpkmn.game.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
@@ -19,24 +18,10 @@ public class Battle implements Iterable<Slot> {
     _round = new Round(this);
   }
 
-  public void add(AbstractParty p) {
+  public void add(SlotType t, AbstractParty p) {
     if (ready() || _slots.size() == Constants.MAXBATTLESIZE) return;
 
-    _slots.put(_slots.size(), new Slot(p, _slots.size()));
-  }
-
-  public void removeLoser(int slotID) {
-    Slot s = _slots.get(slotID);
-
-    lostBattle(s.leader().owner());
-
-    for (Slot slot : this) {
-      if (slot != s) {
-        // REWARD PARTICIPANTS HERE
-      }
-    }
-
-    remove(slotID);
+    _slots.put(_slots.size(), new Slot(_slots.size(), t, p));
   }
 
   public void remove(int slotID) {
@@ -47,6 +32,26 @@ public class Battle implements Iterable<Slot> {
 
   public void start(int battleID) {
     _id = battleID;
+  }
+
+  public void rewardFrom(int slotID) {
+    Slot loser = _slots.get(slotID);
+
+    for (Slot slot : this) {
+      if (slot.id() != slotID) {
+        slot.rival(loser);
+      }
+    }
+
+    if (loser.type() == SlotType.PLAYER) {
+      // TODO : Punish player
+    }
+    else if (loser.type() == SlotType.GYM) {
+      // TODO : Reward from gym
+    }
+    else if (loser.type() == SlotType.TRAINER) {
+      // TODO : Prevent players from fighting this trainer again
+    }
   }
 
   public int id() {
@@ -180,10 +185,6 @@ public class Battle implements Iterable<Slot> {
     for (Slot slot : _slots.values()) {
       slot.leader().notify(s);
     }
-  }
-
-  private void lostBattle(Player p) {
-    p.cash(p.cash() / 2);
   }
 
   // Later used to implement teams
