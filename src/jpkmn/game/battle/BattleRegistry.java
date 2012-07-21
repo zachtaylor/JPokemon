@@ -3,19 +3,19 @@ package jpkmn.game.battle;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.game.Player;
+import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.WildParty;
 
 public class BattleRegistry {
   public static void make(Player player, Pokemon wildEnemy) {
     Battle b = new Battle();
-    WildParty wp = new WildParty();
+    MockPlayer mp = new MockPlayer();
 
-    wp.add(wildEnemy);
+    mp.party.add(wildEnemy);
 
     b.add(SlotType.PLAYER, player.party);
-    b.add(SlotType.WILD, wp);
+    b.add(SlotType.WILD, mp.party);
 
     start(b);
   }

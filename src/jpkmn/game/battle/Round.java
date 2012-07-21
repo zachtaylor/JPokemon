@@ -50,7 +50,14 @@ public class Round {
       verifyTurnList();
     }
 
-    setForcedNextAttacks();
+    if (BattleRegistry.get(_battle.id()) == _battle) {
+      for (Slot slot : _battle) {
+        slot.leader().owner().screen.refresh();
+      }
+
+      setForcedNextAttacks();
+      _battle.makeMockAttacks();
+    }
   }
 
   private void verifyTurnList() {

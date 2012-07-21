@@ -1,24 +1,20 @@
-package jpkmn.game;
+package jpkmn.game.player;
 
 import java.io.PrintWriter;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.Driver;
-import jpkmn.exe.gui.GraphicsHandler;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
-import jpkmn.game.pokemon.storage.Party;
 import jpkmn.map.Area;
 
-public class Player {
+public class Player extends AbstractPlayer {
   public final Bag bag;
   public final Pokedex dex;
-  public final Party party;
   public final PCStorage box;
-  public final GraphicsHandler screen;
 
   public Player(String serial) throws LoadException {
     if (!serial.equals(Driver.officialSerial))
@@ -29,16 +25,8 @@ public class Player {
     bag = new Bag();
     dex = new Pokedex();
     box = new PCStorage();
-    party = new Party(this);
-    screen = new GraphicsHandler(this);
-  }
 
-  public String name() {
-    return _name;
-  }
-
-  public void name(String s) {
-    _name = s;
+    screen.player(this);
   }
 
   public int cash() {
@@ -92,12 +80,8 @@ public class Player {
     return ((Player) o)._id == _id;
   }
 
-  public void notify(String... s) {
-    screen.notify(s);
-  }
-
   int _id;
   private Area _area;
+  private String _serial;
   private int _cash, _badge;
-  private String _serial, _name;
 }

@@ -25,13 +25,22 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void remove(int slotID) {
-    _slots.remove(slotID);
+    (_slots.remove(slotID)).leader().owner().screen.showWorld();
 
-    if (_slots.size() == 1) BattleRegistry.remove(_id);
+    if (_slots.size() == 1) {
+      remove((int) _slots.keySet().toArray()[0]);
+      BattleRegistry.remove(_id);
+    }
   }
 
   public void start(int battleID) {
     _id = battleID;
+
+    for (Slot slot : this) {
+      slot.leader().owner().screen.showBattle(battleID, slot.id());
+    }
+
+    makeMockAttacks();
   }
 
   public void rewardFrom(int slotID) {
@@ -127,6 +136,12 @@ public class Battle implements Iterable<Slot> {
     }
   }
 
+  public void makeMockAttacks() {
+    for (Slot slot : this) {
+      if (slot.type() != SlotType.PLAYER) fight(slot.id());
+    }
+  }
+
   public static int computeDamage(Move move, Pokemon victim) {
     Pokemon user = move.pkmn;
 
@@ -183,7 +198,7 @@ public class Battle implements Iterable<Slot> {
 
   void notifyAll(String... s) {
     for (Slot slot : _slots.values()) {
-      slot.leader().notify(s);
+      slot.leader().owner().screen.notify(s);
     }
   }
 

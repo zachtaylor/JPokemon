@@ -15,6 +15,8 @@ public class Route extends Area implements PokemonGenerator {
       name("Route-1");
       species(16, 7); // Pidgey
       species(19, 3); // Rattata
+      
+      range(2, 5);
     }
     else if (routeNumber == 11) {
       name("Route-2");
@@ -24,6 +26,8 @@ public class Route extends Area implements PokemonGenerator {
       species(19, 8); // Rattata
       species(29, 3); // Nidorano
       species(32, 3); // Nidorana
+      
+      range(3, 6);
     }
     else if (routeNumber == 12) {
       name("Route-22");
@@ -35,6 +39,8 @@ public class Route extends Area implements PokemonGenerator {
       species(56, 2); // Mankey
 
       rivalBattle(2);
+      
+      range(3, 6);
     }
     else if (routeNumber == 13) {
       name("Veridian Forest");
@@ -45,6 +51,8 @@ public class Route extends Area implements PokemonGenerator {
       species(25, 1); // Pikachu
       species(16, 5); // Pidgey
       species(17, 1); // Pidgeotto
+      
+      range(4, 8);
     }
     else if (routeNumber == 14) {
       name("Route-3");
@@ -56,6 +64,8 @@ public class Route extends Area implements PokemonGenerator {
       species(27, 3); // Sandshrew
       species(39, 2); // Jigglypuff
       species(56, 3); // Mankey
+      
+      range(6, 12);
     }
     else if (routeNumber == 15) {
       name("Mt. Moon 1F");

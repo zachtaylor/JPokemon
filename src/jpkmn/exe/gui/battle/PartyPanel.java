@@ -16,9 +16,7 @@ import jpkmn.game.pokemon.storage.AbstractParty;
 import jpkmn.img.ImageFinder;
 
 public class PartyPanel extends JPanel {
-  public PartyPanel(AbstractParty p, boolean showXP) {
-    _party = p;
-
+  public PartyPanel() {
     info = new JPanel();
     partyStatus = new JPanel();
 
@@ -30,8 +28,10 @@ public class PartyPanel extends JPanel {
     leaderPicture = new JLabel();
 
     setLayout(new FlowLayout());
-
     info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
+
+    setMaximumSize(new Dimension(340, 80));
+    setPreferredSize(new Dimension(340, 80));
     partyStatus.setPreferredSize(new Dimension(40, 50));
 
     hpBar.setMinimum(0);
@@ -48,22 +48,31 @@ public class PartyPanel extends JPanel {
 
     info.add(title);
     info.add(hpBar);
-    if (showXP) info.add(xpBar);
+    info.add(xpBar);
     info.add(condition);
 
     add(partyStatus);
     add(leaderPicture);
     add(info);
-
-    refresh();
   }
 
-  public void refresh() {
-    Pokemon lead = _party.getLeader(); // shortcut
+  public PartyPanel(AbstractParty p, boolean showXP) {
+    this();
+    setup(p, showXP);
+  }
+
+  public void setup(AbstractParty p, boolean showXP) {
+    if (!showXP) info.remove(xpBar);
+
+    refresh(p);
+  }
+
+  public void refresh(AbstractParty p) {
+    Pokemon lead = p.getLeader(); // shortcut
 
     partyStatus.removeAll();
     for (int i = 0; i < Constants.PARTYSIZE; i++) {
-      if (_party.get(i) != null && _party.get(i).condition.awake())
+      if (p.get(i) != null && p.get(i).condition.awake())
         partyStatus.add(new JLabel(new ImageIcon(ImageFinder.find("aslot"))));
       else
         partyStatus.add(new JLabel(new ImageIcon(ImageFinder.find("eslot"))));
@@ -79,8 +88,6 @@ public class PartyPanel extends JPanel {
 
     condition.setText(lead.condition.toString());
   }
-
-  private AbstractParty _party;
 
   private JPanel info, partyStatus;
   private JProgressBar hpBar, xpBar;

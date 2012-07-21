@@ -1,11 +1,11 @@
 package jpkmn.game.pokemon.storage;
 
 import jpkmn.Constants;
-import jpkmn.game.Player;
+import jpkmn.game.player.AbstractPlayer;
 import jpkmn.game.pokemon.Pokemon;
 
 public class Party extends AbstractParty {
-  public Party(Player p) {
+  public Party(AbstractPlayer p) {
     super();
     _owner = p;
   }
@@ -32,5 +32,5 @@ public class Party extends AbstractParty {
     return true;
   }
 
-  private Player _owner;
+  private AbstractPlayer _owner;
 }

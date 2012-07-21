@@ -142,7 +142,7 @@ public class Condition {
       }
     }
 
-    return (String[]) messages.toArray();
+    return messages.toArray(new String[messages.size()]);
   }
 
   /**

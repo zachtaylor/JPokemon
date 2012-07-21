@@ -40,6 +40,10 @@ public abstract class Area {
     return _neighbors;
   }
 
+  public AreaConnection neighbors(int n) {
+    return _neighbors.get(n);
+  }
+  
   public void connect(Area a) {
     if (id < a.id) {
       _neighbors.add(new AreaConnection(a.id));

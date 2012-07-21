@@ -5,11 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import jpkmn.exceptions.CancelException;
-import jpkmn.game.Player;
 import jpkmn.game.item.Ball;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.Machine;
 import jpkmn.game.item.Stone;
+import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
@@ -176,7 +176,7 @@ public class Turn {
       _messages.add(p.owner().name() + " sent out " + p.name());
     }
 
-    return (String[]) _messages.toArray();
+    return _messages.toArray(new String[_messages.size()]);
   }
 
   public static class TurnComparator implements Comparator<Turn> {

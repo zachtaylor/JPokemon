@@ -8,40 +8,50 @@ import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.Slot;
 
 public class BattleView extends JPanel {
-  public BattleView(int battleID, int slotID) {
-    _battleID = battleID;
-    _slotID = slotID;
-
-    Battle b = BattleRegistry.get(battleID);
-
-    enemies = new JPanel();
+  public BattleView() {
+    _enemies = new JPanel();
     JPanel userPanel = new JPanel();
-    user = new PartyPanel(b.get(slotID).getParty(), true);
+    _user = new PartyPanel();
     buttons = new ButtonPanel(this);
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
     userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
-    userPanel.add(user);
+
+    userPanel.add(_user);
     userPanel.add(buttons);
+    userPanel.add(new JPanel());
+
     add(userPanel);
+    add(_enemies);
+  }
 
-    add(enemies);
+  public void setup(int battleID, int slotID) {
+    _enabled = true;
+    _slotID = slotID;
+    _battleID = battleID;
 
-    refresh();
+    Battle b = BattleRegistry.get(battleID);
+
+    _user.setup(b.get(slotID).getParty(), true);
   }
 
   public void refresh() {
+    if (!_enabled) return;
+
     Battle b = BattleRegistry.get(_battleID);
 
-    user.refresh();
+    b.get(_slotID);
+    b.get(_slotID).getParty();
+    _user.refresh(b.get(_slotID).getParty());
 
-    enemies.removeAll();
+    _enemies.removeAll();
     for (Slot s : b) {
       if (s.id() != _slotID) {
-        enemies.add(new PartyPanel(s.getParty(), false));
+        _enemies.add(new PartyPanel(s.getParty(), false));
       }
     }
+
+    enableButtons();
   }
 
   public void enableButtons() {
@@ -50,6 +60,10 @@ public class BattleView extends JPanel {
 
   public void disableButtons() {
     buttons.disable();
+  }
+
+  public void disable() {
+    _enabled = false;
   }
 
   public void fight() {
@@ -72,8 +86,9 @@ public class BattleView extends JPanel {
     BattleRegistry.get(_battleID).item(_slotID);
   }
 
-  private JPanel enemies;
-  private PartyPanel user;
+  private JPanel _enemies;
+  private PartyPanel _user;
+  private boolean _enabled;
   private ButtonPanel buttons;
   private int _battleID, _slotID;
   private static final long serialVersionUID = 1L;

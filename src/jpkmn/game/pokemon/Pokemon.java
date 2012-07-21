@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.Player;
+import jpkmn.game.player.AbstractPlayer;
 import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
 import lib.PokemonBase;
@@ -96,16 +96,12 @@ public class Pokemon {
     stats.hp.effect(heal);
   }
 
-  public void owner(Player owner) {
+  public void owner(AbstractPlayer owner) {
     _owner = owner;
   }
 
-  public Player owner() {
+  public AbstractPlayer owner() {
     return _owner;
-  }
-
-  public void notify(String... s) {
-    if (_owner != null) _owner.notify(s);
   }
 
   /**
@@ -235,7 +231,7 @@ public class Pokemon {
     moves.check();
 
     speciesUpdate += species + "!";
-    notify("Congratulations!", speciesUpdate);
+    _owner.screen.notify("Congratulations!", speciesUpdate);
 
     return true;
   }
@@ -247,7 +243,7 @@ public class Pokemon {
   private int _id;
   private Type type1, type2;
   private String name, species;
-  private Player _owner;
+  private AbstractPlayer _owner;
   private int number, level, _xp, evolutionlevel;
 
   private static int CURRENT_ID;

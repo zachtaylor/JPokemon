@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 
 import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.Player;
-import jpkmn.game.PlayerRegistry;
 import jpkmn.game.battle.Slot;
 import jpkmn.game.item.Item;
+import jpkmn.game.player.Player;
+import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
@@ -77,17 +77,43 @@ public class GraphicsHandler {
   public GraphicsHandler() {
   }
 
-  public GraphicsHandler(Player p) {
+  public void player(Player p) {
     _player = p;
     _inbox = new MessageView();
+    _window = new GameWindow();
   }
 
   public void notify(String... s) {
-    if (_player == null) return;
+    if (mock()) return;
+
     _inbox.addMessage(s);
   }
 
+  public void showWorld() {
+    if (mock()) return;
+    
+    _window.showMain();
+    
+    refresh();
+  }
+  
+  public void showBattle(int battleID, int slotID) {
+    if (mock()) return;
+
+    _window.showBattle(battleID, slotID);
+
+    refresh();
+  }
+
+  public void refresh() {
+    if (mock()) return;
+
+    _window.refresh();
+  }
+
   public boolean isEvolutionOkay(Pokemon p) throws CancelException {
+    if (mock()) return true;
+
     String message = "Allow " + p.name() + " to evolve?";
     String title = p.name() + " wants to evolve!";
     Icon icon = new ImageIcon(ImageFinder.find(p));
@@ -98,6 +124,10 @@ public class GraphicsHandler {
   }
 
   public int getMoveIndex(String message, Pokemon p) throws CancelException {
+    if (mock()) {
+      // TODO : stuff
+    }
+
     String[] moveNames = p.moves.list();
     String title = "Select Move Index";
     Icon icon = new ImageIcon(ImageFinder.find(p));
@@ -108,6 +138,10 @@ public class GraphicsHandler {
   }
 
   public int getPartyIndex(String message) throws CancelException {
+    if (mock()) {
+      // TODO : stuff
+    }
+
     ImageIcon[] options = new ImageIcon[_player.party.size()];
 
     for (int i = _player.party.size() - 1; i >= 0; i--)
@@ -119,6 +153,9 @@ public class GraphicsHandler {
   }
 
   public Slot getTargetSlot(List<Slot> enemySlots) throws CancelException {
+    if (mock()) {
+      // TODO : stuff
+    }
     if (enemySlots.size() == 1) return enemySlots.get(0);
 
     // TODO
@@ -126,6 +163,11 @@ public class GraphicsHandler {
   }
 
   public Item getItemChoice(String message) throws CancelException {
+    if (mock()) {
+      // TODO : stuff
+    }
+
+    Player player = (Player) _player;
     String[] options = { "Balls", "Potions", "Stones", "Machines" };
 
     int itemFamily = JOptionPane.showOptionDialog(null, message,
@@ -145,7 +187,7 @@ public class GraphicsHandler {
           JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
           ballOptions, null);
 
-      if (ball != -1) return _player.bag.ball(ball);
+      if (ball != -1) return player.bag.ball(ball);
     }
     else if (itemFamily == 1) {
       ImageIcon[] potionOptions = {
@@ -158,7 +200,7 @@ public class GraphicsHandler {
           "Select An Item", JOptionPane.DEFAULT_OPTION,
           JOptionPane.QUESTION_MESSAGE, null, potionOptions, null);
 
-      if (potion != -1) return _player.bag.potion(potion);
+      if (potion != -1) return player.bag.potion(potion);
     }
     else if (itemFamily == 2) {
       ImageIcon[] stoneOptions = {
@@ -173,18 +215,23 @@ public class GraphicsHandler {
           stoneOptions, null);
 
       if (stone == 0)
-        return _player.bag.stone("fire");
+        return player.bag.stone("fire");
       else if (stone == 1)
-        return _player.bag.stone("leaf");
+        return player.bag.stone("leaf");
       else if (stone == 2)
-        return _player.bag.stone("moon");
+        return player.bag.stone("moon");
       else if (stone == 3)
-        return _player.bag.stone("thunder");
-      else if (stone == 4) return _player.bag.stone("water");
+        return player.bag.stone("thunder");
+      else if (stone == 4) return player.bag.stone("water");
     }
     return null;
   }
 
+  private boolean mock() {
+    return _player == null;
+  }
+
   private Player _player;
   private MessageView _inbox;
+  private GameWindow _window;
 }

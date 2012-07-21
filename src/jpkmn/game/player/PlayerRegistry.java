@@ -1,8 +1,7 @@
-package jpkmn.game;
+package jpkmn.game.player;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

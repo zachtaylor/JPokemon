@@ -1,6 +1,6 @@
 package jpkmn.map;
 
-import jpkmn.game.Player;
+import jpkmn.game.player.Player;
 
 public class AreaConnection {
   public AreaConnection(int nextAreaID) {
