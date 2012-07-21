@@ -101,7 +101,7 @@ public class BattleView extends JPanel {
 
   public void run() {
     disableButtons();
-    BattleRegistry.get(_battleID).item(_slotID);
+    BattleRegistry.get(_battleID).run(_slotID);
   }
 
   private JPanel _enemies;

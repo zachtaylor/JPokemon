@@ -66,7 +66,7 @@ public class Round {
     for (Turn turn : _turns) {
       slot = turn.getUserSlot();
 
-      if (slot.party().size() == 0) {
+      if (slot.party().countAwake() == 0) {
         _turns.remove(turn);
         _battle.remove(slot.id());
       }
