@@ -68,7 +68,7 @@ public class PartyPanel extends JPanel {
   }
 
   public void refresh(AbstractParty p) {
-    Pokemon lead = p.getLeader(); // shortcut
+    Pokemon lead = p.get(0); // shortcut
 
     partyStatus.removeAll();
     for (int i = 0; i < Constants.PARTYSIZE; i++) {

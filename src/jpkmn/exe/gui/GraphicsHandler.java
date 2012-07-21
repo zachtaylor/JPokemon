@@ -35,7 +35,7 @@ public class GraphicsHandler {
     g.notify("Test Notification", "Line1", "Line2");
 
     try {
-      if (g.isEvolutionOkay(party.getLeader())) {
+      if (g.isEvolutionOkay(party.get(0))) {
         g.notify("Evolutioin allowed");
       }
       else {
@@ -47,9 +47,9 @@ public class GraphicsHandler {
     }
 
     try {
-      int index = g.getMoveIndex("Select a move", party.getLeader());
+      int index = g.getMoveIndex("Select a move", party.get(0));
 
-      g.notify("Move Selected", party.getLeader().moves.get(index).name());
+      g.notify("Move Selected", party.get(0).moves.get(index).name());
     } catch (CancelException c) {
       g.notify("Move Selection exception");
       return;
@@ -91,12 +91,12 @@ public class GraphicsHandler {
 
   public void showWorld() {
     if (mock()) return;
-    
+
     _window.showMain();
-    
+
     refresh();
   }
-  
+
   public void showBattle(int battleID, int slotID) {
     if (mock()) return;
 

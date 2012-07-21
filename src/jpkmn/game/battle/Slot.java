@@ -129,7 +129,7 @@ public class Slot {
       if (!move.use()) turn.nullify("There is not enough PP!");
 
       // 3 Measure accuracy
-      if (!move.hits(_target._party.getLeader())) {
+      if (!move.hits(_target._party.get(0))) {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (move.number() == 60 || move.number() == 69) {

@@ -29,10 +29,6 @@ public abstract class AbstractParty implements Iterable<Pokemon> {
     return answer;
   }
 
-  public Pokemon getLeader() {
-    return _data[0];
-  }
-
   public Pokemon get(int i) {
     if (i < 0 || i > _amount) return null;
 
