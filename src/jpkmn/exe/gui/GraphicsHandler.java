@@ -174,14 +174,12 @@ public class GraphicsHandler {
         "Select An Item", JOptionPane.DEFAULT_OPTION,
         JOptionPane.QUESTION_MESSAGE, null, options, null);
 
-    if (itemFamily == -1)
-      throw new CancelException("");
-    else if (itemFamily == 0) {
+    if (itemFamily == 0) {
       ImageIcon[] ballOptions = {
-          new ImageIcon(ImageFinder.find("item/ball/g")),
-          new ImageIcon(ImageFinder.find("item/ball/m")),
           new ImageIcon(ImageFinder.find("item/ball/p")),
-          new ImageIcon(ImageFinder.find("item/ball/u")) };
+          new ImageIcon(ImageFinder.find("item/ball/g")),
+          new ImageIcon(ImageFinder.find("item/ball/u")),
+          new ImageIcon(ImageFinder.find("item/ball/m")) };
 
       int ball = JOptionPane.showOptionDialog(null, message, "Select An Item",
           JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -191,10 +189,10 @@ public class GraphicsHandler {
     }
     else if (itemFamily == 1) {
       ImageIcon[] potionOptions = {
-          new ImageIcon(ImageFinder.find("item/potion/f")),
-          new ImageIcon(ImageFinder.find("item/potion/h")),
           new ImageIcon(ImageFinder.find("item/potion/p")),
-          new ImageIcon(ImageFinder.find("item/potion/s")) };
+          new ImageIcon(ImageFinder.find("item/potion/s")),
+          new ImageIcon(ImageFinder.find("item/potion/h")),
+          new ImageIcon(ImageFinder.find("item/potion/f")) };
 
       int potion = JOptionPane.showOptionDialog(null, message,
           "Select An Item", JOptionPane.DEFAULT_OPTION,
@@ -222,9 +220,11 @@ public class GraphicsHandler {
         return player.bag.stone("moon");
       else if (stone == 3)
         return player.bag.stone("thunder");
-      else if (stone == 4) return player.bag.stone("water");
+      else if (stone == 4)
+        return player.bag.stone("water");
     }
-    return null;
+
+    throw new CancelException("");
   }
 
   private boolean mock() {

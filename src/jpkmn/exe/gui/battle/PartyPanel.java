@@ -12,7 +12,7 @@ import javax.swing.JProgressBar;
 
 import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.AbstractParty;
+import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
 
 public class PartyPanel extends JPanel {
@@ -56,18 +56,18 @@ public class PartyPanel extends JPanel {
     add(info);
   }
 
-  public PartyPanel(AbstractParty p, boolean showXP) {
+  public PartyPanel(Party p, boolean showXP) {
     this();
     setup(p, showXP);
   }
 
-  public void setup(AbstractParty p, boolean showXP) {
+  public void setup(Party p, boolean showXP) {
     if (!showXP) info.remove(xpBar);
 
     refresh(p);
   }
 
-  public void refresh(AbstractParty p) {
+  public void refresh(Party p) {
     Pokemon lead = p.get(0); // shortcut
 
     partyStatus.removeAll();

@@ -53,7 +53,7 @@ public class Field {
         _slot.takeDamageAbsolute(_slot.leader().stats.hp.max() / 16);
       else
         _slot.leader().healDamage(
-            _slot.getTarget().leader().stats.hp.max() / 16);
+            _slot.target().leader().stats.hp.max() / 16);
     }
   }
 

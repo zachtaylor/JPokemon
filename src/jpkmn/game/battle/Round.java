@@ -52,7 +52,7 @@ public class Round {
 
     if (BattleRegistry.get(_battle.id()) == _battle) {
       for (Slot slot : _battle) {
-        slot.leader().owner().screen.refresh();
+        slot.party().owner().screen.refresh();
       }
 
       setForcedNextAttacks();
@@ -66,20 +66,18 @@ public class Round {
     for (Turn turn : _turns) {
       slot = turn.getUserSlot();
 
-      if (!slot.leader().condition.awake()) {
+      if (slot.party().size() == 0) {
+        _turns.remove(turn);
+        _battle.remove(slot.id());
+      }
+      else if (!slot.leader().condition.awake()) {
         _battle.rewardFrom(slot.id());
-
-        if (slot.getParty().countAwake() > 0)
-          turn.changeToSwap();
-        else {
-          _turns.remove(turn);
-          _battle.remove(slot.id());
-        }
+        turn.changeToSwap();
       }
     }
 
     for (Turn turn : _turns) {
-      slot = turn.getUserSlot().getTarget();
+      slot = turn.getUserSlot().target();
 
       if (_battle.get(slot.id()) == null) {
         // TODO shit bricks

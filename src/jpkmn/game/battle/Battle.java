@@ -10,7 +10,7 @@ import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
-import jpkmn.game.pokemon.storage.AbstractParty;
+import jpkmn.game.pokemon.storage.Party;
 
 public class Battle implements Iterable<Slot> {
   public Battle() {
@@ -18,14 +18,14 @@ public class Battle implements Iterable<Slot> {
     _round = new Round(this);
   }
 
-  public void add(SlotType t, AbstractParty p) {
+  public void add(SlotType t, Party p) {
     if (ready() || _slots.size() == Constants.MAXBATTLESIZE) return;
 
     _slots.put(_slots.size(), new Slot(_slots.size(), t, p));
   }
 
   public void remove(int slotID) {
-    (_slots.remove(slotID)).leader().owner().screen.showWorld();
+    (_slots.remove(slotID)).party().owner().screen.showWorld();
 
     if (_slots.size() == 1) {
       remove((int) _slots.keySet().toArray()[0]);
@@ -37,7 +37,7 @@ public class Battle implements Iterable<Slot> {
     _id = battleID;
 
     for (Slot slot : this) {
-      slot.leader().owner().screen.showBattle(battleID, slot.id());
+      slot.party().owner().screen.showBattle(battleID, slot.id());
     }
 
     makeMockAttacks();
@@ -198,7 +198,7 @@ public class Battle implements Iterable<Slot> {
 
   void notifyAll(String... s) {
     for (Slot slot : _slots.values()) {
-      slot.leader().owner().screen.notify(s);
+      slot.party().owner().screen.notify(s);
     }
   }
 

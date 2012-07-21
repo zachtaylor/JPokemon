@@ -30,7 +30,7 @@ public class Turn {
     }
 
     _messages = new ArrayList<String>();
-    _messages.add(_user.leader().owner().name() + " tried to run!");
+    _messages.add(_user.party().owner().name() + " tried to run!");
   }
 
   public Turn(Slot user, int moveIndex) {
@@ -50,7 +50,7 @@ public class Turn {
     _mode = Mode.SWAP;
 
     _messages = new ArrayList<String>();
-    _messages.add("Come back, " + user.getParty().get(_int1) + "!");
+    _messages.add("Come back, " + user.party().get(_int1) + "!");
   }
 
   public Turn(Slot user, Item item, int index) {
@@ -60,7 +60,7 @@ public class Turn {
     _mode = Mode.ITEM;
 
     _messages = new ArrayList<String>();
-    _messages.add(_user.leader().owner().name() + " used " + item.getName());
+    _messages.add(_user.party().owner().name() + " used " + item.getName());
   }
 
   public int damage() {
@@ -89,9 +89,9 @@ public class Turn {
     _int2 = 0;
     _mode = Mode.SWAP;
 
-    while (!_user.getParty().get(_int2).condition.awake()) {
+    while (!_user.party().get(_int2).condition.awake()) {
       try {
-        _int2 = _user.leader().owner().screen.getPartyIndex("swap");
+        _int2 = _user.party().owner().screen.getPartyIndex("swap");
       } catch (CancelException c) {
       }
     }
@@ -104,7 +104,7 @@ public class Turn {
 
   public void execute() {
     if (_mode == Mode.ATTACK) {
-      Slot enemy = _user.getTarget();
+      Slot enemy = _user.target();
       Move move = _user.leader().moves.get(_int1);
       _int2 = Battle.computeDamage(move, enemy.leader());
 
@@ -116,13 +116,13 @@ public class Turn {
       applyMoveEffects();
     }
     else if (_mode == Mode.SWAP) {
-      _user.getParty().swap(_int1, _int2);
+      _user.party().swap(_int1, _int2);
     }
     else if (_mode == Mode.ITEM) {
       Pokemon target;
 
       if (_item.target == Target.SELF) {
-        target = _user.getParty().get(_int1);
+        target = _user.party().get(_int1);
 
         if (_item instanceof Machine)
           _messages.add("Machines aren't allowed in battle!");
@@ -132,16 +132,16 @@ public class Turn {
           _item.effect(target);
       }
       else {
-        target = _user.getTarget().leader();
+        target = _user.target().leader();
 
         if (_item instanceof Ball) {
-          if (_user.getTarget().type() != SlotType.WILD) {
+          if (_user.target().type() != SlotType.WILD) {
             _messages.add("Cannot use a ball against " + target.name() + "!");
           }
           else if (_item.effect(target)) {
-            if (!_user.getParty().add(target))
-              ((Player) (_user.leader().owner())).box.add(target);
-            _user.getTarget().getParty().remove(target);
+            if (!_user.party().add(target))
+              ((Player) (_user.party().owner())).box.add(target);
+            _user.target().party().remove(target);
 
             _messages.add(target.name() + "was caught!");
           }
@@ -165,7 +165,7 @@ public class Turn {
     Pokemon p;
 
     if (_mode == Mode.ATTACK) {
-      p = _user.getTarget().leader();
+      p = _user.target().leader();
       _messages.add(p.name() + " took " + _int2 + " damage!");
     }
     else if (_mode == Mode.ITEM) {
@@ -199,7 +199,7 @@ public class Turn {
   }
 
   private void applyMoveEffects() {
-    Pokemon leader = _user.leader(), enemy = _user.getTarget().leader();
+    Pokemon leader = _user.leader(), enemy = _user.target().leader();
     Move move = leader.moves.get(_int1);
 
     for (MoveEffect be : move.getMoveEffects()) {

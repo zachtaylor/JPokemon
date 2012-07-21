@@ -3,11 +3,31 @@ package jpkmn.exe.gui.battle;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.Slot;
+import jpkmn.game.player.Player;
+import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.pokemon.Pokemon;
+import jpkmn.map.AreaManager;
+import jpkmn.map.Route;
 
 public class BattleView extends JPanel {
+  public static void main(String[] args) {
+    try {
+      Player zach = PlayerRegistry.fromFile("Zach");
+
+      zach.area(AreaManager.get(10)); // route 1
+
+      Pokemon wild = ((Route) zach.area()).species();
+
+      BattleRegistry.make(zach, wild);
+    } catch (LoadException l) {
+      l.printStackTrace();
+    }
+  }
+
   public BattleView() {
     _enemies = new JPanel();
     JPanel userPanel = new JPanel();
@@ -32,7 +52,7 @@ public class BattleView extends JPanel {
 
     Battle b = BattleRegistry.get(battleID);
 
-    _user.setup(b.get(slotID).getParty(), true);
+    _user.setup(b.get(slotID).party(), true);
   }
 
   public void refresh() {
@@ -40,14 +60,12 @@ public class BattleView extends JPanel {
 
     Battle b = BattleRegistry.get(_battleID);
 
-    b.get(_slotID);
-    b.get(_slotID).getParty();
-    _user.refresh(b.get(_slotID).getParty());
+    _user.refresh(b.get(_slotID).party());
 
     _enemies.removeAll();
     for (Slot s : b) {
       if (s.id() != _slotID) {
-        _enemies.add(new PartyPanel(s.getParty(), false));
+        _enemies.add(new PartyPanel(s.party(), false));
       }
     }
 

@@ -7,7 +7,7 @@ import javax.swing.JButton;
 
 public class ItemButton extends JButton implements ActionListener {
   public ItemButton(BattleView view) {
-    super("Item");
+    super("ITEM");
 
     _view = view;
 

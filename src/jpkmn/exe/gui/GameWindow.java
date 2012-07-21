@@ -13,6 +13,8 @@ public class GameWindow extends JFrame {
     _main = new JPanel();
     _battle = new BattleView();
 
+    setResizable(false);
+
     _main.add(new JLabel("Main Menu!"));
   }
 
@@ -22,7 +24,7 @@ public class GameWindow extends JFrame {
 
     add(_main);
 
-    setMinimumSize(new Dimension(200, 100));
+    size(200, 100);
     refresh();
   }
 
@@ -32,7 +34,7 @@ public class GameWindow extends JFrame {
     _battle.setup(battleID, slotID);
     add(_battle);
 
-    setMinimumSize(new Dimension(625, 200));
+    size(625, 200);
     refresh();
   }
 
@@ -41,6 +43,10 @@ public class GameWindow extends JFrame {
 
     setVisible(false);
     setVisible(true);
+  }
+
+  private void size(int x, int y) {
+    setSize(new Dimension(x, y));
   }
 
   private JPanel _main;

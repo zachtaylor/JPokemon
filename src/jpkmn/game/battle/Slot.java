@@ -11,10 +11,10 @@ import jpkmn.game.pokemon.Condition.Issue;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveStyle;
-import jpkmn.game.pokemon.storage.AbstractParty;
+import jpkmn.game.pokemon.storage.Party;
 
 public class Slot {
-  public Slot(int id, SlotType t, AbstractParty p) {
+  public Slot(int id, SlotType t, Party p) {
     _id = id;
     _type = t;
     _party = p;
@@ -33,14 +33,14 @@ public class Slot {
   }
 
   public Pokemon leader() {
-    return getParty().get(0);
+    return _party.get(0);
   }
 
-  public AbstractParty getParty() {
+  public Party party() {
     return _party;
   }
 
-  public Slot getTarget() {
+  public Slot target() {
     return _target;
   }
 
@@ -48,11 +48,14 @@ public class Slot {
     if (leader().condition.contains(Issue.WAIT)) return true;
 
     try {
-      _index = leader().owner().screen.getMoveIndex("attack", leader());
+      _index = _party.owner().screen.getMoveIndex("attack", leader());
+
       return true;
     } catch (CancelException c) {
-      return false;
     }
+
+    _party.owner().screen.refresh();
+    return false;
   }
 
   public Move getMove() {
@@ -61,11 +64,14 @@ public class Slot {
 
   public boolean chooseItem() {
     try {
-      _item = leader().owner().screen.getItemChoice("item");
-      return true;
+      _item = _party.owner().screen.getItemChoice("item");
+
+      if (_item != null) return true;
     } catch (CancelException c) {
-      return false;
     }
+
+    _party.owner().screen.refresh();
+    return false;
   }
 
   public Item getItem() {
@@ -74,38 +80,44 @@ public class Slot {
 
   public boolean chooseSwapPosition() {
     try {
-      _index = leader().owner().screen.getPartyIndex("swap");
+      _index = _party.owner().screen.getPartyIndex("swap");
 
-      return true;
+      if (_index != 0) return true;
     } catch (CancelException c) {
-      return false;
     }
+
+    _party.owner().screen.refresh();
+    return false;
   }
 
   public boolean chooseAttackTarget(List<Slot> enemySlots) {
     try {
-      _target = leader().owner().screen.getTargetSlot(enemySlots);
+      _target = _party.owner().screen.getTargetSlot(enemySlots);
       return true;
     } catch (CancelException c) {
-      return false;
     }
+
+    _party.owner().screen.refresh();
+    return false;
   }
 
   public boolean chooseItemTarget(List<Slot> enemySlots) {
     try {
       if (_item.target == Target.SELF) {
         _target = this;
-        _index = leader().owner().screen.getPartyIndex("item");
+        _index = _party.owner().screen.getPartyIndex("item");
         return true;
       }
       else {
-        _target = leader().owner().screen.getTargetSlot(enemySlots);
+        _target = _party.owner().screen.getTargetSlot(enemySlots);
         _index = -1;
         return true;
       }
     } catch (CancelException c) {
-      return false;
     }
+
+    _party.owner().screen.refresh();
+    return false;
   }
 
   public Turn attack() {
@@ -232,8 +244,8 @@ public class Slot {
   private int _id;
   private Field _field;
   private Slot _target;
+  private Party _party;
   private SlotType _type;
-  private AbstractParty _party;
   private Map<Pokemon, List<Pokemon>> _rivals;
 
   // Move
