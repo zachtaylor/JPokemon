@@ -50,7 +50,7 @@ public class Slot {
     try {
       _index = _party.owner().screen.getMoveIndex("attack", leader());
 
-      return true;
+      if (_index != -1) return true;
     } catch (CancelException c) {
     }
 
@@ -82,7 +82,7 @@ public class Slot {
     try {
       _index = _party.owner().screen.getPartyIndex("swap");
 
-      if (_index != 0) return true;
+      if (_index > 0) return true;
     } catch (CancelException c) {
     }
 
@@ -106,7 +106,7 @@ public class Slot {
       if (_item.target == Target.SELF) {
         _target = this;
         _index = _party.owner().screen.getPartyIndex("item");
-        return true;
+        if (_index != -1) return true;
       }
       else {
         _target = _party.owner().screen.getTargetSlot(enemySlots);
