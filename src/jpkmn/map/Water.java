@@ -1,35 +1,20 @@
 package jpkmn.map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jpkmn.game.pokemon.Pokemon;
 
-public class Water implements PokemonGenerator {
+public class Water {
   public Water() {
-    _species = new ArrayList<Integer>();
+    _spawner = new PokemonSpawner();
   }
 
-  @Override
-  public void species(int num, int flex) {
+  public void add(int num, int flex, int low, int high, String tag) {
     for (int i = 0; i < flex; i++)
-      _species.add(num);
+      _spawner.add(num, low, high, tag);
   }
 
-  @Override
-  public Pokemon species() {
-    int number = _species.get((int) (Math.random() * _species.size()));
-    int level = _low + (int) (Math.random() * (_high - _low + 1));
-
-    return new Pokemon(number, level);
+  public Pokemon spawn(String... tags) {
+    return _spawner.spawn(tags);
   }
 
-  @Override
-  public void range(int low, int high) {
-    _low = low;
-    _high = high;
-  }
-
-  private int _low, _high;
-  private List<Integer> _species;
+  private PokemonSpawner _spawner;
 }

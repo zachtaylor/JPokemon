@@ -43,7 +43,7 @@ public abstract class Area {
   public AreaConnection neighbors(int n) {
     return _neighbors.get(n);
   }
-  
+
   public void connect(Area a) {
     if (id < a.id) {
       _neighbors.add(new AreaConnection(a.id));
@@ -55,8 +55,12 @@ public abstract class Area {
     _water = w;
   }
 
-  public Pokemon water() {
-    return _water == null ? null : _water.species();
+  public Water water() {
+    return _water;
+  }
+
+  public Pokemon fish(String pole) {
+    return _water == null ? null : _water.spawn(pole);
   }
 
   public void rivalBattle(int num) {

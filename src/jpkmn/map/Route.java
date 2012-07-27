@@ -1,159 +1,154 @@
 package jpkmn.map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jpkmn.game.pokemon.Pokemon;
 
-public class Route extends Area implements PokemonGenerator {
+public class Route extends Area {
   public Route(int routeNumber) {
     super(routeNumber);
 
-    _species = new ArrayList<Integer>();
+    _spawner = new PokemonSpawner();
 
     if (routeNumber == 10) {
       name("Route-1");
-      species(16, 7); // Pidgey
-      species(19, 3); // Rattata
-      
-      range(2, 5);
+      add(16, 6, 2, 7); // Pidgey
+      add(19, 4, 2, 4); // Rattata
     }
     else if (routeNumber == 11) {
       name("Route-2");
-      species(10, 3); // Caterpie
-      species(13, 3); // Weedle
-      species(16, 6); // Pidgey
-      species(19, 8); // Rattata
-      species(29, 3); // Nidorano
-      species(32, 3); // Nidorana
-      
-      range(3, 6);
+      add(10, 1, 3, 5); // Caterpie
+      add(13, 1, 3, 5); // Weedle
+      add(16, 4, 3, 7); // Pidgey
+      add(19, 4, 3, 4); // Rattata
     }
     else if (routeNumber == 12) {
       name("Route-22");
       buildings(Building.ELITE4);
-      species(19, 1); // Rattata
-      species(21, 1); // Spearow
-      species(29, 3); // Nidorano
-      species(32, 3); // Nidorana
-      species(56, 2); // Mankey
+      water(new Water());
+
+      add(19, 5, 2, 4); // Rattata
+      add(21, 1, 2, 6); // Spearow
+      add(29, 2, 3, 4); // Nidorano
+      add(32, 2, 3, 4); // Nidorana
+      water().add(129, 1, 5, 5, "oldrod"); // magikarp
+      water().add(60, 1, 10, 10, "goodrod"); // poliwag
+      water().add(118, 1, 10, 10, "goodrod"); // goldeen
+      water().add(60, 1, 15, 15, "superrod"); // poliwag
+      water().add(118, 1, 15, 15, "superrod"); // goldeen
 
       rivalBattle(2);
-      
-      range(3, 6);
     }
-    else if (routeNumber == 13) {
-      name("Veridian Forest");
-      species(10, 10); // Caterpie
-      species(11, 7); // Metapod
-      species(13, 10); // Weedle
-      species(14, 7); // Kakuna
-      species(25, 1); // Pikachu
-      species(16, 5); // Pidgey
-      species(17, 1); // Pidgeotto
-      
-      range(4, 8);
-    }
-    else if (routeNumber == 14) {
-      name("Route-3");
-      buildings(Building.CENTER);
-      buildings(Building.EVENTHOUSE); // Buy a magikarp
-      species(16, 10); // Pidgey
-      species(19, 3); // Rattata
-      species(21, 11); // Spearow
-      species(27, 3); // Sandshrew
-      species(39, 2); // Jigglypuff
-      species(56, 3); // Mankey
-      
-      range(6, 12);
-    }
-    else if (routeNumber == 15) {
-      name("Mt. Moon 1F");
-      buildings(Building.EVENTHOUSE); // Moon Stone
-      species(41, 15); // Zubat
-      species(74, 4); // Geodude
-      species(46, 1); // Paras
-      species(27, 1); // Sandshrew
-    }
-    else if (routeNumber == 16) {
-      name("Mt. Moon B1");
-      species(41, 13); // Zubat
-      species(74, 5); // Geodude
-      species(46, 2); // Paras
-      species(35, 1); // Clefairy
-    }
-    else if (routeNumber == 17) {
-      name("Mt. Moon B2");
-      buildings(Building.EVENTHOUSE); // Hidden Moon Stone
-      buildings(Building.EVENTHOUSE); // Fossil choice
-      species(41, 12); // Zubat
-      species(74, 3); // Geodude
-      species(46, 3); // Paras
-      species(35, 2); // Clefairy
-    }
-    else if (routeNumber == 18) {
-      name("Route-4");
-      species(19, 3); // Rattata
-      species(21, 11); // Spearow
-      species(27, 3); // Sandshrew
-      species(23, 5); // Ekans
-      species(15, 3); // Mankey
-    }
-    else if (routeNumber == 19) {
-      name("Route-24");
-      species(10, 5); // Caterpie
-      species(11, 3); // Metapod
-      species(13, 5); // Weedle
-      species(14, 3); // Kakuna
-      species(16, 5); // Pidgey
-      species(17, 1); // Pidgeotto
-      species(43, 7); // Oddish
-      species(48, 2); // Venonat
-      species(63, 3); // Abra
-      species(69, 5); // Bellsprout
-
-      Water water = new Water();
-      water.species(54, 2); // Psyduck
-      water.species(98, 2); // Krabby
-      water.species(118, 5); // Goldeen
-      water.species(119, 1); // Seaking
-      water(water);
-
-      rivalBattle(3);
-    }
-    else if (routeNumber == 20) {
-      name("Route-25");
-      buildings(Building.EVENTHOUSE); // Activate PC, SS Ticket
-      species(10, 5); // Caterpie
-      species(11, 3); // Metapod
-      species(13, 5); // Weedle
-      species(14, 3); // Kakuna
-      species(16, 5); // Pidgey
-      species(17, 1); // Pidgeotto
-      species(43, 7); // Oddish
-      species(48, 2); // Venonat
-      species(63, 3); // Abra
-      species(69, 5); // Bellsprout
-
-      Water water = new Water();
-      water.species(54, 2); // Psyduck
-      water.species(98, 4); // Krabby
-      water.species(99, 1); // Kingler
-      water(water);
-    }
-    else if (routeNumber == 21) {
-      name("Route-5");
-      buildings(Building.EVENTHOUSE); // Day Care
-      species(16, 9); // Pidgey
-      species(17, 1); // Pidgeotto
-      species(19, 5); // Rattata
-      species(39, 2); // Jigglypuff
-      species(43, 8); // Oddish
-      species(52, 5); // Meowth
-      species(56, 5); // Mankey
-      species(63, 3); // Abra
-      species(69, 8); // Bellsprout
-    }
+    // else if (routeNumber == 13) {
+    // name("Veridian Forest");
+    // species(10, 10); // Caterpie
+    // species(11, 7); // Metapod
+    // species(13, 10); // Weedle
+    // species(14, 7); // Kakuna
+    // species(25, 1); // Pikachu
+    // species(16, 5); // Pidgey
+    // species(17, 1); // Pidgeotto
+    //
+    // range(4, 8);
+    // }
+    // else if (routeNumber == 14) {
+    // name("Route-3");
+    // buildings(Building.CENTER);
+    // buildings(Building.EVENTHOUSE); // Buy a magikarp
+    // species(16, 10); // Pidgey
+    // species(19, 3); // Rattata
+    // species(21, 11); // Spearow
+    // species(27, 3); // Sandshrew
+    // species(39, 2); // Jigglypuff
+    // species(56, 3); // Mankey
+    //
+    // range(6, 12);
+    // }
+    // else if (routeNumber == 15) {
+    // name("Mt. Moon 1F");
+    // buildings(Building.EVENTHOUSE); // Moon Stone
+    // species(41, 15); // Zubat
+    // species(74, 4); // Geodude
+    // species(46, 1); // Paras
+    // species(27, 1); // Sandshrew
+    // }
+    // else if (routeNumber == 16) {
+    // name("Mt. Moon B1");
+    // species(41, 13); // Zubat
+    // species(74, 5); // Geodude
+    // species(46, 2); // Paras
+    // species(35, 1); // Clefairy
+    // }
+    // else if (routeNumber == 17) {
+    // name("Mt. Moon B2");
+    // buildings(Building.EVENTHOUSE); // Hidden Moon Stone
+    // buildings(Building.EVENTHOUSE); // Fossil choice
+    // species(41, 12); // Zubat
+    // species(74, 3); // Geodude
+    // species(46, 3); // Paras
+    // species(35, 2); // Clefairy
+    // }
+    // else if (routeNumber == 18) {
+    // name("Route-4");
+    // species(19, 3); // Rattata
+    // species(21, 11); // Spearow
+    // species(27, 3); // Sandshrew
+    // species(23, 5); // Ekans
+    // species(15, 3); // Mankey
+    // }
+    // else if (routeNumber == 19) {
+    // name("Route-24");
+    // species(10, 5); // Caterpie
+    // species(11, 3); // Metapod
+    // species(13, 5); // Weedle
+    // species(14, 3); // Kakuna
+    // species(16, 5); // Pidgey
+    // species(17, 1); // Pidgeotto
+    // species(43, 7); // Oddish
+    // species(48, 2); // Venonat
+    // species(63, 3); // Abra
+    // species(69, 5); // Bellsprout
+    //
+    // Water water = new Water();
+    // water.species(54, 2); // Psyduck
+    // water.species(98, 2); // Krabby
+    // water.species(118, 5); // Goldeen
+    // water.species(119, 1); // Seaking
+    // water(water);
+    //
+    // rivalBattle(3);
+    // }
+    // else if (routeNumber == 20) {
+    // name("Route-25");
+    // buildings(Building.EVENTHOUSE); // Activate PC, SS Ticket
+    // species(10, 5); // Caterpie
+    // species(11, 3); // Metapod
+    // species(13, 5); // Weedle
+    // species(14, 3); // Kakuna
+    // species(16, 5); // Pidgey
+    // species(17, 1); // Pidgeotto
+    // species(43, 7); // Oddish
+    // species(48, 2); // Venonat
+    // species(63, 3); // Abra
+    // species(69, 5); // Bellsprout
+    //
+    // Water water = new Water();
+    // water.species(54, 2); // Psyduck
+    // water.species(98, 4); // Krabby
+    // water.species(99, 1); // Kingler
+    // water(water);
+    // }
+    // else if (routeNumber == 21) {
+    // name("Route-5");
+    // buildings(Building.EVENTHOUSE); // Day Care
+    // species(16, 9); // Pidgey
+    // species(17, 1); // Pidgeotto
+    // species(19, 5); // Rattata
+    // species(39, 2); // Jigglypuff
+    // species(43, 8); // Oddish
+    // species(52, 5); // Meowth
+    // species(56, 5); // Mankey
+    // species(63, 3); // Abra
+    // species(69, 8); // Bellsprout
+    // }
     // else if (areaName.equals("6")) {
     // currentArea = new Route("6");
     // Water water = new Water();
@@ -225,26 +220,18 @@ public class Route extends Area implements PokemonGenerator {
     // }
   }
 
-  @Override
-  public void species(int num, int flex) {
+  private void add(int num, int flex, int low, int high) {
+    add(num, flex, low, high, "");
+  }
+
+  private void add(int num, int flex, int low, int high, String s) {
     for (int i = 0; i < flex; i++)
-      _species.add(num);
+      _spawner.add(num, low, high, s);
   }
 
-  @Override
-  public Pokemon species() {
-    int number = _species.get((int) (Math.random() * _species.size()));
-    int level = _low + (int) (Math.random() * (_high - _low + 1));
-
-    return new Pokemon(number, level);
+  public Pokemon spawn(String... tags) {
+    return _spawner.spawn(tags);
   }
 
-  @Override
-  public void range(int low, int high) {
-    _low = low;
-    _high = high;
-  }
-
-  private int _low, _high;
-  private List<Integer> _species;
+  private PokemonSpawner _spawner;
 }
