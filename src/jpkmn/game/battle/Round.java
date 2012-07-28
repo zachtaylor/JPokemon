@@ -66,13 +66,16 @@ public class Round {
     for (Turn turn : _turns) {
       slot = turn.getUserSlot();
 
+      if (slot.party().size() > 0 && !slot.leader().condition.awake()) {
+        if (slot.party().countAwake() > 0)
+          turn.changeToSwap();
+        else
+          _battle.rewardFrom(slot.id());
+      }
+      
       if (slot.party().countAwake() == 0) {
         _turns.remove(turn);
         _battle.remove(slot.id());
-      }
-      else if (!slot.leader().condition.awake()) {
-        _battle.rewardFrom(slot.id());
-        turn.changeToSwap();
       }
     }
 

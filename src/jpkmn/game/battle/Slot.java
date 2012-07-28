@@ -236,8 +236,10 @@ public class Slot {
     }
 
     for (Pokemon cur : earners) {
-      cur.xp(xp / count > 0 ? xp / count : 1);
+      cur.xp((xp / count) > 0 ? (xp / count) : 1);
     }
+    
+    // TODO : Notify XP
   }
 
   // Slot

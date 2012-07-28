@@ -25,12 +25,22 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void remove(int slotID) {
-    (_slots.remove(slotID)).party().owner().screen.showWorld();
+    Slot slot = _slots.remove(slotID);
 
     if (_slots.size() == 1) {
-      remove((int) _slots.keySet().toArray()[0]);
+      _slots.remove(_slots.keySet().toArray()[0]);
       BattleRegistry.remove(_id);
     }
+
+    // AI should never run
+    if (slot.type() == SlotType.GYM) {
+      // TODO : Reward from gym
+    }
+    else if (slot.type() == SlotType.TRAINER) {
+      // TODO : Prevent players from fighting this trainer again
+    }
+
+    slot.party().owner().screen.showWorld();
   }
 
   public void start(int battleID) {
@@ -52,14 +62,8 @@ public class Battle implements Iterable<Slot> {
       }
     }
 
-    if (loser.type() == SlotType.PLAYER) {
+    if (loser.type() == SlotType.PLAYER && loser.party().countAwake() == 0) {
       // TODO : Punish player
-    }
-    else if (loser.type() == SlotType.GYM) {
-      // TODO : Reward from gym
-    }
-    else if (loser.type() == SlotType.TRAINER) {
-      // TODO : Prevent players from fighting this trainer again
     }
   }
 

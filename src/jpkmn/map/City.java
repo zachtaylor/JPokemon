@@ -8,18 +8,21 @@ package jpkmn.map;
 public class City extends Area {
   public City(int cityNumber) {
     super(cityNumber);
-    
+
     if (cityNumber == 0) {
       name("Pallet Town");
       buildings(Building.HOME);
       buildings(Building.EVENTHOUSE); // Map
       rivalBattle(1);
 
-      Water water = new Water();
-      water.species(60, 1); // Poliwag
-      water.species(72, 1); // Tentacool
-      water.species(120, 1); // Staryu
-      water(water);
+      Water w = new Water();
+      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
+      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
+      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
+      w.add(60, 1, 15, 15, "superrod"); // Poliwag
+      w.add(72, 1, 15, 15, "superrod"); // Tentacool
+      w.add(120, 1, 10, 20, "superrod"); // Staryu
+      water(w);
     }
     else if (cityNumber == 1) {
       name("Viridian City");
@@ -27,10 +30,13 @@ public class City extends Area {
       buildings(Building.MART);
       buildings(Building.GYM); // TODO Gym 8
 
-      Water water = new Water();
-      water.species(60, 1); // Poliwag
-      water.species(72, 1); // Tentacool
-      water(water);
+      Water w = new Water();
+      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
+      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
+      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
+      w.add(60, 1, 5, 15, "superrod"); // Poliwag
+      w.add(72, 1, 15, 15, "superrod"); // Tentacool=
+      water(w);
     }
     else if (cityNumber == 2) {
       name("Pewter City");
@@ -45,13 +51,15 @@ public class City extends Area {
       buildings(Building.MART);
       buildings(Building.GYM); // TODO Gym 2
       buildings(Building.EVENTHOUSE); // Trade Poliwhirl for Jynx
-      
-      Water water = new Water();
-      water.species(54, 1); // Psyduck
-      water.species(98, 1); // Krabby
-      water.species(118, 2); // Goldeen
-      water.species(119, 1); // Seaking
-      water(water);
+
+      Water w = new Water();
+      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
+      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
+      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
+      w.add(54, 1, 15, 15, "superrod"); // Psyduck
+      w.add(98, 1, 15, 15, "superrod"); // Krabby
+      w.add(118, 2, 15, 15, "superrod"); // Goldeen
+      water(w);
     }
     else if (cityNumber == 4) {
       name("Vermilion City");
@@ -61,13 +69,16 @@ public class City extends Area {
       buildings(Building.EVENTHOUSE); // Trade Spearow for Farfetch'd
       buildings(Building.EVENTHOUSE); // Bike Voucher
       buildings(Building.EVENTHOUSE); // Old Rod
-      
-      Water water = new Water();
-      water.species(72, 9); // Tentacool
-      water.species(90, 5); // Shelder
-      water.species(98, 5); // Krabby
-      water.species(116, 2); // Horsea
-      water(water);
+
+      Water w = new Water();
+      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
+      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
+      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
+      w.add(72, 3, 10, 20, "superrod"); // Tentacool
+      w.add(90, 3, 15, 15, "superrod"); // Shelder
+      w.add(98, 3, 15, 15, "superrod"); // Krabby
+      w.add(116, 1, 5, 5, "superrod"); // Horsea
+      water(w);
     }
     else if (cityNumber == 5) {
       name("Lavender Town");

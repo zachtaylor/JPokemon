@@ -20,7 +20,7 @@ public class BattleView extends JPanel {
 
       zach.area(AreaManager.get(10)); // route 1
 
-      Pokemon wild = ((Route) zach.area()).species();
+      Pokemon wild = ((Route) zach.area()).spawn();
 
       BattleRegistry.make(zach, wild);
     } catch (LoadException l) {
