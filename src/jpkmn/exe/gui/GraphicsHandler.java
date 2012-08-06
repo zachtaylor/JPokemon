@@ -92,17 +92,13 @@ public class GraphicsHandler {
   public void showWorld() {
     if (mock()) return;
 
-    _window.showMain();
-
-    refresh();
+    _window.showMain(_player.area().id);
   }
 
   public void showBattle(int battleID, int slotID) {
     if (mock()) return;
 
     _window.showBattle(battleID, slotID);
-
-    refresh();
   }
 
   public void refresh() {

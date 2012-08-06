@@ -187,8 +187,7 @@ public class Battle implements Iterable<Slot> {
   }
 
   /**
-   * Calculates the confused damage a Pokemon does to itself. This method
-   * exists here to unify all damage calculations.
+   * Calculates the confused damage a Pokemon does to itself.
    * 
    * @param p Pokemon to calculate for
    * @return Damage done
@@ -215,7 +214,7 @@ public class Battle implements Iterable<Slot> {
     List<Slot> enemySlots = new ArrayList<Slot>();
 
     for (Slot s : _slots.values())
-      if (s != slot) enemySlots.add(s);
+      if (s.id() != slot.id()) enemySlots.add(s);
 
     return enemySlots;
   }

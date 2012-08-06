@@ -3,25 +3,23 @@ package jpkmn.exe.gui;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import jpkmn.exe.gui.battle.BattleView;
+import jpkmn.exe.gui.world.WorldView;
 
 public class GameWindow extends JFrame {
   public GameWindow() {
-    _main = new JPanel();
     _battle = new BattleView();
+    _main = new WorldView(this);
 
-    setResizable(false);
-
-    _main.add(new JLabel("Main Menu!"));
+    // setResizable(false);
   }
 
-  public void showMain() {
+  public void showMain(int areaID) {
     _battle.disable();
     remove(_battle);
 
+    _main.setup(areaID);
     add(_main);
 
     size(200, 100);
@@ -29,6 +27,7 @@ public class GameWindow extends JFrame {
   }
 
   public void showBattle(int battleID, int slotID) {
+    _main.disable();
     remove(_main);
 
     _battle.setup(battleID, slotID);
@@ -39,6 +38,7 @@ public class GameWindow extends JFrame {
   }
 
   public void refresh() {
+    _main.refresh();
     _battle.refresh();
 
     setVisible(false);
@@ -49,7 +49,7 @@ public class GameWindow extends JFrame {
     setSize(new Dimension(x, y));
   }
 
-  private JPanel _main;
+  private WorldView _main;
   private BattleView _battle;
   private static final long serialVersionUID = 1L;
 }
