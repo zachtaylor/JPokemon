@@ -18,10 +18,14 @@ public class Battle implements Iterable<Slot> {
     _round = new Round(this);
   }
 
-  public void add(SlotType t, Party p) {
-    if (ready() || _slots.size() == Constants.MAXBATTLESIZE) return;
+  public int add(SlotType t, Party p) {
+    if (ready() || _slots.size() == Constants.MAXBATTLESIZE) return -1;
 
-    _slots.put(_slots.size(), new Slot(_slots.size(), t, p));
+    int id = _slots.size();
+
+    _slots.put(id, new Slot(id, t, p));
+
+    return id;
   }
 
   public void remove(int slotID) {
@@ -30,14 +34,6 @@ public class Battle implements Iterable<Slot> {
     if (_slots.size() == 1) {
       _slots.remove(_slots.keySet().toArray()[0]);
       BattleRegistry.remove(_id);
-    }
-
-    // AI should never run
-    if (slot.type() == SlotType.GYM) {
-      // TODO : Reward from gym
-    }
-    else if (slot.type() == SlotType.TRAINER) {
-      // TODO : Prevent players from fighting this trainer again
     }
 
     slot.party().owner().screen.showWorld();
@@ -62,8 +58,16 @@ public class Battle implements Iterable<Slot> {
       }
     }
 
-    if (loser.type() == SlotType.PLAYER && loser.party().countAwake() == 0) {
-      // TODO : Punish player
+    if (loser.party().countAwake() == 0) {
+      if (loser.type() == SlotType.PLAYER) {
+        // TODO : Punish player
+      }
+      else if (loser.type() == SlotType.GYM) {
+        // TODO : Reward from gym
+      }
+      else if (loser.type() == SlotType.TRAINER) {
+        // TODO : Prevent players from fighting this trainer again
+      }
     }
   }
 
