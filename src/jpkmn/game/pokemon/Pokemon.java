@@ -7,7 +7,7 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.player.AbstractPlayer;
 import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
-import lib.PokemonBase;
+import jpkmn.game.base.PokemonBase;
 
 public class Pokemon {
   public final Condition condition;

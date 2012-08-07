@@ -3,8 +3,8 @@ package jpkmn.game.pokemon.move;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.BonusEffectBase;
-import lib.MoveBase;
+import jpkmn.game.base.BonusEffectBase;
+import jpkmn.game.base.MoveBase;
 
 import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.Pokemon;
