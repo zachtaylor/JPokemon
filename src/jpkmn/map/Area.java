@@ -16,6 +16,9 @@ public abstract class Area {
   public Area(int areaNumber) {
     id = areaNumber;
 
+    _gym = -1;
+    _rival = -1;
+
     _buildings = new ArrayList<Building>();
     _neighbors = new ArrayList<AreaConnection>();
   }
@@ -63,19 +66,27 @@ public abstract class Area {
     return _water == null ? null : _water.spawn(pole);
   }
 
-  public void rivalBattle(int num) {
-    _rivalBattle = num;
+  public int gym() {
+    return _gym;
   }
 
-  public int rivalBattle() {
-    return _rivalBattle;
+  public void gym(int number) {
+    _gym = number;
+  }
+
+  public void rival(int num) {
+    _rival = num;
+  }
+
+  public int rival() {
+    return _rival;
   }
 
   public final int id;
 
   protected String _name;
   protected Water _water;
-  protected int _rivalBattle = 0;
+  protected int _rival, _gym;
   protected List<Building> _buildings;
   protected List<AreaConnection> _neighbors;
 }

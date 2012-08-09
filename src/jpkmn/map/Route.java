@@ -38,7 +38,7 @@ public class Route extends Area {
       w.add(118, 1, 15, 15, "superrod"); // goldeen
       water(w);
 
-      rivalBattle(2);
+      rival(2);
     }
     else if (routeNumber == 13) {
       name("Veridian Forest");
