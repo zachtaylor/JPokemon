@@ -1,11 +1,15 @@
 package jpkmn.game.player;
 
+import jpkmn.game.base.GymLeaderBase;
 import jpkmn.game.pokemon.Pokemon;
 
 public class GymLeader extends AbstractPlayer {
   public GymLeader(int badgeNumber) {
     _id = badgeNumber;
+    GymLeaderBase.setup(this);
+  }
 
+  public void oldData() {
     if (_id == 1) {
       name("Brock");
       _prize = 1386;
@@ -111,8 +115,16 @@ public class GymLeader extends AbstractPlayer {
       throw new IllegalArgumentException("Cannot create Gym Leader: " + _id);
   }
 
+  public int badge() {
+    return _id;
+  }
+  
   public int prize() {
     return _prize;
+  }
+
+  public void prize(int p) {
+    _prize = p;
   }
 
   private int _id, _prize;
