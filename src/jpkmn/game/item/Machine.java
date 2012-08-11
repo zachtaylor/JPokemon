@@ -1,7 +1,6 @@
 package jpkmn.game.item;
 
-import lib.MoveBase;
-
+import jpkmn.game.base.MoveBase;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 

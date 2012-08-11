@@ -1,8 +1,8 @@
 package jpkmn.game.pokemon.stat;
 
+import jpkmn.game.base.PokemonBase;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
-import lib.PokemonBase;
 
 public class StatBlock {
   public final Stat atk, stk, def, sdf, spd;

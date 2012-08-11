@@ -5,8 +5,8 @@ import java.util.List;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.CancelException;
+import jpkmn.game.base.MoveMap;
 import jpkmn.game.pokemon.Pokemon;
-import lib.MoveMap;
 
 public class MoveBlock {
   public MoveBlock(Pokemon p) {
