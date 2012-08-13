@@ -12,6 +12,22 @@ public class AbstractPlayer {
     screen = new GraphicsHandler();
   }
 
+  public int id() {
+    return _id;
+  }
+
+  public void id(int id) {
+    if (_id == -1) _id = id;
+  }
+
+  public int cash() {
+    return _cash;
+  }
+
+  public void cash(int c) {
+    _cash = c;
+  }
+
   public String name() {
     return _name;
   }
@@ -20,5 +36,6 @@ public class AbstractPlayer {
     _name = s;
   }
 
+  protected int _cash, _id = -1;
   protected String _name;
 }

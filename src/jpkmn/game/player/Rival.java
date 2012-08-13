@@ -6,12 +6,12 @@ import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.AIParty;
 import jpkmn.game.pokemon.Pokemon;
 
-public class GymLeader extends AbstractPlayer {
-  public GymLeader(int badgeNumber) {
-    _id = badgeNumber;
+public class Rival extends AbstractPlayer {
+  public Rival(int rivalNumber) {
+    _id = rivalNumber;
 
-    List<Pokemon> pokemon = AIParty.getPartyForLeader(_id);
-    AIInfo info = AIInfo.getInfoForLeader(_id);
+    List<Pokemon> pokemon = AIParty.getPartyForRival(_id);
+    AIInfo info = AIInfo.getInfoForRival(_id);
 
     for (Pokemon p : pokemon) {
       party.add(p);

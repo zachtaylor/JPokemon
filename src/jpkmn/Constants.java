@@ -18,6 +18,10 @@ public class Constants {
   public static final int ROUTENUMBER = 12;
   public static final int AREANUMBER = CITYNUMBER + ROUTENUMBER;
 
+  public static final int GYMNUMBER = 4;
+  public static final int RIVALNUMBER = 0;
+  public static final int TRAINERNUMBER = 0;
+
   public static final Preferences prefs = Preferences
       .systemNodeForPackage(Constants.class);
 }

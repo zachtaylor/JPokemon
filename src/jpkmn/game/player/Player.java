@@ -3,8 +3,6 @@ package jpkmn.game.player;
 import java.io.PrintWriter;
 
 import jpkmn.Constants;
-import jpkmn.exceptions.LoadException;
-import jpkmn.exe.Driver;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
@@ -16,25 +14,12 @@ public class Player extends AbstractPlayer {
   public final Pokedex dex;
   public final PCStorage box;
 
-  public Player(String serial) throws LoadException {
-    if (!serial.equals(Driver.officialSerial))
-      throw new LoadException("Improper file version: " + _serial);
-
-    _serial = serial;
-
+  public Player() {
     bag = new Bag();
     dex = new Pokedex();
     box = new PCStorage();
 
     screen.player(this);
-  }
-
-  public int cash() {
-    return _cash;
-  }
-
-  public void cash(int c) {
-    _cash = c;
   }
 
   public Area area() {
@@ -54,7 +39,6 @@ public class Player extends AbstractPlayer {
   }
 
   public void toFile(PrintWriter p) {
-    p.println(_serial);
     p.println(_name);
     p.println(_cash);
     p.println(_badge);
@@ -80,8 +64,6 @@ public class Player extends AbstractPlayer {
     return ((Player) o)._id == _id;
   }
 
-  int _id;
   private Area _area;
-  private String _serial;
-  private int _cash, _badge;
+  private int _badge;
 }

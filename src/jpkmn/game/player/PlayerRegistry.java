@@ -9,31 +9,27 @@ import java.util.prefs.Preferences;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
-import jpkmn.exe.Driver;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.AreaManager;
 
 public class PlayerRegistry {
-  public static int UNIQUE_ID;
 
   public static Player create(String name, int start) throws LoadException {
-    Player newPlayer = new Player(Driver.officialSerial);
+    Player newPlayer = new Player();
     newPlayer.name(name);
     newPlayer.party.add(new Pokemon(start, 5));
     return register(newPlayer);
   }
 
   public static Player fromFile(String s) throws LoadException {
-    if (!s.endsWith(".jpkmn")) {
-      s += ".jpkmn";
-    }
+    if (!s.endsWith(".jpkmn")) s += ".jpkmn";
 
     try {
       Preferences pref = Constants.prefs;
       File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
       Scanner scan = new Scanner(playerFile);
 
-      Player newPlayer = new Player(scan.nextLine());
+      Player newPlayer = new Player();
       newPlayer.name(scan.nextLine());
       newPlayer.cash(Integer.parseInt(scan.nextLine()));
       newPlayer.badge(Integer.parseInt(scan.nextLine()));
@@ -61,11 +57,12 @@ public class PlayerRegistry {
     else if (names.contains(p.name()))
       throw new LoadException("Player is already registered: " + p.name());
 
-    p._id = UNIQUE_ID++;
+    p._id = PLAYER_COUNT++;
     names.add(p.name());
 
     return p;
   }
 
+  private static int PLAYER_COUNT;
   private static List<String> names;
 }
