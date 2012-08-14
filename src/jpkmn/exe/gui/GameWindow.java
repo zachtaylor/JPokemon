@@ -22,7 +22,7 @@ public class GameWindow extends JFrame {
     _main.setup(areaID);
     add(_main);
 
-    size(200, 100);
+    size(400, 100);
     refresh();
   }
 

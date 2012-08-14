@@ -66,8 +66,8 @@ public class WorldView extends JPanel {
     for (Building b : a.buildings()) {
       System.out.println(b.toString());
       if (b == Building.CENTER)
-        add(new CenterButton(this, _areaID));
-      else if (b == Building.MART) add(new MartButton(this, _areaID));
+        _buttons.add(new CenterButton(this, _areaID));
+      else if (b == Building.MART) _buttons.add(new MartButton(this, _areaID));
       // TODO : Figure the rest out
     }
   }
