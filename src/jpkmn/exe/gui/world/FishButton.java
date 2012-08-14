@@ -13,10 +13,13 @@ public class FishButton extends JButton implements ActionListener {
 
     _window = view.window;
     _areaID = areaID;
+
+    addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    System.out.println("You clicked Fish");
     // TODO : Generate battle
   }
 

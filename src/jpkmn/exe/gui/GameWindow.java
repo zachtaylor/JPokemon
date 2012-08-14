@@ -6,13 +6,16 @@ import javax.swing.JFrame;
 
 import jpkmn.exe.gui.battle.BattleView;
 import jpkmn.exe.gui.world.WorldView;
+import jpkmn.img.ImageFinder;
 
 public class GameWindow extends JFrame {
   public GameWindow() {
     _battle = new BattleView();
     _main = new WorldView(this);
 
-    // setResizable(false);
+    setResizable(false);
+    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    setIconImage(ImageFinder.find("main-icon"));
   }
 
   public void showMain(int areaID) {
@@ -22,7 +25,7 @@ public class GameWindow extends JFrame {
     _main.setup(areaID);
     add(_main);
 
-    size(400, 100);
+    size(600, 300);
     refresh();
   }
 

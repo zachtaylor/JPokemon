@@ -1,7 +1,9 @@
 package jpkmn.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jpkmn.game.pokemon.Pokemon;
 
@@ -20,7 +22,7 @@ public abstract class Area {
     _rival = -1;
 
     _buildings = new ArrayList<Building>();
-    _neighbors = new ArrayList<AreaConnection>();
+    _neighbors = new HashMap<Direction, AreaConnection>();
   }
 
   public void name(String s) {
@@ -39,19 +41,16 @@ public abstract class Area {
     if (!_buildings.contains(b)) _buildings.add(b);
   }
 
-  public List<AreaConnection> neighbors() {
-    return _neighbors;
+  public AreaConnection neighbor(Direction d) {
+    return _neighbors.get(d);
   }
 
   public AreaConnection neighbors(int n) {
     return _neighbors.get(n);
   }
 
-  public void connect(Area a) {
-    if (id < a.id) {
-      _neighbors.add(new AreaConnection(a.id));
-      a._neighbors.add(new AreaConnection(id));
-    }
+  public void connect(Direction d, Area a) {
+    _neighbors.put(d, new AreaConnection(a.id));
   }
 
   public void water(Water w) {
@@ -88,5 +87,5 @@ public abstract class Area {
   protected Water _water;
   protected int _rival, _gym;
   protected List<Building> _buildings;
-  protected List<AreaConnection> _neighbors;
+  protected Map<Direction, AreaConnection> _neighbors;
 }

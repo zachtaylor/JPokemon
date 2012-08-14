@@ -80,8 +80,8 @@ public class GraphicsHandler {
 
   public void player(Player p) {
     _player = p;
-    _inbox = new MessageView();
     _window = new GameWindow();
+    _inbox = new MessageView();
   }
 
   public void notify(String... s) {

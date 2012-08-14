@@ -13,10 +13,13 @@ public class MartButton extends JButton implements ActionListener {
 
     _window = view.window;
     _areaID = areaID;
+
+    addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent arg0) {
+    System.out.println("You clicked Mart");
     // TODO : Generate battle
   }
 

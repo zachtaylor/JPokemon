@@ -22,12 +22,29 @@ public class AreaManager {
         _areas[i] = new Route(i);
     }
 
-    _areas[0].connect(_areas[10]); // Pallet - Route 1
-    _areas[1].connect(_areas[10]); // Viridian City - Route 1
-    _areas[1].connect(_areas[11]); // Viridian City - Route 2
-    _areas[1].connect(_areas[12]); // Viridian City - Route 22
-    _areas[12].connect(_areas[13]); // Route 22 - Viridian Forest
-    _areas[2].connect(_areas[13]); // Pewter City - Viridian Forest
+    // Pallet - Route 1
+    _areas[0].connect(Direction.NORTH, _areas[10]);
+    _areas[10].connect(Direction.SOUTH, _areas[0]);
+
+    // Route 1 - Viridian City
+    _areas[10].connect(Direction.NORTH, _areas[1]);
+    _areas[1].connect(Direction.SOUTH, _areas[10]);
+
+    // Viridian City - Route 2
+    _areas[1].connect(Direction.NORTH, _areas[11]);
+    _areas[1].connect(Direction.SOUTH, _areas[11]);
+
+    // Viridian City - Route 22
+    _areas[1].connect(Direction.WEST, _areas[12]);
+    _areas[12].connect(Direction.EAST, _areas[13]);
+
+    // Route 2 - Viridian Forest
+    _areas[12].connect(Direction.NORTH, _areas[13]);
+    _areas[13].connect(Direction.SOUTH, _areas[12]);
+
+    // Viridan Forest - Pewter City
+    _areas[13].connect(Direction.NORTH, _areas[2]);
+    _areas[2].connect(Direction.SOUTH, _areas[13]);
 
     return true;
   }
