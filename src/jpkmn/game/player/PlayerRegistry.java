@@ -2,8 +2,8 @@ package jpkmn.game.player;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.prefs.Preferences;
 
@@ -13,9 +13,8 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.AreaManager;
 
 public class PlayerRegistry {
-
   public static Player create(String name, int start) throws LoadException {
-    Player newPlayer = new Player();
+    Player newPlayer = new Player(PLAYER_COUNT++);
     newPlayer.name(name);
     newPlayer.party.add(new Pokemon(start, 5));
     return register(newPlayer);
@@ -29,7 +28,7 @@ public class PlayerRegistry {
       File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
       Scanner scan = new Scanner(playerFile);
 
-      Player newPlayer = new Player();
+      Player newPlayer = new Player(PLAYER_COUNT++);
       newPlayer.name(scan.nextLine());
       newPlayer.cash(Integer.parseInt(scan.nextLine()));
       newPlayer.badge(Integer.parseInt(scan.nextLine()));
@@ -48,21 +47,26 @@ public class PlayerRegistry {
       return register(newPlayer);
     } catch (FileNotFoundException f) {
       throw new LoadException("That player does not exist.");
+    } catch (Exception e) {
+      throw new LoadException("General error - " + e.toString());
     }
   }
 
-  private static Player register(Player p) throws LoadException {
-    if (names == null)
-      names = new ArrayList<String>();
-    else if (names.contains(p.name()))
-      throw new LoadException("Player is already registered: " + p.name());
+  public static Player get(int playerID) {
+    return _players.get(playerID);
+  }
 
-    p._id = PLAYER_COUNT++;
-    names.add(p.name());
+  private static Player register(Player p) throws LoadException {
+    if (_players.get(p._id) != null) {
+      Player player = _players.get(p._id);
+
+      throw new LoadException("PlayerID " + p._id + " is already assigned to "
+          + player.name());
+    }
 
     return p;
   }
 
-  private static int PLAYER_COUNT;
-  private static List<String> names;
+  private static int PLAYER_COUNT; // Eventually move to DB
+  private static Map<Integer, Player> _players = new HashMap<Integer, Player>();
 }

@@ -26,6 +26,7 @@ public class GraphicsHandler {
       zach = PlayerRegistry.fromFile("newfile");
 
     } catch (LoadException le) {
+      le.printStackTrace();
       return;
     }
 

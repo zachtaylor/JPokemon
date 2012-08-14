@@ -14,7 +14,8 @@ public class Player extends AbstractPlayer {
   public final Pokedex dex;
   public final PCStorage box;
 
-  public Player() {
+  public Player(int playerID) {
+    _id = playerID;
     bag = new Bag();
     dex = new Pokedex();
     box = new PCStorage();
