@@ -1,7 +1,7 @@
 package jpkmn.game.player;
 
-import jpkmn.exe.gui.GraphicsHandler;
 import jpkmn.game.pokemon.storage.Party;
+import jpkmn.game.service.GraphicsHandler;
 
 public class AbstractPlayer {
   public final Party party;

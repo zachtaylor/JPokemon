@@ -1,4 +1,4 @@
-package jpkmn.exe.gui;
+package jpkmn.game.service;
 
 import java.util.List;
 
@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 
 import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
+import jpkmn.exe.gui.GameWindow;
+import jpkmn.exe.gui.MessageView;
 import jpkmn.game.battle.Slot;
 import jpkmn.game.item.Item;
 import jpkmn.game.player.Player;
