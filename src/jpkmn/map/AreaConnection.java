@@ -17,8 +17,8 @@ public class AreaConnection {
     return true;
   }
 
-  public String name() {
-    return AreaManager.get(_nextID).name();
+  public Area next() {
+    return AreaManager.get(_nextID);
   }
 
   private int _nextID;

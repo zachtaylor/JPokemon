@@ -5,14 +5,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jpkmn.exceptions.LoadException;
+import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.service.PlayerService;
 import jpkmn.map.Area;
 import jpkmn.map.AreaManager;
-import jpkmn.map.Building;
-import jpkmn.map.Direction;
-import jpkmn.map.Route;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class WorldView extends JPanel {
   public static void main(String[] args) {
@@ -43,10 +45,10 @@ public class WorldView extends JPanel {
     JPanel right = new JPanel();
     JPanel center = new JPanel();
 
-    _north = new AreaConnectionButton(this, Direction.NORTH);
-    _east = new AreaConnectionButton(this, Direction.EAST);
-    _south = new AreaConnectionButton(this, Direction.SOUTH);
-    _west = new AreaConnectionButton(this, Direction.WEST);
+    _north = new AreaConnectionButton(this, "NORTH");
+    _east = new AreaConnectionButton(this, "EAST");
+    _south = new AreaConnectionButton(this, "SOUTH");
+    _west = new AreaConnectionButton(this, "WEST");
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
@@ -74,39 +76,49 @@ public class WorldView extends JPanel {
   public void refresh() {
     if (!_enabled) return;
 
-    Area a = AreaManager.get(_areaID);
+    try {
+      JSONObject areaInfo = PlayerService.areaInfo(_playerID);
 
-    _title.setText(a.name());
+      _title.setText(areaInfo.getString("name"));
 
-    _buttons.removeAll();
+      _buttons.removeAll();
 
-    if (a instanceof Route) {
-      _buttons.add(new GrassButton(this, _areaID));
-    }
-    if (a.water() != null) {
-      _buttons.add(new FishButton(this, _areaID));
-    }
+      if (areaInfo.getString("type").equals("route")) {
+        _buttons.add(new GrassButton(this, areaInfo.getInt("id")));
+      }
+      if (areaInfo.getBoolean("hasWater")) {
+        _buttons.add(new FishButton(this, areaInfo.getInt("id")));
+      }
+
+      //@preformat
+    /* 
     for (Building b : a.buildings()) {
       if (b == Building.CENTER)
         _buttons.add(new CenterButton(this, _areaID));
       else if (b == Building.MART)
         _buttons.add(new MartButton(this, _areaID));
       // TODO : Figure the rest out
-    }
+    } 
+    */
+    //@format
 
-    _north.setUp(a);
-    _east.setUp(a);
-    _south.setUp(a);
-    _west.setUp(a);
+      _north.setUp(areaInfo.getString("NORTH"));
+      _east.setUp(areaInfo.getString("EAST"));
+      _south.setUp(areaInfo.getString("SOUTH"));
+      _west.setUp(areaInfo.getString("WEST"));
+    } catch (ServiceException s) {
+
+    } catch (JSONException j) {
+
+    }
+  }
+
+  public void enable() {
+    _enabled = true;
   }
 
   public void disable() {
     _enabled = false;
-  }
-
-  public void setup(int areaID) {
-    _enabled = true;
-    _areaID = areaID;
   }
 
   private JPanel spacer() {
@@ -114,7 +126,7 @@ public class WorldView extends JPanel {
   }
 
   GameWindow window;
-  private int _areaID;
+  private int _playerID;
   private JLabel _title;
   private JPanel _buttons;
   private boolean _enabled;

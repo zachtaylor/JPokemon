@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.exe.gui.MessageView;
 import jpkmn.game.battle.Slot;
 import jpkmn.game.item.Item;
 import jpkmn.game.player.Player;
@@ -82,14 +81,13 @@ public class GraphicsHandler {
 
   public void player(Player p) {
     _player = p;
-    _window = new GameWindow();
-    _inbox = new MessageView();
+    _window = new GameWindow(p.id());
   }
 
   public void notify(String... s) {
     if (mock()) return;
 
-    _inbox.addMessage(s);
+    _window.inbox().addMessage(s);
   }
 
   public void showWorld() {
@@ -231,6 +229,5 @@ public class GraphicsHandler {
   }
 
   private Player _player;
-  private MessageView _inbox;
   private GameWindow _window;
 }

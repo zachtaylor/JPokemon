@@ -12,6 +12,10 @@ public class AbstractPlayer {
     screen = new GraphicsHandler();
   }
 
+  public int id() {
+    return _id;
+  }
+
   public int cash() {
     return _cash;
   }

@@ -32,15 +32,15 @@ public class AreaManager {
 
     // Viridian City - Route 2
     _areas[1].connect(Direction.NORTH, _areas[11]);
-    _areas[1].connect(Direction.SOUTH, _areas[11]);
+    _areas[11].connect(Direction.SOUTH, _areas[1]);
 
     // Viridian City - Route 22
     _areas[1].connect(Direction.WEST, _areas[12]);
-    _areas[12].connect(Direction.EAST, _areas[13]);
+    _areas[12].connect(Direction.EAST, _areas[1]);
 
     // Route 2 - Viridian Forest
-    _areas[12].connect(Direction.NORTH, _areas[13]);
-    _areas[13].connect(Direction.SOUTH, _areas[12]);
+    _areas[11].connect(Direction.NORTH, _areas[13]);
+    _areas[13].connect(Direction.SOUTH, _areas[11]);
 
     // Viridan Forest - Pewter City
     _areas[13].connect(Direction.NORTH, _areas[2]);

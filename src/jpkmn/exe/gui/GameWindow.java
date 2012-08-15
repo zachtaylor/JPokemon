@@ -9,20 +9,32 @@ import jpkmn.exe.gui.world.WorldView;
 import jpkmn.img.ImageFinder;
 
 public class GameWindow extends JFrame {
-  public GameWindow() {
+  public GameWindow(int playerID) {
+    _playerID = playerID;
+    _inbox = new MessageView();
     _battle = new BattleView();
     _main = new WorldView(this);
 
     setResizable(false);
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setIconImage(ImageFinder.find("main-icon"));
+
+    setVisible(true);
+  }
+
+  public int playerID() {
+    return _playerID;
+  }
+
+  public MessageView inbox() {
+    return _inbox;
   }
 
   public void showMain(int areaID) {
     _battle.disable();
     remove(_battle);
 
-    _main.setup(areaID);
+    _main.enable();
     add(_main);
 
     size(600, 300);
@@ -52,7 +64,9 @@ public class GameWindow extends JFrame {
     setSize(new Dimension(x, y));
   }
 
+  private int _playerID;
   private WorldView _main;
   private BattleView _battle;
+  private MessageView _inbox;
   private static final long serialVersionUID = 1L;
 }

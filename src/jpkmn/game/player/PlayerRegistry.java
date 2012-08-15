@@ -63,6 +63,7 @@ public class PlayerRegistry {
       throw new LoadException("PlayerID " + p._id + " is already assigned to "
           + player.name());
     }
+    _players.put(p.id(), p);
 
     return p;
   }
