@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.map.Area;
+import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
 
 public class AreaConnectionButton extends JButton implements ActionListener {
@@ -18,8 +20,14 @@ public class AreaConnectionButton extends JButton implements ActionListener {
     addActionListener(this);
   }
 
-  public void setUp(int areaID) {
-    // TODO : setup
+  public void setUp(Area area) {
+    AreaConnection c = area.neighbor(_direction);
+    if (c == null)
+      setEnabled(false);
+    else {
+      setEnabled(true);
+      setToolTipText(c.name());
+    }
   }
 
   @Override

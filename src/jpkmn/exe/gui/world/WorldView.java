@@ -89,10 +89,15 @@ public class WorldView extends JPanel {
     for (Building b : a.buildings()) {
       if (b == Building.CENTER)
         _buttons.add(new CenterButton(this, _areaID));
-      else if (b == Building.MART) 
+      else if (b == Building.MART)
         _buttons.add(new MartButton(this, _areaID));
       // TODO : Figure the rest out
     }
+
+    _north.setUp(a);
+    _east.setUp(a);
+    _south.setUp(a);
+    _west.setUp(a);
   }
 
   public void disable() {
