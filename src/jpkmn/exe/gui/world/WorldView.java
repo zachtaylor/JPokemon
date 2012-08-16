@@ -41,14 +41,18 @@ public class WorldView extends JPanel {
 
     _buttons = new JPanel();
 
-    JPanel left = new JPanel();
-    JPanel right = new JPanel();
-    JPanel center = new JPanel();
+    _fish = new FishButton(this);
+
+    _grass = new GrassButton(this);
 
     _north = new AreaConnectionButton(this, "NORTH");
     _east = new AreaConnectionButton(this, "EAST");
     _south = new AreaConnectionButton(this, "SOUTH");
     _west = new AreaConnectionButton(this, "WEST");
+
+    JPanel left = new JPanel();
+    JPanel right = new JPanel();
+    JPanel center = new JPanel();
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
@@ -84,10 +88,10 @@ public class WorldView extends JPanel {
       _buttons.removeAll();
 
       if (areaInfo.getString("type").equals("route")) {
-        _buttons.add(new GrassButton(this, areaInfo.getInt("id")));
+        _buttons.add(_grass);
       }
       if (areaInfo.getBoolean("hasWater")) {
-        _buttons.add(new FishButton(this, areaInfo.getInt("id")));
+        _buttons.add(_fish);
       }
 
       //@preformat
@@ -130,6 +134,8 @@ public class WorldView extends JPanel {
   private JLabel _title;
   private JPanel _buttons;
   private boolean _enabled;
+  private FishButton _fish;
+  private GrassButton _grass;
   private AreaConnectionButton _north, _east, _south, _west;
 
   private static final long serialVersionUID = 1L;

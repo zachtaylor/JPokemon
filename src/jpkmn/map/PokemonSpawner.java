@@ -22,10 +22,14 @@ public class PokemonSpawner {
     for (String tag : tags) {
       cur = _tags.get(tag);
 
+      if (cur == null) continue;
+
       for (Spawn spawn : cur) {
         if (!spawnable.contains(spawn)) spawnable.add(spawn);
       }
     }
+
+    if (spawnable.isEmpty()) return null;
 
     int index = (int) (Math.random() * spawnable.size());
 

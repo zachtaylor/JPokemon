@@ -5,25 +5,32 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.game.service.BattleService;
 
 public class FishButton extends JButton implements ActionListener {
-  public FishButton(WorldView view, int areaID) {
+  public FishButton(WorldView view) {
     super("Fish");
 
     _window = view.window;
-    _areaID = areaID;
 
     addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    System.out.println("You clicked Fish");
-    // TODO : Generate battle
+    int playerID = _window.playerID();
+
+    try {
+      BattleService.startWater(playerID);
+    } catch (ServiceException s) {
+      _window.inbox().addMessage(s.getMessage());
+    }
+
+    _window.refresh();
   }
 
-  private int _areaID;
   private GameWindow _window;
   private static final long serialVersionUID = 1L;
 }
