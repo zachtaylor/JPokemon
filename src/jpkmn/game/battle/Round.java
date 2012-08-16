@@ -51,10 +51,6 @@ public class Round {
     }
 
     if (BattleRegistry.get(_battle.id()) == _battle) {
-      for (Slot slot : _battle) {
-        slot.party().owner().screen.refresh();
-      }
-
       setForcedNextAttacks();
       _battle.makeMockAttacks();
     }
@@ -72,7 +68,7 @@ public class Round {
         else
           _battle.rewardFrom(slot.id());
       }
-      
+
       if (slot.party().countAwake() == 0) {
         _turns.remove(turn);
         _battle.remove(slot.id());

@@ -86,8 +86,11 @@ public class Turn {
   }
 
   public void changeToSwap() {
-    _int2 = 0;
+    _int1 = _int2 = 0;
     _mode = Mode.SWAP;
+
+    _messages.clear();
+    _messages.add(_user.leader().name() + " has fainted!");
 
     while (!_user.party().get(_int2).condition.awake()) {
       try {

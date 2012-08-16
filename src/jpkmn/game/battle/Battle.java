@@ -32,7 +32,7 @@ public class Battle implements Iterable<Slot> {
     Slot slot = _slots.remove(slotID);
 
     if (_slots.size() == 1) {
-      _slots.remove(_slots.keySet().toArray()[0]);
+      remove((int) _slots.keySet().toArray()[0]);
       BattleRegistry.remove(_id);
     }
 
@@ -136,11 +136,15 @@ public class Battle implements Iterable<Slot> {
     _round = new Round(this);
     current.play();
     executeConditionEffects();
+
+    for (Slot slot : this)
+      slot.party().owner().screen.refresh();
   }
 
   private void executeConditionEffects() {
     for (Slot slot : _slots.values()) {
-      notifyAll(slot.leader().condition.applyEffects());
+      String[] messages = slot.leader().condition.applyEffects();
+      if (messages.length > 0) notifyAll(messages);
     }
   }
 
