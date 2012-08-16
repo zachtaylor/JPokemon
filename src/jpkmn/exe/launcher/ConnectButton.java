@@ -5,15 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class ConnectButton extends JButton implements ActionListener {
-  private int a; // Flag to do work
-
   public ConnectButton(Launcher l) {
     super("Connect");
 
     _launcher = l;
-    
+
     setFocusable(false);
     setBorderPainted(false);
     setBounds(550, 100, 110, 30);
@@ -24,8 +23,9 @@ public class ConnectButton extends JButton implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    // TODO Auto-generated method stub
-    _launcher.dispose();
+    JOptionPane.showMessageDialog(_launcher,
+        "Hello! I have not been implemented yet!", "Oops!",
+        JOptionPane.PLAIN_MESSAGE);
   }
 
   private Launcher _launcher;

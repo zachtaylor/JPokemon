@@ -10,7 +10,7 @@ import jpkmn.img.ImageFinder;
 
 public class Launcher extends JFrame {
   public Launcher() {
-    setTitle("JPokemon (ver 0.1)");
+    setTitle("JPokemon (dev build)");
     setIconImage(ImageFinder.find("main-icon"));
     setSize(720, 457); // WIDTH, HEIGHT
     setUndecorated(true);

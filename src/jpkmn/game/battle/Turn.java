@@ -146,7 +146,7 @@ public class Turn {
               ((Player) (_user.party().owner())).box.add(target);
             _user.target().party().remove(target);
 
-            _messages.add(target.name() + "was caught!");
+            _messages.add(target.name() + " was caught!");
           }
           else
             _messages.add(target.name() + "broke free!");

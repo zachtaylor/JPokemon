@@ -219,26 +219,33 @@ public class Slot {
   public void rival(Slot s) {
     if (s.id() == id()) return;
 
-    Pokemon p = s.leader();
+    Pokemon dead = s.leader();
     int xp = s.getXPAwarded(), count = 0;
+    List<String> message = new ArrayList<String>();
     List<Pokemon> rivals, earners = new ArrayList<Pokemon>();
+
+    message.add(dead.name() + " fained!");
 
     for (Pokemon cur : _party) {
       rivals = _rivals.get(cur);
 
+      // If cur holding xp share, add to earners
+
       if (rivals == null) continue;
-      if (rivals.contains(p)) {
+      if (rivals.contains(dead)) {
         count++;
         earners.add(cur);
-        rivals.remove(p);
+        rivals.remove(dead);
       }
       if (rivals.isEmpty()) _rivals.remove(cur);
     }
 
+    xp = (xp / count) > 0 ? (xp / count) : 1;
     for (Pokemon cur : earners) {
-      cur.xp((xp / count) > 0 ? (xp / count) : 1);
+      message.add(cur.name() + " received " + xp + " experience!");
+      cur.xp(xp);
     }
-    
+
     // TODO : Notify XP
   }
 
