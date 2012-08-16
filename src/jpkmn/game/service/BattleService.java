@@ -10,6 +10,7 @@ import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.Route;
+import jpkmn.map.Water;
 
 public class BattleService {
   public static void startWild(int playerID) throws ServiceException {
@@ -18,15 +19,53 @@ public class BattleService {
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
 
-    MockPlayer mock = new MockPlayer();
-    Pokemon wild = ((Route) player.area()).spawn(""); // No tags yet
+    Area area = player.area();
+
+    if (area == null)
+      throw new ServiceException(player.name() + " has no area");
+
+    if (!(area instanceof Route))
+      throw new ServiceException(area.name() + " is not a route");
+
+    Route route = (Route) area;
+
+    Pokemon wild = route.spawn(""); // No tags yet
 
     if (wild == null)
       throw new ServiceException("Unable to generate wild pokemon");
 
+    MockPlayer mock = new MockPlayer();
     mock.party.add(wild);
 
     BattleRegistry.make(player, mock);
+  }
+
+  public static void startWater(int playerID) throws ServiceException {
+    Player player = PlayerRegistry.get(playerID);
+
+    if (player == null)
+      throw new ServiceException("PlayerID " + playerID + " not found");
+
+    Area area = player.area();
+
+    if (area == null)
+      throw new ServiceException(player.name() + " has no area");
+
+    Water water = area.water();
+
+    if (water == null)
+      throw new ServiceException(area.name() + " has no water");
+
+    Pokemon wild = water.spawn(""); // No tags yet
+
+    if (wild == null)
+      throw new ServiceException("Unable to generate wild pokemon");
+
+    MockPlayer mock = new MockPlayer();
+    mock.party.add(wild);
+
+    BattleRegistry.make(player, mock);
+
   }
 
   public static void startGym(int playerID) throws ServiceException {
@@ -38,12 +77,12 @@ public class BattleService {
     Area area = player.area();
 
     if (area == null)
-      throw new ServiceException(player.name() + " has no registered area!");
+      throw new ServiceException(player.name() + " has no area");
 
     int gymNumber = area.gym();
 
     if (gymNumber == 0)
-      throw new ServiceException(area.name() + " has no gym.");
+      throw new ServiceException(area.name() + " has no gym");
     else if (gymNumber != player.badge() + 1)
       throw new ServiceException("You are not qualified for this gym");
 
@@ -61,7 +100,7 @@ public class BattleService {
     Area area = player.area();
 
     if (area == null)
-      throw new ServiceException(player.name() + " has no registered area!");
+      throw new ServiceException(player.name() + " has no area");
 
     Trainer trainer = new Trainer(tID);
 
