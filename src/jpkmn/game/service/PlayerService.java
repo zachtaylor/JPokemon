@@ -5,7 +5,6 @@ import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
-import jpkmn.map.AreaManager;
 import jpkmn.map.Direction;
 
 import org.json.JSONException;
@@ -13,8 +12,15 @@ import org.json.JSONObject;
 
 public class PlayerService {
   public static JSONObject areaInfo(int playerID) throws ServiceException {
-    Player p = PlayerRegistry.get(playerID);
-    Area area = AreaManager.get(p.area().id);
+    Player player = PlayerRegistry.get(playerID);
+
+    if (player == null)
+      throw new ServiceException("PlayerID " + playerID + " not found");
+
+    Area area = player.area();
+
+    if (area == null)
+      throw new ServiceException(player.name() + " has no registered area!");
 
     try {
       return JSONMaker.make(area);
@@ -23,27 +29,30 @@ public class PlayerService {
     }
   }
 
-  public static void areaChange(int playerID, String direction)
-      throws ServiceException {
-    Player p = PlayerRegistry.get(playerID);
+  public static void areaChange(int pID, String dir) throws ServiceException {
+    Player player = PlayerRegistry.get(pID);
 
-    if (p == null)
-      throw new ServiceException("PlayerID " + playerID + " not found");
+    if (player == null)
+      throw new ServiceException("PlayerID " + pID + " not found");
 
     // HACKY - But i'm too tired to do it the right way right now
-    Direction d = null;
-    for (Direction dir : Direction.values())
-      if (dir.toString().equals(direction)) d = dir;
+    Direction direction = null;
+    for (Direction d : Direction.values())
+      if (d.toString().equals(dir)) direction = d;
     // END HACK
 
-    Area cur = p.area();
-    AreaConnection con = cur.neighbor(d);
+    Area area = player.area();
 
-    if (con == null)
-      throw new ServiceException(p.area().name() + " has no " + d + " neighbor");
-    if (!con.test(p))
-      throw new ServiceException(p.name() + " cannot access " + d);
+    if (area == null)
+      throw new ServiceException(player.name() + " has no registered area!");
 
-    con.use(p);
+    AreaConnection connection = area.neighbor(direction);
+
+    if (connection == null)
+      throw new ServiceException(area.name() + " cannot access " + direction);
+    if (!connection.test(player))
+      throw new ServiceException("You are not qualified to go  " + direction);
+
+    connection.use(player);
   }
 }
