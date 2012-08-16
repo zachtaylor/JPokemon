@@ -139,6 +139,8 @@ public class Battle implements Iterable<Slot> {
 
     for (Slot slot : this)
       slot.party().owner().screen.refresh();
+    
+    makeMockAttacks();
   }
 
   private void executeConditionEffects() {
@@ -148,7 +150,7 @@ public class Battle implements Iterable<Slot> {
     }
   }
 
-  public void makeMockAttacks() {
+  private void makeMockAttacks() {
     for (Slot slot : this) {
       if (slot.type() != SlotType.PLAYER) fight(slot.id());
     }

@@ -246,7 +246,7 @@ public class Slot {
       cur.xp(xp);
     }
 
-    // TODO : Notify XP
+    _party.owner().screen.notify(message.toArray(new String[message.size()]));
   }
 
   // Slot

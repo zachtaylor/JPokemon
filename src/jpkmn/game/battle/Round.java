@@ -50,10 +50,8 @@ public class Round {
       verifyTurnList();
     }
 
-    if (BattleRegistry.get(_battle.id()) == _battle) {
-      setForcedNextAttacks();
-      _battle.makeMockAttacks();
-    }
+    setForcedNextAttacks();
+
   }
 
   private void verifyTurnList() {
@@ -63,10 +61,8 @@ public class Round {
       slot = turn.getUserSlot();
 
       if (slot.party().size() > 0 && !slot.leader().condition.awake()) {
-        if (slot.party().countAwake() > 0)
-          turn.changeToSwap();
-        else
-          _battle.rewardFrom(slot.id());
+        _battle.rewardFrom(slot.id());
+        if (slot.party().countAwake() > 0) turn.changeToSwap();
       }
 
       if (slot.party().countAwake() == 0) {
