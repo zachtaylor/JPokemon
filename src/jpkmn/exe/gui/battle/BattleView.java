@@ -7,6 +7,7 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.Slot;
+import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
@@ -20,9 +21,11 @@ public class BattleView extends JPanel {
 
       zach.area(AreaManager.get(10)); // route 1
 
-      Pokemon wild = ((Route) zach.area()).spawn();
+      Pokemon wild = ((Route) zach.area()).spawn("");
+      MockPlayer mock = new MockPlayer();
+      mock.party.add(wild);
 
-      BattleRegistry.make(zach, wild);
+      BattleRegistry.make(zach, mock);
     } catch (LoadException l) {
       l.printStackTrace();
     }

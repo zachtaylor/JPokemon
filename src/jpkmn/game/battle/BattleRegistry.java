@@ -3,21 +3,30 @@ package jpkmn.game.battle;
 import java.util.HashMap;
 import java.util.Map;
 
+import jpkmn.game.player.AbstractPlayer;
+import jpkmn.game.player.GymLeader;
 import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
-import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.player.Trainer;
 
 public class BattleRegistry {
-  public static void make(Player player, Pokemon wildEnemy) {
-    Battle b = new Battle();
-    MockPlayer mp = new MockPlayer();
+  public static void make(Player player, AbstractPlayer enemy) {
+    Battle battle = new Battle();
 
-    mp.party.add(wildEnemy);
+    SlotType type;
+    if (enemy instanceof MockPlayer)
+      type = SlotType.WILD;
+    else if (enemy instanceof GymLeader)
+      type = SlotType.GYM;
+    else if (enemy instanceof Trainer)
+      type = SlotType.TRAINER;
+    else
+      type = null;
 
-    b.add(SlotType.PLAYER, player.party);
-    b.add(SlotType.WILD, mp.party);
+    battle.add(SlotType.PLAYER, player.party);
+    battle.add(type, enemy.party);
 
-    start(b);
+    start(battle);
   }
 
   public static int make() {
