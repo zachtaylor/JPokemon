@@ -13,7 +13,7 @@ public class AreaManager {
   }
 
   private static boolean init() {
-    _areas = new Area[Constants.CITYNUMBER + Constants.ROUTENUMBER];
+    _areas = new Area[Constants.AREANUMBER];
 
     for (int i = 0; i < Constants.AREANUMBER; i++) {
       _areas[i] = new Area(i);

@@ -60,7 +60,7 @@ public class Turn {
     _mode = Mode.ITEM;
 
     _messages = new ArrayList<String>();
-    _messages.add(_user.party().owner().name() + " used " + item.getName());
+    _messages.add(_user.party().owner().name() + " used " + item.name());
   }
 
   public int damage() {

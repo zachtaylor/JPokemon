@@ -5,8 +5,9 @@ import jpkmn.game.pokemon.*;
 
 public class Potion extends Item {
 
-  public Potion(int power, int quantity, String name) {
-    super(power, quantity, name);
+  public Potion(int power, String name, int value) {
+    super(name, value);
+    _power = power;
     target = Target.SELF;
   }
 
@@ -14,7 +15,9 @@ public class Potion extends Item {
   public boolean effect(Pokemon p) {
     if (!reduce()) return false;
 
-    p.healDamage(getPower());
+    p.healDamage(_power);
     return true;
   }
+
+  int _power;
 }

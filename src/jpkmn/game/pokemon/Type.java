@@ -4,6 +4,21 @@ public enum Type {
   NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHTING, POISON, GROUND, FLYING,
   PSYCHIC, BUG, ROCK, GHOST, DRAGON;
 
+  public static Type valueOf(int r) {
+    return Type.values()[r];
+  }
+
+  public double effectiveness(Type t1, Type t2) {
+    double answer = advantage(t1) * weak(t1);
+    if (t2 != null) answer *= advantage(t2) * weak(t2);
+
+    return answer;
+  }
+
+  public double effectiveness(Pokemon p) {
+    return effectiveness(p.type1(), p.type2());
+  }
+
   /**
    * Tells if this type has an advantage against the guest
    * 
@@ -96,20 +111,5 @@ public enum Type {
     else if (me == 13 && you == 0) answer *= 0.0;
 
     return answer;
-  }
-
-  public double effectiveness(Type t1, Type t2) {
-    double answer = advantage(t1) * weak(t1);
-    if (t2 != null) answer *= advantage(t2) * weak(t2);
-
-    return answer;
-  }
-
-  public double effectiveness(Pokemon p) {
-    return effectiveness(p.type1(), p.type2());
-  }
-
-  public static Type valueOf(int r) {
-    return Type.values()[r];
   }
 }

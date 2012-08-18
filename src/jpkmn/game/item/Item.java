@@ -6,30 +6,24 @@ import jpkmn.game.pokemon.*;
 public abstract class Item {
   public Target target;
 
-  public Item(int power, int quantity, String name) {
-    _power = power;
-    _quantity = quantity;
+  public Item(String name, int value) {
     _name = name;
   }
 
-  public void add(int quantity) {
-    _quantity += quantity;
+  public void amount(int quantity) {
+    _quantity = quantity;
   }
 
-  public String getName() {
-    return _name;
-  }
-
-  public int getQuantity() {
+  public int amount() {
     return _quantity;
-  }
-
-  public int getPower() {
-    return _power;
   }
 
   public String name() {
     return _name;
+  }
+
+  public int value() {
+    return _value;
   }
 
   public abstract boolean effect(Pokemon p);
@@ -47,7 +41,6 @@ public abstract class Item {
     return _name + " " + _quantity;
   }
 
-  private int _quantity;
-  private final String _name;
-  private final int _power;
+  private String _name;
+  private int _value, _quantity;
 }

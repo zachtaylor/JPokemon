@@ -5,9 +5,9 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.stat.StatType;
 
 public class XStat extends Item {
-  public XStat(int power, int quantity, StatType type) {
-    super(power, quantity, "X" + type.name());
-    _type = type;
+  public XStat(int statType, int value) {
+    super("X" + StatType.valueOf(statType), value);
+    _type = StatType.valueOf(statType);
     target = Target.SELF;
   }
 

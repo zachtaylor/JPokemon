@@ -4,9 +4,9 @@ import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.*;
 
 public class Ball extends Item {
-
-  public Ball(int power, int quantity, String name) {
-    super(power, quantity, name);
+  public Ball(int chance, String name, int value) {
+    super(name, value);
+    _chance = chance;
     target = Target.ENEMY;
   }
 
@@ -18,7 +18,7 @@ public class Ball extends Item {
 
     HPmax = p.stats.hp.max();
     HPcur = p.stats.hp.cur();
-    BALL = getPower();
+    BALL = _chance;
     STAT = p.condition.getCatchBonus();
 
     q = BALL * 4 * STAT;
@@ -36,4 +36,5 @@ public class Ball extends Item {
     }
   }
 
+  private int _chance;
 }

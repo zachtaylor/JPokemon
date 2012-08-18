@@ -2,21 +2,12 @@ package jpkmn.game.item;
 
 import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.pokemon.Type;
 
 public class Stone extends Item {
-
-  public enum Type {
-    FIRE, WATER, THUNDER, MOON, LEAF;
-
-    private String formatName() {
-      return name().charAt(0)
-          + name().substring(1, name().length()).toLowerCase() + "stone";
-    }
-  }
-
-  public Stone(int power, int quantity, Type type) {
-    super(power, quantity, type.formatName());
-    this.type = type;
+  public Stone(int type, String name, int value) {
+    super(name, value);
+    _type = Type.valueOf(type);
     target = Target.SELF;
   }
 
@@ -28,22 +19,25 @@ public class Stone extends Item {
 
     // Eevee (#133) evolutions are not linear
 
-    if (this.type == Type.FIRE) {
-      if (n == 37 || n == 58) p.changeSpecies();
+    if (_type == Type.FIRE) {
+      if (n == 37 || n == 58)
+        p.changeSpecies();
       else if (n == 133) p.changeSpecies(136);
     }
-    else if (this.type == Type.WATER) {
-      if (n == 60 || n == 90 || n == 120) p.changeSpecies();
+    else if (_type == Type.WATER) {
+      if (n == 60 || n == 90 || n == 120)
+        p.changeSpecies();
       else if (n == 133) p.changeSpecies(134);
     }
-    else if (this.type == Type.LEAF) {
+    else if (_type == Type.GRASS) { // leaf
       if (n == 44 || n == 70 || n == 102) p.changeSpecies();
     }
-    else if (this.type == Type.THUNDER) {
-      if (p.number() == 25) p.changeSpecies();
+    else if (_type == Type.ELECTRIC) { // thunder
+      if (p.number() == 25)
+        p.changeSpecies();
       else if (n == 133) p.changeSpecies(135);
     }
-    else if (this.type == Type.MOON) {
+    else if (_type == Type.NORMAL) { // moon
       if (n == 30 || n == 33 || n == 35 || n == 39) p.changeSpecies();
     }
 
@@ -51,5 +45,5 @@ public class Stone extends Item {
 
   }
 
-  private Type type;
+  private Type _type;
 }

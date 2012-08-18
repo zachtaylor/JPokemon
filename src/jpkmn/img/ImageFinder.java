@@ -37,13 +37,13 @@ public class ImageFinder {
     String dest = "item/";
 
     if (i instanceof Ball)
-      dest += "ball/" + i.getName().toLowerCase().charAt(0);
+      dest += "ball/" + i.name().toLowerCase().charAt(0);
     else if (i instanceof Machine)
       dest += "machine";
     else if (i instanceof Potion)
-      dest += "potion/" + i.getName().toLowerCase().charAt(0);
+      dest += "potion/" + i.name().toLowerCase().charAt(0);
     else if (i instanceof Stone)
-      dest += "stone/" + i.getName().toLowerCase().charAt(0);
+      dest += "stone/" + i.name().toLowerCase().charAt(0);
     else if (i instanceof XStat)
       dest += "xstat";
     else
