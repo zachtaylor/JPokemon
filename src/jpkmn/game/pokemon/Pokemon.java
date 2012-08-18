@@ -2,12 +2,11 @@ package jpkmn.game.pokemon;
 
 import java.util.Scanner;
 
-import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
+import jpkmn.game.base.PokemonBase;
 import jpkmn.game.player.AbstractPlayer;
 import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
-import jpkmn.game.base.PokemonBase;
 
 public class Pokemon {
   public final Condition condition;
@@ -119,16 +118,16 @@ public class Pokemon {
         if (!(scan.next().equals("|("))) throw new Exception();
 
         Pokemon p = new Pokemon(scan.nextInt(), scan.nextInt());
-        p.stats.setPoints(scan.nextInt());
+        p.stats.points(scan.nextInt());
         p._xp = scan.nextInt();
 
         if (!scan.next().equals(")")) throw new Exception();
 
-        p.stats.atk.setPts(scan.nextInt());
-        p.stats.stk.setPts(scan.nextInt());
-        p.stats.def.setPts(scan.nextInt());
-        p.stats.sdf.setPts(scan.nextInt());
-        p.stats.spd.setPts(scan.nextInt());
+        p.stats.atk.points(scan.nextInt());
+        p.stats.stk.points(scan.nextInt());
+        p.stats.def.points(scan.nextInt());
+        p.stats.sdf.points(scan.nextInt());
+        p.stats.spd.points(scan.nextInt());
         p.stats.resetMaxAll();
 
         if (!scan.next().equals("(")) throw new Exception();
@@ -157,13 +156,12 @@ public class Pokemon {
     StringBuilder save = new StringBuilder();
 
     save.append("|( ");
-    save.append(number + " " + level + " " + stats.getPoints() + " " + _xp
-        + " ) ");
-    save.append(stats.atk.pts() + " ");
-    save.append(stats.stk.pts() + " ");
-    save.append(stats.def.pts() + " ");
-    save.append(stats.sdf.pts() + " ");
-    save.append(stats.spd.pts() + " ");
+    save.append(number + " " + level + " " + stats.points() + " " + _xp + " ) ");
+    save.append(stats.atk.points() + " ");
+    save.append(stats.stk.points() + " ");
+    save.append(stats.def.points() + " ");
+    save.append(stats.sdf.points() + " ");
+    save.append(stats.spd.points() + " ");
     save.append("( ");
     try {
       for (int i = 0; i < moves.amount(); i++) {
@@ -194,46 +192,51 @@ public class Pokemon {
     _xp -= getXPNeeded();
     level++;
     moves.check();
-    stats.levelUp();
+    stats.level(level);
+    stats.points(stats.points() + 1);
     condition.reset();
-    if (level == evolutionlevel) changeSpecies();
+
+    if (level == evolutionlevel)
+      _owner.screen.notify("Evolution!", name + " is ready to evolve!");
   }
 
   /**
-   * Calls gui.Tools to ask about evolution. If yes, increases number, adds 2
-   * points, sets xp = 0, stats adjusted.
+   * Changes a Pokemon into another one. This can be regular evolution
+   * (Charmander to Charmeleon) or other complicated changes (fire stone
+   * changes Eevee into Flareon).
    */
-  public boolean changeSpecies(int... num) {
+  public void changeSpecies(int... num) {
     String speciesUpdate = "Your " + species + " evolved into ";
 
-    try {
-      if (!_owner.screen.isEvolutionOkay(this)) return false;
-    } catch (CancelException c) {
-      return false;
+    if (num.length == 0) {
+      if (level < evolutionlevel) // they cannot evolve yet.
+        return;
+
+      number++; // no special value. just increment
+      stats.points(stats.points() + 1); // add stat point
+    }
+    else {
+      number = num[0]; // special value
+
+      if (number == 133) // only Eevee gets stat point for special evolution
+        stats.points(stats.points() + 1);
     }
 
-    if (num == null || num.length == 0)
-      number++;
-    else
-      number = num[0];
-
     PokemonBase base = PokemonBase.getBaseForNumber(number);
-    evolutionlevel = base.getEvolutionlevel();
+
+    moves.check();
+    stats.rebase(base);
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
+    evolutionlevel = base.getEvolutionlevel();
 
     if (name.equals(species))
       name = species = base.getName();
     else
       species = base.getName();
 
-    stats.changeSpecies(num);
-    moves.check();
-
     speciesUpdate += species + "!";
     _owner.screen.notify("Congratulations!", speciesUpdate);
-
-    return true;
   }
 
   public int hashCode() {

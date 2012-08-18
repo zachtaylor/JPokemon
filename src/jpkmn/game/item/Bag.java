@@ -3,6 +3,8 @@ package jpkmn.game.item;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import jpkmn.game.pokemon.stat.StatType;
+
 public class Bag {
   public Bag() {
     potions = new Potion[4];
@@ -10,19 +12,19 @@ public class Bag {
     potions[1] = new Potion(20, 0, "Super Potion");
     potions[2] = new Potion(50, 0, "Hyper Potion");
     potions[3] = new Potion(200, 0, "Full Heal");
-    
+
     balls = new Ball[4];
     balls[0] = new Ball(10, 0, "Poke-ball");
     balls[1] = new Ball(15, 0, "Great Ball");
     balls[2] = new Ball(20, 0, "Ultraball");
     balls[3] = new Ball(2550, 0, "Master Ball");
-    
+
     xstat = new XStat[5];
-    xstat[0] = new XStat(0, 0, XStat.Kind.ATTACK);
-    xstat[1] = new XStat(0, 0, XStat.Kind.SATTACK);
-    xstat[2] = new XStat(0, 0, XStat.Kind.DEFENSE);
-    xstat[3] = new XStat(0, 0, XStat.Kind.SDEFENSE);
-    xstat[4] = new XStat(0, 0, XStat.Kind.SPEED);
+    xstat[0] = new XStat(0, 0, StatType.ATTACK);
+    xstat[1] = new XStat(0, 0, StatType.SPECATTACK);
+    xstat[2] = new XStat(0, 0, StatType.DEFENSE);
+    xstat[3] = new XStat(0, 0, StatType.SPECDEFENSE);
+    xstat[4] = new XStat(0, 0, StatType.SPEED);
 
     stone = new Stone[5];
     stone[0] = new Stone(0, 0, Stone.Type.FIRE);
@@ -49,8 +51,7 @@ public class Bag {
       return xstat[2];
     else if (kind.equalsIgnoreCase("sdefense"))
       return xstat[3];
-    else if (kind.equalsIgnoreCase("speed"))
-      return xstat[4];
+    else if (kind.equalsIgnoreCase("speed")) return xstat[4];
     return null;
   }
 
@@ -101,7 +102,7 @@ public class Bag {
 
   public String saveToString() {
     StringBuffer s = new StringBuffer();
-    
+
     for (int i = 0; i < 4; i++) {
       s.append(potions[i].getQuantity() + " ");
       s.append(balls[i].getQuantity() + " ");
@@ -110,7 +111,7 @@ public class Bag {
       s.append(xstat[i].getQuantity() + " ");
       s.append(stone[i].getQuantity() + " ");
     }
-    
+
     return s.toString();
   }
 

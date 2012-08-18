@@ -24,63 +24,31 @@ public class Stone extends Item {
   public boolean effect(Pokemon p) {
     if (!reduce()) return false;
 
-    //@preformat
+    int n = p.number();
+
+    // Eevee (#133) evolutions are not linear
+
     if (this.type == Type.FIRE) {
-      switch (p.number()) {
-      case 133: case 134: case 135: case 37: case 58:
-        return report(p, true);
-      }
+      if (n == 37 || n == 58) p.changeSpecies();
+      else if (n == 133) p.changeSpecies(136);
     }
     else if (this.type == Type.WATER) {
-      switch (p.number()) {
-      case 60: case 90: case 120: case 133: case 135: case 136:
-        return report(p, true);
-      }
+      if (n == 60 || n == 90 || n == 120) p.changeSpecies();
+      else if (n == 133) p.changeSpecies(134);
     }
     else if (this.type == Type.LEAF) {
-      switch (p.number()) {
-      case 102: case 70: case 44:
-        return report(p, true);
-      }
+      if (n == 44 || n == 70 || n == 102) p.changeSpecies();
     }
     else if (this.type == Type.THUNDER) {
-      switch (p.number()) {
-      case 133: case 134: case 136: case 25:
-        return report(p, true);
-      }
+      if (p.number() == 25) p.changeSpecies();
+      else if (n == 133) p.changeSpecies(135);
     }
     else if (this.type == Type.MOON) {
-      switch (p.number()) {
-      case 33: case 30: case 35: case 39:
-        return report(p, true);
-      }
+      if (n == 30 || n == 33 || n == 35 || n == 39) p.changeSpecies();
     }
-    //@format
 
-    return report(p, false);
-  }
+    return p.number() != n;
 
-  /**
-   * Parses the evolution process of stones
-   * 
-   * @param p Pokemon to use the stone on
-   * @param b Whether or not stone is effective with selected Pokemon
-   * @return Whether or not the pokemon evolved
-   */
-  private boolean report(Pokemon p, boolean b) {
-    if (b) {
-      if (p.number() < 133 || p.number() > 136)
-        b = p.changeSpecies();
-
-      // All evolutions of Eevee have their stats increased specially
-      else if (this.type == Type.FIRE)
-        b = p.changeSpecies(136);
-      else if (this.type == Type.THUNDER)
-        b = p.changeSpecies(135);
-      else if (this.type == Type.WATER) 
-        b = p.changeSpecies(134);
-    }
-    return b;
   }
 
   private Type type;

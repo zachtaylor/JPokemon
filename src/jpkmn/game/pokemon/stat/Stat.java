@@ -2,10 +2,10 @@ package jpkmn.game.pokemon.stat;
 
 import jpkmn.Constants;
 
-public abstract class Stat {
-  public Stat(int base, int lvl) {
-    _base = base;
-    _lvl = lvl;
+public class Stat {
+  public Stat() {
+    resetMax();
+    _cur = _max;
   }
 
   public int cur() {
@@ -16,37 +16,13 @@ public abstract class Stat {
     return _max;
   }
 
-  public int pts() {
+  public int points() {
     return _pts;
   }
 
-  public void setPts(int p) {
+  public void points(int p) {
     _pts = p;
-  }
-  
-  public double percentage() {
-    return ((double) _cur) / ((double) _max);
-  }
-
-  /**
-   * Increases the temporary version by max/2
-   */
-  public void increase() {
-    if (_delta == Constants.STATCHANGEMAX) return;
-
-    _delta++;
-    _cur += _max / 2;
-  }
-
-  /**
-   * Decreases the temporary version by *= 3/4
-   */
-  public void decrease() {
-    if (_delta == -Constants.STATCHANGEMAX) return;
-
-    _delta--;
-    _cur *= 3 / 4;
-    if (_cur < 1) _cur = 1;
+    resetMax();
   }
 
   /**
@@ -60,24 +36,23 @@ public abstract class Stat {
       increase();
     for (int i = 0; i > power; --i)
       decrease();
+
     if (_cur < 0) _cur = 1;
   }
 
   /**
-   * Sets the temporary version the max version
+   * Sets the current value to the max value
    */
   public void reset() {
     _cur = _max;
   }
 
-  public abstract void resetMax();
-
   /**
-   * Increases the points spent, calls resetMax();
+   * Recalculates the maximum value based on the base value, number of stat
+   * points invested, and level
    */
-  public void usePoint() {
-    _pts++;
-    resetMax();
+  public void resetMax() {
+    _max = ((2 * _base + _pts) * _lvl) / 100 + 5;
   }
 
   /**
@@ -85,17 +60,38 @@ public abstract class Stat {
    * 
    * @param l New value for the stored lvl variable
    */
-  public void setLevel(int l) {
+  public void level(int l) {
     _lvl = l;
     resetMax();
     reset();
   }
 
-  public void setBase(int b) {
+  public void rebase(int b) {
     _base = b;
     resetMax();
     reset();
   }
 
-  int _cur, _max, _base, _pts, _lvl, _delta;
+  /**
+   * Increases the current value of this stat by max/2, according to formula
+   */
+  private void increase() {
+    if (_delta == Constants.STATCHANGEMAX) return;
+
+    _delta++;
+    _cur += _max / 2;
+  }
+
+  /**
+   * Decreases the current value of this stat by cur/4, according to forumla
+   */
+  private void decrease() {
+    if (_delta == -Constants.STATCHANGEMAX) return;
+
+    _delta--;
+    _cur *= 3 / 4;
+    if (_cur < 1) _cur = 1;
+  }
+
+  protected int _cur, _max, _base, _pts, _lvl, _delta;
 }
