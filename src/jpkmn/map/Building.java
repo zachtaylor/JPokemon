@@ -13,4 +13,8 @@ public enum Building {
       }
     }
   }
+
+  public Building valueOf(int b) {
+    return Building.values()[b];
+  }
 }
