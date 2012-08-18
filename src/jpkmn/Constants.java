@@ -14,7 +14,7 @@ public class Constants {
   public static final int STATCHANGEMAX = 6;
   public static final double TYPEADVANTAGE = 2.0;
 
-  public static final int ITEMNUMBER = 10; //
+  public static final int ITEMNUMBER = 18;
 
   public static final int AREANUMBER = 22;
 
