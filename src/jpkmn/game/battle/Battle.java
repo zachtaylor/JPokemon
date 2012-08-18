@@ -32,7 +32,7 @@ public class Battle implements Iterable<Slot> {
     Slot slot = _slots.remove(slotID);
 
     if (_slots.size() == 1) {
-      remove((int) _slots.keySet().toArray()[0]);
+      remove((Integer) _slots.keySet().toArray()[0]);
       BattleRegistry.remove(_id);
     }
 
