@@ -110,39 +110,6 @@ public enum Type {
   }
 
   public static Type valueOf(int r) {
-    switch (r) {
-    case 0:
-      return NORMAL;
-    case 1:
-      return FIRE;
-    case 2:
-      return WATER;
-    case 3:
-      return ELECTRIC;
-    case 4:
-      return GRASS;
-    case 5:
-      return ICE;
-    case 6:
-      return FIGHTING;
-    case 7:
-      return POISON;
-    case 8:
-      return GROUND;
-    case 9:
-      return FLYING;
-    case 10:
-      return PSYCHIC;
-    case 11:
-      return BUG;
-    case 12:
-      return ROCK;
-    case 13:
-      return GHOST;
-    case 14:
-      return DRAGON;
-    default:
-      return null;
-    }
+    return Type.values()[r];
   }
 }

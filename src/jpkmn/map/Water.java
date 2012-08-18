@@ -1,20 +1,22 @@
 package jpkmn.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jpkmn.game.pokemon.Pokemon;
 
 public class Water {
   public Water() {
-    _spawner = new PokemonSpawner();
+    _spawnMap = new HashMap<String, PokemonSpawner>();
   }
 
-  public void add(int num, int flex, int low, int high, String tag) {
-    for (int i = 0; i < flex; i++)
-      _spawner.add(num, low, high, tag);
+  public void add(int num, int flex, int low, int high, String s) {
+    _spawnMap.put(s, new PokemonSpawner(num, low, high, flex));
   }
 
   public Pokemon spawn(String... tags) {
-    return _spawner.spawn(tags);
+    return null;
   }
 
-  private PokemonSpawner _spawner;
+  private Map<String, PokemonSpawner> _spawnMap;
 }

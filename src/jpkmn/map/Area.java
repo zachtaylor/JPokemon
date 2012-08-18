@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.game.pokemon.Pokemon;
-
 /**
  * Represents a game area where the player can "be." Areas can contain
  * buildings, and may have water applied to them. Water usage is always
@@ -14,14 +12,17 @@ import jpkmn.game.pokemon.Pokemon;
  * 
  * @author Zach
  */
-public abstract class Area {
+public class Area {
   public Area(int areaNumber) {
     id = areaNumber;
-
     _gym = -1;
     _rival = -1;
+    _name = "FakeName";
 
+    _water = new Water();
+    _events = new ArrayList<Event>();
     _buildings = new ArrayList<Building>();
+    _spawnMap = new HashMap<String, PokemonSpawner>();
     _neighbors = new HashMap<Direction, AreaConnection>();
   }
 
@@ -45,10 +46,6 @@ public abstract class Area {
     return _neighbors.get(d);
   }
 
-  public AreaConnection neighbors(int n) {
-    return _neighbors.get(n);
-  }
-
   public void connect(Direction d, Area a) {
     _neighbors.put(d, new AreaConnection(a.id));
   }
@@ -59,10 +56,6 @@ public abstract class Area {
 
   public Water water() {
     return _water;
-  }
-
-  public Pokemon fish(String pole) {
-    return _water == null ? null : _water.spawn(pole);
   }
 
   public int gym() {
@@ -81,11 +74,17 @@ public abstract class Area {
     return _rival;
   }
 
+  private void add(int num, int flex, int low, int high, String s) {
+    _spawnMap.put(s, new PokemonSpawner(num, low, high, flex));
+  }
+
   public final int id;
 
-  protected String _name;
-  protected Water _water;
-  protected int _rival, _gym;
-  protected List<Building> _buildings;
-  protected Map<Direction, AreaConnection> _neighbors;
+  private String _name;
+  private Water _water;
+  private List<Event> _events;
+  private int _rival, _gym;
+  private List<Building> _buildings;
+  private Map<String, PokemonSpawner> _spawnMap;
+  private Map<Direction, AreaConnection> _neighbors;
 }

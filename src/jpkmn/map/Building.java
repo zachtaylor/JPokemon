@@ -4,7 +4,7 @@ import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 
 public enum Building {
-  CENTER, MART, EVENTHOUSE, HOME, ELITE4;
+  CENTER, MART, HOME, ELITE4;
 
   public void effect(Player player) {
     if (this == CENTER) {

@@ -16,10 +16,7 @@ public class AreaManager {
     _areas = new Area[Constants.CITYNUMBER + Constants.ROUTENUMBER];
 
     for (int i = 0; i < Constants.AREANUMBER; i++) {
-      if (i < Constants.CITYNUMBER)
-        _areas[i] = new City(i);
-      else
-        _areas[i] = new Route(i);
+      _areas[i] = new Area(i);
     }
 
     // Pallet - Route 1

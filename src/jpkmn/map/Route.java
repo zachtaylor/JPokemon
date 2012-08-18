@@ -1,12 +1,15 @@
 package jpkmn.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jpkmn.game.pokemon.Pokemon;
 
 public class Route extends Area {
   public Route(int routeNumber) {
     super(routeNumber);
 
-    _spawner = new PokemonSpawner();
+    _spawnermap = new HashMap<String, PokemonSpawner>();
 
     if (routeNumber == 10) {
       name("Route-1");
@@ -52,7 +55,7 @@ public class Route extends Area {
     else if (routeNumber == 14) {
       name("Route-3");
       buildings(Building.CENTER);
-      buildings(Building.EVENTHOUSE); // Buy a magikarp
+      //buildings(Building.EVENTHOUSE); // Buy a magikarp
 
       add(16, 2, 6, 8); // Pidgey
       add(19, 2, 10, 12); // Rattata
@@ -223,13 +226,12 @@ public class Route extends Area {
   }
 
   private void add(int num, int flex, int low, int high, String s) {
-    for (int i = 0; i < flex; i++)
-      _spawner.add(num, low, high, s);
+    _spawnermap.put(s, new PokemonSpawner(num, low, high, flex));
   }
 
   public Pokemon spawn(String... tags) {
-    return _spawner.spawn(tags);
+    return null;
   }
 
-  private PokemonSpawner _spawner;
+  private Map<String, PokemonSpawner> _spawnermap;
 }

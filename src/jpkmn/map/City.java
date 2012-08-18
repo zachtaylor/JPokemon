@@ -12,7 +12,7 @@ public class City extends Area {
     if (cityNumber == 0) {
       name("Pallet Town");
       buildings(Building.HOME);
-      buildings(Building.EVENTHOUSE); // Map
+      // buildings(Building.EVENTHOUSE); // Map
       rival(1);
 
       Water w = new Water();
@@ -42,14 +42,14 @@ public class City extends Area {
       name("Pewter City");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // Science Museum
+      // buildings(Building.EVENTHOUSE); // Science Museum
       gym(1);
     }
     else if (cityNumber == 3) {
       name("Cerulean City");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // Trade Poliwhirl for Jynx
+      // buildings(Building.EVENTHOUSE); // Trade Poliwhirl for Jynx
       gym(2);
 
       Water w = new Water();
@@ -65,9 +65,9 @@ public class City extends Area {
       name("Vermilion City");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // Trade Spearow for Farfetch'd
-      buildings(Building.EVENTHOUSE); // Bike Voucher
-      buildings(Building.EVENTHOUSE); // Old Rod
+      // buildings(Building.EVENTHOUSE); // Trade Spearow for Farfetch'd
+      // buildings(Building.EVENTHOUSE); // Bike Voucher
+      // buildings(Building.EVENTHOUSE); // Old Rod
       gym(3);
 
       Water w = new Water();
@@ -84,40 +84,40 @@ public class City extends Area {
       name("Lavender Town");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // Pokemon Tower
+      // buildings(Building.EVENTHOUSE); // Pokemon Tower
     }
     else if (cityNumber == 6) {
       name("Celadon City");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // Casino
-      buildings(Building.EVENTHOUSE); // Department Store
-      buildings(Building.EVENTHOUSE); // Mansion to get Eevee
+      // buildings(Building.EVENTHOUSE); // Casino
+      // buildings(Building.EVENTHOUSE); // Department Store
+      // buildings(Building.EVENTHOUSE); // Mansion to get Eevee
       gym(4);
     }
     else if (cityNumber == 7) {
       name("Celadon City");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // Get psychic
-      buildings(Building.EVENTHOUSE); // Fighting dojo
-      buildings(Building.EVENTHOUSE); // Trade pokedoll for Mimic
+      // buildings(Building.EVENTHOUSE); // Get psychic
+      // buildings(Building.EVENTHOUSE); // Fighting dojo
+      // buildings(Building.EVENTHOUSE); // Trade pokedoll for Mimic
       gym(5);
     }
     else if (cityNumber == 8) {
       name("Fuchsia City");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // good rod
-      buildings(Building.EVENTHOUSE); // Safari Zone - Strength
+      // buildings(Building.EVENTHOUSE); // good rod
+      // buildings(Building.EVENTHOUSE); // Safari Zone - Strength
       gym(6);
     }
     else if (cityNumber == 9) {
       name("Cinnabar Island");
       buildings(Building.CENTER);
       buildings(Building.MART);
-      buildings(Building.EVENTHOUSE); // get metronome
-      buildings(Building.EVENTHOUSE); // lots of trades
+      // buildings(Building.EVENTHOUSE); // get metronome
+      // buildings(Building.EVENTHOUSE); // lots of trades
       gym(7);
     }
   }
