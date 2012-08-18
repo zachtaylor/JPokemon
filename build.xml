@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JPokemon" default="default" >
+    <description>
+        JPokemon - pokemon made possible through java.
+    </description>
+
+    <property name="src" location="src" />
+    <property name="build" location="build/classes" />
+    <property name="images" location="src/jpkmn/img" />
+
+    <path id="classpath">
+        <pathelement location="JSON.jar" />
+        <pathelement location="SqliteORM.jar" />
+        <pathelement location="sqlite-jdbc-3.7.2.jar" />
+    </path>
+    
+    <target name="compile" >
+        <mkdir dir="${build}" />
+        <javac destdir="${build}" source="1.6" encoding="UTF-8" debug="true" includeantruntime="false">
+            <src path="${src}" />
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" >
+        <jar jarfile="JPokemon.jar">
+            <fileset dir="${build}" />
+            <fileset dir="${src}">
+                <exclude name="**/*.java" />
+            </fileset>
+            
+            <manifest>
+                <attribute name="Manifest-Version" value="1.0" />
+                <attribute name="Main-Class" value="jpkmn.exe.Driver"/>
+            </manifest> 
+        </jar>
+    </target>
+    
+    <target name="default" depends="jar" />
+</project>
