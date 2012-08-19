@@ -39,27 +39,6 @@ public class Player extends AbstractPlayer {
     _badge = b;
   }
 
-  public void toFile(PrintWriter p) {
-    p.println(_name);
-    p.println(_cash);
-    p.println(_badge);
-    p.println(_area.id);
-
-    for (int i = 0; i < Constants.PARTYSIZE; i++)
-      if (party.get(i) != null)
-        p.println(party.get(i).saveToString());
-      else
-        p.println("||");
-
-    p.println(bag.saveToString());
-
-    p.println(dex.saveSeenToString());
-    p.println(dex.saveOwnToString());
-
-    for (Pokemon pkmn : box)
-      p.println(pkmn.saveToString());
-  }
-
   public boolean equals(Object o) {
     if (!(o instanceof Player)) return false;
     return ((Player) o)._id == _id;

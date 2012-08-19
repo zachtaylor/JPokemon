@@ -5,6 +5,7 @@ public enum Type {
   PSYCHIC, BUG, ROCK, GHOST, DRAGON;
 
   public static Type valueOf(int r) {
+    if (r < 0 || r > Type.values().length) return null;
     return Type.values()[r];
   }
 
