@@ -6,9 +6,11 @@ import java.util.List;
 import jpkmn.game.pokemon.Pokemon;
 
 public class PokemonSpawner {
-  public PokemonSpawner(int number, int low, int high, int flex) {
+  public PokemonSpawner() {
     _spawn = new ArrayList<Spawn>();
+  }
 
+  public void add(int number, int low, int high, int flex) {
     for (int i = 0; i < flex; i++)
       _spawn.add(new Spawn(number, low, high));
   }

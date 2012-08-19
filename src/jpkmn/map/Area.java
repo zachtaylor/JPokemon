@@ -20,9 +20,9 @@ public class Area {
     _name = "FakeName";
 
     _water = new Water();
+    _spawner = new PokemonSpawner();
     _events = new ArrayList<Event>();
     _buildings = new ArrayList<Building>();
-    _spawnMap = new HashMap<String, PokemonSpawner>();
     _neighbors = new HashMap<Direction, AreaConnection>();
   }
 
@@ -46,8 +46,8 @@ public class Area {
     return _neighbors.get(d);
   }
 
-  public void connect(Direction d, Area a) {
-    _neighbors.put(d, new AreaConnection(a.id));
+  public void connect(Direction d, Area a, Requirement r) {
+    _neighbors.put(d, new AreaConnection(a.id, r));
   }
 
   public void water(Water w) {
@@ -74,17 +74,13 @@ public class Area {
     return _rival;
   }
 
-  private void add(int num, int flex, int low, int high, String s) {
-    _spawnMap.put(s, new PokemonSpawner(num, low, high, flex));
-  }
-
   public final int id;
 
   private String _name;
   private Water _water;
-  private List<Event> _events;
   private int _rival, _gym;
+  private List<Event> _events;
+  private PokemonSpawner _spawner;
   private List<Building> _buildings;
-  private Map<String, PokemonSpawner> _spawnMap;
   private Map<Direction, AreaConnection> _neighbors;
 }

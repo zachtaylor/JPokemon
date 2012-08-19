@@ -3,7 +3,8 @@ package jpkmn.map;
 import jpkmn.game.player.Player;
 
 public class AreaConnection {
-  public AreaConnection(int nextAreaID) {
+  public AreaConnection(int nextAreaID, Requirement r) {
+    _req = r;
     _nextID = nextAreaID;
   }
 
@@ -14,7 +15,8 @@ public class AreaConnection {
   }
 
   public boolean test(Player p) {
-    return true;
+    if (_req == null) return true;
+    return _req.test(p);
   }
 
   public Area next() {
@@ -22,4 +24,5 @@ public class AreaConnection {
   }
 
   private int _nextID;
+  private Requirement _req;
 }

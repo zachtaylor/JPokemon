@@ -56,7 +56,7 @@ public class BattleService {
     if (water == null)
       throw new ServiceException(area.name() + " has no water");
 
-    Pokemon wild = water.spawn(0); // No tags yet
+    Pokemon wild = water.spawn(""); // No tags yet
 
     if (wild == null)
       throw new ServiceException("Unable to generate wild pokemon");

@@ -7,7 +7,7 @@ import jpkmn.game.pokemon.Pokemon;
 
 public class Water {
   public Water() {
-    _spawnMap = new HashMap<Integer, PokemonSpawner>();
+    _spawnMap = new HashMap<String, PokemonSpawner>();
   }
 
   /**
@@ -17,10 +17,12 @@ public class Water {
    * @param flex Representation of how often the Pokemon appears
    * @param low Minimum level value
    * @param high Maximum level value
-   * @param itemID Fishin Pole used used to get this pokemon
+   * @param rod Fishin Pole used used to get this pokemon
    */
-  public void add(int num, int flex, int low, int high, int itemID) {
-    _spawnMap.put(itemID, new PokemonSpawner(num, low, high, flex));
+  public void add(int num, int flex, int low, int high, String rod) {
+    if (_spawnMap.get(rod) == null) _spawnMap.put(rod, new PokemonSpawner());
+
+    _spawnMap.get(rod).add(num, low, high, flex);
   }
 
   /**
@@ -29,12 +31,12 @@ public class Water {
    * @param itemID Fishin pole used on the water
    * @return Pokemon spawned, null if that item didn't work.
    */
-  public Pokemon spawn(int itemID) {
-    PokemonSpawner spawner = _spawnMap.get(itemID);
+  public Pokemon spawn(String rod) {
+    PokemonSpawner spawner = _spawnMap.get(rod);
 
     if (spawner == null) return null;
     return spawner.spawn();
   }
 
-  private Map<Integer, PokemonSpawner> _spawnMap;
+  private Map<String, PokemonSpawner> _spawnMap;
 }
