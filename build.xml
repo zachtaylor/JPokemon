@@ -5,7 +5,7 @@
     </description>
 
     <property name="src" location="src" />
-    <property name="build" location="build/classes" />
+    <property name="build" location="bin" />
     <property name="images" location="src/jpkmn/img" />
 
     <path id="classpath">
@@ -13,6 +13,12 @@
         <pathelement location="SqliteORM.jar" />
         <pathelement location="sqlite-jdbc-3.7.2.jar" />
     </path>
+    
+    <fileset id="3rdparty-jars" dir=".">
+      <include name="JSON.jar" />
+      <include name="sqlite-jdbc-3.7.2.jar" />
+      <include name="SqliteORM.jar" />
+    </fileset>
     
     <target name="compile" >
         <mkdir dir="${build}" />
@@ -28,13 +34,18 @@
             <fileset dir="${src}">
                 <exclude name="**/*.java" />
             </fileset>
+            <fileset refid="3rdparty-jars" />
             
             <manifest>
                 <attribute name="Manifest-Version" value="1.0" />
                 <attribute name="Main-Class" value="jpkmn.exe.Driver"/>
+                <attribute name="Class-Path" value="JSON.jar sqlite-jdbc-3.7.2.jar SqliteORM.jar" />
             </manifest> 
         </jar>
     </target>
     
+    <target name="clean">
+        <delete dir="${build}"/>
+    </target>
     <target name="default" depends="jar" />
 </project>
