@@ -1,26 +1,35 @@
 package jpkmn.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jpkmn.game.pokemon.Pokemon;
 
 public class PokemonSpawner {
   public PokemonSpawner() {
-    _spawn = new ArrayList<Spawn>();
+    _spawnMap = new HashMap<String, List<Spawn>>();
   }
 
-  public void add(int number, int low, int high, int flex) {
+  public void add(int number, int low, int high, int flex, String itemName) {
+    if (_spawnMap.get(itemName) == null)
+      _spawnMap.put(itemName, new ArrayList<Spawn>());
+
+    List<Spawn> spawner = _spawnMap.get(itemName);
+
     for (int i = 0; i < flex; i++)
-      _spawn.add(new Spawn(number, low, high));
+      spawner.add(new Spawn(number, low, high));
   }
 
-  public Pokemon spawn() {
-    if (_spawn.isEmpty()) return null;
+  public Pokemon spawn(String itemName) {
+    if (_spawnMap.get(itemName) == null) return null;
 
-    int index = (int) (Math.random() * _spawn.size());
+    List<Spawn> spawner = _spawnMap.get(itemName);
 
-    return _spawn.get(index).make();
+    int index = (int) (Math.random() * spawner.size());
+
+    return spawner.get(index).make();
   }
 
   private class Spawn {
@@ -48,5 +57,5 @@ public class PokemonSpawner {
     private int _low, _high, _number;
   }
 
-  private List<Spawn> _spawn;
+  private Map<String, List<Spawn>> _spawnMap;
 }

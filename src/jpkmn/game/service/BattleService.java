@@ -10,7 +10,6 @@ import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.Route;
-import jpkmn.map.Water;
 
 public class BattleService {
   public static void startWild(int playerID) throws ServiceException {
@@ -51,12 +50,7 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    Water water = area.water();
-
-    if (water == null)
-      throw new ServiceException(area.name() + " has no water");
-
-    Pokemon wild = water.spawn(""); // No tags yet
+    Pokemon wild = area.spawn("oldrod"); // No tags yet
 
     if (wild == null)
       throw new ServiceException("Unable to generate wild pokemon");

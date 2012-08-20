@@ -16,7 +16,7 @@ public class Constants {
 
   public static final int ITEMNUMBER = 18;
 
-  public static final int AREANUMBER = 22;
+  public static final int AREANUMBER = 11;
 
   public static final int GYMNUMBER = 4;
   public static final int RIVALNUMBER = 0;

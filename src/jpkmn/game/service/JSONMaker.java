@@ -16,7 +16,7 @@ public class JSONMaker {
     json.put("id", area.id);
     json.put("name", area.name());
     json.put("buildings", area.buildings());
-    json.put("hasWater", area.water() != null);
+    json.put("hasWater", area.water());
 
     if (area instanceof Route)
       json.put("type", "route");

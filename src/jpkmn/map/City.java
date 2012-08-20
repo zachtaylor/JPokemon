@@ -9,59 +9,42 @@ public class City extends Area {
   public City(int cityNumber) {
     super(cityNumber);
 
-    if (cityNumber == 0) {
+    if (cityNumber == 1) {
       name("Pallet Town");
       buildings(Building.HOME);
       // buildings(Building.EVENTHOUSE); // Map
       rival(1);
-
-      Water w = new Water();
-      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
-      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
-      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
-      w.add(60, 1, 15, 15, "superrod"); // Poliwag
-      w.add(72, 1, 15, 15, "superrod"); // Tentacool
-      w.add(120, 1, 10, 20, "superrod"); // Staryu
-      water(w);
     }
-    else if (cityNumber == 1) {
+    else if (cityNumber == 3) {
       name("Viridian City");
       buildings(Building.CENTER);
       buildings(Building.MART);
       gym(8);
-
-      Water w = new Water();
-      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
-      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
-      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
-      w.add(60, 1, 5, 15, "superrod"); // Poliwag
-      w.add(72, 1, 15, 15, "superrod"); // Tentacool
-      water(w);
     }
-    else if (cityNumber == 2) {
+    else if (cityNumber == 7) {
       name("Pewter City");
       buildings(Building.CENTER);
       buildings(Building.MART);
       // buildings(Building.EVENTHOUSE); // Science Museum
       gym(1);
     }
-    else if (cityNumber == 3) {
+    else if (cityNumber == 0) {
       name("Cerulean City");
       buildings(Building.CENTER);
       buildings(Building.MART);
       // buildings(Building.EVENTHOUSE); // Trade Poliwhirl for Jynx
       gym(2);
 
-      Water w = new Water();
-      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
-      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
-      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
-      w.add(54, 1, 15, 15, "superrod"); // Psyduck
-      w.add(98, 1, 15, 15, "superrod"); // Krabby
-      w.add(118, 2, 15, 15, "superrod"); // Goldeen
-      water(w);
+      // Water w = new Water();
+      // w.add(129, 1, 5, 5, "oldrod"); // Magikarp
+      // w.add(60, 1, 10, 10, "goodrod"); // Poliwag
+      // w.add(118, 1, 10, 10, "goodrod"); // Goldeen
+      // w.add(54, 1, 15, 15, "superrod"); // Psyduck
+      // w.add(98, 1, 15, 15, "superrod"); // Krabby
+      // w.add(118, 2, 15, 15, "superrod"); // Goldeen
+      // water(w);
     }
-    else if (cityNumber == 4) {
+    else if (cityNumber == 0) {
       name("Vermilion City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -70,23 +53,23 @@ public class City extends Area {
       // buildings(Building.EVENTHOUSE); // Old Rod
       gym(3);
 
-      Water w = new Water();
-      w.add(129, 1, 5, 5, "oldrod"); // Magikarp
-      w.add(60, 1, 10, 10, "goodrod"); // Poliwag
-      w.add(118, 1, 10, 10, "goodrod"); // Goldeen
-      w.add(72, 3, 10, 20, "superrod"); // Tentacool
-      w.add(90, 3, 15, 15, "superrod"); // Shelder
-      w.add(98, 3, 15, 15, "superrod"); // Krabby
-      w.add(116, 1, 5, 5, "superrod"); // Horsea
-      water(w);
+      // Water w = new Water();
+      // w.add(129, 1, 5, 5, "oldrod"); // Magikarp
+      // w.add(60, 1, 10, 10, "goodrod"); // Poliwag
+      // w.add(118, 1, 10, 10, "goodrod"); // Goldeen
+      // w.add(72, 3, 10, 20, "superrod"); // Tentacool
+      // w.add(90, 3, 15, 15, "superrod"); // Shelder
+      // w.add(98, 3, 15, 15, "superrod"); // Krabby
+      // w.add(116, 1, 5, 5, "superrod"); // Horsea
+      // water(w);
     }
-    else if (cityNumber == 5) {
+    else if (cityNumber == 0) {
       name("Lavender Town");
       buildings(Building.CENTER);
       buildings(Building.MART);
       // buildings(Building.EVENTHOUSE); // Pokemon Tower
     }
-    else if (cityNumber == 6) {
+    else if (cityNumber == 0) {
       name("Celadon City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -95,7 +78,7 @@ public class City extends Area {
       // buildings(Building.EVENTHOUSE); // Mansion to get Eevee
       gym(4);
     }
-    else if (cityNumber == 7) {
+    else if (cityNumber == 0) {
       name("Celadon City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -104,7 +87,7 @@ public class City extends Area {
       // buildings(Building.EVENTHOUSE); // Trade pokedoll for Mimic
       gym(5);
     }
-    else if (cityNumber == 8) {
+    else if (cityNumber == 0) {
       name("Fuchsia City");
       buildings(Building.CENTER);
       buildings(Building.MART);
@@ -112,7 +95,7 @@ public class City extends Area {
       // buildings(Building.EVENTHOUSE); // Safari Zone - Strength
       gym(6);
     }
-    else if (cityNumber == 9) {
+    else if (cityNumber == 0) {
       name("Cinnabar Island");
       buildings(Building.CENTER);
       buildings(Building.MART);

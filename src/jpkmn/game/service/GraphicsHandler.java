@@ -1,5 +1,6 @@
 package jpkmn.game.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -10,7 +11,9 @@ import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.battle.Slot;
+import jpkmn.game.item.BagPocket;
 import jpkmn.game.item.Item;
+import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
@@ -164,64 +167,35 @@ public class GraphicsHandler {
       // TODO : stuff
     }
 
-    Player player = (Player) _player;
-    String[] options = { "Balls", "Potions", "Stones", "Machines" };
+    try {
+      Player player = (Player) _player; // Throws ClassCastException
 
-    int itemFamily = JOptionPane.showOptionDialog(null, message,
-        "Select An Item", JOptionPane.DEFAULT_OPTION,
-        JOptionPane.QUESTION_MESSAGE, null, options, null);
-
-    if (itemFamily == 0) {
-      ImageIcon[] ballOptions = {
-          new ImageIcon(ImageFinder.find("item/ball/p")),
-          new ImageIcon(ImageFinder.find("item/ball/g")),
-          new ImageIcon(ImageFinder.find("item/ball/u")),
-          new ImageIcon(ImageFinder.find("item/ball/m")) };
-
-      int ball = JOptionPane.showOptionDialog(null, message, "Select An Item",
-          JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-          ballOptions, null);
-
-      if (ball != -1) return player.bag.ball(ball);
-    }
-    else if (itemFamily == 1) {
-      ImageIcon[] potionOptions = {
-          new ImageIcon(ImageFinder.find("item/potion/p")),
-          new ImageIcon(ImageFinder.find("item/potion/s")),
-          new ImageIcon(ImageFinder.find("item/potion/h")),
-          new ImageIcon(ImageFinder.find("item/potion/f")) };
-
-      int potion = JOptionPane.showOptionDialog(null, message,
+      int pocketChoice = JOptionPane.showOptionDialog(null, message,
           "Select An Item", JOptionPane.DEFAULT_OPTION,
-          JOptionPane.QUESTION_MESSAGE, null, potionOptions, null);
+          JOptionPane.QUESTION_MESSAGE, null, ItemType.values(), null);
 
-      if (potion != -1) return player.bag.potion(potion);
+      // Throws ArrayIndexOutOfBoundsException
+      BagPocket pocket = player.bag.pocket(ItemType.valueOf(pocketChoice));
+
+      List<Item> available = new ArrayList<Item>();
+      List<ImageIcon> choices = new ArrayList<ImageIcon>();
+
+      for (Item item : pocket) {
+        available.add(item);
+        choices.add(new ImageIcon(ImageFinder.find(item)));
+      }
+
+      int choice = JOptionPane.showOptionDialog(null, message,
+          "Select An Item", JOptionPane.DEFAULT_OPTION,
+          JOptionPane.QUESTION_MESSAGE, null,
+          choices.toArray(new ImageIcon[choices.size()]), null);
+
+      // Throws ArrayIndexOutOfBoundsException
+      return available.get(choice);
+
+    } catch (Exception e) {
+      throw new CancelException(e.getMessage());
     }
-    else if (itemFamily == 2) {
-      ImageIcon[] stoneOptions = {
-          new ImageIcon(ImageFinder.find("item/stone/f")),
-          new ImageIcon(ImageFinder.find("item/stone/l")),
-          new ImageIcon(ImageFinder.find("item/stone/m")),
-          new ImageIcon(ImageFinder.find("item/stone/t")),
-          new ImageIcon(ImageFinder.find("item/stone/w")) };
-
-      int stone = JOptionPane.showOptionDialog(null, message, "Select An Item",
-          JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-          stoneOptions, null);
-
-      if (stone == 0)
-        return player.bag.stone("fire");
-      else if (stone == 1)
-        return player.bag.stone("leaf");
-      else if (stone == 2)
-        return player.bag.stone("moon");
-      else if (stone == 3)
-        return player.bag.stone("thunder");
-      else if (stone == 4)
-        return player.bag.stone("water");
-    }
-
-    throw new CancelException("");
   }
 
   private boolean mock() {

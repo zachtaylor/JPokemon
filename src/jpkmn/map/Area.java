@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.base.SpawnInfo;
+import jpkmn.game.pokemon.Pokemon;
+
 /**
  * Represents a game area where the player can "be." Areas can contain
  * buildings, and may have water applied to them. Water usage is always
@@ -19,11 +22,11 @@ public class Area {
     _rival = -1;
     _name = "FakeName";
 
-    _water = new Water();
-    _spawner = new PokemonSpawner();
     _events = new ArrayList<Event>();
     _buildings = new ArrayList<Building>();
     _neighbors = new HashMap<Direction, AreaConnection>();
+
+    _spawner = SpawnInfo.getSpawner(areaNumber);
   }
 
   public void name(String s) {
@@ -50,12 +53,12 @@ public class Area {
     _neighbors.put(d, new AreaConnection(a.id, r));
   }
 
-  public void water(Water w) {
-    _water = w;
+  public boolean water() {
+    return _water;
   }
 
-  public Water water() {
-    return _water;
+  public void water(boolean b) {
+    _water = b;
   }
 
   public int gym() {
@@ -74,10 +77,14 @@ public class Area {
     return _rival;
   }
 
+  public Pokemon spawn(String tag) {
+    return _spawner.spawn(tag);
+  }
+
   public final int id;
 
   private String _name;
-  private Water _water;
+  private boolean _water;
   private int _rival, _gym;
   private List<Event> _events;
   private PokemonSpawner _spawner;
