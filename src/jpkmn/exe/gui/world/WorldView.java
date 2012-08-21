@@ -87,9 +87,7 @@ public class WorldView extends JPanel {
 
       _buttons.removeAll();
 
-      if (areaInfo.getString("type").equals("route")) {
-        _buttons.add(_grass);
-      }
+      _buttons.add(_grass);
       if (areaInfo.getBoolean("hasWater")) {
         _buttons.add(_fish);
       }

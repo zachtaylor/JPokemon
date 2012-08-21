@@ -8,10 +8,6 @@ import jpkmn.Constants;
  * @author Zach
  */
 public class AreaManager {
-  public static void main(String[] args) {
-    System.out.println(_areas[0].name());
-  }
-
   public static Area get(int id) {
     return _areas[id];
   }

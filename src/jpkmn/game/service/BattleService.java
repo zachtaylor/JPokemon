@@ -9,7 +9,6 @@ import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
-import jpkmn.map.Route;
 
 public class BattleService {
   public static void startWild(int playerID) throws ServiceException {
@@ -23,12 +22,7 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    if (!(area instanceof Route))
-      throw new ServiceException(area.name() + " is not a route");
-
-    Route route = (Route) area;
-
-    Pokemon wild = route.spawn(""); // No tags yet
+    Pokemon wild = area.spawn(""); // No tags yet
 
     if (wild == null)
       throw new ServiceException("Unable to generate wild pokemon");

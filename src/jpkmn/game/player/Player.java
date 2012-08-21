@@ -1,11 +1,7 @@
 package jpkmn.game.player;
 
-import java.io.PrintWriter;
-
-import jpkmn.Constants;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokedex;
-import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 import jpkmn.map.Area;
 

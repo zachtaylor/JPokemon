@@ -12,7 +12,6 @@ import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.AreaManager;
-import jpkmn.map.Route;
 
 public class BattleView extends JPanel {
   public static void main(String[] args) {
@@ -21,7 +20,7 @@ public class BattleView extends JPanel {
 
       zach.area(AreaManager.get(10)); // route 1
 
-      Pokemon wild = ((Route) zach.area()).spawn("");
+      Pokemon wild = zach.area().spawn("");
       MockPlayer mock = new MockPlayer();
       mock.party.add(wild);
 
