@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.SpawnInfo;
 import jpkmn.game.pokemon.Pokemon;
 
@@ -27,6 +28,7 @@ public class Area {
     _neighbors = new HashMap<Direction, AreaConnection>();
 
     _spawner = SpawnInfo.getSpawner(areaNumber);
+    _neighbors = ConnectionInfo.getConnectionMap(areaNumber);
   }
 
   public void name(String s) {
@@ -46,11 +48,9 @@ public class Area {
   }
 
   public AreaConnection neighbor(Direction d) {
-    return _neighbors.get(d);
-  }
+    if (_neighbors == null) return null;
 
-  public void connect(Direction d, Area a, Requirement r) {
-    _neighbors.put(d, new AreaConnection(a.id, r));
+    return _neighbors.get(d);
   }
 
   public boolean water() {
