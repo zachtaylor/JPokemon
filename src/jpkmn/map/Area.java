@@ -54,11 +54,8 @@ public class Area {
   }
 
   public boolean water() {
-    return _water;
-  }
-
-  public void water(boolean b) {
-    _water = b;
+    if (_spawner == null) return false; // temp untill water is added to areainfo
+    return _spawner.spawn("oldrod") != null;
   }
 
   public int gym() {
