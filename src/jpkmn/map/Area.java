@@ -21,7 +21,7 @@ public class Area {
     id = areaNumber;
     _gym = -1;
     _rival = -1;
-    _name = "FakeName";
+    _name = tempMethodToSetName();
 
     _events = new ArrayList<Event>();
     _buildings = new ArrayList<Building>();
@@ -79,6 +79,35 @@ public class Area {
 
   public Pokemon spawn(String tag) {
     return _spawner.spawn(tag);
+  }
+
+  private String tempMethodToSetName() {
+    switch (id) {
+    case 1:
+      return "Pallet Town";
+    case 2:
+      return "Route-1";
+    case 3:
+      return "Viridian City";
+    case 4:
+      return "Route-2";
+    case 5:
+      return "Route-22";
+    case 6:
+      return "Viridian Forest";
+    case 7:
+      return "Pewter City";
+    case 8:
+      return "Route-3";
+    case 9:
+      return "Mt. Moon 1F";
+    case 10:
+      return "Mt. Moon B1F";
+    case 11:
+      return "Mt. Moon B2F";
+    default:
+      return "FakeName";
+    }
   }
 
   public final int id;

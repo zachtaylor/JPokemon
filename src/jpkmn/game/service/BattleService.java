@@ -22,7 +22,7 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    Pokemon wild = area.spawn(""); // No tags yet
+    Pokemon wild = area.spawn(null); // No tags yet
 
     if (wild == null)
       throw new ServiceException("Unable to generate wild pokemon");

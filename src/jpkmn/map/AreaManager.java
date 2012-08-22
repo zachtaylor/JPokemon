@@ -9,7 +9,7 @@ import jpkmn.Constants;
  */
 public class AreaManager {
   public static Area get(int id) {
-    return _areas[id];
+    return _areas[id - 1];
   }
 
   private static boolean init() {
