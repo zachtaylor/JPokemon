@@ -54,7 +54,7 @@ public class Area {
   }
 
   public boolean water() {
-    if (_spawner == null) return false; // temp untill water is added to areainfo
+    if (_spawner == null) return false; // until water is added to areainfo
     return _spawner.spawn("oldrod") != null;
   }
 
@@ -102,6 +102,49 @@ public class Area {
       return "Mt. Moon B1F";
     case 11:
       return "Mt. Moon B2F";
+    case 12:
+      return "Route-4";
+    case 13:
+      return "Cerulean City";
+    case 14:
+      return "Route-24";
+    case 15:
+      return "Route-25";
+    case 16:
+      return "Route-9";
+    case 17:
+      return "Route-5";
+    case 18:
+      return "Saffron City";
+    case 19:
+      return "Route-8";
+    case 20:
+      return "Lavender Town";
+    case 21:
+      return "Route-10";
+    case 22:
+      return "Route-6";
+    case 23:
+      return "Vermilion City";
+    case 24:
+      return "Route-7";
+    case 25:
+      return "Celadon City";
+    case 26:
+      return "Route-11";
+    case 27:
+      return "Diglett's Cave";
+    case 28:
+      return "Route-12";
+    case 29:
+      return "Route-13";
+    case 30:
+      return "Route-14";
+    case 31:
+      return "Route-15";
+    case 32:
+      return "Fuchsia City";
+
     default:
       return "FakeName";
     }
