@@ -1,7 +1,7 @@
 Thanks for looking at JPokemon!
 
 ### What the nuts is this?
-I started rewriting Pokemon  in Java as a programming exercise. Early attempts were command line based, with little in common with the actual game. As I reworkd and reworked the code, the scope grew. This repository is a fully-fledged attempt at the game, with some of my own changes.
+I started rewriting Pokemon in Java as a programming exercise. Early attempts were command line based, with little in common with the actual game. As I reworked and reworked the code, the scope grew. This repository is a fully-fledged attempt at the game, with some of my own changes.
 
 
 ### I can already use a GameBoy Emulator
