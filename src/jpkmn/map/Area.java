@@ -55,7 +55,7 @@ public class Area {
 
   public boolean water() {
     if (_spawner == null) return false; // until water is added to areainfo
-    return _spawner.spawn("oldrod") != null;
+    return _water = _spawner.spawn("oldrod") != null;
   }
 
   public int gym() {
@@ -144,6 +144,32 @@ public class Area {
       return "Route-15";
     case 32:
       return "Fuchsia City";
+    case 33:
+      return "Route-18";
+    case 34:
+      return "Route-17 (Bike Path)";
+    case 35:
+      return "Route-16";
+    case 36:
+      return "Route-19";
+    case 37:
+      return "Route-20 (east)";
+    case 38:
+      return "Seafoam Islands 1F";
+    case 39:
+      return "Seafoam Islands B1F";
+    case 40:
+      return "Seafoam Islands B2F";
+    case 41:
+      return "Seafoam Islands B3F";
+    case 42:
+      return "Seafoam Islands B4F";
+    case 43:
+      return "Route-20 (west)";
+    case 44:
+      return "Cinnabar Island";
+    case 45:
+      return "Route-21";
 
     default:
       return "FakeName";
