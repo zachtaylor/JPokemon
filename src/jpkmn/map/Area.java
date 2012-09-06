@@ -19,7 +19,7 @@ import jpkmn.game.pokemon.Pokemon;
 public class Area {
   public Area(int areaNumber) {
     id = areaNumber;
-    _gym = -1;
+    _gym = tempMethodToSetGym();
     _rival = -1;
     _name = tempMethodToSetName();
 
@@ -29,6 +29,9 @@ public class Area {
 
     _spawner = SpawnInfo.getSpawner(areaNumber);
     _neighbors = ConnectionInfo.getConnectionMap(areaNumber);
+
+    // Only doing this until AreaInfo is ready
+    _water = _spawner == null ? false : _spawner.spawn("oldrod") != null;
   }
 
   public void name(String s) {
@@ -54,16 +57,11 @@ public class Area {
   }
 
   public boolean water() {
-    if (_spawner == null) return false; // until water is added to areainfo
-    return _water = _spawner.spawn("oldrod") != null;
+    return _water;
   }
 
   public int gym() {
     return _gym;
-  }
-
-  public void gym(int number) {
-    _gym = number;
   }
 
   public void rival(int num) {
@@ -75,6 +73,8 @@ public class Area {
   }
 
   public Pokemon spawn(String tag) {
+    if (_spawner == null) return null;
+
     return _spawner.spawn(tag);
   }
 
@@ -173,6 +173,29 @@ public class Area {
 
     default:
       return "FakeName";
+    }
+  }
+
+  private int tempMethodToSetGym() {
+    switch (id) {
+    case 3:
+      return 8;
+    case 7:
+      return 1;
+    case 13:
+      return 2;
+    case 18:
+      return 6;
+    case 23:
+      return 3;
+    case 25:
+      return 4;
+    case 32:
+      return 5;
+    case 44:
+      return 7;
+    default:
+      return -1;
     }
   }
 

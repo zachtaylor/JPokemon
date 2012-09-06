@@ -12,9 +12,11 @@ public class JSONMaker {
     JSONObject json = new JSONObject();
 
     json.put("id", area.id);
+    json.put("gym", area.gym());
     json.put("name", area.name());
-    json.put("buildings", area.buildings());
     json.put("hasWater", area.water());
+    json.put("buildings", area.buildings());
+    json.put("hasGrass", area.spawn(null) != null);
 
     for (Direction d : Direction.values()) {
       AreaConnection con = area.neighbor(d);

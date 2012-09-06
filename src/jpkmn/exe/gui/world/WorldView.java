@@ -41,8 +41,8 @@ public class WorldView extends JPanel {
 
     _buttons = new JPanel();
 
+    _gym = new GymButton(this);
     _fish = new FishButton(this);
-
     _grass = new GrassButton(this);
 
     _north = new AreaConnectionButton(this, "NORTH");
@@ -86,11 +86,9 @@ public class WorldView extends JPanel {
       _title.setText(areaInfo.getString("name"));
 
       _buttons.removeAll();
-
-      _buttons.add(_grass);
-      if (areaInfo.getBoolean("hasWater")) {
-        _buttons.add(_fish);
-      }
+      if (areaInfo.getBoolean("hasGrass"))_buttons.add(_grass);
+      if (areaInfo.getBoolean("hasWater")) _buttons.add(_fish);
+      if (areaInfo.getInt("gym") > 0) _buttons.add(_gym);
 
       //@preformat
     /* 
@@ -130,6 +128,7 @@ public class WorldView extends JPanel {
   GameWindow window;
   private int _playerID;
   private JLabel _title;
+  private GymButton _gym;
   private JPanel _buttons;
   private boolean _enabled;
   private FishButton _fish;

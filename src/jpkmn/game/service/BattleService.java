@@ -53,7 +53,6 @@ public class BattleService {
     mock.party.add(wild);
 
     BattleRegistry.make(player, mock);
-
   }
 
   public static void startGym(int playerID) throws ServiceException {
@@ -69,7 +68,7 @@ public class BattleService {
 
     int gymNumber = area.gym();
 
-    if (gymNumber == 0)
+    if (gymNumber <= 0)
       throw new ServiceException(area.name() + " has no gym");
     else if (gymNumber != player.badge() + 1)
       throw new ServiceException("You are not qualified for this gym");

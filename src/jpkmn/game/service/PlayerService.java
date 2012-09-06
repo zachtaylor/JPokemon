@@ -35,11 +35,10 @@ public class PlayerService {
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");
 
-    // HACKY - But i'm too tired to do it the right way right now
-    Direction direction = null;
-    for (Direction d : Direction.values())
-      if (d.toString().equals(dir)) direction = d;
-    // END HACK
+    Direction direction = Direction.valueOf(dir);
+
+    if (direction == null)
+      throw new ServiceException("Direction " + dir + "not recognized");
 
     Area area = player.area();
 
