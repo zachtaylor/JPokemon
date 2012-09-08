@@ -6,24 +6,32 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.game.player.Player;
+import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.pokemon.Pokemon;
 
 public class CenterButton extends JButton implements ActionListener {
-  public CenterButton(WorldView view, int areaID) {
+  public CenterButton(WorldView view) {
     super("Pokemon Center");
 
     _window = view.window;
-    _areaID = areaID;
 
     addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent arg0) {
-    System.out.println("You clicked Center");
-    // TODO : Generate battle
+    // TODO the right way
+    Player player = PlayerRegistry.get(_window.playerID());
+
+    for (Pokemon p : player.party) {
+      p.healDamage(p.stats.hp.max());
+    }
+
+    player.screen.notify("Your Pokemon have been fully healed!",
+        "Please come again!");
   }
 
-  private int _areaID;
   private GameWindow _window;
   private static final long serialVersionUID = 1L;
 }

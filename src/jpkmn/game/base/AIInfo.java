@@ -10,7 +10,7 @@ public class AIInfo {
   private int area, cash, number, type;
   private String name;
 
-  public static List<AIInfo> getInfoForArea(int number) {
+  public static List<AIInfo> getAIForArea(int number) {
     DataConnectionManager.init("Pokemon.db");
 
     try {

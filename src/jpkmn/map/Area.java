@@ -18,18 +18,19 @@ import jpkmn.game.pokemon.Pokemon;
  * @author Zach
  */
 public class Area {
+  public final int id;
+
   public Area(int areaNumber) {
     id = areaNumber;
-    _name = tempMethodToSetName();
-
-    _events = new ArrayList<Event>();
-    _buildings = new ArrayList<Building>();
 
     _spawner = SpawnInfo.getSpawner(areaNumber);
-    _trainers = AIInfo.getInfoForArea(areaNumber);
+    _trainers = AIInfo.getAIForArea(areaNumber);
     _neighbors = ConnectionInfo.getConnectionMap(areaNumber);
 
-    // Only doing this until AreaInfo is ready
+    // Replace with areainfo
+    _name = mapNumberToName();
+    _center = mapNumberToCenter();
+    _events = new ArrayList<Event>();
     _water = _spawner == null ? false : _spawner.spawn("oldrod") != null;
   }
 
@@ -57,18 +58,14 @@ public class Area {
     return _trainers;
   }
 
-  public List<Building> buildings() {
-    return _buildings;
-  }
-
-  public void buildings(Building b) {
-    if (!_buildings.contains(b)) _buildings.add(b);
-  }
-
   public AreaConnection neighbor(Direction d) {
     if (_neighbors == null) return null;
 
     return _neighbors.get(d);
+  }
+
+  public boolean center() {
+    return _center;
   }
 
   public boolean water() {
@@ -81,7 +78,7 @@ public class Area {
     return _spawner.spawn(tag);
   }
 
-  private String tempMethodToSetName() {
+  private String mapNumberToName() {
     switch (id) {
     case 1:
       return "Pallet Town";
@@ -179,13 +176,29 @@ public class Area {
     }
   }
 
-  public final int id;
+  private boolean mapNumberToCenter() {
+    switch (id) {
+    case 1:
+    case 3:
+    case 7:
+    case 13:
+    case 18:
+    case 20:
+    case 23:
+    case 25:
+    case 32:
+    case 44:
+      return true;
+    default:
+      return false;
+    }
+  }
 
   private String _name;
   private boolean _water;
+  private boolean _center;
   private List<Event> _events;
   private List<AIInfo> _trainers;
   private PokemonSpawner _spawner;
-  private List<Building> _buildings;
   private Map<Direction, AreaConnection> _neighbors;
 }

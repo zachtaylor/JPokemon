@@ -1,7 +1,6 @@
 package jpkmn.game.service;
 
 import jpkmn.game.base.AIInfo;
-import jpkmn.game.player.TrainerType;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
@@ -17,7 +16,7 @@ public class JSONMaker {
     json.put("id", area.id);
     json.put("name", area.name());
     json.put("hasWater", area.water());
-    json.put("buildings", area.buildings());
+    json.put("hasCenter", area.center());
     json.put("hasGrass", area.spawn(null) != null);
 
     for (Direction d : Direction.values()) {

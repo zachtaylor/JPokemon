@@ -27,8 +27,6 @@ public class WorldView extends JPanel {
 
       dev.area(viridian);
 
-      System.out.println(route1.buildings());
-
       dev.screen.showWorld();
     } catch (LoadException e) {
       e.printStackTrace();
@@ -44,6 +42,7 @@ public class WorldView extends JPanel {
 
     _fish = new FishButton(this);
     _grass = new GrassButton(this);
+    _center = new CenterButton(this);
 
     _north = new AreaConnectionButton(this, "NORTH");
     _east = new AreaConnectionButton(this, "EAST");
@@ -88,6 +87,7 @@ public class WorldView extends JPanel {
       _buttons.removeAll();
       if (areaInfo.getBoolean("hasGrass")) _buttons.add(_grass);
       if (areaInfo.getBoolean("hasWater")) _buttons.add(_fish);
+      if (areaInfo.getBoolean("hasCenter")) _buttons.add(_center);
 
       JSONArray trainers = areaInfo.getJSONArray("trainers");
       for (int index = 0; index < trainers.length(); index++) {
@@ -141,6 +141,7 @@ public class WorldView extends JPanel {
   private boolean _enabled;
   private FishButton _fish;
   private GrassButton _grass;
+  private CenterButton _center;
   private AreaConnectionButton _north, _east, _south, _west;
 
   private static final long serialVersionUID = 1L;
