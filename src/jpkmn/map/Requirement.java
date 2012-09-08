@@ -3,8 +3,16 @@ package jpkmn.map;
 import jpkmn.game.player.Player;
 
 public class Requirement {
-  public Requirement(RequirementType type, int value) {
-    _type = type;
+  private enum RequirementType {
+    MOVE, BADGE, POKEDEX, ITEM;
+
+    static RequirementType valueOf(int r) {
+      return RequirementType.values()[r];
+    }
+  }
+
+  public Requirement(int type, int value) {
+    _type = RequirementType.valueOf(type);
     _value = value;
   }
 

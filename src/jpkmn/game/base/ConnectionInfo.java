@@ -7,7 +7,6 @@ import java.util.Map;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
 import jpkmn.map.Requirement;
-import jpkmn.map.RequirementType;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -23,7 +22,6 @@ public class ConnectionInfo {
     Direction d;
     AreaConnection con;
     Requirement req = null;
-    RequirementType reqType;
 
     Map<Direction, AreaConnection> map = new HashMap<Direction, AreaConnection>();
 
@@ -35,8 +33,7 @@ public class ConnectionInfo {
       d = Direction.valueOf(info.getDirection());
 
       if (info.getRequirement() > -1) {
-        reqType = RequirementType.valueOf(info.getRequirement());
-        req = new Requirement(reqType, info.getValue());
+        req = new Requirement(info.getRequirement(), info.getValue());
       }
 
       con = new AreaConnection(info.getNext(), req);

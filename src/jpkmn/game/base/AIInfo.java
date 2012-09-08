@@ -46,8 +46,8 @@ public class AIInfo {
   }
 
   //@preformat
-    public int getNumber() {return number;} public void setNumber(int _val) {number = _val;}
-    public int getCash() {return cash;} public void setCash(int _val) {cash = _val;}
-    public String getName() {return name;} public void setName(String _val) {name = _val;}
-    //@format
+  public int getNumber() {return number;} public void setNumber(int _val) {number = _val;}
+  public int getCash() {return cash;} public void setCash(int _val) {cash = _val;}
+  public String getName() {return name;} public void setName(String _val) {name = _val;}
+  //@format
 }
