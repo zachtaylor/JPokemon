@@ -1,12 +1,13 @@
 package jpkmn.map;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.SpawnInfo;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 
 /**
@@ -19,27 +20,41 @@ import jpkmn.game.pokemon.Pokemon;
 public class Area {
   public Area(int areaNumber) {
     id = areaNumber;
-    _gym = tempMethodToSetGym();
-    _rival = -1;
     _name = tempMethodToSetName();
 
     _events = new ArrayList<Event>();
     _buildings = new ArrayList<Building>();
-    _neighbors = new HashMap<Direction, AreaConnection>();
 
     _spawner = SpawnInfo.getSpawner(areaNumber);
+    _trainers = AIInfo.getInfoForArea(areaNumber);
     _neighbors = ConnectionInfo.getConnectionMap(areaNumber);
 
     // Only doing this until AreaInfo is ready
     _water = _spawner == null ? false : _spawner.spawn("oldrod") != null;
   }
 
-  public void name(String s) {
-    _name = s;
-  }
-
   public String name() {
     return _name;
+  }
+
+  public Trainer getTrainer(int trainerID) {
+    AIInfo targetInfo = null;
+
+    for (AIInfo curInfo : _trainers) {
+      if (curInfo.getNumber() == trainerID) {
+        targetInfo = curInfo;
+        break;
+      }
+    }
+
+    if (targetInfo == null) return null;
+
+    return new Trainer(targetInfo.getType(), targetInfo.getName(),
+        targetInfo.getCash(), targetInfo.getNumber());
+  }
+
+  public List<AIInfo> trainers() {
+    return _trainers;
   }
 
   public List<Building> buildings() {
@@ -58,18 +73,6 @@ public class Area {
 
   public boolean water() {
     return _water;
-  }
-
-  public int gym() {
-    return _gym;
-  }
-
-  public void rival(int num) {
-    _rival = num;
-  }
-
-  public int rival() {
-    return _rival;
   }
 
   public Pokemon spawn(String tag) {
@@ -176,35 +179,12 @@ public class Area {
     }
   }
 
-  private int tempMethodToSetGym() {
-    switch (id) {
-    case 3:
-      return 8;
-    case 7:
-      return 1;
-    case 13:
-      return 2;
-    case 18:
-      return 6;
-    case 23:
-      return 3;
-    case 25:
-      return 4;
-    case 32:
-      return 5;
-    case 44:
-      return 7;
-    default:
-      return -1;
-    }
-  }
-
   public final int id;
 
   private String _name;
   private boolean _water;
-  private int _rival, _gym;
   private List<Event> _events;
+  private List<AIInfo> _trainers;
   private PokemonSpawner _spawner;
   private List<Building> _buildings;
   private Map<Direction, AreaConnection> _neighbors;

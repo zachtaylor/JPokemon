@@ -1,9 +1,12 @@
 package jpkmn.game.service;
 
+import jpkmn.game.base.AIInfo;
+import jpkmn.game.player.TrainerType;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,7 +15,6 @@ public class JSONMaker {
     JSONObject json = new JSONObject();
 
     json.put("id", area.id);
-    json.put("gym", area.gym());
     json.put("name", area.name());
     json.put("hasWater", area.water());
     json.put("buildings", area.buildings());
@@ -25,6 +27,17 @@ public class JSONMaker {
       else
         json.put(d.name(), con.next().name());
     }
+
+    JSONArray trainers = new JSONArray();
+    for (AIInfo trainerInfo : area.trainers()) {
+      JSONObject data = new JSONObject();
+
+      data.put("name", trainerInfo.getName());
+      data.put("id", trainerInfo.getNumber());
+
+      trainers.put(data);
+    }
+    json.put("trainers", trainers);
 
     return json;
   }

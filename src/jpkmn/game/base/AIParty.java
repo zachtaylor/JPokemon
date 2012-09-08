@@ -3,7 +3,6 @@ package jpkmn.game.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
 
 import com.kremerk.Sqlite.DataConnectionException;
@@ -13,22 +12,7 @@ import com.kremerk.Sqlite.SqlStatement;
 public class AIParty {
   private int number, pkmn, level, move1, move2, move3, move4;
 
-  public static List<Pokemon> getPartyForLeader(int number) {
-    if (number <= 0 || number > Constants.GYMNUMBER) return null;
-    return doGet(number);
-  }
-
-  public static List<Pokemon> getPartyForRival(int number) {
-    if (number <= 0 || number > Constants.RIVALNUMBER) return null;
-    return doGet(number + Constants.GYMNUMBER);
-  }
-
-  public static List<Pokemon> getPartyForTrainer(int number) {
-    if (number <= 0 || number > Constants.TRAINERNUMBER) return null;
-    return doGet(number + Constants.GYMNUMBER + Constants.RIVALNUMBER);
-  }
-
-  private static List<Pokemon> doGet(int number) {
+  public static List<Pokemon> getParty(int number) {
     DataConnectionManager.init("Pokemon.db");
 
     try {

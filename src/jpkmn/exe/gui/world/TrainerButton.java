@@ -9,10 +9,11 @@ import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.service.BattleService;
 
-public class GymButton extends JButton implements ActionListener {
-  public GymButton(WorldView view) {
-    super("Gym Challenge");
+public class TrainerButton extends JButton implements ActionListener {
+  public TrainerButton(WorldView view, int trainerID, String text) {
+    super(text);
 
+    _trainerID = trainerID;
     _window = view.window;
 
     addActionListener(this);
@@ -23,12 +24,13 @@ public class GymButton extends JButton implements ActionListener {
     int playerID = _window.playerID();
 
     try {
-      BattleService.startGym(playerID);
+      BattleService.startBattle(playerID, _trainerID);
     } catch (ServiceException s) {
       _window.inbox().addMessage(s.getMessage());
     }
   }
 
+  private int _trainerID;
   private GameWindow _window;
   private static final long serialVersionUID = 1L;
 }

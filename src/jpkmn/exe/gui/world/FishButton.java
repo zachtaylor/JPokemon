@@ -23,7 +23,7 @@ public class FishButton extends JButton implements ActionListener {
     int playerID = _window.playerID();
 
     try {
-      BattleService.startWater(playerID);
+      BattleService.startWater(playerID, "oldrod"); // short term
     } catch (ServiceException s) {
       _window.inbox().addMessage(s.getMessage());
     }

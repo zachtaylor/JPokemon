@@ -13,6 +13,7 @@ import jpkmn.game.service.PlayerService;
 import jpkmn.map.Area;
 import jpkmn.map.AreaManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,7 +42,6 @@ public class WorldView extends JPanel {
 
     _buttons = new JPanel();
 
-    _gym = new GymButton(this);
     _fish = new FishButton(this);
     _grass = new GrassButton(this);
 
@@ -86,9 +86,18 @@ public class WorldView extends JPanel {
       _title.setText(areaInfo.getString("name"));
 
       _buttons.removeAll();
-      if (areaInfo.getBoolean("hasGrass"))_buttons.add(_grass);
+      if (areaInfo.getBoolean("hasGrass")) _buttons.add(_grass);
       if (areaInfo.getBoolean("hasWater")) _buttons.add(_fish);
-      if (areaInfo.getInt("gym") > 0) _buttons.add(_gym);
+
+      JSONArray trainers = areaInfo.getJSONArray("trainers");
+      for (int index = 0; index < trainers.length(); index++) {
+        JSONObject trainer = trainers.getJSONObject(index);
+
+        TrainerButton button = new TrainerButton(this, trainer.getInt("id"),
+            trainer.getString("name"));
+
+        _buttons.add(button);
+      }
 
       //@preformat
     /* 
@@ -128,7 +137,6 @@ public class WorldView extends JPanel {
   GameWindow window;
   private int _playerID;
   private JLabel _title;
-  private GymButton _gym;
   private JPanel _buttons;
   private boolean _enabled;
   private FishButton _fish;
