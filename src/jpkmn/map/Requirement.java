@@ -2,17 +2,22 @@ package jpkmn.map;
 
 import jpkmn.game.player.Player;
 
+/**
+ * A generalized rule, which can be used to test a Player
+ * 
+ * @author zach
+ */
 public class Requirement {
-  private enum RequirementType {
+  public enum Type {
     MOVE, BADGE, POKEDEX, ITEM;
 
-    static RequirementType valueOf(int r) {
-      return RequirementType.values()[r];
+    public static Requirement.Type valueOf(int r) {
+      return Requirement.Type.values()[r];
     }
   }
 
   public Requirement(int type, int value) {
-    _type = RequirementType.valueOf(type);
+    _type = Type.valueOf(type);
     _value = value;
   }
 
@@ -22,5 +27,5 @@ public class Requirement {
   }
 
   private int _value;
-  private RequirementType _type;
+  private Requirement.Type _type;
 }

@@ -4,35 +4,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.service.PlayerService;
-import jpkmn.map.Area;
-import jpkmn.map.AreaManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WorldView extends JPanel {
-  public static void main(String[] args) {
-    try {
-      Player dev = PlayerRegistry.fromFile("newfile");
-
-      Area route1 = AreaManager.get(10); // route 1;
-      Area viridian = AreaManager.get(1); // viridian city
-
-      dev.area(viridian);
-
-      dev.screen.showWorld();
-    } catch (LoadException e) {
-      e.printStackTrace();
-    }
-  }
-
   public WorldView(GameWindow g) {
     window = g;
 

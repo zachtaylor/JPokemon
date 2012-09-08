@@ -10,7 +10,7 @@ import java.util.prefs.Preferences;
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.map.AreaManager;
+import jpkmn.map.AreaRegistry;
 
 public class PlayerRegistry {
   public static Player create(String name, int start) throws LoadException {
@@ -32,7 +32,7 @@ public class PlayerRegistry {
       newPlayer.name(scan.nextLine());
       newPlayer.cash(Integer.parseInt(scan.nextLine()));
       newPlayer.badge(Integer.parseInt(scan.nextLine()));
-      newPlayer.area(AreaManager.get(Integer.parseInt(scan.nextLine())));
+      newPlayer.area(AreaRegistry.get(Integer.parseInt(scan.nextLine())));
 
       for (int i = 0; i < Constants.PARTYSIZE; i++)
         newPlayer.party.add(Pokemon.createFromString(scan.nextLine()));

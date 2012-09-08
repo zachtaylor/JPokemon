@@ -3,33 +3,11 @@ package jpkmn.exe.gui.battle;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import jpkmn.exceptions.LoadException;
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.Slot;
-import jpkmn.game.player.MockPlayer;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
-import jpkmn.game.pokemon.Pokemon;
-import jpkmn.map.AreaManager;
 
 public class BattleView extends JPanel {
-  public static void main(String[] args) {
-    try {
-      Player zach = PlayerRegistry.fromFile("Zach");
-
-      zach.area(AreaManager.get(10)); // route 1
-
-      Pokemon wild = zach.area().spawn("");
-      MockPlayer mock = new MockPlayer();
-      mock.party.add(wild);
-
-      BattleRegistry.make(zach, mock);
-    } catch (LoadException l) {
-      l.printStackTrace();
-    }
-  }
-
   public BattleView() {
     _enemies = new JPanel();
     JPanel userPanel = new JPanel();

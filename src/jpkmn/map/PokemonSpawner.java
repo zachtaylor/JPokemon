@@ -12,6 +12,17 @@ public class PokemonSpawner {
     _spawnMap = new HashMap<String, List<Spawn>>();
   }
 
+  /**
+   * Adds a Pokemon blueprint to this PokemonSpawner.
+   * 
+   * @param number Pokemon number
+   * @param low Minimum level value
+   * @param high Maximum level value
+   * @param flex Integer representation of the Pokemon's appearance rate, with
+   *          respect to other species
+   * @param itemName Tag used to spawn this pokemon, itemName=null specifies
+   *          tall grass.
+   */
   public void add(int number, int low, int high, int flex, String itemName) {
     if (_spawnMap.get(itemName) == null)
       _spawnMap.put(itemName, new ArrayList<Spawn>());
@@ -22,6 +33,13 @@ public class PokemonSpawner {
       spawner.add(new Spawn(number, low, high));
   }
 
+  /**
+   * Creates a new instance of a Pokemon, spawnable using the specified item.
+   * If itemName=null, spawn using tall grass
+   * 
+   * @param itemName Item used, ie "oldrod"
+   * @return New instance of Pokemon
+   */
   public Pokemon spawn(String itemName) {
     if (_spawnMap.get(itemName) == null) return null;
 
@@ -32,6 +50,11 @@ public class PokemonSpawner {
     return spawner.get(index).make();
   }
 
+  /**
+   * A blueprint of a spawnable Pokemon in a given level range.
+   * 
+   * @author zach
+   */
   private class Spawn {
     public Spawn(int number, int low, int high) {
       _low = low;
@@ -39,6 +62,11 @@ public class PokemonSpawner {
       _number = number;
     }
 
+    /**
+     * Generates a new instance of the Pokemon in the level range
+     * 
+     * @return New instance of this Pokemon.
+     */
     public Pokemon make() {
       int range = _high - _low;
       int level = _low + (int) (Math.random() * (range + 1));

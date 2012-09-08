@@ -34,10 +34,22 @@ public class Area {
     _water = _spawner == null ? false : _spawner.spawn("oldrod") != null;
   }
 
+  /**
+   * Gets the name of the Area
+   * 
+   * @return Name of the Area
+   */
   public String name() {
     return _name;
   }
 
+  /**
+   * Gets a new instance of the specified Trainer, if that Trainer is in this
+   * area.
+   * 
+   * @param trainerID ID of the trainer
+   * @return A new instance of the specified Trainer
+   */
   public Trainer getTrainer(int trainerID) {
     AIInfo targetInfo = null;
 
@@ -54,30 +66,65 @@ public class Area {
         targetInfo.getCash(), targetInfo.getNumber());
   }
 
+  /**
+   * Gets the info for all Trainers in this area.
+   * 
+   * @return All Trainers' info
+   */
   public List<AIInfo> trainers() {
     return _trainers;
   }
 
+  /**
+   * Gets the AreaConnection for the specified direction, if such an
+   * AreaConnection exists
+   * 
+   * @param d Direction to travel in
+   * @return The connection
+   */
   public AreaConnection neighbor(Direction d) {
     if (_neighbors == null) return null;
 
     return _neighbors.get(d);
   }
 
+  /**
+   * Tells whether this Area has a Pokemon Center
+   * 
+   * @return Whether this Area has a Pokemon Center
+   */
   public boolean center() {
     return _center;
   }
 
+  /**
+   * Tells whether this Area has fishable water
+   * 
+   * @return Whether this Area has fishable water
+   */
   public boolean water() {
     return _water;
   }
 
+  /**
+   * Attempts to create a new instance of a Pokemon, which is spawnable in this
+   * area, using the given tag. Specifying tag=null will spawn a wild Pokemon
+   * from the tall grass.
+   * 
+   * @param tag Item used, i.e. "oldrod"
+   * @return New instance of a wild Pokemon
+   */
   public Pokemon spawn(String tag) {
     if (_spawner == null) return null;
 
     return _spawner.spawn(tag);
   }
 
+  /**
+   * Maps the number of this Area to a name
+   * 
+   * @return Name
+   */
   private String mapNumberToName() {
     switch (id) {
     case 1:
@@ -176,6 +223,11 @@ public class Area {
     }
   }
 
+  /**
+   * Maps the number of this area to a Pokemon Center status.
+   * 
+   * @return If this Area has a Pokemon Center
+   */
   private boolean mapNumberToCenter() {
     switch (id) {
     case 1:

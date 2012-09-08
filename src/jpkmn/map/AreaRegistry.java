@@ -7,11 +7,23 @@ import jpkmn.Constants;
  * 
  * @author Zach
  */
-public class AreaManager {
+public class AreaRegistry {
+
+  /**
+   * Gets a reference to the specified Area
+   * 
+   * @param id Area's ID
+   * @return The Area
+   */
   public static Area get(int id) {
     return _areas[id - 1];
   }
 
+  /**
+   * Trick to initialize the map on JVM load
+   * 
+   * @return doesn't matter
+   */
   private static boolean init() {
     _areas = new Area[Constants.AREANUMBER];
 
@@ -23,5 +35,5 @@ public class AreaManager {
   }
 
   private static Area[] _areas;
-  protected static boolean _ready = init();
+  protected static boolean _ready = init(); // protected solves eclipse warning
 }
