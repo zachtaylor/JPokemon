@@ -1,10 +1,9 @@
 package jpkmn.exe.gui;
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 
 import jpkmn.exe.gui.battle.BattleView;
+import jpkmn.exe.gui.pokemonupgrade.PokemonUpgradeView;
 import jpkmn.exe.gui.world.WorldView;
 import jpkmn.img.ImageFinder;
 
@@ -14,10 +13,11 @@ public class GameWindow extends JFrame {
     _inbox = new MessageView();
     _battle = new BattleView();
     _main = new WorldView(this);
+    _upgrade = new PokemonUpgradeView(this);
 
     setResizable(false);
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-    setIconImage(ImageFinder.find("main-icon"));
+    setIconImage(ImageFinder.find("main-icon").getImage());
 
     setVisible(true);
   }
@@ -30,43 +30,45 @@ public class GameWindow extends JFrame {
     return _inbox;
   }
 
-  public void showMain(int areaID) {
-    _battle.disable();
-    remove(_battle);
-
-    _main.enable();
-    add(_main);
-
-    size(600, 300);
-    refresh();
+  public void showMain() {
+    show(_main);
   }
 
   public void showBattle(int battleID, int slotID) {
-    _main.disable();
-    remove(_main);
-
     _battle.setup(battleID, slotID);
-    add(_battle);
 
-    size(625, 200);
-    refresh();
+    show(_battle);
+  }
+
+  public void showUpgrade(int partyIndex) {
+    _upgrade.setup(partyIndex);
+
+    show(_upgrade);
   }
 
   public void refresh() {
-    _main.refresh();
-    _battle.refresh();
+    _active.refresh();
 
     setVisible(false);
     setVisible(true);
   }
 
-  private void size(int x, int y) {
-    setSize(new Dimension(x, y));
+  private void show(JPokemonView view) {
+    if (_active != null) remove(_active);
+
+    _active = view;
+    add(_active);
+
+    setSize(_active.dimension());
+
+    refresh();
   }
 
   private int _playerID;
   private WorldView _main;
   private BattleView _battle;
   private MessageView _inbox;
+  private JPokemonView _active;
+  private PokemonUpgradeView _upgrade;
   private static final long serialVersionUID = 1L;
 }

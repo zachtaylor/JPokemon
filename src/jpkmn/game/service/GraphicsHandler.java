@@ -96,13 +96,19 @@ public class GraphicsHandler {
   public void showWorld() {
     if (mock()) return;
 
-    _window.showMain(_player.area().id);
+    _window.showMain();
   }
 
   public void showBattle(int battleID, int slotID) {
     if (mock()) return;
 
     _window.showBattle(battleID, slotID);
+  }
+
+  public void showUpgrade(int partyIndex) {
+    if (mock()) return;
+
+    _window.showUpgrade(partyIndex);
   }
 
   public void refresh() {
@@ -116,7 +122,7 @@ public class GraphicsHandler {
 
     String message = "Allow " + p.name() + " to evolve?";
     String title = p.name() + " wants to evolve!";
-    Icon icon = new ImageIcon(ImageFinder.find(p));
+    Icon icon = ImageFinder.find(p);
 
     return JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(null,
         message, title, JOptionPane.OK_CANCEL_OPTION,
@@ -130,7 +136,7 @@ public class GraphicsHandler {
 
     String[] moveNames = p.moves.list();
     String title = "Select Move Index";
-    Icon icon = new ImageIcon(ImageFinder.find(p));
+    Icon icon = ImageFinder.find(p);
 
     return JOptionPane.showOptionDialog(null, message, title,
         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, icon,
@@ -145,7 +151,7 @@ public class GraphicsHandler {
     ImageIcon[] options = new ImageIcon[_player.party.size()];
 
     for (int i = _player.party.size() - 1; i >= 0; i--)
-      options[i] = new ImageIcon(ImageFinder.find(_player.party.get(i)));
+      options[i] = ImageFinder.find(_player.party.get(i));
 
     return JOptionPane.showOptionDialog(null, message, "Select From Party",
         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -182,7 +188,7 @@ public class GraphicsHandler {
 
       for (Item item : pocket) {
         available.add(item);
-        choices.add(new ImageIcon(ImageFinder.find(item)));
+        choices.add(ImageFinder.find(item));
       }
 
       int choice = JOptionPane.showOptionDialog(null, message,

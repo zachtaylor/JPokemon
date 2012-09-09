@@ -1,18 +1,21 @@
 package jpkmn.exe.gui.world;
 
+import java.awt.Dimension;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.service.PlayerService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WorldView extends JPanel {
+public class WorldView extends JPokemonView {
   public WorldView(GameWindow g) {
     window = g;
 
@@ -57,8 +60,6 @@ public class WorldView extends JPanel {
   }
 
   public void refresh() {
-    if (!_enabled) return;
-
     try {
       JSONObject areaInfo = PlayerService.areaInfo(_playerID);
 
@@ -102,23 +103,14 @@ public class WorldView extends JPanel {
     }
   }
 
-  public void enable() {
-    _enabled = true;
-  }
-
-  public void disable() {
-    _enabled = false;
-  }
-
-  private JPanel spacer() {
-    return new JPanel();
+  public Dimension dimension() {
+    return new Dimension(600, 300);
   }
 
   GameWindow window;
   private int _playerID;
   private JLabel _title;
   private JPanel _buttons;
-  private boolean _enabled;
   private FishButton _fish;
   private GrassButton _grass;
   private CenterButton _center;

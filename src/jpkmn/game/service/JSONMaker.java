@@ -1,6 +1,8 @@
 package jpkmn.game.service;
 
 import jpkmn.game.base.AIInfo;
+import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.pokemon.stat.StatType;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
@@ -37,6 +39,28 @@ public class JSONMaker {
       trainers.put(data);
     }
     json.put("trainers", trainers);
+
+    return json;
+  }
+
+  public static JSONObject make(Pokemon p) throws JSONException {
+    JSONObject json = new JSONObject();
+
+    json.put("name", p.name());
+    json.put("number", p.number());
+
+    JSONArray stats = new JSONArray();
+    for (StatType st : StatType.values()) {
+      // Do it this way to support dynamic stat types
+
+      JSONObject stat = new JSONObject();
+      stat.put("name", st.name());
+      stat.put("value", p.stats.getStat(st).cur());
+      stat.put("points", p.stats.getStat(st).points());
+
+      stats.put(stat);
+    }
+    json.put("stats", stats);
 
     return json;
   }

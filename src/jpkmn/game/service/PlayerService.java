@@ -3,6 +3,7 @@ package jpkmn.game.service;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
@@ -11,6 +12,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PlayerService {
+  public static JSONObject pokemonInfo(int pID, int i) throws ServiceException {
+    Player player = PlayerRegistry.get(pID);
+
+    if (player == null)
+      throw new ServiceException("PlayerID " + pID + " not found");
+
+    Pokemon pokemon = player.party.get(i);
+
+    if (pokemon == null)
+      throw new ServiceException(player.name() + " has no " + i + " Pokemon");
+
+    try {
+      return JSONMaker.make(pokemon);
+    } catch (JSONException e) {
+      throw new ServiceException("There was an error. It's not your fault.");
+    }
+  }
+
   public static JSONObject areaInfo(int playerID) throws ServiceException {
     Player player = PlayerRegistry.get(playerID);
 

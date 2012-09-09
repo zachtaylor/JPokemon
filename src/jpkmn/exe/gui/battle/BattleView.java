@@ -1,13 +1,16 @@
 package jpkmn.exe.gui.battle;
 
+import java.awt.Dimension;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.Slot;
 
-public class BattleView extends JPanel {
+public class BattleView extends JPokemonView {
   public BattleView() {
     _enemies = new JPanel();
     JPanel userPanel = new JPanel();
@@ -26,7 +29,6 @@ public class BattleView extends JPanel {
   }
 
   public void setup(int battleID, int slotID) {
-    _enabled = true;
     _slotID = slotID;
     _battleID = battleID;
 
@@ -36,8 +38,6 @@ public class BattleView extends JPanel {
   }
 
   public void refresh() {
-    if (!_enabled) return;
-
     Battle b = BattleRegistry.get(_battleID);
 
     _user.refresh(b.get(_slotID).party());
@@ -49,44 +49,35 @@ public class BattleView extends JPanel {
       }
     }
 
-    enableButtons();
-  }
-
-  public void enableButtons() {
     buttons.enable();
   }
 
-  public void disableButtons() {
-    buttons.disable();
-  }
-
-  public void disable() {
-    _enabled = false;
+  public Dimension dimension() {
+    return new Dimension(625, 200);
   }
 
   public void fight() {
-    disableButtons();
+    buttons.disable();
     BattleRegistry.get(_battleID).fight(_slotID);
   }
 
   public void swap() {
-    disableButtons();
+    buttons.disable();
     BattleRegistry.get(_battleID).swap(_slotID);
   }
 
   public void item() {
-    disableButtons();
+    buttons.disable();
     BattleRegistry.get(_battleID).item(_slotID);
   }
 
   public void run() {
-    disableButtons();
+    buttons.disable();
     BattleRegistry.get(_battleID).run(_slotID);
   }
 
   private JPanel _enemies;
   private PartyPanel _user;
-  private boolean _enabled;
   private ButtonPanel buttons;
   private int _battleID, _slotID;
   private static final long serialVersionUID = 1L;

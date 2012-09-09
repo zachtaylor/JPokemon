@@ -73,12 +73,12 @@ public class PartyPanel extends JPanel {
     partyStatus.removeAll();
     for (int i = 0; i < Constants.PARTYSIZE; i++) {
       if (p.get(i) != null && p.get(i).condition.awake())
-        partyStatus.add(new JLabel(new ImageIcon(ImageFinder.find("aslot"))));
+        partyStatus.add(new JLabel(ImageFinder.find("aslot")));
       else
-        partyStatus.add(new JLabel(new ImageIcon(ImageFinder.find("eslot"))));
+        partyStatus.add(new JLabel(ImageFinder.find("eslot")));
     }
 
-    leaderPicture.setIcon(new ImageIcon(ImageFinder.find(lead)));
+    leaderPicture.setIcon(ImageFinder.find(lead));
 
     title.setText(lead.name() + " Lvl." + lead.level());
     hpBar.setMaximum(lead.stats.hp.max());

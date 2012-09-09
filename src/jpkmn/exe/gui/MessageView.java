@@ -3,7 +3,6 @@ package jpkmn.exe.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,13 +28,13 @@ public class MessageView extends JPanel {
     frame.getContentPane().add(scroll, BorderLayout.CENTER);
     frame.setSize(new Dimension(350, 200));
     frame.setResizable(false);
-    frame.setIconImage(ImageFinder.find("mail"));
+    frame.setIconImage(ImageFinder.find("mail").getImage());
     frame.setTitle("Message Center");
     frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     frame.setVisible(true);
   }
 
-  public void addMessage(Image image, String... message) {
+  public void addMessage(ImageIcon image, String... message) {
     addMessage(new Message(image, message));
   }
 
@@ -58,7 +57,7 @@ public class MessageView extends JPanel {
   private void refresh() {
     setVisible(false);
     setVisible(true);
-    
+
     JScrollBar bar = scroll.getVerticalScrollBar();
     bar.setValue(bar.getMaximum());
   }
@@ -78,9 +77,9 @@ public class MessageView extends JPanel {
       this(ImageFinder.find("err"), message);
     }
 
-    public Message(Image image, String... message) {
+    public Message(ImageIcon image, String... message) {
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-      add(new JLabel(new ImageIcon(image)));
+      add(new JLabel(image));
       JPanel p = new JPanel();
       p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
       for (int i = 0; i < message.length; ++i)
@@ -95,7 +94,7 @@ public class MessageView extends JPanel {
 
   private class CloseButton extends JButton implements ActionListener {
     public CloseButton(Message m) {
-      super(new ImageIcon(ImageFinder.find("close")));
+      super(ImageFinder.find("close"));
       message = m;
       addActionListener(this);
     }

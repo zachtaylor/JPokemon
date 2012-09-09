@@ -1,6 +1,5 @@
 package jpkmn.img;
 
-import java.awt.Image;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -14,7 +13,7 @@ import jpkmn.game.item.XStat;
 import jpkmn.game.pokemon.Pokemon;
 
 public class ImageFinder {
-  public static Image find(Object o) {
+  public static ImageIcon find(Object o) {
     if (o instanceof Pokemon)
       return getImage((Pokemon) o);
     else if (o instanceof Item)
@@ -23,17 +22,17 @@ public class ImageFinder {
       return getImage(o.toString());
   }
 
-  private static Image getImage(String path) {
+  private static ImageIcon getImage(String path) {
     URL url = ImageFinder.class.getResource(path + ".png");
     if (url == null) url = ImageFinder.class.getResource("err.png");
-    return new ImageIcon(url).getImage();
+    return new ImageIcon(url);
   }
 
-  private static Image getImage(Pokemon p) {
+  private static ImageIcon getImage(Pokemon p) {
     return getImage("pkmn/" + p.number());
   }
 
-  private static Image getImage(Item i) {
+  private static ImageIcon getImage(Item i) {
     String dest = "item/";
 
     if (i instanceof Ball)
