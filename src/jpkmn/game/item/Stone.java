@@ -5,8 +5,8 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Type;
 
 public class Stone extends Item {
-  public Stone(int type, String name, int value) {
-    super(name, value);
+  public Stone(String name, int itemID, int value, int type) {
+    super(name, itemID, value);
     _type = Type.valueOf(type);
     target = Target.SELF;
   }
@@ -42,7 +42,6 @@ public class Stone extends Item {
     }
 
     return p.number() != n;
-
   }
 
   private Type _type;

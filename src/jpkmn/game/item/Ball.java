@@ -4,8 +4,8 @@ import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.*;
 
 public class Ball extends Item {
-  public Ball(int chance, String name, int value) {
-    super(name, value);
+  public Ball(String name, int itemID, int value, int chance) {
+    super(name, itemID, value);
     _chance = chance;
     target = Target.ENEMY;
   }

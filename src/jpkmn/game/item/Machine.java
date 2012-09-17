@@ -5,9 +5,8 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
 
 public class Machine extends Item {
-
-  public Machine(double move, int value) {
-    super("TM-" + MoveBase.getBaseForNumber((int) move).getName(), value);
+  public Machine(int itemID, int value, int move) {
+    super("TM-" + MoveBase.getBaseForNumber(move).getName(), itemID, value);
     _move = (int) move;
   }
 

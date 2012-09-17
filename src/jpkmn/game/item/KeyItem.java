@@ -4,8 +4,8 @@ import jpkmn.game.pokemon.Pokemon;
 
 public class KeyItem extends Item {
 
-  public KeyItem(int data, String name, int value) {
-    super(name, value);
+  public KeyItem(String name, int itemID, int value, int data) {
+    super(name, itemID, value);
     // TODO Auto-generated constructor stub
   }
 
@@ -14,5 +14,4 @@ public class KeyItem extends Item {
     // TODO : useful stuff
     return false;
   }
-
 }

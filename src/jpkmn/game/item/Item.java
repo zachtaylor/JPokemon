@@ -6,8 +6,18 @@ import jpkmn.game.pokemon.*;
 public abstract class Item {
   public Target target;
 
-  public Item(String name, int value) {
+  public Item(String name, int id, int value) {
     _name = name;
+    _id = id;
+    _value = value;
+  }
+
+  public String name() {
+    return _name;
+  }
+
+  public int id() {
+    return _id;
   }
 
   public void amount(int quantity) {
@@ -18,29 +28,21 @@ public abstract class Item {
     return _quantity;
   }
 
-  public String name() {
-    return _name;
-  }
-
   public int value() {
     return _value;
   }
 
-  public abstract boolean effect(Pokemon p);
-
   /**
-   * Reduces quantity
+   * Reduces the quantity
    * 
-   * @return True if quantity was at least 1
+   * @return If quantity was greater than 0
    */
-  protected boolean reduce() {
+  boolean reduce() {
     return _quantity-- > 0;
   }
 
-  public String toString() {
-    return _name + " " + _quantity;
-  }
+  public abstract boolean effect(Pokemon p);
 
   private String _name;
-  private int _value, _quantity;
+  private int _id, _value, _quantity;
 }

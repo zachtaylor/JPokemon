@@ -5,8 +5,8 @@ import jpkmn.game.pokemon.*;
 
 public class Potion extends Item {
 
-  public Potion(int power, String name, int value) {
-    super(name, value);
+  public Potion(String name, int itemID, int value, int power) {
+    super(name, itemID, value);
     _power = power;
     target = Target.SELF;
   }
@@ -19,5 +19,5 @@ public class Potion extends Item {
     return true;
   }
 
-  int _power;
+  private int _power;
 }
