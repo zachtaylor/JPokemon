@@ -1,6 +1,5 @@
 package jpkmn.exe.gui.pokemonupgrade;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
