@@ -38,8 +38,7 @@ public class PlayerRegistry {
         newPlayer.party.add(Pokemon.createFromString(scan.nextLine()));
 
       scan.nextLine();
-      newPlayer.dex.readSeen(scan.nextLine());
-      newPlayer.dex.readOwn(scan.nextLine());
+      newPlayer.dex.load(scan.nextLine());
 
       while (scan.hasNext())
         newPlayer.box.add(Pokemon.createFromString(scan.nextLine()));

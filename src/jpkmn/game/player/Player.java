@@ -1,7 +1,6 @@
 package jpkmn.game.player;
 
 import jpkmn.game.item.Bag;
-import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.storage.PCStorage;
 import jpkmn.map.Area;
 
