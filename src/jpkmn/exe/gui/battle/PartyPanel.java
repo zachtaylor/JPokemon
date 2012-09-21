@@ -82,7 +82,7 @@ public class PartyPanel extends JPanel {
     title.setText(lead.name() + " Lvl." + lead.level());
     hpBar.setMaximum(lead.stats.hp.max());
     hpBar.setValue(lead.stats.hp.cur());
-    xpBar.setMaximum(lead.getXPNeeded());
+    xpBar.setMaximum(lead.xpNeeded());
     xpBar.setValue(lead.xp());
 
     condition.setText(lead.condition.toString());

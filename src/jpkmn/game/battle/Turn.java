@@ -109,7 +109,7 @@ public class Turn {
     if (_mode == Mode.ATTACK) {
       Slot enemy = _user.target();
       Move move = _user.leader().moves.get(_int1);
-      _int2 = Battle.computeDamage(move, enemy.leader());
+      _int2 = Battle.computeDamage(_user.leader(), move, enemy.leader());
 
       if (_absolute)
         enemy.takeDamageAbsolute(_int2);
@@ -205,16 +205,16 @@ public class Turn {
     Pokemon leader = _user.leader(), enemy = _user.target().leader();
     Move move = leader.moves.get(_int1);
 
-    for (MoveEffect be : move.getMoveEffects()) {
+    for (MoveEffect me : move.moveEffects()) {
       // Move # 73 (Leech Seed) fix cause it targets both user and enemy
-      if (be == MoveEffect.LEECH) {
-        enemy.condition.addIssue(Condition.Issue.SEEDED);
+      if (me.type() == MoveEffect.Type.LEECH) {
+        enemy.condition.addIssue(Condition.Issue.SEEDVIC);
         leader.condition.addIssue(Condition.Issue.SEEDUSR);
       }
-      else if (be.target == Target.SELF)
-        be.effect(leader);
+      else if (me.target() == Target.SELF)
+        me.effect(leader);
       else
-        be.effect(enemy);
+        me.effect(enemy);
     }
   }
 

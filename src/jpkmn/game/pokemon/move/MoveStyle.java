@@ -28,30 +28,17 @@ public enum MoveStyle {
           amount++;
       }
     }
-    
+
     return amount;
   }
 
   public static MoveStyle valueOf(int style) {
-    switch (style) {
-    case 0:
-      return PHYSICAL;
-    case 1:
-      return SPECIAL;
-    case 2:
-      return OHKO;
-    case 3:
-      return STATUS;
-    case 4:
-      return REPEAT;
-    case 5:
-      return DELAY;
-    default:
-      return MISC;
-    }
+    if (style < 0 || style > values().length) return null;
+    return values()[style];
   }
 
   private int delay;
   private boolean attackAfterDelay = true;
+
   private static final int REPEAT_MIN = 2;
 }

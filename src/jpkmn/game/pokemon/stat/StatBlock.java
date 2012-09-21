@@ -6,22 +6,13 @@ import jpkmn.game.pokemon.Condition;
 public class StatBlock {
   public final Stat hp, atk, stk, def, sdf, spd;
 
-  public StatBlock(PokemonBase base, int level) {
-    _points = 0;
-
+  public StatBlock(PokemonBase base) {
     hp = new Health();
     atk = new Stat();
     stk = new Stat();
     def = new Stat();
     sdf = new Stat();
     spd = new Stat();
-
-    hp.level(level);
-    atk.level(level);
-    stk.level(level);
-    def.level(level);
-    sdf.level(level);
-    spd.level(level);
 
     rebase(base);
   }
@@ -62,12 +53,12 @@ public class StatBlock {
   }
 
   public void level(int level) {
+    hp.level(level);
     atk.level(level);
     stk.level(level);
     def.level(level);
     sdf.level(level);
     spd.level(level);
-    hp.level(level);
   }
 
   public int points() {

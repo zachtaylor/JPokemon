@@ -1,88 +1,74 @@
 package jpkmn.game.pokemon.move;
 
+import jpkmn.game.base.BonusEffectBase;
 import jpkmn.game.battle.Target;
-import jpkmn.game.pokemon.*;
+import jpkmn.game.pokemon.Condition;
+import jpkmn.game.pokemon.Pokemon;
 
-public enum MoveEffect {
+public class MoveEffect {
+  public enum Type {
+    ATTACK, DEFENSE, SPECATTACK, SPECDEFENSE, SPEED, BURN, PARALYZE, SLEEP,
+    POISON, FREEZE, CONFUSE, WRAP, FLINCH, HEAL, LEECH, KAMIKAZE;
 
-  ATTACK, DEFENSE, SPECATTACK, SPECDEFENSE, SPEED, BURN, PARALYZE, SLEEP,
-  POISON, FREEZE, CONFUSE, WRAP, FLINCH, HEAL, LEECH, KAMIKAZE;
-
-  public int power;
-  public double chance, percent;
-  public Target target;
-
-  public void effect(Pokemon p) {
-    if (chance < Math.random()) return; // didn't hit
-
-    if (this == ATTACK)
-      p.stats.atk.effect(power);
-    else if (this == DEFENSE)
-      p.stats.def.effect(power);
-    else if (this == SPECATTACK)
-      p.stats.stk.effect(power);
-    else if (this == SPECDEFENSE)
-      p.stats.sdf.effect(power);
-    else if (this == SPEED)
-      p.stats.spd.effect(power);
-    else if (this == BURN)
-      p.condition.addIssue(Condition.Issue.BURN);
-    else if (this == PARALYZE)
-      p.condition.addIssue(Condition.Issue.PARALYZE);
-    else if (this == SLEEP)
-      p.condition.addIssue(Condition.Issue.SLEEP);
-    else if (this == POISON)
-      p.condition.addIssue(Condition.Issue.POISON);
-    else if (this == FREEZE)
-      p.condition.addIssue(Condition.Issue.FREEZE);
-    else if (this == CONFUSE)
-      p.condition.addIssue(Condition.Issue.CONFUSE);
-    else if (this == WRAP)
-      p.condition.addIssue(Condition.Issue.WRAP);
-    else if (this == FLINCH)
-      p.condition.addIssue(Condition.Issue.FLINCH);
-    else if (this == HEAL)
-      p.healDamage((int) (p.stats.hp.max() * percent));
-    else if (this == KAMIKAZE)
-      p.takeDamage((int) (p.stats.hp.max() * percent));
-  }
-
-  public static MoveEffect valueOf(int style) {
-    switch (style) {
-    case 0:
-      return ATTACK;
-    case 1:
-      return DEFENSE;
-    case 2:
-      return SPECATTACK;
-    case 3:
-      return SPECDEFENSE;
-    case 4:
-      return SPEED;
-    case 5:
-      return BURN;
-    case 6:
-      return PARALYZE;
-    case 7:
-      return SLEEP;
-    case 8:
-      return POISON;
-    case 9:
-      return FREEZE;
-    case 10:
-      return CONFUSE;
-    case 11:
-      return WRAP;
-    case 12:
-      return FLINCH;
-    case 13:
-      return HEAL;
-    case 14:
-      return LEECH;
-    case 15:
-      return KAMIKAZE;
-    default:
-      return null;
+    public static MoveEffect.Type valueOf(int style) {
+      if (style < 0 || style > values().length) return null;
+      return values()[style];
     }
   }
+
+  public MoveEffect(BonusEffectBase beb) {
+    _power = beb.getPower();
+    _chance = beb.getChance();
+    _percent = beb.getPercent();
+    _target = Target.valueOf(beb.getTarget());
+    _type = MoveEffect.Type.valueOf(beb.getType());
+  }
+
+  public Target target() {
+    return _target;
+  }
+
+  public MoveEffect.Type type() {
+    return _type;
+  }
+
+  public void effect(Pokemon p) {
+    if (_chance < Math.random()) return; // didn't hit
+
+    if (_type == MoveEffect.Type.ATTACK)
+      p.stats.atk.effect(_power);
+    else if (_type == MoveEffect.Type.DEFENSE)
+      p.stats.def.effect(_power);
+    else if (_type == MoveEffect.Type.SPECATTACK)
+      p.stats.stk.effect(_power);
+    else if (_type == MoveEffect.Type.SPECDEFENSE)
+      p.stats.sdf.effect(_power);
+    else if (_type == MoveEffect.Type.SPEED)
+      p.stats.spd.effect(_power);
+    else if (_type == MoveEffect.Type.BURN)
+      p.condition.addIssue(Condition.Issue.BURN);
+    else if (_type == MoveEffect.Type.PARALYZE)
+      p.condition.addIssue(Condition.Issue.PARALYZE);
+    else if (_type == MoveEffect.Type.SLEEP)
+      p.condition.addIssue(Condition.Issue.SLEEP);
+    else if (_type == MoveEffect.Type.POISON)
+      p.condition.addIssue(Condition.Issue.POISON);
+    else if (_type == MoveEffect.Type.FREEZE)
+      p.condition.addIssue(Condition.Issue.FREEZE);
+    else if (_type == MoveEffect.Type.CONFUSE)
+      p.condition.addIssue(Condition.Issue.CONFUSE);
+    else if (_type == MoveEffect.Type.WRAP)
+      p.condition.addIssue(Condition.Issue.WRAP);
+    else if (_type == MoveEffect.Type.FLINCH)
+      p.condition.addIssue(Condition.Issue.FLINCH);
+    else if (_type == MoveEffect.Type.HEAL)
+      p.healDamage((int) (p.stats.hp.max() * _percent));
+    else if (_type == MoveEffect.Type.KAMIKAZE)
+      p.takeDamage((int) (p.stats.hp.max() * _percent));
+  }
+
+  private int _power;
+  private Target _target;
+  private MoveEffect.Type _type;
+  private double _chance, _percent;
 }

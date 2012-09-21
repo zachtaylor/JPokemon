@@ -6,7 +6,7 @@ import jpkmn.game.pokemon.move.Move;
 
 public class Machine extends Item {
   public Machine(int itemID, int value, int move) {
-    super("TM-" + MoveBase.getBaseForNumber(move).getName(), itemID, value);
+    super("TM-" + MoveBase.get(move).getName(), itemID, value);
     _move = (int) move;
   }
 

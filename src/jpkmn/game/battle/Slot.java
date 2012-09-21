@@ -138,14 +138,17 @@ public class Slot {
         turn.nullify(leader.condition.toString());
 
       // 2 Reduce and measure PP
-      if (!move.use()) turn.nullify("There is not enough PP!");
+      if (!move.enabled())
+        turn.nullify("Move is not enabled!");
+      else
+        move.pp(move.pp() - 1);
 
       // 3 Measure accuracy
       if (!move.hits(_target._party.get(0))) {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (move.number() == 60 || move.number() == 69) {
-          int damage = Battle.computeDamage(move, _target.leader());
+          int damage = Battle.computeDamage(leader, move, _target.leader());
           damage /= 8;
           takeDamageAbsolute(damage);
         }

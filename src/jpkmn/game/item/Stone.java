@@ -21,24 +21,24 @@ public class Stone extends Item {
 
     if (_type == Type.FIRE) {
       if (n == 37 || n == 58)
-        p.changeSpecies();
-      else if (n == 133) p.changeSpecies(136);
+        p.evolve();
+      else if (n == 133) p.evolve(136);
     }
     else if (_type == Type.WATER) {
       if (n == 60 || n == 90 || n == 120)
-        p.changeSpecies();
-      else if (n == 133) p.changeSpecies(134);
+        p.evolve();
+      else if (n == 133) p.evolve(134);
     }
     else if (_type == Type.GRASS) { // leaf
-      if (n == 44 || n == 70 || n == 102) p.changeSpecies();
+      if (n == 44 || n == 70 || n == 102) p.evolve();
     }
     else if (_type == Type.ELECTRIC) { // thunder
       if (p.number() == 25)
-        p.changeSpecies();
-      else if (n == 133) p.changeSpecies(135);
+        p.evolve();
+      else if (n == 133) p.evolve(135);
     }
     else if (_type == Type.NORMAL) { // moon
-      if (n == 30 || n == 33 || n == 35 || n == 39) p.changeSpecies();
+      if (n == 30 || n == 33 || n == 35 || n == 39) p.evolve();
     }
 
     return p.number() != n;

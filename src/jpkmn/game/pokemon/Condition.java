@@ -7,7 +7,7 @@ import jpkmn.game.battle.Battle;
 
 public class Condition {
   public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDED, WRAP, SEEDUSR, FREEZE, CONFUSE,
+    BURN, PARALYZE, SLEEP, POISON, SEEDVIC, WRAP, SEEDUSR, FREEZE, CONFUSE,
     FLINCH, WAIT;
   }
 
@@ -122,7 +122,7 @@ public class Condition {
         remove(Issue.FREEZE);
         messages.add(pkmn.name() + " broke out of the ice!");
       }
-      else if (current == Issue.SEEDED) {
+      else if (current == Issue.SEEDVIC) {
         pkmn.takeDamage(pkmn.stats.hp.max() / 10);
         messages.add(pkmn.name() + " was injured by the seeds!");
       }

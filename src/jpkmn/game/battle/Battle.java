@@ -139,7 +139,7 @@ public class Battle implements Iterable<Slot> {
 
     for (Slot slot : this)
       slot.party().owner().screen.refresh();
-    
+
     makeMockAttacks();
   }
 
@@ -156,11 +156,17 @@ public class Battle implements Iterable<Slot> {
     }
   }
 
-  public static int computeDamage(Move move, Pokemon victim) {
-    Pokemon user = move.pkmn;
-
-    double damage = 1.0, L = user.level(), A = 1.0, P = move.power(), D = 0, STAB = move
-        .STAB(), E = move.effectiveness(victim), R = Math.random() * .15 + .85;
+  public static int computeDamage(Pokemon user, Move move, Pokemon victim) {
+    //@preformat
+    double damage = 1.0, 
+           L = user.level(), 
+           A = 1.0, 
+           P = move.power(), 
+           D = 0, 
+           STAB = move.STAB(), 
+           E = move.effectiveness(victim), 
+           R = Math.random() * .15 + .85;
+    //@format
 
     if (move.style() == MoveStyle.SPECIAL) {
       A = user.stats.stk.cur();
@@ -175,14 +181,8 @@ public class Battle implements Iterable<Slot> {
       D = 1;
     }
     else if (move.style() == MoveStyle.DELAY) {
-      if (user.stats.atk.cur() > user.stats.stk.cur())
-        A = user.stats.atk.cur();
-      else
-        A = user.stats.stk.cur();
-      if (victim.stats.def.cur() > victim.stats.sdf.cur())
-        D = victim.stats.def.cur();
-      else
-        D = victim.stats.sdf.cur();
+      A = Math.max(user.stats.atk.cur(), user.stats.stk.cur());
+      D = Math.max(victim.stats.def.cur(), victim.stats.sdf.cur());
     }
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R;

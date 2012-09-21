@@ -9,29 +9,34 @@ import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
 
 public class Pokemon {
-  public final Condition condition;
-  public final StatBlock stats;
   public final MoveBlock moves;
+  public final StatBlock stats;
+  public final Condition condition;
 
-  public Pokemon(int num, int lvl) {
-    number = num;
-    level = lvl;
-    _xp = 0;
-    condition = new Condition(this);
-    moves = new MoveBlock(this);
+  public Pokemon(int num) {
+    _number = num;
 
-    PokemonBase base = PokemonBase.get(number);
-    evolutionlevel = base.getEvolutionlevel();
+    PokemonBase base = PokemonBase.get(_number);
+
     name = species = base.getName();
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
-    stats = new StatBlock(base, level);
+    evolutionlevel = base.getEvolutionlevel();
+
+    moves = new MoveBlock(this);
+    stats = new StatBlock(base);
+    condition = new Condition(this);
 
     _id = CURRENT_ID++;
   }
 
+  public Pokemon(int num, int lvl) {
+    this(num);
+    level(lvl);
+  }
+
   public int number() {
-    return number;
+    return _number;
   }
 
   public String name() {
@@ -43,7 +48,28 @@ public class Pokemon {
   }
 
   public int level() {
-    return level;
+    return _level;
+  }
+
+  public void level(int l) {
+    _level = l;
+    stats.level(l);
+
+    if (_xp >= xpNeeded()) {
+      _xp -= xpNeeded();
+      stats.points(stats.points() + 1);
+    }
+
+    moves.check();
+    condition.reset();
+  }
+
+  public Trainer owner() {
+    return _owner;
+  }
+
+  public void owner(Trainer owner) {
+    _owner = owner;
   }
 
   public Type type1() {
@@ -58,9 +84,16 @@ public class Pokemon {
     return _xp;
   }
 
+  /**
+   * Adds the xp specified to the Pokemon. If the Pokemon has enough, level is
+   * increased
+   * 
+   * @param amount Amount of xp to add
+   */
   public void xp(int amount) {
     _xp += amount;
-    if (_xp >= getXPNeeded()) levelUp();
+
+    if (_xp >= xpNeeded()) level(level() + 1);
   }
 
   /**
@@ -68,8 +101,46 @@ public class Pokemon {
    * 
    * @return The amount of XP needed to gain a level
    */
-  public int getXPNeeded() {
-    return (int) (Math.log((double) level) * level * level * .35);
+  public int xpNeeded() {
+    return (int) (Math.log((double) _level) * _level * .35 * _level);
+  }
+
+  /**
+   * Changes a Pokemon into another one. This can be regular evolution
+   * (Charmander to Charmeleon) or other complicated changes (fire stone
+   * changes Eevee into Flareon).
+   * 
+   * Evolve will fail if the Pokemon is not high enough level, and no arguments
+   * are passed
+   */
+  public void evolve(int... num) {
+    String speciesUpdate = "Your " + species + " evolved into ";
+
+    // No points for Vaporeon/Jolteon/Flareon
+    if (_number < 134 || _number > 136) stats.points(stats.points() + 1);
+
+    if (num.length != 0)
+      _number = num[0]; // special value
+    else if (_level < evolutionlevel)
+      return; // stock evolution and they cannot evolve yet.
+    else
+      _number++;
+
+    PokemonBase base = PokemonBase.get(_number);
+
+    moves.check();
+    stats.rebase(base);
+    type1 = Type.valueOf(base.getType1());
+    type2 = Type.valueOf(base.getType2());
+    evolutionlevel = base.getEvolutionlevel();
+
+    if (name.equals(species))
+      name = species = base.getName();
+    else
+      species = base.getName();
+
+    speciesUpdate += species + "!";
+    _owner.screen.notify("Congratulations!", speciesUpdate);
   }
 
   /**
@@ -95,12 +166,42 @@ public class Pokemon {
     stats.hp.effect(heal);
   }
 
-  public void owner(Trainer owner) {
-    _owner = owner;
-  }
+  /**
+   * Properly writes this Pokemon to a save file
+   */
+  public String save() {
+    StringBuilder save = new StringBuilder();
 
-  public Trainer owner() {
-    return _owner;
+    save.append("|( ");
+    save.append(_number);
+    save.append(" ");
+    save.append(_level);
+    save.append(" ");
+    save.append(stats.points());
+    save.append(" ");
+    save.append(_xp);
+    save.append(" ) ");
+    save.append(stats.atk.points());
+    save.append(" ");
+    save.append(stats.stk.points());
+    save.append(" ");
+    save.append(stats.def.points());
+    save.append(" ");
+    save.append(stats.sdf.points());
+    save.append(" ");
+    save.append(stats.spd.points());
+    save.append(" ( ");
+
+    try {
+      for (int i = 0; i < moves.amount(); i++) {
+        save.append(moves.get(i).number() + " ");
+      }
+    } catch (Exception e) {
+      // do nothing
+    }
+    save.append(") " + name + " |\n");
+
+    return save.toString();
   }
 
   /**
@@ -149,44 +250,6 @@ public class Pokemon {
     return null;
   }
 
-  /**
-   * Properly writes this Pokemon to a save file
-   */
-  public String save() {
-    StringBuilder save = new StringBuilder();
-
-    save.append("|( ");
-    save.append(number);
-    save.append(" ");
-    save.append(level);
-    save.append(" ");
-    save.append(stats.points());
-    save.append(" ");
-    save.append(_xp);
-    save.append(" ) ");
-    save.append(stats.atk.points());
-    save.append(" ");
-    save.append(stats.stk.points());
-    save.append(" ");
-    save.append(stats.def.points());
-    save.append(" ");
-    save.append(stats.sdf.points());
-    save.append(" ");
-    save.append(stats.spd.points());
-    save.append(" ( ");
-
-    try {
-      for (int i = 0; i < moves.amount(); i++) {
-        save.append(moves.get(i).number() + " ");
-      }
-    } catch (Exception e) {
-      // do nothing
-    }
-    save.append(") " + name + " |\n");
-
-    return save.toString();
-  }
-
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Pokemon))
@@ -195,71 +258,14 @@ public class Pokemon {
       return ((Pokemon) o)._id == this._id;
   }
 
-  /**
-   * Applies the level up. Level++, points++, stats adjusted, and checks for
-   * evolution. Resets status conditions. Calls gui.Tools to notify the user
-   * about the level up.
-   */
-  private void levelUp() {
-    _xp -= getXPNeeded();
-    level++;
-    moves.check();
-    stats.level(level);
-    stats.points(stats.points() + 1);
-    condition.reset();
-
-    if (level == evolutionlevel)
-      _owner.screen.notify("Evolution!", name + " is ready to evolve!");
-  }
-
-  /**
-   * Changes a Pokemon into another one. This can be regular evolution
-   * (Charmander to Charmeleon) or other complicated changes (fire stone
-   * changes Eevee into Flareon).
-   */
-  public void changeSpecies(int... num) {
-    String speciesUpdate = "Your " + species + " evolved into ";
-
-    if (num.length == 0) {
-      if (level < evolutionlevel) // they cannot evolve yet.
-        return;
-
-      number++; // no special value. just increment
-      stats.points(stats.points() + 1); // add stat point
-    }
-    else {
-      number = num[0]; // special value
-
-      if (number == 133) // only Eevee gets stat point for special evolution
-        stats.points(stats.points() + 1);
-    }
-
-    PokemonBase base = PokemonBase.get(number);
-
-    moves.check();
-    stats.rebase(base);
-    type1 = Type.valueOf(base.getType1());
-    type2 = Type.valueOf(base.getType2());
-    evolutionlevel = base.getEvolutionlevel();
-
-    if (name.equals(species))
-      name = species = base.getName();
-    else
-      species = base.getName();
-
-    speciesUpdate += species + "!";
-    _owner.screen.notify("Congratulations!", speciesUpdate);
-  }
-
   public int hashCode() {
     return _id;
   }
 
-  private int _id;
+  private Trainer _owner;
   private Type type1, type2;
   private String name, species;
-  private Trainer _owner;
-  private int number, level, _xp, evolutionlevel;
+  private int _id, _number, _level, _xp, evolutionlevel;
 
   private static int CURRENT_ID;
 }

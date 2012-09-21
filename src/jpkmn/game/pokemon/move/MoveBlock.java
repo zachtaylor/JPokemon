@@ -10,55 +10,38 @@ import jpkmn.game.pokemon.Pokemon;
 
 public class MoveBlock {
   public MoveBlock(Pokemon p) {
-    pkmn = p;
+    _pokemon = p;
     moves = new Move[Constants.MOVENUMBER];
 
-    setDefaults();
+    ArrayList<Integer> possible = new ArrayList<Integer>();
+
+    for (int l = 1; l <= _pokemon.level(); l++) {
+      MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(_pokemon.number(), l);
+
+      if (m != null && !possible.contains(m)) possible.add(m.getMove_number());
+    }
+
+    while (!possible.isEmpty() && _amount < moves.length)
+      add(possible.remove((int) (Math.random() * possible.size())), _amount++);
   }
 
   public int amount() {
-    return amount;
+    return _amount;
   }
 
   public Move get(int i) {
-    if (i > amount || i < 0) return null;
+    if (i < 0 || i >= _amount) return null;
     return moves[i];
-  }
-
-  public void restoreAll() {
-    for (int i = 0; i < amount; i++) {
-      if (moves[i] != null) moves[i].restore();
-    }
-  }
-
-  public String[] list() {
-    List<String> response = new ArrayList<String>();
-
-    for (Move m : moves) {
-      if (m != null)
-        response.add(m.name() + " (" + m.ppcur() + "/" + m.ppmax() + ")");
-    }
-
-    return response.toArray(new String[amount]);
-  }
-
-  public void check() {
-    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(pkmn.number(),
-        pkmn.level());
-    if (m == null) return;
-
-    add(m.getMove_number());
   }
 
   public boolean add(int number) {
     int position;
 
-    if (amount < moves.length) {
-      position = amount++;
-    }
+    if (_amount < moves.length)
+      position = _amount++;
     else {
       try {
-        position = pkmn.owner().screen.getMoveIndex("replace", pkmn);
+        position = _pokemon.owner().screen.getMoveIndex("replace", _pokemon);
       } catch (CancelException c) {
         return false;
       }
@@ -72,35 +55,41 @@ public class MoveBlock {
 
   public boolean add(int number, int position) {
     if (!contains(number)) {
-      moves[position] = new Move(number, pkmn);
+      moves[position] = new Move(number, _pokemon);
       return true;
     }
     else
       return false;
   }
 
-  public void removeAll() {
-    for (int i = 0; i < Constants.MOVENUMBER; i++) {
-      moves[i] = null;
+  public void restoreAll() {
+    for (int i = 0; i < _amount; i++) {
+      if (moves[i] != null) moves[i].pp(moves[i].ppmax());
     }
-    amount = 0;
   }
 
-  /**
-   * Picks up to 4 moves randomly from the list of moves that this Pokemon
-   * could have learned by this level, and assigns them.
-   */
-  private void setDefaults() {
-    ArrayList<Integer> possible = new ArrayList<Integer>();
+  public void removeAll() {
+    for (int i = 0; i < Constants.MOVENUMBER; i++)
+      moves[i] = null;
 
-    for (int l = 1; l <= pkmn.level(); l++) {
-      MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(pkmn.number(), l);
+    _amount = 0;
+  }
 
-      if (m != null && !possible.contains(m)) possible.add(m.getMove_number());
-    }
+  public String[] list() {
+    List<String> response = new ArrayList<String>();
 
-    while (!possible.isEmpty() && amount < moves.length)
-      add(possible.remove((int) (Math.random() * possible.size())), amount++);
+    for (int moveIndex = 0; moveIndex < _amount; moveIndex++)
+      response.add(moves[moveIndex].toString());
+
+    return response.toArray(new String[_amount]);
+  }
+
+  public void check() {
+    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(_pokemon.number(),
+        _pokemon.level());
+    if (m == null) return;
+
+    add(m.getMove_number());
   }
 
   private boolean contains(int number) {
@@ -109,7 +98,7 @@ public class MoveBlock {
     return false;
   }
 
-  private int amount;
+  private int _amount;
   private Move[] moves;
-  private Pokemon pkmn;
+  private Pokemon _pokemon;
 }
