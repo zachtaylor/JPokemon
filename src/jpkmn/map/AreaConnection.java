@@ -22,7 +22,7 @@ public class AreaConnection {
   public void use(Player p) {
     if (!test(p)) return;
 
-    p.area(AreaRegistry.get(_nextID));
+    p.area(_nextID);
   }
 
   /**

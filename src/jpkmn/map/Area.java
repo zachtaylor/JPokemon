@@ -7,7 +7,7 @@ import java.util.Map;
 import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.SpawnInfo;
-import jpkmn.game.player.Trainer;
+import jpkmn.game.player.MockPlayer;
 import jpkmn.game.pokemon.Pokemon;
 
 /**
@@ -44,13 +44,13 @@ public class Area {
   }
 
   /**
-   * Gets a new instance of the specified Trainer, if that Trainer is in this
-   * area.
+   * Gets a new instance of the specified MockPlayer, if that MockPlayer is in
+   * this area.
    * 
    * @param trainerID ID of the trainer
    * @return A new instance of the specified Trainer
    */
-  public Trainer getTrainer(int trainerID) {
+  public MockPlayer getTrainer(int trainerID) {
     AIInfo targetInfo = null;
 
     for (AIInfo curInfo : _trainers) {
@@ -62,7 +62,7 @@ public class Area {
 
     if (targetInfo == null) return null;
 
-    return new Trainer(targetInfo.getType(), targetInfo.getName(),
+    return new MockPlayer(targetInfo.getType(), targetInfo.getName(),
         targetInfo.getCash(), targetInfo.getNumber());
   }
 

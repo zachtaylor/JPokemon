@@ -1,22 +1,37 @@
 package jpkmn.game.player;
 
-import java.util.List;
+import jpkmn.game.pokemon.storage.Party;
+import jpkmn.game.service.GraphicsHandler;
 
-import jpkmn.game.base.AIParty;
-import jpkmn.game.pokemon.Pokemon;
+public abstract class Trainer {
+  public final Party party;
+  public final GraphicsHandler screen;
 
-public class Trainer extends AbstractPlayer {
-  public final TrainerType type;
-
-  public Trainer(int type, String name, int cash, int trainerNumber) {
-    this.type = TrainerType.valueOf(type);
-    _name = name;
-    _cash = cash;
-    _id = trainerNumber;
-
-    List<Pokemon> pokemon = AIParty.getParty(_id);
-
-    for (Pokemon p : pokemon)
-      party.add(p);
+  public Trainer() {
+    party = new Party(this);
+    screen = new GraphicsHandler();
   }
+
+  public int id() {
+    return _id;
+  }
+
+  public int cash() {
+    return _cash;
+  }
+
+  public void cash(int c) {
+    _cash = c;
+  }
+
+  public String name() {
+    return _name;
+  }
+
+  public void name(String s) {
+    _name = s;
+  }
+
+  protected String _name;
+  protected int _id, _cash;
 }

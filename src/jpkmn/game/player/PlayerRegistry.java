@@ -10,14 +10,13 @@ import java.util.prefs.Preferences;
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.map.AreaRegistry;
 
 public class PlayerRegistry {
   public static Player create(String name, int start) throws LoadException {
-    Player newPlayer = new Player(PLAYER_COUNT++);
+    Player newPlayer = newPlayer();
     newPlayer.name(name);
     newPlayer.party.add(new Pokemon(start, 5));
-    return register(newPlayer);
+    return newPlayer;
   }
 
   public static Player fromFile(String s) throws LoadException {
@@ -28,22 +27,7 @@ public class PlayerRegistry {
       File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
       Scanner scan = new Scanner(playerFile);
 
-      Player newPlayer = new Player(PLAYER_COUNT++);
-      newPlayer.name(scan.nextLine());
-      newPlayer.cash(Integer.parseInt(scan.nextLine()));
-      newPlayer.badge(Integer.parseInt(scan.nextLine()));
-      newPlayer.area(AreaRegistry.get(Integer.parseInt(scan.nextLine())));
-
-      for (int i = 0; i < Constants.PARTYSIZE; i++)
-        newPlayer.party.add(Pokemon.createFromString(scan.nextLine()));
-
-      scan.nextLine();
-      newPlayer.dex.load(scan.nextLine());
-
-      while (scan.hasNext())
-        newPlayer.box.add(Pokemon.createFromString(scan.nextLine()));
-
-      return register(newPlayer);
+      return newPlayer().load(scan);
     } catch (FileNotFoundException f) {
       throw new LoadException("That player does not exist.");
     } catch (Exception e) {
@@ -55,13 +39,12 @@ public class PlayerRegistry {
     return _players.get(playerID);
   }
 
-  private static Player register(Player p) throws LoadException {
-    if (_players.get(p._id) != null) {
-      Player player = _players.get(p._id);
+  private static Player newPlayer() {
+    // Eventually synchronize
+    return register(new Player(PLAYER_COUNT++));
+  }
 
-      throw new LoadException("PlayerID " + p._id + " is already assigned to "
-          + player.name());
-    }
+  private static Player register(Player p) {
     _players.put(p.id(), p);
 
     return p;

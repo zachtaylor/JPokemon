@@ -67,6 +67,8 @@ public class Pokedex {
       }
     }
 
+    list.append("\n");
+
     return list.toString();
   }
 

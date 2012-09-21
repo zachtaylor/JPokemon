@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
-import jpkmn.game.player.AbstractPlayer;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.move.MoveBlock;
 import jpkmn.game.pokemon.stat.StatBlock;
 
@@ -95,11 +95,11 @@ public class Pokemon {
     stats.hp.effect(heal);
   }
 
-  public void owner(AbstractPlayer owner) {
+  public void owner(Trainer owner) {
     _owner = owner;
   }
 
-  public AbstractPlayer owner() {
+  public Trainer owner() {
     return _owner;
   }
 
@@ -110,8 +110,8 @@ public class Pokemon {
    * @return A new Pokemon as described by the string
    * @throws LoadException if loaded with invalid string
    */
-  public static Pokemon createFromString(String s) throws LoadException {
-    if (s != null && !s.equals("||")) {
+  public static Pokemon load(String s) throws LoadException {
+    if (s != null && !s.equals(" ")) {
       try {
         Scanner scan = new Scanner(s);
 
@@ -142,7 +142,7 @@ public class Pokemon {
         return p;
 
       } catch (Throwable t) {
-        throw new LoadException("Pokemon loaded with string: " + s);
+        throw new LoadException("Pokemon could not load: " + s);
       }
     }
 
@@ -152,17 +152,29 @@ public class Pokemon {
   /**
    * Properly writes this Pokemon to a save file
    */
-  public String saveToString() {
+  public String save() {
     StringBuilder save = new StringBuilder();
 
     save.append("|( ");
-    save.append(number + " " + level + " " + stats.points() + " " + _xp + " ) ");
-    save.append(stats.atk.points() + " ");
-    save.append(stats.stk.points() + " ");
-    save.append(stats.def.points() + " ");
-    save.append(stats.sdf.points() + " ");
-    save.append(stats.spd.points() + " ");
-    save.append("( ");
+    save.append(number);
+    save.append(" ");
+    save.append(level);
+    save.append(" ");
+    save.append(stats.points());
+    save.append(" ");
+    save.append(_xp);
+    save.append(" ) ");
+    save.append(stats.atk.points());
+    save.append(" ");
+    save.append(stats.stk.points());
+    save.append(" ");
+    save.append(stats.def.points());
+    save.append(" ");
+    save.append(stats.sdf.points());
+    save.append(" ");
+    save.append(stats.spd.points());
+    save.append(" ( ");
+
     try {
       for (int i = 0; i < moves.amount(); i++) {
         save.append(moves.get(i).number() + " ");
@@ -170,7 +182,7 @@ public class Pokemon {
     } catch (Exception e) {
       // do nothing
     }
-    save.append(") " + name + " |");
+    save.append(") " + name + " |\n");
 
     return save.toString();
   }
@@ -246,7 +258,7 @@ public class Pokemon {
   private int _id;
   private Type type1, type2;
   private String name, species;
-  private AbstractPlayer _owner;
+  private Trainer _owner;
   private int number, level, _xp, evolutionlevel;
 
   private static int CURRENT_ID;

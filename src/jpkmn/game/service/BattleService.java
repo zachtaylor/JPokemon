@@ -5,9 +5,9 @@ import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
-import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
+import jpkmn.map.AreaRegistry;
 
 public class BattleService {
   public static void startWild(int playerID) throws ServiceException {
@@ -16,7 +16,7 @@ public class BattleService {
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
 
-    Area area = player.area();
+    Area area = AreaRegistry.get(player.area());
 
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
@@ -39,7 +39,7 @@ public class BattleService {
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
 
-    Area area = player.area();
+    Area area = AreaRegistry.get(player.area());
 
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
@@ -61,12 +61,12 @@ public class BattleService {
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");
 
-    Area area = player.area();
+    Area area = AreaRegistry.get(player.area());
 
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    Trainer trainer = area.getTrainer(tID);
+    MockPlayer trainer = area.getTrainer(tID);
 
     if (trainer == null)
       throw new ServiceException("Trainer " + tID + " is not in this area");

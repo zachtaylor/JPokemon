@@ -6,6 +6,7 @@ import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
+import jpkmn.map.AreaRegistry;
 import jpkmn.map.Direction;
 
 import org.json.JSONException;
@@ -36,7 +37,7 @@ public class PlayerService {
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
 
-    Area area = player.area();
+    Area area = AreaRegistry.get(player.area());
 
     if (area == null)
       throw new ServiceException(player.name() + " has no registered area!");
@@ -59,7 +60,7 @@ public class PlayerService {
     if (direction == null)
       throw new ServiceException("Direction " + dir + "not recognized");
 
-    Area area = player.area();
+    Area area = AreaRegistry.get(player.area());
 
     if (area == null)
       throw new ServiceException(player.name() + " has no registered area!");

@@ -3,11 +3,11 @@ package jpkmn.game.pokemon.storage;
 import java.util.Iterator;
 
 import jpkmn.Constants;
-import jpkmn.game.player.AbstractPlayer;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 
 public class Party implements Iterable<Pokemon> {
-  public Party(AbstractPlayer p) {
+  public Party(Trainer p) {
     _owner = p;
     _amount = 0;
     _data = new Pokemon[Constants.PARTYSIZE];
@@ -19,7 +19,7 @@ public class Party implements Iterable<Pokemon> {
     return _data[i];
   }
 
-  public AbstractPlayer owner() {
+  public Trainer owner() {
     return _owner;
   }
 
@@ -84,7 +84,37 @@ public class Party implements Iterable<Pokemon> {
 
   @Override
   public Iterator<Pokemon> iterator() {
-    return new PartyIterator(this);
+    // @preformat
+    // Crazy cool trick learned from Adam Mlodzinski at
+    // http://stackoverflow.com/questions/5107158/how-to-pass-parameters-to-anonymous-class
+    // @format
+
+    return new Iterator<Pokemon>() {
+      public Iterator<Pokemon> init(Party p) {
+        _party = p;
+        _index = 0;
+
+        return this;
+      }
+
+      @Override
+      public boolean hasNext() {
+        return _index < _party._amount;
+      }
+
+      @Override
+      public Pokemon next() {
+        return _party.get(_index++);
+      }
+
+      @Override
+      public void remove() {
+        // Don't need this
+      }
+
+      private int _index;
+      private Party _party;
+    }.init(this);
   }
 
   private int indexOf(Pokemon p) {
@@ -94,30 +124,7 @@ public class Party implements Iterable<Pokemon> {
     return -1;
   }
 
-  private class PartyIterator implements Iterator<Pokemon> {
-    public PartyIterator(Party p) {
-      _party = p;
-    }
-
-    @Override
-    public boolean hasNext() {
-      return position < _party._amount;
-    }
-
-    public Pokemon next() {
-      return _party.get(position++);
-    }
-
-    @Override
-    public void remove() {
-      // Not needed
-    }
-
-    private Party _party;
-    private int position = 0;
-  }
-
   private int _amount;
   private Pokemon[] _data;
-  private AbstractPlayer _owner;
+  private Trainer _owner;
 }
