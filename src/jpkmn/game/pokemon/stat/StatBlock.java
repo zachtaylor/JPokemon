@@ -2,13 +2,11 @@ package jpkmn.game.pokemon.stat;
 
 import jpkmn.game.base.PokemonBase;
 import jpkmn.game.pokemon.Condition;
-import jpkmn.game.pokemon.Pokemon;
 
 public class StatBlock {
-  public final Stat atk, stk, def, sdf, spd;
-  public final Health hp; // necessary so health can do more without cast
+  public final Stat hp, atk, stk, def, sdf, spd;
 
-  public StatBlock(Pokemon p) {
+  public StatBlock(PokemonBase base, int level) {
     _points = 0;
 
     hp = new Health();
@@ -18,7 +16,6 @@ public class StatBlock {
     sdf = new Stat();
     spd = new Stat();
 
-    int level = p.level();
     hp.level(level);
     atk.level(level);
     stk.level(level);
@@ -26,7 +23,6 @@ public class StatBlock {
     sdf.level(level);
     spd.level(level);
 
-    PokemonBase base = PokemonBase.getBaseForNumber(p.number());
     rebase(base);
   }
 
@@ -91,26 +87,40 @@ public class StatBlock {
     hp.rebase(base.getHealth());
   }
 
+  /**
+   * Applies a stat penalty, as a result of a condition issue
+   * 
+   * @param i The issue which applies a stat penalty
+   */
   public void effectBy(Condition.Issue i) {
-    if (i == Condition.Issue.BURN) burn();
-    if (i == Condition.Issue.PARALYZE) paralyze();
+    if (i == Condition.Issue.BURN) {
+      _burn = true;
+      atk._cur /= 2;
+      if (atk._cur < 1) atk._cur = 1;
+    }
+    else if (i == Condition.Issue.PARALYZE) {
+      _para = true;
+      spd._cur /= 4;
+      if (spd._cur < 1) spd._cur = 1;
+    }
   }
 
   /**
-   * Applies the status effect of getting paralyzed
+   * Removes the previously added stat penalty of a condition issue
+   * 
+   * @param i The issue to reset the effects of
    */
-  private void paralyze() {
-    spd._cur /= 4;
-    if (spd._cur < 1) spd._cur = 1;
-  }
-
-  /**
-   * Applies the status effect of getting burned
-   */
-  private void burn() {
-    atk._cur /= 2;
-    if (atk._cur < 1) atk._cur = 1;
+  public void removeEffect(Condition.Issue i) {
+    if (i == Condition.Issue.BURN && _burn) {
+      _burn = false;
+      atk.effect(0);
+    }
+    else if (i == Condition.Issue.PARALYZE && _para) {
+      _para = false;
+      spd.effect(0);
+    }
   }
 
   private int _points;
+  private boolean _burn, _para;
 }

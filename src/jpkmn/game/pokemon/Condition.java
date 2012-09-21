@@ -12,7 +12,7 @@ public class Condition {
   }
 
   /**
-   * Creates a new Status for the specified Pokemon
+   * Creates a new Condition for the specified Pokemon
    * 
    * @param p The Pokemon whom this status effects
    */
@@ -36,13 +36,16 @@ public class Condition {
    * @return the Catch Bonus
    */
   public int getCatchBonus() {
-    if (issues.contains(Issue.FREEZE) || issues.contains(Issue.SLEEP))
-      return 20;
-    else if (issues.contains(Issue.BURN) || issues.contains(Issue.POISON)
-        || issues.contains(Issue.PARALYZE))
-      return 15;
-    else
-      return 10;
+    int best = 10;
+
+    for (Issue i : issues) {
+      if (i == Issue.FREEZE || i == Issue.SLEEP)
+        return 20;
+      else if (i == Issue.BURN || i == Issue.POISON || i == Issue.PARALYZE)
+        best = 15;
+    }
+
+    return best;
   }
 
   /**
@@ -53,13 +56,10 @@ public class Condition {
    * @param i The issue to be added
    */
   public void addIssue(Issue i) {
-    if (i == Issue.WAIT)
-      issues.add(i);
-    else if (!issues.contains(i)) {
-      issues.add(i);
+    if (i != Issue.WAIT && contains(i)) remove(i);
 
-      pkmn.stats.effectBy(i);
-    }
+    issues.add(i);
+    pkmn.stats.effectBy(i);
   }
 
   /**
@@ -69,17 +69,15 @@ public class Condition {
    * @return true if user can attack
    */
   public boolean canAttack() {
-    if (issues.contains(Issue.FREEZE))
-      return false;
-    else if (issues.contains(Issue.SLEEP))
-      return false;
-    else if (issues.contains(Issue.FLINCH))
-      return false;
-    else if (issues.contains(Issue.PARALYZE) && Math.random() < .25)
-      return false;
-    else if (issues.contains(Issue.CONFUSE) && Math.random() < .33334) {
-      attackself = true;
-      return false;
+    for (Issue i : issues) {
+      if (i == Issue.FREEZE || i == Issue.SLEEP || i == Issue.FLINCH)
+        return false;
+      else if (i == Issue.PARALYZE && Math.random() < .25)
+        return false;
+      else if (i == Issue.CONFUSE) {
+        attackself = true;
+        return false;
+      }
     }
 
     return true;
@@ -99,7 +97,7 @@ public class Condition {
       }
       else if (current == Issue.WRAP) {
         if (Math.random() > .66666) {
-          issues.remove(Issue.WRAP);
+          remove(Issue.WRAP);
           messages.add(pkmn.name() + " freed itself!");
         }
         else {
@@ -113,15 +111,15 @@ public class Condition {
           attackself = false;
         }
         else if (Math.random() > .66666) {
-          issues.remove(Issue.CONFUSE);
+          remove(Issue.CONFUSE);
           messages.add(pkmn.name() + " is no longer confused!");
         }
       }
       else if (current == Issue.FLINCH) {
-        issues.remove(Issue.FLINCH);
+        remove(Issue.FLINCH);
       }
       else if (current == Issue.FREEZE && Math.random() > .8) {
-        issues.remove(Issue.FREEZE);
+        remove(Issue.FREEZE);
         messages.add(pkmn.name() + " broke out of the ice!");
       }
       else if (current == Issue.SEEDED) {
@@ -137,7 +135,7 @@ public class Condition {
         messages.add(pkmn.name() + " was injured by the poison!");
       }
       else if (current == Issue.SLEEP && Math.random() > .333333) {
-        issues.remove(Issue.SLEEP);
+        remove(Issue.SLEEP);
         messages.add(pkmn.name() + " woke up!");
       }
     }
@@ -153,10 +151,7 @@ public class Condition {
   }
 
   public boolean contains(Issue i) {
-    for (Issue current : issues) {
-      if (current == i) return true;
-    }
-    return false;
+    return issues.contains(i);
   }
 
   public String toString() {
@@ -165,6 +160,7 @@ public class Condition {
 
   public void remove(Issue i) {
     issues.remove(i);
+    pkmn.stats.removeEffect(i);
   }
 
   private List<Issue> issues = new ArrayList<Issue>();

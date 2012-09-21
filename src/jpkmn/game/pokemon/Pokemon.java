@@ -18,14 +18,14 @@ public class Pokemon {
     level = lvl;
     _xp = 0;
     condition = new Condition(this);
-    stats = new StatBlock(this);
     moves = new MoveBlock(this);
 
-    PokemonBase base = PokemonBase.getBaseForNumber(number);
+    PokemonBase base = PokemonBase.get(number);
     evolutionlevel = base.getEvolutionlevel();
     name = species = base.getName();
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
+    stats = new StatBlock(base, level);
 
     _id = CURRENT_ID++;
   }
@@ -234,7 +234,7 @@ public class Pokemon {
         stats.points(stats.points() + 1);
     }
 
-    PokemonBase base = PokemonBase.getBaseForNumber(number);
+    PokemonBase base = PokemonBase.get(number);
 
     moves.check();
     stats.rebase(base);

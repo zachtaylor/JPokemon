@@ -10,11 +10,10 @@ public class Health extends Stat {
   @Override
   public void effect(int power) {
     _cur += power;
-    verify();
-  }
 
-  private void verify() {
-    if (_cur > _max) _cur = _max;
-    if (_cur < 0) _cur = 0;
+    if (_cur > _max)
+      _cur = _max;
+    else if (_cur < 0)
+      _cur = 0;
   }
 }

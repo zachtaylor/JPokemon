@@ -3,11 +3,6 @@ package jpkmn.game.pokemon.stat;
 import jpkmn.Constants;
 
 public class Stat {
-  public Stat() {
-    resetMax();
-    _cur = _max;
-  }
-
   public int cur() {
     return _cur;
   }
@@ -32,12 +27,21 @@ public class Stat {
    * @param power
    */
   public void effect(int power) {
-    for (int i = 0; i < power; ++i)
-      increase();
-    for (int i = 0; i > power; --i)
-      decrease();
+    _delta += power;
 
-    if (_cur < 0) _cur = 1;
+    if (_delta > Constants.STATCHANGEMAX)
+      _delta = Constants.STATCHANGEMAX;
+    else if (_delta < Constants.STATCHANGEMAX)
+      _delta = -Constants.STATCHANGEMAX;
+
+    if (_delta > 0)
+      _cur = _max * ((_delta + 2) / 2);
+    else if (_delta < 0) {
+      _cur = (int) (Math.pow((3.0 / 4.0), -_delta) * _max);
+      if (_cur < 0) _cur = 1;
+    }
+    else
+      _cur = _max;
   }
 
   /**
@@ -70,27 +74,6 @@ public class Stat {
     _base = b;
     resetMax();
     reset();
-  }
-
-  /**
-   * Increases the current value of this stat by max/2, according to formula
-   */
-  private void increase() {
-    if (_delta == Constants.STATCHANGEMAX) return;
-
-    _delta++;
-    _cur += _max / 2;
-  }
-
-  /**
-   * Decreases the current value of this stat by cur/4, according to forumla
-   */
-  private void decrease() {
-    if (_delta == -Constants.STATCHANGEMAX) return;
-
-    _delta--;
-    _cur *= 3 / 4;
-    if (_cur < 1) _cur = 1;
   }
 
   protected int _cur, _max, _base, _pts, _lvl, _delta;

@@ -28,38 +28,36 @@ public enum Type {
    */
   private double advantage(Type guest) {
     int me = this.ordinal(), you = guest.ordinal();
-    double answer = 1.0;
 
     if (me == 1 && (you == 4 || you == 5 || you == 11))
-      answer *= 2;
+      return 2;
     else if (me == 2 && (you == 1 || you == 8 || you == 12))
-      answer *= 2;
+      return 2;
     else if (me == 3 && (you == 2 || you == 9))
-      answer *= 2;
+      return 2;
     else if (me == 4 && (you == 2 || you == 8 || you == 12))
-      answer *= 2;
+      return 2;
     else if (me == 5 && (you == 4 || you == 8 || you == 9 || you == 14))
-      answer *= 2;
+      return 2;
     else if (me == 6 && (you == 0 || you == 5 || you == 12))
-      answer *= 2;
+      return 2;
     else if (me == 7 && you == 4)
-      answer *= 2;
+      return 2;
     else if (me == 8 && (you == 1 || you == 3 || you == 7 || you == 12))
-      answer *= 2;
+      return 2;
     else if (me == 9 && (you == 4 || you == 6 || you == 11))
-      answer *= 2;
+      return 2;
     else if (me == 10 && (you == 6 || you == 7))
-      answer *= 2;
+      return 2;
     else if (me == 11 && (you == 4 || you == 10))
-      answer *= 2;
+      return 2;
     else if (me == 12 && (you == 1 || you == 5 || you == 9 || you == 11))
-      answer *= 2;
+      return 2;
     else if (me == 13 && (you == 10 || you == 13))
-      answer *= 2;
-    else if (me == 14 && you == 14) answer *= 2;
-
-    // Return the answer
-    return answer;
+      return 2;
+    else if (me == 14 && you == 14)
+      return 2;
+    return 1;
   }
 
   /**
@@ -71,46 +69,43 @@ public enum Type {
    */
   private double weak(Type guest) {
     int me = this.ordinal(), you = guest.ordinal();
-    double answer = 1.0;
 
     if (me == 0 && you == 12)
-      answer /= 2;
+      return 0.5;
     else if (me == 0 && you == 13)
-      answer *= 0.0;
+      return 0;
     else if (me == 1 && (you == 1 || you == 2 || you == 12 || you == 14))
-      answer /= 2;
+      return 0.5;
     else if (me == 2 && (you == 2 || you == 4 || you == 14))
-      answer /= 2;
+      return 0.5;
     else if (me == 3 && (you == 3 || you == 4 || you == 14))
-      answer /= 2;
+      return 0.5;
     else if (me == 3 && you == 8)
-      answer *= 0.0;
-    else if (me == 4
-        && (you == 1 || you == 4 || you == 7 || you == 9 || you == 11 || you == 14))
-      answer /= 2;
+      return 0;
+    else if (me == 4 && (you == 1 || you == 4 || you == 7 || you == 9 || you == 11 || you == 14))
+      return 0.5;
     else if (me == 5 && (you == 1 || you == 2 || you == 5))
-      answer /= 2;
+      return 0.5;
     else if (me == 6 && (you == 7 || you == 9 || you == 10 || you == 11))
-      answer /= 2;
+      return 0.5;
     else if (me == 6 && you == 13)
-      answer *= 0.0;
+      return 0;
     else if (me == 7 && (you == 7 || you == 8 || you == 12 || you == 13))
-      answer /= 2;
+      return 0.5;
     else if (me == 8 && (you == 4 || you == 11))
-      answer /= 2;
+      return 0.5;
     else if (me == 8 && you == 9)
-      answer *= 0.0;
+      return 0;
     else if (me == 9 && (you == 3 || you == 12))
-      answer /= 2;
+      return 0.5;
     else if (me == 10 && you == 10)
-      answer /= 2;
-    else if (me == 11
-        && (you == 1 || you == 6 || you == 7 || you == 9 || you == 13))
-      answer /= 2;
+      return 0.5;
+    else if (me == 11 && (you == 1 || you == 6 || you == 7 || you == 9 || you == 13))
+      return 0.5;
     else if (me == 12 && (you == 6 || you == 8))
-      answer /= 2;
-    else if (me == 13 && you == 0) answer *= 0.0;
-
-    return answer;
+      return 0.5;
+    else if (me == 13 && you == 0)
+      return 0;
+    return 1;
   }
 }
