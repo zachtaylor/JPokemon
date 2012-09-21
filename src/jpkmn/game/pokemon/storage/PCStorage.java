@@ -13,7 +13,7 @@ public class PCStorage implements Iterable<Pokemon> {
     addBox();
   }
 
-  public int getTotal() {
+  public int total() {
     int total = 0;
 
     for (int i = 0; i < _available; i++)
@@ -25,29 +25,22 @@ public class PCStorage implements Iterable<Pokemon> {
   public void addBox() {
     if (_available < Constants.BOXNUMBER)
       _boxes[_available++] = new StorageBox();
-
   }
 
   public boolean add(Pokemon p) {
-    for (int i = 0; i < _available; i++) {
-      if (_boxes[i].add(p)) return true;
-    }
+    for (int boxIndex = 0; boxIndex < _available; boxIndex++)
+      if (_boxes[boxIndex].add(p)) return true;
+
     return false;
   }
 
   @Override
   public Iterator<Pokemon> iterator() {
-    return createPCStorageIterator(this);
-  }
-
-  private Iterator<Pokemon> createPCStorageIterator(PCStorage pcs) {
     List<Pokemon> pokemon = new ArrayList<Pokemon>();
 
-    for (int box = 0; box < pcs._available; box++) {
-      for (Pokemon p : _boxes[box]) {
+    for (int box = 0; box < _available; box++)
+      for (Pokemon p : _boxes[box])
         pokemon.add(p);
-      }
-    }
 
     return pokemon.iterator();
   }

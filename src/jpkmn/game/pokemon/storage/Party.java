@@ -13,18 +13,18 @@ public class Party implements Iterable<Pokemon> {
     _data = new Pokemon[Constants.PARTYSIZE];
   }
 
-  public Pokemon get(int i) {
-    if (i < 0 || i > _amount) return null;
-
-    return _data[i];
-  }
-
   public Trainer owner() {
     return _owner;
   }
 
   public int size() {
     return _amount;
+  }
+
+  public Pokemon get(int i) {
+    if (i < 0 || i >= _amount) return null;
+
+    return _data[i];
   }
 
   public boolean add(Pokemon p) {
@@ -42,42 +42,38 @@ public class Party implements Iterable<Pokemon> {
   }
 
   public boolean remove(int index) {
-    if (index < 0) return false;
+    if (index < 0 || index >= _amount) return false;
+
+    _data[index].owner(null);
 
     for (int i = index; i < _amount - 1; i++)
       _data[i] = _data[i + 1];
 
-    _data[--_amount].owner(null);
-    _data[_amount] = null;
+    _data[--_amount] = null;
 
     return true;
   }
 
   public boolean contains(Pokemon p) {
-    for (int i = 0; i < _amount; i++) {
-      if (_data[i].equals(p)) return true;
-    }
-    return false;
+    return indexOf(p) != -1;
   }
 
   public int countAwake() {
-    int answer = 0;
+    int awake = 0;
 
-    for (int i = 0; i < _amount; i++) {
-      if (_data[i].condition.awake()) answer++;
-    }
+    for (int i = 0; i < _amount; i++)
+      if (_data[i].condition.awake()) awake++;
 
-    return answer;
+    return awake;
   }
 
-  public boolean swap(int index1, int index2) {
-    if (index1 < 0 || index2 < 0) return false;
-    if (index1 >= _amount || index2 >= _amount) return false;
-    if (index1 == index2) return false;
+  public boolean swap(int p1, int p2) {
+    if (p1 < 0 || p2 < 0 || p1 >= _amount || p2 >= _amount || p1 == p2)
+      return false;
 
-    Pokemon swap = _data[index1];
-    _data[index1] = _data[index2];
-    _data[index2] = swap;
+    Pokemon swap = _data[p1];
+    _data[p1] = _data[p2];
+    _data[p2] = swap;
 
     return true;
   }

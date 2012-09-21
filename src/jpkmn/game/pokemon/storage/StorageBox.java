@@ -10,7 +10,7 @@ import jpkmn.game.pokemon.Pokemon;
 public class StorageBox implements Iterable<Pokemon> {
   public StorageBox() {
     _size = 0;
-    storage = new ArrayList<Pokemon>();
+    _storage = new ArrayList<Pokemon>();
   }
 
   public int size() {
@@ -18,15 +18,15 @@ public class StorageBox implements Iterable<Pokemon> {
   }
 
   public boolean add(Pokemon p) {
-    if (_size == Constants.BOXSIZE || storage.contains(p)) return false;
+    if (_size == Constants.BOXSIZE || _storage.contains(p)) return false;
 
     _size++;
-    storage.add(p);
+    _storage.add(p);
     return true;
   }
 
   public boolean remove(Pokemon p) {
-    if (storage.remove(p)) {
+    if (_storage.remove(p)) {
       _size--;
       return true;
     }
@@ -35,9 +35,9 @@ public class StorageBox implements Iterable<Pokemon> {
 
   @Override
   public Iterator<Pokemon> iterator() {
-    return storage.iterator();
+    return _storage.iterator();
   }
 
   private int _size;
-  private List<Pokemon> storage;
+  private List<Pokemon> _storage;
 }
