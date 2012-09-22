@@ -32,7 +32,9 @@ public class Pokemon {
 
   public Pokemon(int num, int lvl) {
     this(num);
-    level(lvl);
+    _level = lvl;
+    stats.level(lvl);
+    moves.randomize();
   }
 
   public int number() {
@@ -218,7 +220,8 @@ public class Pokemon {
 
         if (!(scan.next().equals("|("))) throw new Exception();
 
-        Pokemon p = new Pokemon(scan.nextInt(), scan.nextInt());
+        Pokemon p = new Pokemon(scan.nextInt());
+        p.level(scan.nextInt());
         p.stats.points(scan.nextInt());
         p._xp = scan.nextInt();
 

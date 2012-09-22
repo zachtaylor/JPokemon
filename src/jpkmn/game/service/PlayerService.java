@@ -1,5 +1,6 @@
 package jpkmn.game.service;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
@@ -13,6 +14,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PlayerService {
+  public static JSONObject loadPlayer(String name) throws ServiceException {
+    Player p;
+
+    try {
+      p = PlayerRegistry.fromFile(name);
+    } catch (LoadException e) {
+      e.printStackTrace();
+      throw new ServiceException(e.getMessage());
+    }
+
+    try {
+      return JSONMaker.make(p);
+    } catch (JSONException jsone) {
+      jsone.printStackTrace();
+      throw new ServiceException("There was an error. It's not your fault.");
+    }
+  }
+
   public static JSONObject pokemonInfo(int pID, int i) throws ServiceException {
     Player player = PlayerRegistry.get(pID);
 
@@ -73,5 +92,13 @@ public class PlayerService {
       throw new ServiceException("You are not qualified to go  " + direction);
 
     connection.use(player);
+  }
+
+  public static void attachGraphicsHandler(int playerID) {
+    Player player = PlayerRegistry.get(playerID);
+
+    player.screen.player(player);
+
+    player.screen.showWorld();
   }
 }

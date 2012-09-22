@@ -41,13 +41,9 @@ public class PlayerRegistry {
 
   private static Player newPlayer() {
     // Eventually synchronize
-    return register(new Player(PLAYER_COUNT++));
-  }
-
-  private static Player register(Player p) {
-    _players.put(p.id(), p);
-
-    return p;
+    Player player = new Player(PLAYER_COUNT++);
+    _players.put(player.id(), player);
+    return player;
   }
 
   private static int PLAYER_COUNT; // Eventually move to DB

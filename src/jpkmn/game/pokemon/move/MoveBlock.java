@@ -13,16 +13,10 @@ public class MoveBlock {
     _pokemon = p;
     moves = new Move[Constants.MOVENUMBER];
 
-    ArrayList<Integer> possible = new ArrayList<Integer>();
+    List<MoveMap> maps = MoveMap.get(_pokemon.number(), 1);
 
-    for (int l = 1; l <= _pokemon.level(); l++) {
-      MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(_pokemon.number(), l);
-
-      if (m != null && !possible.contains(m)) possible.add(m.getMove_number());
-    }
-
-    while (!possible.isEmpty() && _amount < moves.length)
-      add(possible.remove((int) (Math.random() * possible.size())), _amount++);
+    for (MoveMap map : maps)
+      add(map.getMove_number());
   }
 
   public int amount() {
@@ -85,11 +79,24 @@ public class MoveBlock {
   }
 
   public void check() {
-    MoveMap m = MoveMap.getMapForPokemonNumberAtLevel(_pokemon.number(),
-        _pokemon.level());
-    if (m == null) return;
+    List<MoveMap> maps = MoveMap.get(_pokemon.number(), _pokemon.level());
 
-    add(m.getMove_number());
+    for (MoveMap map : maps)
+      add(map.getMove_number());
+  }
+
+  public void randomize() {
+    _amount = 0;
+    ArrayList<Integer> possible = new ArrayList<Integer>();
+
+    for (int level = 0; level < _pokemon.level(); level++) {
+      List<MoveMap> maps = MoveMap.get(_pokemon.number(), level);
+      for (MoveMap map : maps)
+        possible.add(map.getMove_number());
+    }
+
+    while (!possible.isEmpty() && _amount < moves.length)
+      add(possible.remove((int) (Math.random() * possible.size())));
   }
 
   private boolean contains(int number) {

@@ -23,8 +23,6 @@ public class Player extends Trainer {
     bag = new Bag();
     dex = new Pokedex();
     box = new PCStorage();
-
-    screen.player(this);
   }
 
   public int area() {

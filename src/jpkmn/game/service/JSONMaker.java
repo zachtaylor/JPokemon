@@ -1,7 +1,9 @@
 package jpkmn.game.service;
 
+import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.stat.StatType;
+import jpkmn.game.pokemon.storage.Party;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
@@ -61,6 +63,27 @@ public class JSONMaker {
       stats.put(stat);
     }
     json.put("stats", stats);
+
+    return json;
+  }
+
+  public static JSONObject make(Player p) throws JSONException {
+    JSONObject json = new JSONObject();
+
+    json.put("id", p.id());
+    json.put("name", p.name());
+    json.put("cash", p.cash());
+    json.put("badge", p.badge());
+    json.put("party", make(p.party));
+
+    return json;
+  }
+
+  private static JSONArray make(Party p) throws JSONException {
+    JSONArray json = new JSONArray();
+
+    for (Pokemon pkmn : p)
+      json.put(make(pkmn));
 
     return json;
   }

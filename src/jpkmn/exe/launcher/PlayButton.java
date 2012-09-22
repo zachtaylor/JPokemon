@@ -7,8 +7,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import jpkmn.exceptions.LoadException;
-import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.service.PlayerService;
+
+import org.json.JSONObject;
 
 public class PlayButton extends JButton implements ActionListener {
   public PlayButton(Launcher l) {
@@ -32,12 +33,10 @@ public class PlayButton extends JButton implements ActionListener {
     if (name == null) return;
 
     try {
-      // Should do this with PlayerService... but i'm tired and whatever
-      PlayerRegistry.fromFile(name).screen.showWorld();
+      JSONObject player = PlayerService.loadPlayer(name);
       _launcher.dispose();
-    } catch (LoadException l) {
-      JOptionPane.showMessageDialog(_launcher, l.getMessage(), "LOGIN ERROR",
-          JOptionPane.ERROR_MESSAGE);
+
+      PlayerService.attachGraphicsHandler(player.getInt("id"));
     } catch (Exception e) {
       JOptionPane.showMessageDialog(_launcher, e.toString(), "LOGIN ERROR",
           JOptionPane.ERROR_MESSAGE);
