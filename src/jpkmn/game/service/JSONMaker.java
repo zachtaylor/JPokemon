@@ -1,11 +1,11 @@
 package jpkmn.game.service;
 
-import jpkmn.game.base.AIInfo;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.stat.StatType;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
+import jpkmn.map.TrainerProto;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +15,7 @@ public class JSONMaker {
   public static JSONObject make(Area area) throws JSONException {
     JSONObject json = new JSONObject();
 
-    json.put("id", area.id);
+    json.put("id", area.id());
     json.put("name", area.name());
     json.put("hasWater", area.water());
     json.put("hasCenter", area.center());
@@ -30,11 +30,11 @@ public class JSONMaker {
     }
 
     JSONArray trainers = new JSONArray();
-    for (AIInfo trainerInfo : area.trainers()) {
+    for (TrainerProto trainer : area.trainers()) {
       JSONObject data = new JSONObject();
 
-      data.put("name", trainerInfo.getName());
-      data.put("id", trainerInfo.getNumber());
+      data.put("name", trainer.name());
+      data.put("id", trainer.id());
 
       trainers.put(data);
     }

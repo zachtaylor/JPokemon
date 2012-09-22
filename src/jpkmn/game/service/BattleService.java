@@ -66,7 +66,7 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    MockPlayer trainer = area.getTrainer(tID);
+    MockPlayer trainer = area.trainer(tID, player);
 
     if (trainer == null)
       throw new ServiceException("Trainer " + tID + " is not in this area");

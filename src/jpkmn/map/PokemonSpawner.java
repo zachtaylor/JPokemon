@@ -5,32 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.base.SpawnInfo;
 import jpkmn.game.pokemon.Pokemon;
 
 public class PokemonSpawner {
-  public PokemonSpawner() {
+  public PokemonSpawner(List<SpawnInfo> info) {
     _spawnMap = new HashMap<String, List<Spawn>>();
+
+    for (SpawnInfo si : info)
+      add(si.getPkmn(), si.getMin(), si.getMax(), si.getFlex(), si.getTag());
   }
 
   /**
-   * Adds a Pokemon blueprint to this PokemonSpawner.
+   * Reports whether the PokemonSpawner can spawn a Pokemon for the given tag
    * 
-   * @param number Pokemon number
-   * @param low Minimum level value
-   * @param high Maximum level value
-   * @param flex Integer representation of the Pokemon's appearance rate, with
-   *          respect to other species
-   * @param itemName Tag used to spawn this pokemon, itemName=null specifies
-   *          tall grass.
+   * @param tag Tag to check
+   * @return True if the spawner can create a Pokemon with the tag
    */
-  public void add(int number, int low, int high, int flex, String itemName) {
-    if (_spawnMap.get(itemName) == null)
-      _spawnMap.put(itemName, new ArrayList<Spawn>());
-
-    List<Spawn> spawner = _spawnMap.get(itemName);
-
-    for (int i = 0; i < flex; i++)
-      spawner.add(new Spawn(number, low, high));
+  public boolean hasTag(String tag) {
+    return _spawnMap.get(tag) != null;
   }
 
   /**
@@ -48,6 +41,27 @@ public class PokemonSpawner {
     int index = (int) (Math.random() * spawner.size());
 
     return spawner.get(index).make();
+  }
+
+  /**
+   * Adds a Pokemon blueprint to this PokemonSpawner.
+   * 
+   * @param number Pokemon number
+   * @param low Minimum level value
+   * @param high Maximum level value
+   * @param flex Integer representation of the Pokemon's appearance rate, with
+   *          respect to other species
+   * @param itemName Tag used to spawn this pokemon, itemName=null specifies
+   *          tall grass.
+   */
+  private void add(int number, int low, int high, int flex, String itemName) {
+    if (_spawnMap.get(itemName) == null)
+      _spawnMap.put(itemName, new ArrayList<Spawn>());
+
+    List<Spawn> spawner = _spawnMap.get(itemName);
+
+    for (int i = 0; i < flex; i++)
+      spawner.add(new Spawn(number, low, high));
   }
 
   /**

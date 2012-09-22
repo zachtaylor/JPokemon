@@ -1,16 +1,17 @@
 package jpkmn.map;
 
+import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.player.Player;
 
 /**
  * Representation of one Area connecting to another
- * 
- * @author zach
  */
 public class AreaConnection {
-  public AreaConnection(int nextAreaID, Requirement r) {
-    _req = r;
-    _nextID = nextAreaID;
+  public AreaConnection(ConnectionInfo info) {
+    _nextID = info.getNext();
+
+    if (info.getRequirement() > -1)
+      _req = new Requirement(info.getRequirement(), info.getValue());
   }
 
   /**
@@ -26,10 +27,10 @@ public class AreaConnection {
   }
 
   /**
-   * Reports whether a Player can use this AreaConnection
+   * Reports whether a Player can use the AreaConnection
    * 
    * @param p Player to test
-   * @return Whether the player can use this AreaConnection
+   * @return Whether the player can use the AreaConnection
    */
   public boolean test(Player p) {
     if (_req == null) return true;
@@ -37,7 +38,9 @@ public class AreaConnection {
   }
 
   /**
-   * @return
+   * Gets the next area
+   * 
+   * @return The area that this connection would transfer the Player to
    */
   public Area next() {
     return AreaRegistry.get(_nextID);

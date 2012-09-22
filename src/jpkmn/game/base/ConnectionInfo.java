@@ -1,12 +1,6 @@
 package jpkmn.game.base;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import jpkmn.map.AreaConnection;
-import jpkmn.map.Direction;
-import jpkmn.map.Requirement;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -18,33 +12,7 @@ public class ConnectionInfo {
   private int number;
   private int direction, next, requirement, value;
 
-  public static Map<Direction, AreaConnection> getConnectionMap(int number) {
-    Direction d;
-    AreaConnection con;
-    Requirement req = null;
-
-    Map<Direction, AreaConnection> map = new HashMap<Direction, AreaConnection>();
-
-    List<ConnectionInfo> allInfo = doGet(number);
-
-    if (allInfo.isEmpty()) return null;
-
-    for (ConnectionInfo info : allInfo) {
-      d = Direction.valueOf(info.getDirection());
-
-      if (info.getRequirement() > -1) {
-        req = new Requirement(info.getRequirement(), info.getValue());
-      }
-
-      con = new AreaConnection(info.getNext(), req);
-
-      map.put(d, con);
-    }
-
-    return map;
-  }
-
-  private static List<ConnectionInfo> doGet(int number) {
+  public static List<ConnectionInfo> get(int number) {
     DataConnectionManager.init("Pokemon.db");
 
     try {

@@ -6,14 +6,12 @@ import jpkmn.game.base.AIParty;
 import jpkmn.game.pokemon.Pokemon;
 
 public class MockPlayer extends Trainer {
-  public final OpponentType type;
-
   public MockPlayer() {
-    type = OpponentType.WILD;
+    _type = OpponentType.WILD;
   }
 
-  public MockPlayer(int type, String name, int cash, int trainerNumber) {
-    this.type = OpponentType.valueOf(type);
+  public MockPlayer(OpponentType type, String name, int cash, int trainerNumber) {
+    _type = type;
     _name = name;
     _cash = cash;
     _id = trainerNumber;
@@ -23,4 +21,10 @@ public class MockPlayer extends Trainer {
     for (Pokemon p : pokemon)
       party.add(p);
   }
+
+  public OpponentType type() {
+    return _type;
+  }
+
+  private OpponentType _type;
 }

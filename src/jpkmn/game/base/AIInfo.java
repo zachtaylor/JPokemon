@@ -5,9 +5,13 @@ import java.util.List;
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
+import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
 public class AIInfo {
-  private int area, cash, number, type;
+  @PrimaryKey
+  private int number;
+
+  private int area, cash, type, requirement, reqData;
   private String name;
 
   public static List<AIInfo> getAIForArea(int number) {
@@ -30,6 +34,8 @@ public class AIInfo {
   public int getCash() {return cash;} public void setCash(int _val) {cash = _val;}
   public int getNumber() {return number;} public void setNumber(int _val) {number = _val;}
   public int getType() {return type;} public void setType(int t) {type = t;}
+  public int getRequirement() {return requirement;} public void setRequirement(int r) {requirement = r;}
+  public int getReqData() {return reqData;} public void setReqData(int rd) {reqData = rd;}
   public String getName() {return name;} public void setName(String _val) {name = _val;}
   //@format
 }

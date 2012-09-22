@@ -12,9 +12,9 @@ public class BattleRegistry {
     Battle battle = new Battle();
 
     SlotType type;
-    if (enemy.type == OpponentType.GYM)
+    if (enemy.type() == OpponentType.GYM)
       type = SlotType.GYM;
-    else if (enemy.type == OpponentType.TRAINER)
+    else if (enemy.type() == OpponentType.TRAINER)
       type = SlotType.TRAINER;
     else
       type = SlotType.WILD;

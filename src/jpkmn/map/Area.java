@@ -1,6 +1,7 @@
 package jpkmn.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.SpawnInfo;
 import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 
 /**
@@ -18,20 +20,32 @@ import jpkmn.game.pokemon.Pokemon;
  * @author Zach
  */
 public class Area {
-  public final int id;
-
   public Area(int areaNumber) {
-    id = areaNumber;
+    _id = areaNumber;
 
-    _spawner = SpawnInfo.getSpawner(areaNumber);
-    _trainers = AIInfo.getAIForArea(areaNumber);
-    _neighbors = ConnectionInfo.getConnectionMap(areaNumber);
+    _spawner = new PokemonSpawner(SpawnInfo.get(areaNumber));
+    _water = _spawner.hasTag("oldrod");
 
-    // Replace with areainfo
+    _map = new HashMap<Direction, AreaConnection>();
+
+    List<ConnectionInfo> conInfo = ConnectionInfo.get(areaNumber);
+    for (ConnectionInfo info : conInfo)
+      _map.put(Direction.valueOf(info.getDirection()), new AreaConnection(info));
+
+    _trainers = new ArrayList<TrainerProto>();
+
+    List<AIInfo> aiInfo = AIInfo.getAIForArea(areaNumber);
+    for (AIInfo info : aiInfo)
+      _trainers.add(new TrainerProto(info));
+
+    // This is just ugly.
     _name = mapNumberToName();
     _center = mapNumberToCenter();
     _events = new ArrayList<Event>();
-    _water = _spawner == null ? false : _spawner.spawn("oldrod") != null;
+  }
+
+  public int id() {
+    return _id;
   }
 
   /**
@@ -44,48 +58,12 @@ public class Area {
   }
 
   /**
-   * Gets a new instance of the specified MockPlayer, if that MockPlayer is in
-   * this area.
+   * Tells whether this Area has fishable water
    * 
-   * @param trainerID ID of the trainer
-   * @return A new instance of the specified Trainer
+   * @return Whether this Area has fishable water
    */
-  public MockPlayer getTrainer(int trainerID) {
-    AIInfo targetInfo = null;
-
-    for (AIInfo curInfo : _trainers) {
-      if (curInfo.getNumber() == trainerID) {
-        targetInfo = curInfo;
-        break;
-      }
-    }
-
-    if (targetInfo == null) return null;
-
-    return new MockPlayer(targetInfo.getType(), targetInfo.getName(),
-        targetInfo.getCash(), targetInfo.getNumber());
-  }
-
-  /**
-   * Gets the info for all Trainers in this area.
-   * 
-   * @return All Trainers' info
-   */
-  public List<AIInfo> trainers() {
-    return _trainers;
-  }
-
-  /**
-   * Gets the AreaConnection for the specified direction, if such an
-   * AreaConnection exists
-   * 
-   * @param d Direction to travel in
-   * @return The connection
-   */
-  public AreaConnection neighbor(Direction d) {
-    if (_neighbors == null) return null;
-
-    return _neighbors.get(d);
+  public boolean water() {
+    return _water;
   }
 
   /**
@@ -98,12 +76,54 @@ public class Area {
   }
 
   /**
-   * Tells whether this Area has fishable water
+   * Gets the info for all Trainers in this area.
    * 
-   * @return Whether this Area has fishable water
+   * @return All Trainers' info
    */
-  public boolean water() {
-    return _water;
+  public List<TrainerProto> trainers() {
+    return _trainers;
+  }
+
+  public List<Event> events() {
+    return _events;
+  }
+
+  /**
+   * Gets the AreaConnection for the specified direction, if such an
+   * AreaConnection exists
+   * 
+   * @param d Direction to travel in
+   * @return The connection
+   */
+  public AreaConnection neighbor(Direction d) {
+    if (_map == null) return null;
+
+    return _map.get(d);
+  }
+
+  /**
+   * Gets a new instance of the specified MockPlayer, if that MockPlayer is in
+   * this area.
+   * 
+   * @param trainerID ID of the trainer
+   * @return A new instance of the specified Trainer
+   */
+  public MockPlayer trainer(int trainerID, Player p) {
+    TrainerProto target = null;
+
+    for (TrainerProto trainer : _trainers) {
+      if (trainer.id() == trainerID) {
+        target = trainer;
+        break;
+      }
+    }
+
+    if (target == null) return null;
+
+    if (!target.test(p)) return null;
+
+    return target.make();
+
   }
 
   /**
@@ -126,7 +146,7 @@ public class Area {
    * @return Name
    */
   private String mapNumberToName() {
-    switch (id) {
+    switch (_id) {
     case 1:
       return "Pallet Town";
     case 2:
@@ -229,7 +249,7 @@ public class Area {
    * @return If this Area has a Pokemon Center
    */
   private boolean mapNumberToCenter() {
-    switch (id) {
+    switch (_id) {
     case 1:
     case 3:
     case 7:
@@ -246,11 +266,11 @@ public class Area {
     }
   }
 
+  private int _id;
   private String _name;
-  private boolean _water;
-  private boolean _center;
   private List<Event> _events;
-  private List<AIInfo> _trainers;
   private PokemonSpawner _spawner;
-  private Map<Direction, AreaConnection> _neighbors;
+  private boolean _water, _center;
+  private List<TrainerProto> _trainers;
+  private Map<Direction, AreaConnection> _map;
 }
