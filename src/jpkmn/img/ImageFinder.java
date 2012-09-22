@@ -4,12 +4,8 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import jpkmn.game.item.Ball;
 import jpkmn.game.item.Item;
-import jpkmn.game.item.Machine;
-import jpkmn.game.item.Potion;
-import jpkmn.game.item.Stone;
-import jpkmn.game.item.XStat;
+import jpkmn.game.item.ItemType;
 import jpkmn.game.pokemon.Pokemon;
 
 public class ImageFinder {
@@ -35,15 +31,15 @@ public class ImageFinder {
   private static ImageIcon getImage(Item i) {
     String dest = "item/";
 
-    if (i instanceof Ball)
+    if (i.type() == ItemType.BALL)
       dest += "ball/" + i.name().toLowerCase().charAt(0);
-    else if (i instanceof Machine)
+    else if (i.type() == ItemType.MACHINE)
       dest += "machine";
-    else if (i instanceof Potion)
+    else if (i.type() == ItemType.POTION)
       dest += "potion/" + i.name().toLowerCase().charAt(0);
-    else if (i instanceof Stone)
+    else if (i.type() == ItemType.STONE)
       dest += "stone/" + i.name().toLowerCase().charAt(0);
-    else if (i instanceof XStat)
+    else if (i.type() == ItemType.XSTAT)
       dest += "xstat";
     else
       dest = "err";

@@ -2,45 +2,66 @@ package jpkmn.game.item;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import jpkmn.Constants;
-import jpkmn.game.base.ItemInfo;
+import jpkmn.exceptions.LoadException;
 
 public class Bag {
   public Bag() {
+    _allItems = new Item[Constants.ITEMNUMBER];
     _pockets = new HashMap<ItemType, BagPocket>();
 
-    for (ItemType type : ItemType.values()) 
+    for (ItemType type : ItemType.values())
       _pockets.put(type, new BagPocket());
 
-    ItemInfo nfo;
-    ItemType type;
-    BagPocket pocket;
-
     for (int id = 1; id <= Constants.ITEMNUMBER; id++) {
-      nfo = ItemInfo.getInfo(id);
-      type = ItemType.valueOf(nfo.getType());
-
-      pocket = _pockets.get(type);
-
-      if (type == ItemType.BALL)
-        pocket.add(new Ball(nfo.getName(), id, nfo.getValue(), nfo.getData()));
-      else if (type == ItemType.POTION)
-        pocket.add(new Potion(nfo.getName(), id, nfo.getValue(), nfo.getData()));
-      else if (type == ItemType.XSTAT)
-        pocket.add(new XStat(id, nfo.getValue(), nfo.getData()));
-      else if (type == ItemType.STONE)
-        pocket.add(new Stone(nfo.getName(), id, nfo.getValue(), nfo.getData()));
-      else if (type == ItemType.MACHINE)
-        pocket.add(new Machine(id, nfo.getValue(), nfo.getData()));
-      else if (type == ItemType.KEYITEM)
-        pocket.add(new KeyItem(nfo.getName(), id, nfo.getValue(), nfo.getData()));
+      _allItems[id - 1] = new Item(id);
+      _pockets.get(_allItems[id - 1].type()).add(_allItems[id - 1]);
     }
   }
 
-  public BagPocket pocket(ItemType type) {
+  public Item get(int itemID) {
+    return _allItems[itemID - 1];
+  }
+
+  public Iterable<Item> pocket(ItemType type) {
     return _pockets.get(type);
   }
 
+  public String save() {
+    StringBuilder data = new StringBuilder();
+
+    data.append("BAG: ");
+
+    for (Item item : _allItems) {
+      if (item.amount() == 0) continue;
+
+      data.append(item.toString());
+      data.append(" ");
+    }
+
+    data.append("\n");
+
+    return data.toString();
+  }
+
+  public void load(String s) throws LoadException {
+    try {
+      Scanner scan = new Scanner(s);
+
+      if (!scan.next().equals("BAG:")) throw new Exception();
+
+      String[] parts;
+      while (scan.hasNext()) {
+        parts = scan.next().split("-");
+        get(Integer.parseInt(parts[0])).amount(Integer.parseInt(parts[1]));
+      }
+    } catch (Exception e) {
+      throw new LoadException("Bag could not load: " + s);
+    }
+  }
+
+  private Item[] _allItems;
   private Map<ItemType, BagPocket> _pockets;
 }

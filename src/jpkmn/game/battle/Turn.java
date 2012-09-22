@@ -5,10 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import jpkmn.exceptions.CancelException;
-import jpkmn.game.item.Ball;
 import jpkmn.game.item.Item;
-import jpkmn.game.item.Machine;
-import jpkmn.game.item.Stone;
+import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
@@ -124,12 +122,12 @@ public class Turn {
     else if (_mode == Mode.ITEM) {
       Pokemon target;
 
-      if (_item.target == Target.SELF) {
+      if (_item.target() == Target.SELF) {
         target = _user.party().get(_int1);
 
-        if (_item instanceof Machine)
+        if (_item.type() == ItemType.MACHINE)
           _messages.add("Machines aren't allowed in battle!");
-        else if (_item instanceof Stone)
+        else if (_item.type() == ItemType.STONE)
           _messages.add("Stones aren't allowed in battle!");
         else
           _item.effect(target);
@@ -137,7 +135,7 @@ public class Turn {
       else {
         target = _user.target().leader();
 
-        if (_item instanceof Ball) {
+        if (_item.type() == ItemType.BALL) {
           if (_user.target().type() != SlotType.WILD) {
             _messages.add("Cannot use a ball against " + target.name() + "!");
           }

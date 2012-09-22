@@ -103,7 +103,7 @@ public class Slot {
 
   public boolean chooseItemTarget(List<Slot> enemySlots) {
     try {
-      if (_item.target == Target.SELF) {
+      if (_item.target() == Target.SELF) {
         _target = this;
         _index = _party.owner().screen.getPartyIndex("item");
         if (_index != -1) return true;

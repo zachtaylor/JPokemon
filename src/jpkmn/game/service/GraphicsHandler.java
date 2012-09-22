@@ -11,7 +11,6 @@ import jpkmn.exceptions.CancelException;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.battle.Slot;
-import jpkmn.game.item.BagPocket;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
@@ -180,8 +179,7 @@ public class GraphicsHandler {
           "Select An Item", JOptionPane.DEFAULT_OPTION,
           JOptionPane.QUESTION_MESSAGE, null, ItemType.values(), null);
 
-      // Throws ArrayIndexOutOfBoundsException
-      BagPocket pocket = player.bag.pocket(ItemType.valueOf(pocketChoice));
+      Iterable<Item> pocket = player.bag.pocket(ItemType.valueOf(pocketChoice));
 
       List<Item> available = new ArrayList<Item>();
       List<ImageIcon> choices = new ArrayList<ImageIcon>();

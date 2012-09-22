@@ -62,7 +62,7 @@ public class Player extends Trainer {
     }
 
     // save bag
-    data.append(/* bag.save() */" \n");
+    data.append(bag.save());
 
     // save pokedex
     data.append(dex.save());
@@ -86,7 +86,7 @@ public class Player extends Trainer {
         party.add(Pokemon.load(scan.nextLine()));
 
       // Load bag
-      /* bag.load( */scan.nextLine() /* ) */;
+      bag.load(scan.nextLine());
 
       // Load pokedex
       dex.load(scan.nextLine());
