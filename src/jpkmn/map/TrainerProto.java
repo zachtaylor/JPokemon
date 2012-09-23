@@ -11,9 +11,6 @@ public class TrainerProto {
     _name = info.getName();
     _cash = info.getCash();
     _type = OpponentType.valueOf(info.getType());
-
-    if (info.getRequirement() > -1)
-      _req = new Requirement(info.getRequirement(), info.getReqData());
   }
 
   public int id() {
@@ -33,7 +30,7 @@ public class TrainerProto {
   }
 
   public boolean test(Player p) {
-    if (_req != null) return _req.test(p);
+    // TODO : check if the player has fought this trainer before
     return true;
   }
 
@@ -43,6 +40,5 @@ public class TrainerProto {
 
   private String _name;
   private int _id, _cash;
-  private Requirement _req;
   private OpponentType _type;
 }

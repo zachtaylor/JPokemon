@@ -24,16 +24,14 @@ public class AreaRegistry {
    * 
    * @return doesn't matter
    */
-  private static boolean init() {
-    _areas = new Area[Constants.AREANUMBER];
+  private static Area[] initAreas() {
+    Area[] areas = new Area[Constants.AREANUMBER];
 
-    for (int i = 0; i < Constants.AREANUMBER; i++) {
-      _areas[i] = new Area(i + 1);
-    }
+    for (int i = 0; i < Constants.AREANUMBER; i++)
+      areas[i] = new Area(i + 1);
 
-    return true;
+    return areas;
   }
 
-  private static Area[] _areas;
-  protected static boolean _ready = init(); // protected solves eclipse warning
+  private static Area[] _areas = initAreas();
 }

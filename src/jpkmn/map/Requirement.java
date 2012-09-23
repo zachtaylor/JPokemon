@@ -8,7 +8,7 @@ import jpkmn.game.player.Player;
  * @author zach
  */
 public class Requirement {
-  public enum Type {
+  private enum Type {
     MOVE, BADGE, POKEDEX, ITEM;
 
     public static Requirement.Type valueOf(int r) {
@@ -22,7 +22,10 @@ public class Requirement {
   }
 
   public boolean test(Player p) {
-    // TODO
+    switch (_type) {
+    case BADGE:
+      return p.badge() >= _value;
+    }
     return true;
   }
 

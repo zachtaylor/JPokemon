@@ -7,6 +7,7 @@ import java.util.Map;
 
 import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
+import jpkmn.game.base.EventInfo;
 import jpkmn.game.base.SpawnInfo;
 import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
@@ -24,24 +25,24 @@ public class Area {
     _id = areaNumber;
 
     _spawner = new PokemonSpawner(SpawnInfo.get(areaNumber));
+    _grass = _spawner.hasTag(null);
     _water = _spawner.hasTag("oldrod");
 
     _map = new HashMap<Direction, AreaConnection>();
-
-    List<ConnectionInfo> conInfo = ConnectionInfo.get(areaNumber);
-    for (ConnectionInfo info : conInfo)
+    for (ConnectionInfo info : ConnectionInfo.get(areaNumber))
       _map.put(Direction.valueOf(info.getDirection()), new AreaConnection(info));
 
     _trainers = new ArrayList<TrainerProto>();
-
-    List<AIInfo> aiInfo = AIInfo.getAIForArea(areaNumber);
-    for (AIInfo info : aiInfo)
+    for (AIInfo info : AIInfo.getAIForArea(areaNumber))
       _trainers.add(new TrainerProto(info));
+
+    _events = new ArrayList<Event>();
+    for (EventInfo info : EventInfo.getEventsForArea(areaNumber))
+      _events.add(new Event(info));
 
     // This is just ugly.
     _name = mapNumberToName();
     _center = mapNumberToCenter();
-    _events = new ArrayList<Event>();
   }
 
   public int id() {
@@ -55,6 +56,10 @@ public class Area {
    */
   public String name() {
     return _name;
+  }
+
+  public boolean grass() {
+    return _grass;
   }
 
   /**
@@ -118,12 +123,8 @@ public class Area {
       }
     }
 
-    if (target == null) return null;
-
-    if (!target.test(p)) return null;
-
+    if (target == null || !target.test(p)) return null;
     return target.make();
-
   }
 
   /**
@@ -270,7 +271,7 @@ public class Area {
   private String _name;
   private List<Event> _events;
   private PokemonSpawner _spawner;
-  private boolean _water, _center;
   private List<TrainerProto> _trainers;
+  private boolean _grass, _water, _center;
   private Map<Direction, AreaConnection> _map;
 }

@@ -7,6 +7,7 @@ import jpkmn.game.pokemon.storage.Party;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
+import jpkmn.map.Event;
 import jpkmn.map.TrainerProto;
 
 import org.json.JSONArray;
@@ -21,7 +22,7 @@ public class JSONMaker {
     json.put("name", area.name());
     json.put("hasWater", area.water());
     json.put("hasCenter", area.center());
-    json.put("hasGrass", area.spawn(null) != null);
+    json.put("hasGrass", area.grass());
 
     for (Direction d : Direction.values()) {
       AreaConnection con = area.neighbor(d);
@@ -41,6 +42,17 @@ public class JSONMaker {
       trainers.put(data);
     }
     json.put("trainers", trainers);
+
+    JSONArray events = new JSONArray();
+    for (Event event : area.events()) {
+      JSONObject data = new JSONObject();
+
+      data.put("id", event.id());
+      data.put("description", event.description());
+
+      events.put(data);
+    }
+    json.put("events", events);
 
     return json;
   }

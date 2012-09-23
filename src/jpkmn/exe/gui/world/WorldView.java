@@ -79,6 +79,16 @@ public class WorldView extends JPokemonView {
 
         _buttons.add(button);
       }
+      
+      JSONArray events = areaInfo.getJSONArray("events");
+      for (int index = 0; index < events.length(); index++) {
+        JSONObject event = events.getJSONObject(index);
+
+        EventButton button = new EventButton(this, event.getInt("id"),
+            event.getString("description"));
+
+        _buttons.add(button);
+      }
 
       //@preformat
     /* 

@@ -9,6 +9,7 @@ import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.AreaRegistry;
 import jpkmn.map.Direction;
+import jpkmn.map.Event;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,6 +93,30 @@ public class PlayerService {
       throw new ServiceException("You are not qualified to go  " + direction);
 
     connection.use(player);
+  }
+
+  public static void triggerEvent(int pID, int eID) throws ServiceException {
+    Player player = PlayerRegistry.get(pID);
+
+    if (player == null)
+      throw new ServiceException("PlayerID " + pID + " not found");
+
+    Area area = AreaRegistry.get(player.area());
+
+    if (area == null)
+      throw new ServiceException(player.name() + " has no registered area!");
+
+    Event event = null;
+    for (Event cur : area.events())
+      if (cur.id() == eID) event = cur;
+
+    if (event == null)
+      throw new ServiceException(area.name() + " has no event " + eID);
+    if (!event.test(player))
+      throw new ServiceException("You are not qualified to  "
+          + event.description());
+
+    event.trigger(player);
   }
 
   public static void attachGraphicsHandler(int playerID) {

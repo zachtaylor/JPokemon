@@ -1,30 +1,63 @@
 package jpkmn.map;
 
+import jpkmn.game.base.AIInfo;
+import jpkmn.game.base.EventInfo;
+import jpkmn.game.battle.BattleRegistry;
+import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.OpponentType;
 import jpkmn.game.player.Player;
 
 public class Event {
   private enum Type {
     GIFTPOKEMON, GIFTITEM, TRADEPOKEMON, TRADEITEM, BATTLE;
 
-    static Type valueOf(int t) {
+    public static Type valueOf(int t) {
       return Type.values()[t];
     }
   }
 
-  public Event(int eventType, int int1, int int2) {
-    _type = Type.valueOf(eventType);
-    _int1 = int1;
-    _int2 = int2;
+  public Event(EventInfo info) {
+    _id = info.getNumber();
+    _int1 = info.getData1();
+    _int2 = info.getData2();
+    _type = Event.Type.valueOf(info.getType());
+
+    if (info.getRequirement() > -1)
+      _requirement = new Requirement(info.getRequirement(), info.getReqData());
   }
 
-  public Event(int eventType, int int1) {
-    this(eventType, int1, -1);
+  public int id() {
+    return _id;
+  }
+
+  public String description() {
+    switch (_type) {
+    case BATTLE:
+      return "Challenge " + AIInfo.get(_int1).getName();
+    }
+    return null;
+  }
+
+  public boolean test(Player p) {
+    if (_requirement == null) return true;
+    return _requirement.test(p);
   }
 
   public void trigger(Player p) {
+    if (!test(p)) return;
+
+    switch (_type) {
+    case BATTLE:
+      AIInfo info = AIInfo.get(_int1);
+      MockPlayer mock = new MockPlayer(OpponentType.valueOf(info.getType()),
+          info.getName(), info.getCash(), info.getNumber());
+      BattleRegistry.make(p, mock);
+      break;
+    }
     // TODO
   }
 
   private Event.Type _type;
-  private int id, _int1, _int2;
+  private int _id, _int1, _int2;
+  private Requirement _requirement;
 }
