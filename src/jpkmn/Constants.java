@@ -1,9 +1,9 @@
 package jpkmn;
 
-import java.util.prefs.Preferences;
-
 public class Constants {
   // Later incorporated into server settings
+  public static final String SAVE_DIR = "save/";
+
   public static final int POKEMONNUMBER = 151;
 
   public static final int ITEMNUMBER = 18;
@@ -19,7 +19,4 @@ public class Constants {
   public static final int MAXBATTLESIZE = 4;
   public static final int STATCHANGEMAX = 6;
   public static final double TYPEADVANTAGE = 2.0;
-
-  public static final Preferences prefs = Preferences
-      .systemNodeForPackage(Constants.class);
 }

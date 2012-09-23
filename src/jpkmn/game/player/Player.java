@@ -56,7 +56,8 @@ public class Player extends Trainer {
     for (int partyIndex = 0; partyIndex < Constants.PARTYSIZE; ++partyIndex) {
       if (party.get(partyIndex) != null)
         data.append(party.get(partyIndex).save());
-      data.append(" \n");
+      else
+        data.append(" \n");
     }
 
     // save bag
@@ -69,7 +70,7 @@ public class Player extends Trainer {
     for (Pokemon p : box)
       data.append(p.save());
 
-    return null;
+    return data.toString();
   }
 
   public Player load(Scanner scan) throws LoadException {

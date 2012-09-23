@@ -2,16 +2,20 @@ package jpkmn.game.player;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.prefs.Preferences;
 
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.pokemon.Pokemon;
 
 public class PlayerRegistry {
+  public static Player get(int playerID) {
+    return _players.get(playerID);
+  }
+
   public static Player create(String name, int start) throws LoadException {
     Player newPlayer = newPlayer();
     newPlayer.name(name);
@@ -23,20 +27,34 @@ public class PlayerRegistry {
     if (!s.endsWith(".jpkmn")) s += ".jpkmn";
 
     try {
-      Preferences pref = Constants.prefs;
-      File playerFile = new File(pref.get("save_dir", "save") + "/" + s);
+      File playerFile = new File(Constants.SAVE_DIR + s);
       Scanner scan = new Scanner(playerFile);
 
       return newPlayer().load(scan);
     } catch (FileNotFoundException f) {
       throw new LoadException("That player does not exist.");
-    } catch (Exception e) {
-      throw new LoadException("General error - " + e.toString());
     }
   }
 
-  public static Player get(int playerID) {
-    return _players.get(playerID);
+  public static void saveFile(int playerID) throws LoadException {
+    Player player = get(playerID);
+
+    if (player == null)
+      throw new LoadException("Could not load player: " + playerID);
+
+    String path = player.name() + ".jpkmn";
+
+    try {
+      File file = new File(Constants.SAVE_DIR + path);
+      if (!file.exists()) file.createNewFile();
+
+      PrintWriter writer = new PrintWriter(file);
+
+      writer.write(player.save());
+      writer.close();
+    } catch (Exception e) {
+      throw new LoadException(e.getMessage());
+    }
   }
 
   private static Player newPlayer() {

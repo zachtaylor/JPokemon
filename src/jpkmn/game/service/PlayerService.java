@@ -33,6 +33,21 @@ public class PlayerService {
     }
   }
 
+  public static JSONObject savePlayer(int playerID) throws ServiceException {
+    try {
+      PlayerRegistry.saveFile(playerID);
+    } catch (LoadException e) {
+      throw new ServiceException(e.getMessage());
+    }
+
+    try {
+      return JSONMaker.make(PlayerRegistry.get(playerID));
+    } catch (JSONException e) {
+      e.printStackTrace();
+      throw new ServiceException("There was an error. It's not your fault.");
+    }
+  }
+
   public static JSONObject pokemonInfo(int pID, int i) throws ServiceException {
     Player player = PlayerRegistry.get(pID);
 
