@@ -4,13 +4,11 @@ public class Constants {
   // Later incorporated into server settings
   public static final String SAVE_DIR = "save/";
 
-  public static final int POKEMONNUMBER = 151;
-
+  public static final int AINUMBER = 8;
   public static final int ITEMNUMBER = 18;
-
   public static final int AREANUMBER = 45;
-
   public static final int EVENTNUMBER = 8;
+  public static final int POKEMONNUMBER = 151;
 
   public static final int PARTYSIZE = 6;
   public static final int BOXNUMBER = 8;

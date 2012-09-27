@@ -2,6 +2,8 @@ package jpkmn.game.base;
 
 import java.util.List;
 
+import jpkmn.Constants;
+
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
@@ -15,14 +17,19 @@ public class AIInfo {
   private String name;
 
   public static AIInfo get(int number) {
+    if (cache[number - 1] != null)
+      return cache[number - 1];
+
     DataConnectionManager.init("Pokemon.db");
 
     try {
       List<AIInfo> info = new SqlStatement().select(AIInfo.class)
           .where("number").eq(number).getList();
 
-      if (info == null || info.isEmpty()) return null;
-      return info.get(0);
+      if (info == null || info.isEmpty())
+        return null;
+
+      return cache[number - 1] = info.get(0);
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
@@ -52,4 +59,6 @@ public class AIInfo {
   public int getType() {return type;} public void setType(int t) {type = t;}
   public String getName() {return name;} public void setName(String _val) {name = _val;}
   //@format
+
+  private static AIInfo[] cache = new AIInfo[Constants.AINUMBER];
 }
