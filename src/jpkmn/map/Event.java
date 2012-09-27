@@ -6,10 +6,11 @@ import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.OpponentType;
 import jpkmn.game.player.Player;
+import jpkmn.game.pokemon.Pokemon;
 
 public class Event {
   private enum Type {
-    GIFTPOKEMON, GIFTITEM, TRADEPOKEMON, TRADEITEM, BATTLE;
+    BATTLE, LEGENDARY;
 
     public static Type valueOf(int t) {
       return Type.values()[t];
@@ -46,11 +47,18 @@ public class Event {
   public void trigger(Player p) {
     if (!test(p)) return;
 
+    MockPlayer mock;
+
     switch (_type) {
     case BATTLE:
       AIInfo info = AIInfo.get(_int1);
-      MockPlayer mock = new MockPlayer(OpponentType.valueOf(info.getType()),
+      mock = new MockPlayer(OpponentType.valueOf(info.getType()),
           info.getName(), info.getCash(), info.getNumber());
+      BattleRegistry.make(p, mock);
+      break;
+    case LEGENDARY:
+      mock = new MockPlayer();
+      mock.party.add(new Pokemon(_int1, _int2));
       BattleRegistry.make(p, mock);
       break;
     }
