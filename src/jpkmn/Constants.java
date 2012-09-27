@@ -10,6 +10,8 @@ public class Constants {
 
   public static final int AREANUMBER = 45;
 
+  public static final int EVENTNUMBER = 8;
+
   public static final int PARTYSIZE = 6;
   public static final int BOXNUMBER = 8;
   public static final int BOXSIZE = 20;

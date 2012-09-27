@@ -1,4 +1,4 @@
-package jpkmn.game.player;
+package jpkmn.game.pokemon;
 
 import java.util.Scanner;
 

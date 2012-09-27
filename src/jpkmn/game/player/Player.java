@@ -5,6 +5,7 @@ import java.util.Scanner;
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.item.Bag;
+import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 
@@ -12,6 +13,7 @@ public class Player extends Trainer {
   public final Bag bag;
   public final Pokedex dex;
   public final PCStorage box;
+  public final Progress progress;
 
   public Player(int playerID) {
     super();
@@ -23,6 +25,7 @@ public class Player extends Trainer {
     bag = new Bag();
     dex = new Pokedex();
     box = new PCStorage();
+    progress = new Progress();
   }
 
   public int area() {

@@ -40,12 +40,17 @@ public class Event {
   }
 
   public boolean test(Player p) {
-    if (_requirement == null) return true;
+    if (_requirement == null)
+      return true;
+    else if (p.progress.event(_id))
+      return false;
+
     return _requirement.test(p);
   }
 
   public void trigger(Player p) {
-    if (!test(p)) return;
+    if (!test(p))
+      return;
 
     MockPlayer mock;
 
@@ -58,7 +63,8 @@ public class Event {
       break;
     case LEGENDARY:
       mock = new MockPlayer();
-      mock.party.add(new Pokemon(_int1, _int2));
+      mock.party.add(new Pokemon(_int1)); // Default moves
+      mock.party.get(0).level(_int2); // Proper level
       BattleRegistry.make(p, mock);
       break;
     }
