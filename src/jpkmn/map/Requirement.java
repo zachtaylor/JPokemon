@@ -9,7 +9,7 @@ import jpkmn.game.player.Player;
  */
 public class Requirement {
   private enum Type {
-    MOVE, BADGE, POKEDEX, ITEM;
+    EVENT, BADGE;
 
     public static Requirement.Type valueOf(int r) {
       return Requirement.Type.values()[r];
@@ -23,6 +23,8 @@ public class Requirement {
 
   public boolean test(Player p) {
     switch (_type) {
+    case EVENT:
+      return p.progress.event(_value);
     case BADGE:
       return p.badge() >= _value;
     }
