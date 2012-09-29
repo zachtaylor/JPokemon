@@ -45,8 +45,13 @@ public class Item {
     _quantity = quantity;
   }
 
+  public void add(int quantity) {
+    amount(quantity + amount());
+  }
+
   public boolean effect(Pokemon p) {
-    if (_quantity < 1) return false;
+    if (_quantity < 1)
+      return false;
     _quantity--;
     return _type.effect(p, _data);
   }

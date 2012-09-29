@@ -5,9 +5,9 @@ public class Constants {
   public static final String SAVE_DIR = "save/";
 
   public static final int AINUMBER = 8;
-  public static final int ITEMNUMBER = 18;
+  public static final int ITEMNUMBER = 19;
   public static final int AREANUMBER = 45;
-  public static final int EVENTNUMBER = 8;
+  public static final int EVENTNUMBER = 10;
   public static final int POKEMONNUMBER = 151;
 
   public static final int PARTYSIZE = 6;
