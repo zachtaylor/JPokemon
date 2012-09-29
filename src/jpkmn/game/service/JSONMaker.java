@@ -7,8 +7,6 @@ import jpkmn.game.pokemon.storage.Party;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
-import jpkmn.map.Event;
-import jpkmn.map.TrainerProto;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,27 +30,8 @@ public class JSONMaker {
         json.put(d.name(), con.next().name());
     }
 
-    JSONArray trainers = new JSONArray();
-    for (TrainerProto trainer : area.trainers()) {
-      JSONObject data = new JSONObject();
-
-      data.put("name", trainer.name());
-      data.put("id", trainer.id());
-
-      trainers.put(data);
-    }
-    json.put("trainers", trainers);
-
-    JSONArray events = new JSONArray();
-    for (Event event : area.events()) {
-      JSONObject data = new JSONObject();
-
-      data.put("id", event.id());
-      data.put("description", event.description());
-
-      events.put(data);
-    }
-    json.put("events", events);
+    json.put("events", area.eventsToJSON());
+    json.put("trainers", area.trainersToJSON());
 
     return json;
   }

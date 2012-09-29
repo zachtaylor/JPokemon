@@ -1,16 +1,15 @@
 package jpkmn.map;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.EventInfo;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.player.MockPlayer;
-import jpkmn.game.player.OpponentType;
 import jpkmn.game.player.Player;
-import jpkmn.game.pokemon.Pokemon;
 
 public class Event {
   private enum Type {
-    BATTLE, LEGENDARY;
+    BATTLE;
 
     public static Type valueOf(int t) {
       return Type.values()[t];
@@ -24,7 +23,7 @@ public class Event {
     _type = Event.Type.valueOf(info.getType());
 
     if (info.getRequirement() > -1)
-      _requirement = new Requirement(info.getRequirement(), info.getReqData());
+      _requirement = new Requirement(info.getRequirement(), info.getRequirement_data());
   }
 
   public int id() {
@@ -48,7 +47,7 @@ public class Event {
     return _requirement.test(p);
   }
 
-  public void trigger(Player p) {
+  public void trigger(Player p) throws LoadException {
     if (!test(p))
       return;
 
@@ -56,15 +55,7 @@ public class Event {
 
     switch (_type) {
     case BATTLE:
-      AIInfo info = AIInfo.get(_int1);
-      mock = new MockPlayer(OpponentType.valueOf(info.getType()),
-          info.getName(), info.getCash(), info.getNumber());
-      BattleRegistry.make(p, mock);
-      break;
-    case LEGENDARY:
-      mock = new MockPlayer();
-      mock.party.add(new Pokemon(_int1)); // Default moves
-      mock.party.get(0).level(_int2); // Proper level
+      mock = new MockPlayer(_int1);
       BattleRegistry.make(p, mock);
       break;
     }

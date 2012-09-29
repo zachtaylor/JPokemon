@@ -11,7 +11,7 @@ public class AreaConnection {
     _nextID = info.getNext();
 
     if (info.getRequirement() > -1)
-      _req = new Requirement(info.getRequirement(), info.getValue());
+      _req = new Requirement(info.getRequirement(), info.getRequirement_data());
   }
 
   /**
@@ -21,7 +21,8 @@ public class AreaConnection {
    * @param p Player to move
    */
   public void use(Player p) {
-    if (!test(p)) return;
+    if (!test(p))
+      return;
 
     p.area(_nextID);
   }
@@ -33,7 +34,8 @@ public class AreaConnection {
    * @return Whether the player can use the AreaConnection
    */
   public boolean test(Player p) {
-    if (_req == null) return true;
+    if (_req == null)
+      return true;
     return _req.test(p);
   }
 

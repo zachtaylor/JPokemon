@@ -1,4 +1,4 @@
-package jpkmn.map;
+package jpkmn.map.spawner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,8 @@ public class PokemonSpawner {
     _spawnMap = new HashMap<String, List<Spawn>>();
 
     for (SpawnInfo si : info)
-      add(si.getPkmn(), si.getMin(), si.getMax(), si.getFlex(), si.getTag());
+      add(si.getPokemon_number(), si.getMin_level(), si.getMax_level(),
+          si.getFlex(), si.getTag());
   }
 
   /**
@@ -34,7 +35,8 @@ public class PokemonSpawner {
    * @return New instance of Pokemon
    */
   public Pokemon spawn(String itemName) {
-    if (_spawnMap.get(itemName) == null) return null;
+    if (_spawnMap.get(itemName) == null)
+      return null;
 
     List<Spawn> spawner = _spawnMap.get(itemName);
 

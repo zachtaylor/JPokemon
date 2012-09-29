@@ -1,6 +1,6 @@
 package jpkmn.game.pokemon.move;
 
-import jpkmn.game.base.BonusEffectBase;
+import jpkmn.game.base.MoveEffectInfo;
 import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
@@ -11,15 +11,15 @@ public class MoveEffect {
     POISON, FREEZE, CONFUSE, WRAP, FLINCH, HEAL, LEECH, KAMIKAZE;
 
     public static MoveEffect.Type valueOf(int style) {
-      if (style < 0 || style > values().length) return null;
+      if (style < 0 || style > values().length)
+        return null;
       return values()[style];
     }
   }
 
-  public MoveEffect(BonusEffectBase beb) {
+  public MoveEffect(MoveEffectInfo beb) {
     _power = beb.getPower();
     _chance = beb.getChance();
-    _percent = beb.getPercent();
     _target = Target.valueOf(beb.getTarget());
     _type = MoveEffect.Type.valueOf(beb.getType());
   }
@@ -33,7 +33,8 @@ public class MoveEffect {
   }
 
   public void effect(Pokemon p) {
-    if (_chance < Math.random()) return; // didn't hit
+    if (_chance < Math.random())
+      return; // didn't hit
 
     if (_type == MoveEffect.Type.ATTACK)
       p.stats.atk.effect(_power);
@@ -62,13 +63,17 @@ public class MoveEffect {
     else if (_type == MoveEffect.Type.FLINCH)
       p.condition.addIssue(Condition.Issue.FLINCH);
     else if (_type == MoveEffect.Type.HEAL)
-      p.healDamage((int) (p.stats.hp.max() * _percent));
+      p.healDamage((int) (p.stats.hp.max() * _power / 1000.0));
     else if (_type == MoveEffect.Type.KAMIKAZE)
-      p.takeDamage((int) (p.stats.hp.max() * _percent));
+      p.takeDamage((int) (p.stats.hp.max() * _power / 1000.0));
   }
 
+  public String toString() {
+    return _type + " "+_target;
+  }
+  
   private int _power;
   private Target _target;
+  private double _chance;
   private MoveEffect.Type _type;
-  private double _chance, _percent;
 }

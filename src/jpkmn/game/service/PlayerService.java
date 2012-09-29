@@ -121,9 +121,7 @@ public class PlayerService {
     if (area == null)
       throw new ServiceException(player.name() + " has no registered area!");
 
-    Event event = null;
-    for (Event cur : area.events())
-      if (cur.id() == eID) event = cur;
+    Event event = area.event(eID);
 
     if (event == null)
       throw new ServiceException(area.name() + " has no event " + eID);
@@ -131,7 +129,11 @@ public class PlayerService {
       throw new ServiceException("You are not qualified to  "
           + event.description());
 
-    event.trigger(player);
+    try {
+      event.trigger(player);
+    } catch (LoadException l) {
+      throw new ServiceException(l.getMessage());
+    }
   }
 
   public static void attachGraphicsHandler(int playerID) {

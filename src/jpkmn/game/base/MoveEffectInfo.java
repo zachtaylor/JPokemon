@@ -6,14 +6,14 @@ import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
-public class BonusEffectBase {
+public class MoveEffectInfo {
   private int move_number, type, target, power;
-  private double chance, percent;
+  private double chance;
 
-  public static List<BonusEffectBase> getBasesForMoveNumber(int number) {
+  public static List<MoveEffectInfo> get(int number) {
     DataConnectionManager.init("Pokemon.db");
     try {
-      return new SqlStatement().select(BonusEffectBase.class)
+      return new SqlStatement().select(MoveEffectInfo.class)
           .where("move_number").eq(number).getList();
     } catch (DataConnectionException e) {
       e.printStackTrace();
@@ -26,7 +26,6 @@ public class BonusEffectBase {
   public int getType() { return type; } public void setType(int val) { type = val; }
   public int getTarget() { return target; } public void setTarget(int val) { target = val; }
   public int getPower() { return power; } public void setPower(int val) { power = val; }
-  public double getPercent() { return percent; } public void setPercent(double val) { percent = val; }
   public double getChance() { return chance; } public void setChance(double val) { chance = val; }
   //@format
 }

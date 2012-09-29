@@ -3,7 +3,7 @@ package jpkmn.game.pokemon.move;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.game.base.BonusEffectBase;
+import jpkmn.game.base.MoveEffectInfo;
 import jpkmn.game.base.MoveBase;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Type;
@@ -30,9 +30,8 @@ public class Move {
 
     _effects = new ArrayList<MoveEffect>();
 
-    List<BonusEffectBase> bebs = BonusEffectBase.getBasesForMoveNumber(_number);
-    for (BonusEffectBase beb : bebs)
-      _effects.add(new MoveEffect(beb));
+    for (MoveEffectInfo info : MoveEffectInfo.get(_number))
+      _effects.add(new MoveEffect(info));
   }
 
   public String name() {

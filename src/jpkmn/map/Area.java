@@ -1,8 +1,6 @@
 package jpkmn.map;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import jpkmn.game.base.AIInfo;
@@ -12,6 +10,11 @@ import jpkmn.game.base.SpawnInfo;
 import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
+import jpkmn.map.spawner.EventSpawner;
+import jpkmn.map.spawner.MockPlayerSpawner;
+import jpkmn.map.spawner.PokemonSpawner;
+
+import org.json.JSONArray;
 
 /**
  * Represents a game area where the player can "be." Areas can contain
@@ -24,21 +27,13 @@ public class Area {
   public Area(int areaNumber) {
     _id = areaNumber;
 
-    _spawner = new PokemonSpawner(SpawnInfo.get(areaNumber));
-    _grass = _spawner.hasTag(null);
-    _water = _spawner.hasTag("oldrod");
+    _pokemon = new PokemonSpawner(SpawnInfo.get(areaNumber));
+    _events = new EventSpawner(EventInfo.getEventsForArea(areaNumber));
+    _trainers = new MockPlayerSpawner(AIInfo.getAIForArea(areaNumber));
 
     _map = new HashMap<Direction, AreaConnection>();
     for (ConnectionInfo info : ConnectionInfo.get(areaNumber))
       _map.put(Direction.valueOf(info.getDirection()), new AreaConnection(info));
-
-    _trainers = new ArrayList<TrainerProto>();
-    for (AIInfo info : AIInfo.getAIForArea(areaNumber))
-      _trainers.add(new TrainerProto(info));
-
-    _events = new ArrayList<Event>();
-    for (EventInfo info : EventInfo.getEventsForArea(areaNumber))
-      _events.add(new Event(info));
 
     // This is just ugly.
     _name = mapNumberToName();
@@ -59,7 +54,7 @@ public class Area {
   }
 
   public boolean grass() {
-    return _grass;
+    return _pokemon.hasTag(null);
   }
 
   /**
@@ -68,7 +63,7 @@ public class Area {
    * @return Whether this Area has fishable water
    */
   public boolean water() {
-    return _water;
+    return _pokemon.hasTag("oldrod");
   }
 
   /**
@@ -81,19 +76,6 @@ public class Area {
   }
 
   /**
-   * Gets the info for all Trainers in this area.
-   * 
-   * @return All Trainers' info
-   */
-  public List<TrainerProto> trainers() {
-    return _trainers;
-  }
-
-  public List<Event> events() {
-    return _events;
-  }
-
-  /**
    * Gets the AreaConnection for the specified direction, if such an
    * AreaConnection exists
    * 
@@ -101,9 +83,22 @@ public class Area {
    * @return The connection
    */
   public AreaConnection neighbor(Direction d) {
-    if (_map == null) return null;
+    if (_map == null)
+      return null;
 
     return _map.get(d);
+  }
+
+  public JSONArray eventsToJSON() {
+    return _events.toJSON();
+  }
+
+  public JSONArray trainersToJSON() {
+    return _trainers.toJSON();
+  }
+
+  public Event event(int eventID) {
+    return _events.get(eventID);
   }
 
   /**
@@ -114,17 +109,7 @@ public class Area {
    * @return A new instance of the specified Trainer
    */
   public MockPlayer trainer(int trainerID, Player p) {
-    TrainerProto target = null;
-
-    for (TrainerProto trainer : _trainers) {
-      if (trainer.id() == trainerID) {
-        target = trainer;
-        break;
-      }
-    }
-
-    if (target == null || !target.test(p)) return null;
-    return target.make();
+    return _trainers.spawn(trainerID, p);
   }
 
   /**
@@ -136,9 +121,10 @@ public class Area {
    * @return New instance of a wild Pokemon
    */
   public Pokemon spawn(String tag) {
-    if (_spawner == null) return null;
+    if (_pokemon == null)
+      return null;
 
-    return _spawner.spawn(tag);
+    return _pokemon.spawn(tag);
   }
 
   /**
@@ -269,9 +255,9 @@ public class Area {
 
   private int _id;
   private String _name;
-  private List<Event> _events;
-  private PokemonSpawner _spawner;
-  private List<TrainerProto> _trainers;
-  private boolean _grass, _water, _center;
+  private boolean _center;
+  private EventSpawner _events;
+  private PokemonSpawner _pokemon;
+  private MockPlayerSpawner _trainers;
   private Map<Direction, AreaConnection> _map;
 }
