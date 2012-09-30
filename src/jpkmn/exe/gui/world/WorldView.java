@@ -128,8 +128,25 @@ public class WorldView extends JPokemonView implements KeyListener {
 
   @Override
   public void keyPressed(KeyEvent event) {
-    if (event.getKeyCode() == 10)
+    int keyCode = event.getKeyCode();
+
+    if (keyCode == 10)
       window.showStart();
+    else if (keyCode > 36 || keyCode < 41) {
+      AreaConnectionButton button = null;
+
+      if (keyCode == 37)
+        button = _west;
+      else if (keyCode == 38)
+        button = _north;
+      else if (keyCode == 39)
+        button = _east;
+      else if (keyCode == 40)
+        button = _south;
+
+      if (button != null)
+        button.actionPerformed(null);
+    }
   }
 
   @Override

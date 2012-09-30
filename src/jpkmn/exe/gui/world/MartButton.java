@@ -14,6 +14,7 @@ public class MartButton extends JButton implements ActionListener {
     _window = view.window;
     _areaID = areaID;
 
+    setFocusable(false);
     addActionListener(this);
   }
 

@@ -16,6 +16,7 @@ public class AreaConnectionButton extends JButton implements ActionListener {
     _direction = direction;
     _window = view.window;
 
+    setFocusable(false);
     addActionListener(this);
   }
 

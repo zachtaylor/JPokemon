@@ -26,7 +26,7 @@ public class Progress {
       if (!_events[i])
         continue;
 
-      data.append(i);
+      data.append(i + 1);
       data.append(" ");
     }
 

@@ -15,6 +15,7 @@ public class FishButton extends JButton implements ActionListener {
 
     _window = view.window;
 
+    setFocusable(false);
     addActionListener(this);
   }
 

@@ -15,7 +15,8 @@ public class EventButton extends JButton implements ActionListener {
 
     _eventID = eventID;
     _window = view.window;
-    
+
+    setFocusable(false);
     addActionListener(this);
   }
 
