@@ -43,7 +43,7 @@ public class Progress {
         throw new Exception();
 
       while (scan.hasNext())
-        event(Integer.parseInt(scan.next()) + 1);
+        event(Integer.parseInt(scan.next()) + 1, true);
 
     } catch (Exception e) {
       throw new LoadException("Progress could not load: " + s);
