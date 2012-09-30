@@ -7,8 +7,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import jpkmn.exceptions.ServiceException;
 import jpkmn.game.service.PlayerService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PlayButton extends JButton implements ActionListener {
@@ -30,16 +33,46 @@ public class PlayButton extends JButton implements ActionListener {
     String name = JOptionPane.showInputDialog(_launcher,
         "Please enter your username", "LOGIN", JOptionPane.QUESTION_MESSAGE);
 
-    if (name == null) return;
+    if (name == null)
+      return;
 
+    JSONObject player = null;
     try {
-      JSONObject player = PlayerService.loadPlayer(name);
-      _launcher.dispose();
-
-      PlayerService.attachGraphicsHandler(player.getInt("id"));
+      player = PlayerService.loadPlayer(name);
     } catch (Exception e) {
       JOptionPane.showMessageDialog(_launcher, e.toString(), "LOGIN ERROR",
           JOptionPane.ERROR_MESSAGE);
+    }
+
+    try {
+      if (player.getInt("id") == -1) {
+        JSONArray starterJSON = PlayerService.starterPokemon();
+
+        String[] starterOptions = new String[starterJSON.length()];
+
+        for (int i = 0; i < starterJSON.length(); i++)
+          starterOptions[i] = starterJSON.getString(i);
+
+        String choice = (String) JOptionPane.showInputDialog(null, "", "title",
+            JOptionPane.QUESTION_MESSAGE, null, starterOptions, null);
+
+        if (choice == null)
+          return;
+
+        player = PlayerService.newPlayer(name, choice);
+      }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    } catch (ServiceException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      PlayerService.attachGraphicsHandler(player.getInt("id"));
+      _launcher.dispose();
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 

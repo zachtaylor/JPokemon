@@ -24,7 +24,8 @@ public class PlayerRegistry {
   }
 
   public static Player fromFile(String s) throws LoadException {
-    if (!s.endsWith(".jpkmn")) s += ".jpkmn";
+    if (!s.endsWith(".jpkmn"))
+      s += ".jpkmn";
 
     try {
       File playerFile = new File(Constants.SAVE_DIR + s);
@@ -32,7 +33,7 @@ public class PlayerRegistry {
 
       return newPlayer().load(scan);
     } catch (FileNotFoundException f) {
-      throw new LoadException("That player does not exist.");
+      return null;
     }
   }
 
@@ -46,7 +47,8 @@ public class PlayerRegistry {
 
     try {
       File file = new File(Constants.SAVE_DIR + path);
-      if (!file.exists()) file.createNewFile();
+      if (!file.exists())
+        file.createNewFile();
 
       PrintWriter writer = new PrintWriter(file);
 

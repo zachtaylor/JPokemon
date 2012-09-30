@@ -26,7 +26,7 @@ public class Progress {
       if (!_events[i])
         continue;
 
-      data.append(i + 1);
+      data.append(i);
       data.append(" ");
     }
 
@@ -46,7 +46,7 @@ public class Progress {
         event(Integer.parseInt(scan.next()) + 1);
 
     } catch (Exception e) {
-      throw new LoadException("Bag could not load: " + s);
+      throw new LoadException("Progress could not load: " + s);
     }
   }
 

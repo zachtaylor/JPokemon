@@ -11,6 +11,7 @@ import jpkmn.map.AreaRegistry;
 import jpkmn.map.Direction;
 import jpkmn.map.Event;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +27,14 @@ public class PlayerService {
     }
 
     try {
-      return JSONMaker.make(p);
+      if (p != null)
+        return JSONMaker.make(p);
+      else {
+        // THIS IS BAD... !!!!
+        JSONObject json = new JSONObject();
+        json.put("id", -1);
+        return json;
+      }
     } catch (JSONException jsone) {
       jsone.printStackTrace();
       throw new ServiceException("There was an error. It's not your fault.");
@@ -46,6 +54,40 @@ public class PlayerService {
       e.printStackTrace();
       throw new ServiceException("There was an error. It's not your fault.");
     }
+  }
+
+  public static JSONObject newPlayer(String name, String starter)
+      throws ServiceException {
+    int pokemon = 0;
+    if (starter.equals("Bulbasaur"))
+      pokemon = 1;
+    else if (starter.equals("Charmander"))
+      pokemon = 4;
+    else if (starter.equals("Squirtle"))
+      pokemon = 7;
+    else
+      throw new ServiceException("Starter not supported: " + starter);
+
+    try {
+      Player player = PlayerRegistry.create(name, pokemon);
+      return JSONMaker.make(player);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      throw new ServiceException("There was an error. It's not your fault.");
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ServiceException(e.getMessage());
+    }
+  }
+
+  public static JSONArray starterPokemon() {
+    JSONArray json = new JSONArray();
+
+    json.put("Bulbasaur");
+    json.put("Charmander");
+    json.put("Squirtle");
+
+    return json;
   }
 
   public static JSONObject pokemonInfo(int pID, int i) throws ServiceException {

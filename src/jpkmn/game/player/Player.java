@@ -19,8 +19,7 @@ public class Player extends Trainer {
     super();
 
     _id = playerID;
-    _area = -1;
-    _badge = -1;
+    _area = 1;
 
     bag = new Bag();
     dex = new Pokedex();
