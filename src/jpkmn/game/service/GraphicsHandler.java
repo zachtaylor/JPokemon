@@ -40,7 +40,7 @@ public class GraphicsHandler {
 
     try {
       if (g.isEvolutionOkay(party.get(0))) {
-        g.notify("Evolutioin allowed");
+        g.notify("Evolution allowed");
       }
       else {
         g.notify("Evolution not allowed");
@@ -83,41 +83,47 @@ public class GraphicsHandler {
 
   public void player(Player p) {
     _player = p;
-    _window = new GameWindow(p.id());
+    _window = new GameWindow(this, p.id());
   }
 
   public void notify(String... s) {
-    if (mock()) return;
+    if (mock())
+      return;
 
     _window.inbox().addMessage(s);
   }
 
   public void showWorld() {
-    if (mock()) return;
+    if (mock())
+      return;
 
     _window.showMain();
   }
 
   public void showBattle(int battleID, int slotID) {
-    if (mock()) return;
+    if (mock())
+      return;
 
     _window.showBattle(battleID, slotID);
   }
 
   public void showUpgrade(int partyIndex) {
-    if (mock()) return;
+    if (mock())
+      return;
 
     _window.showUpgrade(partyIndex);
   }
 
   public void refresh() {
-    if (mock()) return;
+    if (mock())
+      return;
 
     _window.refresh();
   }
 
   public boolean isEvolutionOkay(Pokemon p) throws CancelException {
-    if (mock()) return true;
+    if (mock())
+      return true;
 
     String message = "Allow " + p.name() + " to evolve?";
     String title = p.name() + " wants to evolve!";
@@ -147,21 +153,27 @@ public class GraphicsHandler {
       // TODO : stuff
     }
 
+    int index;
     ImageIcon[] options = new ImageIcon[_player.party.size()];
 
     for (int i = _player.party.size() - 1; i >= 0; i--)
       options[i] = ImageFinder.find(_player.party.get(i));
 
-    return JOptionPane.showOptionDialog(null, message, "Select From Party",
+    index = JOptionPane.showOptionDialog(null, message, "Select From Party",
         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
         options, null);
+
+    if (index == -1)
+      throw new CancelException("cancel...?");
+    return index;
   }
 
   public Slot getTargetSlot(List<Slot> enemySlots) throws CancelException {
     if (mock()) {
       // TODO : stuff
     }
-    if (enemySlots.size() == 1) return enemySlots.get(0);
+    if (enemySlots.size() == 1)
+      return enemySlots.get(0);
 
     // TODO
     return null;

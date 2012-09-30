@@ -45,12 +45,14 @@ public class Slot {
   }
 
   public boolean chooseMove() {
-    if (leader().condition.contains(Issue.WAIT)) return true;
+    if (leader().condition.contains(Issue.WAIT))
+      return true;
 
     try {
       _index = _party.owner().screen.getMoveIndex("attack", leader());
 
-      if (_index != -1) return true;
+      if (_index != -1)
+        return true;
     } catch (CancelException c) {
     }
 
@@ -66,7 +68,8 @@ public class Slot {
     try {
       _item = _party.owner().screen.getItemChoice("item");
 
-      if (_item != null) return true;
+      if (_item != null)
+        return true;
     } catch (CancelException c) {
     }
 
@@ -82,7 +85,7 @@ public class Slot {
     try {
       _index = _party.owner().screen.getPartyIndex("swap");
 
-      if (_index > 0) return true;
+      return true;
     } catch (CancelException c) {
     }
 
@@ -106,7 +109,7 @@ public class Slot {
       if (_item.target() == Target.SELF) {
         _target = this;
         _index = _party.owner().screen.getPartyIndex("item");
-        if (_index != -1) return true;
+        return true;
       }
       else {
         _target = _party.owner().screen.getTargetSlot(enemySlots);
@@ -169,7 +172,8 @@ public class Slot {
         for (int i = 0; i < move.style().delay(); ++i)
           leader.condition.addIssue(Issue.WAIT); // add all the waits
 
-        if (move.style().attackAfterDelay()) turn.nullify("Resting this turn");
+        if (move.style().attackAfterDelay())
+          turn.nullify("Resting this turn");
       }
     }
     else if (move.style() == MoveStyle.MISC) { // Misc
@@ -197,7 +201,8 @@ public class Slot {
   }
 
   public void takeDamageAbsolute(int damage) {
-    if (_bide) _bidedamage += damage;
+    if (_bide)
+      _bidedamage += damage;
 
     leader().takeDamage(damage);
 
@@ -216,11 +221,13 @@ public class Slot {
 
     List<Pokemon> rivals = _rivals.get(leader());
 
-    if (!rivals.contains(p)) rivals.add(p);
+    if (!rivals.contains(p))
+      rivals.add(p);
   }
 
   public void rival(Slot s) {
-    if (s.id() == id()) return;
+    if (s.id() == id())
+      return;
 
     Pokemon dead = s.leader();
     int xp = s.getXPAwarded(), count = 0;
@@ -234,13 +241,15 @@ public class Slot {
 
       // If cur holding xp share, add to earners
 
-      if (rivals == null) continue;
+      if (rivals == null)
+        continue;
       if (rivals.contains(dead)) {
         count++;
         earners.add(cur);
         rivals.remove(dead);
       }
-      if (rivals.isEmpty()) _rivals.remove(cur);
+      if (rivals.isEmpty())
+        _rivals.remove(cur);
     }
 
     xp = (xp / count) > 0 ? (xp / count) : 1;

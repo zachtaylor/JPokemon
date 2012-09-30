@@ -1,6 +1,8 @@
 package jpkmn.exe.gui.world;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -15,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WorldView extends JPokemonView {
+public class WorldView extends JPokemonView implements KeyListener {
   public WorldView(GameWindow g) {
     window = g;
 
@@ -57,6 +59,10 @@ public class WorldView extends JPokemonView {
     add(right);
       right.add(_east);
     //@format
+
+    setFocusable(true);
+    setFocusTraversalKeysEnabled(false);
+    addKeyListener(this);
   }
 
   public void refresh() {
@@ -66,9 +72,12 @@ public class WorldView extends JPokemonView {
       _title.setText(areaInfo.getString("name"));
 
       _buttons.removeAll();
-      if (areaInfo.getBoolean("hasGrass")) _buttons.add(_grass);
-      if (areaInfo.getBoolean("hasWater")) _buttons.add(_fish);
-      if (areaInfo.getBoolean("hasCenter")) _buttons.add(_center);
+      if (areaInfo.getBoolean("hasGrass"))
+        _buttons.add(_grass);
+      if (areaInfo.getBoolean("hasWater"))
+        _buttons.add(_fish);
+      if (areaInfo.getBoolean("hasCenter"))
+        _buttons.add(_center);
 
       JSONArray trainers = areaInfo.getJSONArray("trainers");
       for (int index = 0; index < trainers.length(); index++) {
@@ -79,7 +88,7 @@ public class WorldView extends JPokemonView {
 
         _buttons.add(button);
       }
-      
+
       JSONArray events = areaInfo.getJSONArray("events");
       for (int index = 0; index < events.length(); index++) {
         JSONObject event = events.getJSONObject(index);
@@ -117,6 +126,20 @@ public class WorldView extends JPokemonView {
     return new Dimension(600, 300);
   }
 
+  @Override
+  public void keyPressed(KeyEvent event) {
+    if (event.getKeyCode() == 10)
+      window.showStart();
+  }
+
+  @Override
+  public void keyReleased(KeyEvent arg0) {
+  }
+
+  @Override
+  public void keyTyped(KeyEvent arg0) {
+  }
+
   GameWindow window;
   private int _playerID;
   private JLabel _title;
@@ -127,4 +150,5 @@ public class WorldView extends JPokemonView {
   private AreaConnectionButton _north, _east, _south, _west;
 
   private static final long serialVersionUID = 1L;
+
 }

@@ -94,6 +94,7 @@ public class Turn {
       try {
         _int2 = _user.party().owner().screen.getPartyIndex("swap");
       } catch (CancelException c) {
+        _int2 = 0;
       }
     }
   }
