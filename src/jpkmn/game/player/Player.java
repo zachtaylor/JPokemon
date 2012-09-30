@@ -69,6 +69,9 @@ public class Player extends Trainer {
     // save pokedex
     data.append(dex.save());
 
+    // save progress
+    data.append(progress.save());
+
     // save pcstorage
     for (Pokemon p : box)
       data.append(p.save());
@@ -93,6 +96,9 @@ public class Player extends Trainer {
       // Load pokedex
       dex.load(scan.nextLine());
 
+      // Load progress
+      progress.load(scan.nextLine());
+
       // load pcstorage
       while (scan.hasNextLine())
         box.add(Pokemon.load(scan.nextLine()));
@@ -106,7 +112,8 @@ public class Player extends Trainer {
   }
 
   public boolean equals(Object o) {
-    if (!(o instanceof Player)) return false;
+    if (!(o instanceof Player))
+      return false;
     return ((Player) o)._id == _id;
   }
 
