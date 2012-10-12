@@ -5,9 +5,10 @@ import java.util.Scanner;
 import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.item.Bag;
-import jpkmn.game.pokemon.Pokedex;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
+
+import org.jpokemon.pokedex.Pokedex;
 
 public class Player extends Trainer {
   public final Bag bag;
