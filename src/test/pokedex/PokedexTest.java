@@ -1,4 +1,4 @@
-package org.jpokemon.test.pokedex;
+package test.pokedex;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,26 +89,8 @@ public class PokedexTest extends TestCase {
     }
   }
 
-  public void testBoundsUpperResize() {
-    String loadValue = "DEX(10): \n";
-
-    try {
-      dex.load(loadValue);
-    } catch (LoadException e) {
-      assertTrue(e.getMessage(), false);
-      e.printStackTrace();
-    }
-
-    try {
-      dex.status(11);
-      assertTrue("Out of bounds does not fail", false);
-    } catch (Exception e) {
-      assertTrue(e instanceof IllegalArgumentException);
-    }
-  }
-
   public void testSaveEmpty() {
-    String expected = "DEX(" + defaultSize + "): \n";
+    String expected = "DEX: \n";
 
     assertEquals(expected, dex.save());
   }
@@ -130,7 +112,7 @@ public class PokedexTest extends TestCase {
       data.put(cur, PokedexStatus.OWN);
     }
 
-    String expected = "DEX(" + defaultSize + "): ";
+    String expected = "DEX: ";
     for (int i = 0; i < defaultSize; i++) {
       if (data.get(i) != null)
         expected += i + "-" + data.get(i).ordinal() + " ";
@@ -149,7 +131,7 @@ public class PokedexTest extends TestCase {
     for (int i = 0; i < power; i++)
       data.put((int) (Math.random() * defaultSize), PokedexStatus.OWN);
 
-    String loadData = "DEX(" + defaultSize + "): ";
+    String loadData = "DEX: ";
 
     for (int i = 0; i < defaultSize; i++) {
       if (data.get(i) != null)

@@ -7,15 +7,16 @@ import jpkmn.exceptions.LoadException;
 
 /**
  * A gadget which helps keep track of which Pokemon have been seen or caught in
- * the world. Pokedex maintains a status on each Pokemon it tracks. <br>
- * <br>
- * Pokedex plays nice with a Pokemon count other than the system's
- * Constants.POKEMONNUMBER
+ * the world. Pokedex maintains a status on each Pokemon it tracks.
  */
 public class Pokedex {
   public Pokedex() {
     _size = Constants.POKEMONNUMBER;
-    initNewSize();
+
+    _data = new PokedexStatus[_size];
+
+    for (int i = 0; i < _size; i++)
+      _data[i] = PokedexStatus.NONE;
   }
 
   /**
@@ -63,7 +64,7 @@ public class Pokedex {
    */
   public String save() {
     StringBuilder list = new StringBuilder();
-    list.append("DEX(" + _size + "): ");
+    list.append("DEX: ");
 
     for (int i = 0; i < _size; i++) {
       int status = _data[i].ordinal();
@@ -90,15 +91,10 @@ public class Pokedex {
   public void load(String s) throws LoadException {
     Scanner scan = new Scanner(s);
 
-    String newSize;
-
-    if (!scan.hasNext() || !(newSize = scan.next()).startsWith("DEX"))
+    if (!scan.hasNext() || !scan.next().equals("DEX:"))
       throw new LoadException("Improper format: " + s);
 
     try {
-      _size = Integer.parseInt(newSize.substring(4, newSize.length() - 2));
-      initNewSize();
-
       int number;
       PokedexStatus status;
       String[] parts;
@@ -115,13 +111,6 @@ public class Pokedex {
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new LoadException("Entry loaded above indicated size");
     }
-  }
-
-  private void initNewSize() {
-    _data = new PokedexStatus[_size];
-
-    for (int i = 0; i < _size; i++)
-      _data[i] = PokedexStatus.NONE;
   }
 
   private int _size;
