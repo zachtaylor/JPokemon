@@ -1,5 +1,7 @@
 package org.jpokemon.pokemon.storage;
 
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import jpkmn.Constants;
@@ -11,79 +13,53 @@ import jpkmn.game.pokemon.Pokemon;
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
  * <br>
  * PokemonStorageBlock supports 1 unit of unique size, to be used for the
- * party. Other units have common size. <br>
- * <br>
- * PokemonStorageBlock plays nice with party size, box number, and box size
- * different from the system's Constants.PARTYSIZE, Constants.BOXNUMBER, and
- * Constants.BOXSIZE
+ * party. Other units have common size.
  */
 public class PokemonStorageBlock {
   public PokemonStorageBlock(Trainer trainer) {
     _trainer = trainer;
 
-    initData(Constants.PARTYSIZE, Constants.BOXNUMBER, Constants.BOXSIZE);
+    _data = new PokemonStorageUnit[Constants.BOXNUMBER + 1];
+
+    _data[0] = new PokemonStorageUnit(Constants.PARTYSIZE, _trainer);
+    for (int i = 1; i <= Constants.BOXNUMBER; i++)
+      _data[i] = new PokemonStorageUnit(Constants.BOXSIZE, _trainer);
   }
 
   public String save() {
     StringBuilder sb = new StringBuilder();
-    sb.append("POKEMON (");
-    sb.append(_data[0].size());
-    sb.append(",");
-    sb.append(_data.length - 1);
-    sb.append("x");
-    sb.append(_data[1].size());
-    sb.append(")\n");
+    sb.append("POKEMON START\n");
 
-    for (int i = 0; i < _data.length; i++) {
+    for (int i = 0; i < _data.length; i++)
       for (Pokemon pokemon : _data[i])
         sb.append(i + " " + pokemon.save());
-    }
 
+    sb.append("POKEMON END\n");
     return sb.toString();
   }
 
   public void load(Scanner scan) throws LoadException {
-    if (!scan.hasNext() || !scan.next().equals("POKEMON"))
+    if (!scan.hasNext() || !scan.nextLine().equals("POKEMON START"))
       throw new LoadException("Improper format");
 
-    String[] dimension = scan.next().split(",");
-
-    if (dimension.length != 2)
-      throw new LoadException("Improper format");
-
-    String[] boxDimension = dimension[1].split("x");
-
-    if (boxDimension.length != 2)
-      throw new LoadException("Improper format");
+    int box;
+    String pokemon, line = null;
+    Scanner lineScan;
 
     try {
-      initData(Integer.parseInt(dimension[0]),
-          Integer.parseInt(boxDimension[1]), Integer.parseInt(boxDimension[1]));
-    } catch (NumberFormatException e) {
-      throw new LoadException("Improper format");
-    }
+      while (!(line = scan.nextLine()).equals("POKEMON END")) {
+        lineScan = new Scanner(line);
+        box = lineScan.nextInt();
+        pokemon = lineScan.nextLine();
 
-    scan.nextLine();
-
-    try {
-      while (scan.hasNextLine()) {
-        int boxId = Integer.parseInt(scan.next());
-        String loadData = scan.nextLine();
-
-        if (!_data[boxId].add(Pokemon.load(loadData)))
-          throw new LoadException("Box " + boxId + " full on " + loadData);
+        if (!_data[box].add(Pokemon.load(pokemon)))
+          throw new LoadException("Box " + box + " full on " + line);
       }
-    } catch (NumberFormatException e) {
-      throw new LoadException("Box number specified improperly");
+    } catch (InputMismatchException e) {
+      throw new LoadException("Improper form on line: " + line);
+    } catch (NoSuchElementException e) {
+      throw new LoadException("Improper file format");
     }
-  }
-
-  private void initData(int partySize, int boxNumber, int boxSize) {
-    _data = new PokemonStorageUnit[boxNumber + 1];
-
-    _data[0] = new PokemonStorageUnit(partySize, _trainer);
-    for (int i = 1; i <= boxNumber; i++)
-      _data[i] = new PokemonStorageUnit(boxSize, _trainer);
   }
 
   private Trainer _trainer;

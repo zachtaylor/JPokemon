@@ -22,7 +22,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     _trainer = trainer;
   }
 
-  public Trainer owner() {
+  public Trainer trainer() {
     return _trainer;
   }
 
@@ -32,7 +32,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public Pokemon get(int i) {
     if (i < 0 || i >= _amount)
-      return null;
+      throw new IllegalArgumentException("Index out of bounds");
 
     return _data[i];
   }
@@ -49,12 +49,15 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   public boolean remove(Pokemon p) {
+    p.owner(null);
     return remove(indexOf(p));
   }
 
   public boolean swap(int p1, int p2) {
-    if (p1 < 0 || p2 < 0 || p1 >= _amount || p2 >= _amount || p1 == p2)
-      return false;
+    if (p1 < 0 || p2 < 0 || p1 >= _amount || p2 >= _amount)
+      throw new IllegalArgumentException("Index out of bounds");
+    if (p1 == p2)
+      throw new IllegalArgumentException("Arguments are equal");
 
     Pokemon swap = _data[p1];
     _data[p1] = _data[p2];
@@ -80,7 +83,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   private boolean remove(int index) {
     if (index < 0 || index >= _amount)
-      return false;
+      throw new IllegalArgumentException("Index out of bounds");
 
     for (int i = index; i < _amount - 1; i++)
       _data[i] = _data[i + 1];

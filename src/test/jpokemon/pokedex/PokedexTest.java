@@ -1,4 +1,4 @@
-package test.pokedex;
+package test.jpokemon.pokedex;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokedex.PokedexStatus;
-import org.junit.Test;
 
 public class PokedexTest extends TestCase {
   public static int power = 25, defaultSize = Constants.POKEMONNUMBER;
@@ -20,7 +19,6 @@ public class PokedexTest extends TestCase {
     dex = new Pokedex();
   }
 
-  @Test
   public void testSaw() {
     int cur;
 
@@ -74,16 +72,16 @@ public class PokedexTest extends TestCase {
   public void testBoundsLower() {
     try {
       dex.status(0);
-      assertTrue("Out of bounds does not fail", false);
+      fail();
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
     }
   }
 
-  public void testBoundsUpperDefault() {
+  public void testBoundsUpper() {
     try {
       dex.status(defaultSize + 1);
-      assertTrue("Out of bounds does not fail", false);
+      fail();
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
     }
@@ -163,7 +161,7 @@ public class PokedexTest extends TestCase {
 
   public void testLoadRangeError() {
     try {
-      dex.load("DEX(1): 1-1 \n");
+      dex.load("DEX: 151-1 \n");
       assertTrue("Load nonsense was allowed", false);
     } catch (Exception e) {
       assertTrue(e instanceof LoadException);
