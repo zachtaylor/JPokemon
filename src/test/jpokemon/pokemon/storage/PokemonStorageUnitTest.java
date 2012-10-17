@@ -57,7 +57,7 @@ public class PokemonStorageUnitTest extends TestCase {
 
   public void testAddLimit() {
     for (int i = 0; i < size + 1; i++) {
-      unit.add(new Pokemon(i+1));
+      unit.add(new Pokemon(i + 1));
     }
 
     assertEquals(size, unit.size());
@@ -124,5 +124,19 @@ public class PokemonStorageUnitTest extends TestCase {
     ownedUnit.remove(p);
 
     assertEquals(null, p.owner());
+  }
+
+  public void testRemoveNotInPartyException() {
+    Pokemon p1 = new Pokemon(1);
+    Pokemon p2 = new Pokemon(2);
+    ownedUnit.add(p1);
+    unit.add(p2);
+
+    try {
+      unit.remove(p1);
+      fail();
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
   }
 }

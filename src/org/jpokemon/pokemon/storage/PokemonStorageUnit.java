@@ -49,8 +49,13 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   public boolean remove(Pokemon p) {
+    int index = indexOf(p);
+
+    if (index < 0)
+      throw new IllegalArgumentException("Not in this unit: " + p);
+
     p.owner(null);
-    return remove(indexOf(p));
+    return remove(index);
   }
 
   public boolean swap(int p1, int p2) {
