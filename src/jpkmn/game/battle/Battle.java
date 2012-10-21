@@ -19,7 +19,8 @@ public class Battle implements Iterable<Slot> {
   }
 
   public int add(SlotType t, Party p) {
-    if (ready() || _slots.size() == Constants.MAXBATTLESIZE) return -1;
+    if (ready() || _slots.size() == Constants.MAXBATTLESIZE)
+      return -1;
 
     int id = _slots.size();
 
@@ -86,49 +87,62 @@ public class Battle implements Iterable<Slot> {
   public void fight(int slotID) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null) return;
+    if (!ready() || slot == null)
+      return;
 
-    if (!slot.chooseMove()) return;
-    if (!slot.chooseAttackTarget(getEnemySlotsForSlot(slot))) return;
+    if (!slot.chooseMove())
+      return;
+    if (!slot.chooseAttackTarget(getEnemySlotsForSlot(slot)))
+      return;
 
     _round.add(slot.attack());
 
-    if (_round.size() == _slots.size()) executeRound();
+    if (_round.size() == _slots.size())
+      executeRound();
   }
 
   public void item(int slotID) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null) return;
+    if (!ready() || slot == null)
+      return;
 
-    if (!slot.chooseItem()) return;
-    if (!slot.chooseItemTarget(getEnemySlotsForSlot(slot))) return;
+    if (!slot.chooseItem())
+      return;
+    if (!slot.chooseItemTarget(getEnemySlotsForSlot(slot)))
+      return;
 
     _round.add(slot.item());
 
-    if (_round.size() == _slots.size()) executeRound();
+    if (_round.size() == _slots.size())
+      executeRound();
   }
 
   public void swap(int slotID) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null) return;
+    if (!ready() || slot == null)
+      return;
 
-    if (!slot.chooseSwapPosition()) return;
+    if (!slot.chooseSwapPosition())
+      return;
 
     _round.add(slot.swap());
 
-    if (_round.size() == _slots.size()) executeRound();
+    if (_round.size() == _slots.size())
+      executeRound();
   }
 
   public void run(int slotID) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null) return;
+    if (!ready() || slot == null)
+      return;
 
     _round.add(slot.run(this));
 
-    if (_round.size() == _slots.size()) executeRound();
+    if (_round.size() == _slots.size())
+      executeRound();
   }
 
   private void executeRound() {
@@ -146,13 +160,15 @@ public class Battle implements Iterable<Slot> {
   private void executeConditionEffects() {
     for (Slot slot : _slots.values()) {
       String[] messages = slot.leader().condition.applyEffects();
-      if (messages.length > 0) notifyAll(messages);
+      if (messages.length > 0)
+        notifyAll(messages);
     }
   }
 
   private void makeMockAttacks() {
     for (Slot slot : this) {
-      if (slot.type() != SlotType.PLAYER) fight(slot.id());
+      if (slot.type() != SlotType.PLAYER)
+        fight(slot.id());
     }
   }
 
@@ -169,25 +185,26 @@ public class Battle implements Iterable<Slot> {
     //@format
 
     if (move.style() == MoveStyle.SPECIAL) {
-      A = user.stats.stk.cur();
-      D = victim.stats.sdf.cur();
+      A = user.specattack().cur();
+      D = victim.specdefense().cur();
     }
     else if (move.style() == MoveStyle.PHYSICAL) {
-      A = user.stats.atk.cur();
-      D = victim.stats.def.cur();
+      A = user.attack().cur();
+      D = victim.defense().cur();
     }
     else if (move.style() == MoveStyle.OHKO) {
       A = 10000000;
       D = 1;
     }
     else if (move.style() == MoveStyle.DELAY) {
-      A = Math.max(user.stats.atk.cur(), user.stats.stk.cur());
-      D = Math.max(victim.stats.def.cur(), victim.stats.sdf.cur());
+      A = Math.max(user.attack().cur(), user.specattack().cur());
+      D = Math.max(victim.defense().cur(), victim.specdefense().cur());
     }
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R;
 
-    if (damage < 1 && E != 0) damage = 1;
+    if (damage < 1 && E != 0)
+      damage = 1;
 
     return (int) damage;
   }
@@ -200,7 +217,16 @@ public class Battle implements Iterable<Slot> {
    */
   public static int confusedDamage(Pokemon p) {
     // For more info, see computeDamage
-    double L = p.level(), A = p.stats.atk.cur(), P = 40, D = p.stats.def.cur(), STAB = 1, E = 1, R = 1.00;
+    //@preformat
+    double L = p.level(), 
+           A = p.attack().cur(), 
+           P = 40, 
+           D = p.defense().cur(), 
+           STAB = 1, 
+           E = 1, 
+           R = 1.00;
+    //@format
+    
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
@@ -220,7 +246,8 @@ public class Battle implements Iterable<Slot> {
     List<Slot> enemySlots = new ArrayList<Slot>();
 
     for (Slot s : _slots.values())
-      if (s.id() != slot.id()) enemySlots.add(s);
+      if (s.id() != slot.id())
+        enemySlots.add(s);
 
     return enemySlots;
   }

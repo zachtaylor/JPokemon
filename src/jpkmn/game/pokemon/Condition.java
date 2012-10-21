@@ -55,11 +55,11 @@ public class Condition {
    * 
    * @param i The issue to be added
    */
-  public void addIssue(Issue i) {
-    if (i != Issue.WAIT && contains(i)) remove(i);
+  public void add(Issue i) {
+    if (i != Issue.WAIT && contains(i))
+      remove(i);
 
     issues.add(i);
-    pkmn.stats.effectBy(i);
   }
 
   /**
@@ -92,7 +92,7 @@ public class Condition {
 
     for (Issue current : issues) {
       if (current == Issue.BURN) {
-        pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+        pkmn.takeDamage(pkmn.health().max() / 10);
         messages.add(pkmn.name() + " was injured by it's burn!");
       }
       else if (current == Issue.WRAP) {
@@ -101,7 +101,7 @@ public class Condition {
           messages.add(pkmn.name() + " freed itself!");
         }
         else {
-          pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+          pkmn.takeDamage(pkmn.health().max() / 10);
           messages.add(pkmn.name() + " was injured by the binding!");
         }
       }
@@ -123,15 +123,15 @@ public class Condition {
         messages.add(pkmn.name() + " broke out of the ice!");
       }
       else if (current == Issue.SEEDVIC) {
-        pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+        pkmn.takeDamage(pkmn.health().max() / 10);
         messages.add(pkmn.name() + " was injured by the seeds!");
       }
       else if (current == Issue.SEEDUSR) {
-        pkmn.healDamage(pkmn.stats.hp.max() / 12);
+        pkmn.healDamage(pkmn.health().max() / 12);
         messages.add(pkmn.name() + " recovered health!");
       }
       else if (current == Issue.POISON) {
-        pkmn.takeDamage(pkmn.stats.hp.max() / 10);
+        pkmn.takeDamage(pkmn.health().max() / 10);
         messages.add(pkmn.name() + " was injured by the poison!");
       }
       else if (current == Issue.SLEEP && Math.random() > .333333) {
@@ -160,7 +160,6 @@ public class Condition {
 
   public void remove(Issue i) {
     issues.remove(i);
-    pkmn.stats.removeEffect(i);
   }
 
   private List<Issue> issues = new ArrayList<Issue>();

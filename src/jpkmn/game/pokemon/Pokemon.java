@@ -6,11 +6,14 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
 import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.move.MoveBlock;
-import jpkmn.game.pokemon.stat.StatBlock;
+
+import org.jpokemon.pokemon.stat.Health;
+import org.jpokemon.pokemon.stat.Stat;
+import org.jpokemon.pokemon.stat.StatBlock;
+import org.jpokemon.pokemon.stat.StatType;
 
 public class Pokemon {
   public final MoveBlock moves;
-  public final StatBlock stats;
   public final Condition condition;
 
   public Pokemon(int num) {
@@ -24,7 +27,7 @@ public class Pokemon {
     evolutionlevel = base.getEvolutionlevel();
 
     moves = new MoveBlock(this);
-    stats = new StatBlock(base);
+    _stats = new StatBlock(base);
     condition = new Condition(this);
 
     _id = CURRENT_ID++;
@@ -33,7 +36,7 @@ public class Pokemon {
   public Pokemon(int num, int lvl) {
     this(num);
     _level = lvl;
-    stats.level(lvl);
+    _stats.level(lvl);
     moves.randomize();
   }
 
@@ -55,11 +58,11 @@ public class Pokemon {
 
   public void level(int l) {
     _level = l;
-    stats.level(l);
+    _stats.level(l);
 
     if (_xp >= xpNeeded()) {
       _xp -= xpNeeded();
-      stats.points(stats.points() + 1);
+      _stats.points(_stats.points() + 1);
     }
 
     moves.check();
@@ -95,7 +98,36 @@ public class Pokemon {
   public void xp(int amount) {
     _xp += amount;
 
-    if (_xp >= xpNeeded()) level(level() + 1);
+    if (_xp >= xpNeeded())
+      level(level() + 1);
+  }
+
+  public Stat getStat(StatType s) {
+    return _stats.get(s);
+  }
+  
+  public Health health() {
+    return (Health) _stats.get(StatType.HEALTH);
+  }
+
+  public Stat attack() {
+    return _stats.get(StatType.ATTACK);
+  }
+
+  public Stat specattack() {
+    return _stats.get(StatType.SPECATTACK);
+  }
+
+  public Stat defense() {
+    return _stats.get(StatType.DEFENSE);
+  }
+
+  public Stat specdefense() {
+    return _stats.get(StatType.SPECDEFENSE);
+  }
+
+  public Stat speed() {
+    return _stats.get(StatType.SPEED);
   }
 
   /**
@@ -119,7 +151,8 @@ public class Pokemon {
     String speciesUpdate = "Your " + species + " evolved into ";
 
     // No points for Vaporeon/Jolteon/Flareon
-    if (_number < 134 || _number > 136) stats.points(stats.points() + 1);
+    if (_number < 134 || _number > 136)
+      _stats.points(_stats.points() + 1);
 
     if (num.length != 0)
       _number = num[0]; // special value
@@ -131,7 +164,7 @@ public class Pokemon {
     PokemonBase base = PokemonBase.get(_number);
 
     moves.check();
-    stats.rebase(base);
+    _stats.rebase(base);
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
     evolutionlevel = base.getEvolutionlevel();
@@ -153,8 +186,10 @@ public class Pokemon {
    * @return the awake state of the Pokemon
    */
   public void takeDamage(int damage) {
-    stats.hp.effect(-damage);
-    if (stats.hp.cur() == 0) condition.awake(false);
+    health().effect(-damage);
+
+    if (health().cur() == 0)
+      condition.awake(false);
   }
 
   /**
@@ -165,9 +200,23 @@ public class Pokemon {
    */
   public void healDamage(int heal) {
     condition.awake(true);
-    stats.hp.effect(heal);
+    health().effect(heal);
   }
 
+  public void addIssue(Condition.Issue i) {
+    _stats.addIssue(i);
+    condition.add(i);
+  }
+  
+  public boolean hasIssue(Condition.Issue i) {
+    return condition.contains(i);
+  }
+  
+  public void removeIssue(Condition.Issue i) {
+    _stats.removeIssue(i);
+    condition.remove(i);
+  }
+  
   /**
    * Properly writes this Pokemon to a save file
    */
@@ -179,19 +228,19 @@ public class Pokemon {
     save.append(" ");
     save.append(_level);
     save.append(" ");
-    save.append(stats.points());
+    save.append(_stats.points());
     save.append(" ");
     save.append(_xp);
     save.append(" ) ");
-    save.append(stats.atk.points());
+    save.append(attack().points());
     save.append(" ");
-    save.append(stats.stk.points());
+    save.append(specattack().points());
     save.append(" ");
-    save.append(stats.def.points());
+    save.append(defense().points());
     save.append(" ");
-    save.append(stats.sdf.points());
+    save.append(specdefense().points());
     save.append(" ");
-    save.append(stats.spd.points());
+    save.append(speed().points());
     save.append(" ( ");
 
     try {
@@ -218,23 +267,26 @@ public class Pokemon {
       try {
         Scanner scan = new Scanner(s);
 
-        if (!(scan.next().equals("|("))) throw new Exception();
+        if (!(scan.next().equals("|(")))
+          throw new Exception();
 
         Pokemon p = new Pokemon(scan.nextInt());
         p.level(scan.nextInt());
-        p.stats.points(scan.nextInt());
+        p._stats.points(scan.nextInt());
         p._xp = scan.nextInt();
 
-        if (!scan.next().equals(")")) throw new Exception();
+        if (!scan.next().equals(")"))
+          throw new Exception();
 
-        p.stats.atk.points(scan.nextInt());
-        p.stats.stk.points(scan.nextInt());
-        p.stats.def.points(scan.nextInt());
-        p.stats.sdf.points(scan.nextInt());
-        p.stats.spd.points(scan.nextInt());
-        p.stats.resetMaxAll();
+        p.attack().points(scan.nextInt());
+        p.specattack().points(scan.nextInt());
+        p.defense().points(scan.nextInt());
+        p.specdefense().points(scan.nextInt());
+        p.speed().points(scan.nextInt());
+        p._stats.reset();
 
-        if (!scan.next().equals("(")) throw new Exception();
+        if (!scan.next().equals("("))
+          throw new Exception();
 
         p.moves.removeAll();
         for (String next = scan.next(); !next.equals(")"); next = scan.next())
@@ -266,6 +318,7 @@ public class Pokemon {
   }
 
   private Trainer _owner;
+  private StatBlock _stats;
   private Type type1, type2;
   private String name, species;
   private int _id, _number, _level, _xp, evolutionlevel;

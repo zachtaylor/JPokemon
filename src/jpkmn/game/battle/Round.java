@@ -44,7 +44,7 @@ public class Round {
 
       _battle.notifyAll(turn.getNotifications());
 
-      if (turn.getUserSlot().leader().condition.contains(Issue.WAIT))
+      if (turn.getUserSlot().leader().hasIssue(Issue.WAIT))
         _forceNextAttack.add(turn.getUserSlot());
 
       verifyTurnList();

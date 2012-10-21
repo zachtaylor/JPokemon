@@ -26,7 +26,7 @@ public class CenterButton extends JButton implements ActionListener {
     Player player = PlayerRegistry.get(_window.playerID());
 
     for (Pokemon p : player.party) {
-      p.healDamage(p.stats.hp.max());
+      p.healDamage(p.health().max());
     }
 
     player.screen.notify("Your Pokemon have been fully healed!",

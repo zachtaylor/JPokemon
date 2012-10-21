@@ -2,12 +2,12 @@ package jpkmn.game.service;
 
 import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.stat.StatType;
 import jpkmn.game.pokemon.storage.Party;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
 
+import org.jpokemon.pokemon.stat.StatType;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,8 +48,8 @@ public class JSONMaker {
 
       JSONObject stat = new JSONObject();
       stat.put("name", st.name());
-      stat.put("value", p.stats.getStat(st).cur());
-      stat.put("points", p.stats.getStat(st).points());
+      stat.put("value", p.getStat(st).cur());
+      stat.put("points", p.getStat(st).points());
 
       stats.put(stat);
     }

@@ -37,41 +37,27 @@ public class MoveEffect {
       return; // didn't hit
 
     if (_type == MoveEffect.Type.ATTACK)
-      p.stats.atk.effect(_power);
+      p.attack().effect(_power);
     else if (_type == MoveEffect.Type.DEFENSE)
-      p.stats.def.effect(_power);
+      p.defense().effect(_power);
     else if (_type == MoveEffect.Type.SPECATTACK)
-      p.stats.stk.effect(_power);
+      p.specattack().effect(_power);
     else if (_type == MoveEffect.Type.SPECDEFENSE)
-      p.stats.sdf.effect(_power);
+      p.specdefense().effect(_power);
     else if (_type == MoveEffect.Type.SPEED)
-      p.stats.spd.effect(_power);
-    else if (_type == MoveEffect.Type.BURN)
-      p.condition.addIssue(Condition.Issue.BURN);
-    else if (_type == MoveEffect.Type.PARALYZE)
-      p.condition.addIssue(Condition.Issue.PARALYZE);
-    else if (_type == MoveEffect.Type.SLEEP)
-      p.condition.addIssue(Condition.Issue.SLEEP);
-    else if (_type == MoveEffect.Type.POISON)
-      p.condition.addIssue(Condition.Issue.POISON);
-    else if (_type == MoveEffect.Type.FREEZE)
-      p.condition.addIssue(Condition.Issue.FREEZE);
-    else if (_type == MoveEffect.Type.CONFUSE)
-      p.condition.addIssue(Condition.Issue.CONFUSE);
-    else if (_type == MoveEffect.Type.WRAP)
-      p.condition.addIssue(Condition.Issue.WRAP);
-    else if (_type == MoveEffect.Type.FLINCH)
-      p.condition.addIssue(Condition.Issue.FLINCH);
+      p.speed().effect(_power);
     else if (_type == MoveEffect.Type.HEAL)
-      p.healDamage((int) (p.stats.hp.max() * _power / 1000.0));
+      p.healDamage((int) (p.health().max() * _power / 1000.0));
     else if (_type == MoveEffect.Type.KAMIKAZE)
-      p.takeDamage((int) (p.stats.hp.max() * _power / 1000.0));
+      p.takeDamage((int) (p.health().max() * _power / 1000.0));
+    else
+      p.addIssue(Condition.Issue.valueOf(_type.toString()));
   }
 
   public String toString() {
-    return _type + " "+_target;
+    return _type + " " + _target;
   }
-  
+
   private int _power;
   private Target _target;
   private double _chance;

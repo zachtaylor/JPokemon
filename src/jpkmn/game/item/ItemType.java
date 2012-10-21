@@ -4,7 +4,8 @@ import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Type;
 import jpkmn.game.pokemon.move.Move;
-import jpkmn.game.pokemon.stat.StatType;
+
+import org.jpokemon.pokemon.stat.StatType;
 
 public enum ItemType {
   //@preformat
@@ -27,8 +28,8 @@ public enum ItemType {
   public boolean effect(Pokemon p, int data) {
     switch (this) {
     case BALL:
-      int HPmax = p.stats.hp.max();
-      int HPcur = p.stats.hp.cur();
+      int HPmax = p.health().max();
+      int HPcur = p.health().cur();
       int BALL = data;
       int STAT = p.condition.getCatchBonus();
       int q = BALL * 4 * STAT / HPmax;
@@ -47,7 +48,7 @@ public enum ItemType {
       p.healDamage(data);
       return true;
     case XSTAT:
-      p.stats.getStat(StatType.valueOf(data)).effect(1);
+      p.getStat(StatType.valueOf(data)).effect(1);
       return true;
     case STONE:
       int n = p.number();

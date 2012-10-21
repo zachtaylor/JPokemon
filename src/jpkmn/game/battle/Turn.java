@@ -189,7 +189,7 @@ public class Turn {
         if (o1._mode == Mode.ATTACK) {
           Pokemon p1 = o1._user.leader(), p2 = o2._user.leader();
 
-          return p2.stats.spd.cur() - p1.stats.spd.cur();
+          return p2.speed().cur() - p1.speed().cur();
         }
         else {
           return 0;
@@ -207,8 +207,8 @@ public class Turn {
     for (MoveEffect me : move.moveEffects()) {
       // Move # 73 (Leech Seed) fix cause it targets both user and enemy
       if (me.type() == MoveEffect.Type.LEECH) {
-        enemy.condition.addIssue(Condition.Issue.SEEDVIC);
-        leader.condition.addIssue(Condition.Issue.SEEDUSR);
+        enemy.addIssue(Condition.Issue.SEEDVIC);
+        leader.addIssue(Condition.Issue.SEEDUSR);
       }
       else if (me.target() == Target.SELF)
         me.effect(leader);

@@ -45,7 +45,7 @@ public class Slot {
   }
 
   public boolean chooseMove() {
-    if (leader().condition.contains(Issue.WAIT))
+    if (leader().hasIssue(Issue.WAIT))
       return true;
 
     try {
@@ -135,7 +135,7 @@ public class Slot {
     }
 
     // Don't perform any if they didn't choose this move
-    if (!leader.condition.contains(Issue.WAIT)) {
+    if (!leader.hasIssue(Issue.WAIT)) {
       // 1 Measure if the user can attack
       if (!leader.condition.canAttack())
         turn.nullify(leader.condition.toString());
@@ -161,16 +161,16 @@ public class Slot {
     }
 
     if (move.style() == MoveStyle.DELAY) {
-      if (leader.condition.contains(Issue.WAIT)) {
-        leader.condition.remove(Issue.WAIT); // take away 1 wait
+      if (leader.hasIssue(Issue.WAIT)) {
+        leader.removeIssue(Issue.WAIT); // take away 1 wait
 
-        if (leader.condition.contains(Issue.WAIT) // still waiting?
+        if (leader.hasIssue(Issue.WAIT) // still waiting?
             || move.style().attackBeforeDelay()) // or already attacked
           turn.nullify("Resting this turn.");
       }
       else {
         for (int i = 0; i < move.style().delay(); ++i)
-          leader.condition.addIssue(Issue.WAIT); // add all the waits
+          leader.addIssue(Issue.WAIT); // add all the waits
 
         if (move.style().attackAfterDelay())
           turn.nullify("Resting this turn");

@@ -80,8 +80,8 @@ public class PartyPanel extends JPanel {
     leaderPicture.setIcon(ImageFinder.find(lead));
 
     title.setText(lead.name() + " Lvl." + lead.level());
-    hpBar.setMaximum(lead.stats.hp.max());
-    hpBar.setValue(lead.stats.hp.cur());
+    hpBar.setMaximum(lead.health().max());
+    hpBar.setValue(lead.health().cur());
     xpBar.setMaximum(lead.xpNeeded());
     xpBar.setValue(lead.xp());
 
