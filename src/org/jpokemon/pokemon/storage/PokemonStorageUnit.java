@@ -55,6 +55,8 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
       throw new IllegalArgumentException("Not in this unit: " + p);
 
     p.owner(null);
+    _version++;
+
     return remove(index);
   }
 
@@ -67,6 +69,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     Pokemon swap = _data[p1];
     _data[p1] = _data[p2];
     _data[p2] = swap;
+    _version++;
 
     return true;
   }

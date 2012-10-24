@@ -70,6 +70,32 @@ public class StatTest extends TestCase {
     assertEquals(205, stat.cur());
   }
 
+  public void testResetDoesNotOverrideModify() {
+    stat.base(100);
+    stat.level(100);
+    stat.effect(-6);
+    stat.modify(1.0 / 2);
+
+    assertEquals(25, stat.cur());
+
+    stat.reset();
+
+    assertEquals(102, stat.cur());
+  }
+
+  public void testModifyDoesNotOverrideEffect() {
+    stat.base(100);
+    stat.level(100);
+    stat.effect(-6);
+    stat.modify(1.0 / 2);
+
+    assertEquals(25, stat.cur());
+
+    stat.modify(1);
+
+    assertEquals(51, stat.cur());
+  }
+
   public void testEffectMaximum() {
     stat.base(100);
     stat.level(100);

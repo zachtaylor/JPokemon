@@ -33,7 +33,8 @@ public class Stat {
 
   public void modify(double m) {
     _modifier = m;
-    doModify();
+
+    doCalculation();
   }
 
   public void effect(int power) {
@@ -42,22 +43,24 @@ public class Stat {
     if (Math.abs(_delta) > Constants.STATCHANGEMAX)
       _delta = (int) Math.copySign(Constants.STATCHANGEMAX, _delta);
 
+    doCalculation();
+  }
+
+  public void reset() {
+    _max = (int) (((2.0 * _base + _pts) * _level) / 100.0 + 5.0);
+    _delta = 0;
+
+    doCalculation();
+  }
+
+  private void doCalculation() {
     if (_delta > 0)
-      _cur = (int) ((_max * ((2.0 + _delta)/2)));
+      _cur = (int) ((_max * ((2.0 + _delta) / 2)));
     else if (_delta < 0)
       _cur = (int) (_max * 2.0 / (2 + -_delta));
     else
       _cur = _max;
 
-    doModify();
-  }
-
-  public void reset() {
-    _cur = _max = (int) (((2.0 * _base + _pts) * _level) / 100.0 + 5.0);
-    modify(1);
-  }
-
-  private void doModify() {
     _cur = (int) Math.max(_cur * _modifier, 1);
   }
 
