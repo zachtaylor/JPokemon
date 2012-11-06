@@ -179,29 +179,30 @@ public class Battle implements Iterable<Slot> {
            A = 1.0, 
            P = move.power(), 
            D = 0, 
-           STAB = move.STAB(), 
+           STAB = move.STAB(user),
            E = move.effectiveness(victim), 
-           R = Math.random() * .15 + .85;
+           R = Math.random() * .15 + .85,
+           reps = move.reps(); // repetitions
     //@format
 
     if (move.style() == MoveStyle.SPECIAL) {
-      A = user.specattack().cur();
-      D = victim.specdefense().cur();
+      A = user.specattack();
+      D = victim.specdefense();
     }
     else if (move.style() == MoveStyle.PHYSICAL) {
-      A = user.attack().cur();
-      D = victim.defense().cur();
+      A = user.attack();
+      D = victim.defense();
     }
     else if (move.style() == MoveStyle.OHKO) {
       A = 10000000;
       D = 1;
     }
-    else if (move.style() == MoveStyle.DELAY) {
-      A = Math.max(user.attack().cur(), user.specattack().cur());
-      D = Math.max(victim.defense().cur(), victim.specdefense().cur());
+    else if (move.style() == MoveStyle.DELAYNEXT || move.style() == MoveStyle.DELAYBEFORE) {
+      A = Math.max(user.attack(), user.specattack());
+      D = Math.max(victim.defense(), victim.specdefense());
     }
 
-    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R;
+    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R * reps;
 
     if (damage < 1 && E != 0)
       damage = 1;
@@ -219,9 +220,9 @@ public class Battle implements Iterable<Slot> {
     // For more info, see computeDamage
     //@preformat
     double L = p.level(), 
-           A = p.attack().cur(), 
+           A = p.attack(), 
            P = 40, 
-           D = p.defense().cur(), 
+           D = p.defense(), 
            STAB = 1, 
            E = 1, 
            R = 1.00;

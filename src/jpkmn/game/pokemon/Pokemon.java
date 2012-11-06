@@ -5,6 +5,7 @@ import java.util.Scanner;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
 import jpkmn.game.player.Trainer;
+import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.move.MoveBlock;
 
 import org.jpokemon.pokemon.stat.Health;
@@ -16,7 +17,7 @@ public class Pokemon {
   public final MoveBlock moves;
   public final Condition condition;
 
-  public Pokemon(int num) {
+  public Pokemon(int num) throws LoadException {
     _number = num;
 
     PokemonBase base = PokemonBase.get(_number);
@@ -26,18 +27,18 @@ public class Pokemon {
     type2 = Type.valueOf(base.getType2());
     evolutionlevel = base.getEvolutionlevel();
 
-    moves = new MoveBlock(this);
+    moves = new MoveBlock(_number);
     _stats = new StatBlock(base);
     condition = new Condition(this);
 
     _id = CURRENT_ID++;
   }
 
-  public Pokemon(int num, int lvl) {
+  public Pokemon(int num, int lvl) throws LoadException {
     this(num);
     _level = lvl;
     _stats.level(lvl);
-    moves.randomize();
+    moves.randomize(lvl);
   }
 
   public int number() {
@@ -65,7 +66,9 @@ public class Pokemon {
       _stats.points(_stats.points() + 1);
     }
 
-    moves.check();
+    if (moves.check(level()))
+      ; // TODO : notify of new moves
+
     condition.reset();
   }
 
@@ -105,29 +108,33 @@ public class Pokemon {
   public Stat getStat(StatType s) {
     return _stats.get(s);
   }
-  
-  public Health health() {
-    return (Health) _stats.get(StatType.HEALTH);
+
+  public int health() {
+    return _stats.get(StatType.HEALTH).cur();
   }
 
-  public Stat attack() {
-    return _stats.get(StatType.ATTACK);
+  public int maxHealth() {
+    return ((Health) getStat(StatType.HEALTH)).max();
   }
 
-  public Stat specattack() {
-    return _stats.get(StatType.SPECATTACK);
+  public int attack() {
+    return _stats.get(StatType.ATTACK).cur();
   }
 
-  public Stat defense() {
-    return _stats.get(StatType.DEFENSE);
+  public int specattack() {
+    return _stats.get(StatType.SPECATTACK).cur();
   }
 
-  public Stat specdefense() {
-    return _stats.get(StatType.SPECDEFENSE);
+  public int defense() {
+    return _stats.get(StatType.DEFENSE).cur();
   }
 
-  public Stat speed() {
-    return _stats.get(StatType.SPEED);
+  public int specdefense() {
+    return _stats.get(StatType.SPECDEFENSE).cur();
+  }
+
+  public int speed() {
+    return _stats.get(StatType.SPEED).cur();
   }
 
   /**
@@ -163,7 +170,9 @@ public class Pokemon {
 
     PokemonBase base = PokemonBase.get(_number);
 
-    moves.check();
+    if (moves.check(level()))
+      ; // TODO : notify of new moves
+
     _stats.rebase(base);
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
@@ -186,9 +195,9 @@ public class Pokemon {
    * @return the awake state of the Pokemon
    */
   public void takeDamage(int damage) {
-    health().effect(-damage);
+    getStat(StatType.HEALTH).effect(-damage);
 
-    if (health().cur() == 0)
+    if (health() == 0)
       condition.awake(false);
   }
 
@@ -200,23 +209,23 @@ public class Pokemon {
    */
   public void healDamage(int heal) {
     condition.awake(true);
-    health().effect(heal);
+    getStat(StatType.HEALTH).effect(heal);
   }
 
   public void addIssue(Condition.Issue i) {
     _stats.addIssue(i);
     condition.add(i);
   }
-  
+
   public boolean hasIssue(Condition.Issue i) {
     return condition.contains(i);
   }
-  
+
   public void removeIssue(Condition.Issue i) {
     _stats.removeIssue(i);
     condition.remove(i);
   }
-  
+
   /**
    * Properly writes this Pokemon to a save file
    */
@@ -232,24 +241,20 @@ public class Pokemon {
     save.append(" ");
     save.append(_xp);
     save.append(" ) ");
-    save.append(attack().points());
+    save.append(getStat(StatType.ATTACK).points());
     save.append(" ");
-    save.append(specattack().points());
+    save.append(getStat(StatType.SPECATTACK).points());
     save.append(" ");
-    save.append(defense().points());
+    save.append(getStat(StatType.DEFENSE).points());
     save.append(" ");
-    save.append(specdefense().points());
+    save.append(getStat(StatType.SPECDEFENSE).points());
     save.append(" ");
-    save.append(speed().points());
+    save.append(getStat(StatType.SPEED).points());
     save.append(" ( ");
 
-    try {
-      for (int i = 0; i < moves.amount(); i++) {
-        save.append(moves.get(i).number() + " ");
-      }
-    } catch (Exception e) {
-      // do nothing
-    }
+    for (Move move : moves)
+      save.append(move.number() + " ");
+
     save.append(") " + name + " |\n");
 
     return save.toString();
@@ -264,42 +269,38 @@ public class Pokemon {
    */
   public static Pokemon load(String s) throws LoadException {
     if (s != null && !s.equals(" ")) {
-      try {
-        Scanner scan = new Scanner(s);
 
-        if (!(scan.next().equals("|(")))
-          throw new Exception();
+      Scanner scan = new Scanner(s);
 
-        Pokemon p = new Pokemon(scan.nextInt());
-        p.level(scan.nextInt());
-        p._stats.points(scan.nextInt());
-        p._xp = scan.nextInt();
+      if (!(scan.next().equals("|(")))
+        throw new LoadException("Formatting error");
 
-        if (!scan.next().equals(")"))
-          throw new Exception();
+      Pokemon p = new Pokemon(scan.nextInt());
+      p.level(scan.nextInt());
+      p._stats.points(scan.nextInt());
+      p._xp = scan.nextInt();
 
-        p.attack().points(scan.nextInt());
-        p.specattack().points(scan.nextInt());
-        p.defense().points(scan.nextInt());
-        p.specdefense().points(scan.nextInt());
-        p.speed().points(scan.nextInt());
-        p._stats.reset();
+      if (!scan.next().equals(")"))
+        throw new LoadException("Formatting error");
 
-        if (!scan.next().equals("("))
-          throw new Exception();
+      p.getStat(StatType.ATTACK).points(scan.nextInt());
+      p.getStat(StatType.SPECATTACK).points(scan.nextInt());
+      p.getStat(StatType.DEFENSE).points(scan.nextInt());
+      p.getStat(StatType.SPECDEFENSE).points(scan.nextInt());
+      p.getStat(StatType.SPEED).points(scan.nextInt());
+      p._stats.reset();
 
-        p.moves.removeAll();
-        for (String next = scan.next(); !next.equals(")"); next = scan.next())
-          p.moves.add(Integer.parseInt(next));
+      if (!scan.next().equals("("))
+        throw new LoadException("Formatting error");
 
-        p.name = scan.nextLine();
-        p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
+      p.moves.removeAll();
+      for (String next = scan.next(); !next.equals(")"); next = scan.next())
+        p.moves.add(Integer.parseInt(next));
 
-        return p;
+      p.name = scan.nextLine();
+      p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
 
-      } catch (Throwable t) {
-        throw new LoadException("Pokemon could not load: " + s);
-      }
+      return p;
     }
 
     return null;

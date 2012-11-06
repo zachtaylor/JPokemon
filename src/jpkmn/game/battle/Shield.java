@@ -29,12 +29,10 @@ public class Shield {
     else if (_type == Field.Effect.INVULNERABLE) {
       t.nullify("It didn't work");
     }
-    else if (_type == Field.Effect.PHYSSHIELD
-        && move.style() == MoveStyle.PHYSICAL) {
+    else if (_type == Field.Effect.PHYSSHIELD && move.style() == MoveStyle.PHYSICAL) {
       t.damage((int) (t.damage() * (1 - _reduction)));
     }
-    else if (_type == Field.Effect.SPECSHIELD
-        && move.style() == MoveStyle.SPECIAL) {
+    else if (_type == Field.Effect.SPECSHIELD && move.style() == MoveStyle.SPECIAL) {
       t.damage((int) (t.damage() * (1 - _reduction)));
     }
   }

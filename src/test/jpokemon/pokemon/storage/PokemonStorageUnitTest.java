@@ -1,5 +1,6 @@
 package test.jpokemon.pokemon.storage;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.game.player.MockPlayer;
 import jpkmn.game.pokemon.Pokemon;
 import junit.framework.TestCase;
@@ -18,13 +19,13 @@ public class PokemonStorageUnitTest extends TestCase {
     ownedUnit = new PokemonStorageUnit(size, trainer);
   }
 
-  public void testAdd() {
+  public void testAdd() throws LoadException {
     unit.add(new Pokemon(1));
 
     assertEquals(1, unit.size());
   }
 
-  public void testRemove() {
+  public void testRemove() throws LoadException {
     Pokemon p = new Pokemon(1);
     unit.add(p);
     unit.remove(p);
@@ -36,14 +37,14 @@ public class PokemonStorageUnitTest extends TestCase {
     assertEquals(trainer, ownedUnit.trainer());
   }
 
-  public void testGet() {
+  public void testGet() throws LoadException {
     Pokemon p = new Pokemon(1);
     unit.add(p);
 
     assertEquals(p, unit.get(0));
   }
 
-  public void testSwap() {
+  public void testSwap() throws LoadException {
     Pokemon p1 = new Pokemon(1);
     Pokemon p2 = new Pokemon(2);
     unit.add(p1);
@@ -55,7 +56,7 @@ public class PokemonStorageUnitTest extends TestCase {
     assertEquals(p2, unit.get(0));
   }
 
-  public void testAddLimit() {
+  public void testAddLimit() throws LoadException {
     for (int i = 0; i < size + 1; i++) {
       unit.add(new Pokemon(i + 1));
     }
@@ -72,7 +73,7 @@ public class PokemonStorageUnitTest extends TestCase {
     }
   }
 
-  public void testSwapMany() {
+  public void testSwapMany() throws LoadException {
     Pokemon p1 = new Pokemon(1);
     Pokemon p2 = new Pokemon(2);
     Pokemon p3 = new Pokemon(3);
@@ -99,7 +100,7 @@ public class PokemonStorageUnitTest extends TestCase {
     }
   }
 
-  public void testSwapSame() {
+  public void testSwapSame() throws LoadException {
     Pokemon p1 = new Pokemon(1);
     unit.add(p1);
 
@@ -111,14 +112,14 @@ public class PokemonStorageUnitTest extends TestCase {
     }
   }
 
-  public void testAddAppliesTrainer() {
+  public void testAddAppliesTrainer() throws LoadException {
     Pokemon p = new Pokemon(1);
     ownedUnit.add(p);
 
     assertEquals(trainer, p.owner());
   }
 
-  public void testRemoveRemovesTrainer() {
+  public void testRemoveRemovesTrainer() throws LoadException {
     Pokemon p = new Pokemon(1);
     ownedUnit.add(p);
     ownedUnit.remove(p);
@@ -126,7 +127,7 @@ public class PokemonStorageUnitTest extends TestCase {
     assertEquals(null, p.owner());
   }
 
-  public void testRemoveNotInPartyException() {
+  public void testRemoveNotInPartyException() throws LoadException {
     Pokemon p1 = new Pokemon(1);
     Pokemon p2 = new Pokemon(2);
     ownedUnit.add(p1);

@@ -9,8 +9,6 @@ import javax.swing.JPanel;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.exe.gui.JPokemonView;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.service.PlayerService;
 import jpkmn.img.ImageFinder;
 
@@ -19,22 +17,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PokemonUpgradeView extends JPokemonView {
-  public static void main(String[] args) {
-    try {
-      Player zach = PlayerRegistry.fromFile("Zach");
-
-      zach.screen.showUpgrade(0);
-
-    } catch (Throwable t) {
-      t.printStackTrace();
-    }
-  }
-
   public PokemonUpgradeView(GameWindow g) {
     window = g;
     _playerID = g.playerID();
 
-    _stats = new StatPanel[5];
+    _stats = new StatPanel[6];
 
     _exit = new ExitButton(this);
 
@@ -93,7 +80,7 @@ public class PokemonUpgradeView extends JPokemonView {
   }
 
   public Dimension dimension() {
-    return new Dimension(300, 200);
+    return new Dimension(300, 220);
   }
 
   GameWindow window;

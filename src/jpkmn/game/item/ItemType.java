@@ -28,8 +28,8 @@ public enum ItemType {
   public boolean effect(Pokemon p, int data) {
     switch (this) {
     case BALL:
-      int HPmax = p.health().max();
-      int HPcur = p.health().cur();
+      int HPmax = p.maxHealth();
+      int HPcur = p.health();
       int BALL = data;
       int STAT = p.condition.getCatchBonus();
       int q = BALL * 4 * STAT / HPmax;
@@ -78,11 +78,15 @@ public enum ItemType {
 
       return p.number() != n;
     case MACHINE:
-      Move m = new Move(data, p);
+      Move m = new Move(data);
 
-      if ((p.type1() != m.type() && p.type2() != m.type())) return false;
+      if (m.STAB(p) == 1) return false;
 
-      return p.moves.add(data);
+      try {
+        p.moves.add(data);
+      } catch (IllegalStateException e) {
+        ; // TODO : calculate position and ask
+      }
 
     case KEYITEM:
       // TODO : useful stuff

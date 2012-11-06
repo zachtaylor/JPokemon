@@ -8,10 +8,8 @@ import jpkmn.exceptions.CancelException;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
-import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.move.Move;
-import jpkmn.game.pokemon.move.MoveEffect;
 
 public class Turn {
   public Turn(Slot user, Battle b) {
@@ -92,7 +90,10 @@ public class Turn {
 
     while (!_user.party().get(_int2).condition.awake()) {
       try {
-        _int2 = _user.party().owner().screen.getPartyIndex("swap");
+        if (_user.type() == SlotType.PLAYER)
+          _int2 = _user.party().owner().screen.getPartyIndex("swap");
+        else
+          _int2 = (int) (_user.party().size() * Math.random());
       } catch (CancelException c) {
         _int2 = 0;
       }
@@ -189,7 +190,7 @@ public class Turn {
         if (o1._mode == Mode.ATTACK) {
           Pokemon p1 = o1._user.leader(), p2 = o2._user.leader();
 
-          return p2.speed().cur() - p1.speed().cur();
+          return p2.speed() - p1.speed();
         }
         else {
           return 0;
@@ -203,18 +204,8 @@ public class Turn {
   private void applyMoveEffects() {
     Pokemon leader = _user.leader(), enemy = _user.target().leader();
     Move move = leader.moves.get(_int1);
-
-    for (MoveEffect me : move.moveEffects()) {
-      // Move # 73 (Leech Seed) fix cause it targets both user and enemy
-      if (me.type() == MoveEffect.Type.LEECH) {
-        enemy.addIssue(Condition.Issue.SEEDVIC);
-        leader.addIssue(Condition.Issue.SEEDUSR);
-      }
-      else if (me.target() == Target.SELF)
-        me.effect(leader);
-      else
-        me.effect(enemy);
-    }
+    
+    move.applyEffects(leader, enemy);
   }
 
   private enum Mode {

@@ -17,11 +17,11 @@ public class SpawnInfo {
    * @return List of SpawnInfo from the database
    */
   public static List<SpawnInfo> get(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<SpawnInfo> info = new SqlStatement().select(SpawnInfo.class)
-          .where("area").eq(number).getList();
+      List<SpawnInfo> info = SqlStatement.select(SpawnInfo.class).where("area")
+          .eq(number).getList();
 
       return info;
     } catch (DataConnectionException e) {

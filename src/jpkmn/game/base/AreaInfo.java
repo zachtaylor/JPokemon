@@ -8,10 +8,10 @@ import com.kremerk.Sqlite.SqlStatement;
 
 public class AreaInfo {
   public static AreaInfo getInfo(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<AreaInfo> info = new SqlStatement().select(AreaInfo.class)
+      List<AreaInfo> info = SqlStatement.select(AreaInfo.class)
           .where("number").eq(number).getList();
 
       return info.isEmpty() ? null : info.get(0);

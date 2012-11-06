@@ -10,11 +10,11 @@ public class ConnectionInfo {
   private int area, direction, next, requirement, requirement_data;
 
   public static List<ConnectionInfo> get(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<ConnectionInfo> info = new SqlStatement()
-          .select(ConnectionInfo.class).where("area").eq(number).getList();
+      List<ConnectionInfo> info = SqlStatement.select(ConnectionInfo.class)
+          .where("area").eq(number).getList();
 
       return info;
     } catch (DataConnectionException e) {

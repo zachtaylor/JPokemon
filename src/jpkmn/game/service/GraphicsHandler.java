@@ -16,6 +16,7 @@ import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
 
@@ -139,13 +140,16 @@ public class GraphicsHandler {
       // TODO : stuff
     }
 
-    String[] moveNames = p.moves.list();
+    ArrayList<String> moveNames = new ArrayList<String>();
+    for (Move m : p.moves)
+      moveNames.add(m.name());
+
     String title = "Select Move Index";
     Icon icon = ImageFinder.find(p);
 
     return JOptionPane.showOptionDialog(null, message, title,
         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, icon,
-        moveNames, null);
+        moveNames.toArray(), null);
   }
 
   public int getPartyIndex(String message) throws CancelException {

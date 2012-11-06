@@ -1,5 +1,6 @@
 package jpkmn.game.service;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.player.MockPlayer;
@@ -21,10 +22,12 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    Pokemon wild = area.spawn(null); // No tags yet
-
-    if (wild == null)
-      throw new ServiceException("Unable to generate wild pokemon");
+    Pokemon wild = null;
+    try {
+      wild = area.spawn(null); // No tags yet
+    } catch (LoadException e) {
+      throw new ServiceException(e.getMessage());
+    }
 
     MockPlayer mock = new MockPlayer();
     mock.party.add(wild);
@@ -44,10 +47,13 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    Pokemon wild = area.spawn(rodName);
+    Pokemon wild = null;
 
-    if (wild == null)
-      throw new ServiceException("Unable to generate wild pokemon");
+    try {
+      wild = area.spawn(rodName);
+    } catch (LoadException e) {
+      throw new ServiceException(e.getMessage());
+    }
 
     MockPlayer mock = new MockPlayer();
     mock.party.add(wild);

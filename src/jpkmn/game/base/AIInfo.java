@@ -20,11 +20,11 @@ public class AIInfo {
     if (cache[number - 1] != null)
       return cache[number - 1];
 
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<AIInfo> info = new SqlStatement().select(AIInfo.class)
-          .where("number").eq(number).getList();
+      List<AIInfo> info = SqlStatement.select(AIInfo.class).where("number")
+          .eq(number).getList();
 
       if (info == null || info.isEmpty())
         return null;
@@ -38,10 +38,10 @@ public class AIInfo {
   }
 
   public static List<AIInfo> getAIForArea(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<AIInfo> info = new SqlStatement().select(AIInfo.class).where("area")
+      List<AIInfo> info = SqlStatement.select(AIInfo.class).where("area")
           .eq(number).getList();
 
       return info;

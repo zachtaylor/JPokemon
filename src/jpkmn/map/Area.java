@@ -3,6 +3,7 @@ package jpkmn.map;
 import java.util.HashMap;
 import java.util.Map;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.EventInfo;
@@ -119,8 +120,10 @@ public class Area {
    * 
    * @param tag Item used, i.e. "oldrod"
    * @return New instance of a wild Pokemon
+   * @throws LoadException If the Pokemon generated is not properly configured
+   *           in the database
    */
-  public Pokemon spawn(String tag) {
+  public Pokemon spawn(String tag) throws LoadException {
     if (_pokemon == null)
       return null;
 

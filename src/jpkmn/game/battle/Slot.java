@@ -141,13 +141,11 @@ public class Slot {
         turn.nullify(leader.condition.toString());
 
       // 2 Reduce and measure PP
-      if (!move.enabled())
+      else if (!move.enabled())
         turn.nullify("Move is not enabled!");
-      else
-        move.pp(move.pp() - 1);
 
       // 3 Measure accuracy
-      if (!move.hits(_target._party.get(0))) {
+      else if (!move.use()) {
 
         // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
         if (move.number() == 60 || move.number() == 69) {
@@ -160,20 +158,20 @@ public class Slot {
       }
     }
 
-    if (move.style() == MoveStyle.DELAY) {
+    if (move.style() == MoveStyle.DELAYNEXT) {
       if (leader.hasIssue(Issue.WAIT)) {
-        leader.removeIssue(Issue.WAIT); // take away 1 wait
-
-        if (leader.hasIssue(Issue.WAIT) // still waiting?
-            || move.style().attackBeforeDelay()) // or already attacked
-          turn.nullify("Resting this turn.");
+        leader.removeIssue(Issue.WAIT);
+        turn.nullify("Resting this turn.");
       }
+      else 
+        leader.addIssue(Issue.WAIT);
+    }
+    else if (move.style() == MoveStyle.DELAYBEFORE) {
+      if (leader.hasIssue(Issue.WAIT))
+        leader.removeIssue(Issue.WAIT);
       else {
-        for (int i = 0; i < move.style().delay(); ++i)
-          leader.addIssue(Issue.WAIT); // add all the waits
-
-        if (move.style().attackAfterDelay())
-          turn.nullify("Resting this turn");
+        leader.addIssue(Issue.WAIT);
+        turn.nullify("Resting this turn.");
       }
     }
     else if (move.style() == MoveStyle.MISC) { // Misc

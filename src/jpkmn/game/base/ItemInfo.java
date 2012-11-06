@@ -19,13 +19,13 @@ public class ItemInfo {
   private static ItemInfo[] cache = new ItemInfo[Constants.ITEMNUMBER];
 
   public static ItemInfo getInfo(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     if (cache[number - 1] != null)
       return cache[number - 1];
 
     try {
-      List<ItemInfo> info = new SqlStatement().select(ItemInfo.class)
+      List<ItemInfo> info = SqlStatement.select(ItemInfo.class)
           .where("number").eq(number).getList();
 
       if (info.isEmpty())

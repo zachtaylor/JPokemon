@@ -1,111 +1,116 @@
 package jpkmn.game.pokemon.move;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jpkmn.Constants;
-import jpkmn.exceptions.CancelException;
-import jpkmn.game.base.MoveMap;
-import jpkmn.game.pokemon.Pokemon;
+import jpkmn.exceptions.LoadException;
 
-public class MoveBlock {
-  public MoveBlock(Pokemon p) {
-    _pokemon = p;
-    moves = new Move[Constants.MOVENUMBER];
+public class MoveBlock implements Iterable<Move> {
+  public MoveBlock(int pokemonNumber) throws LoadException {
+    _pokemonNumber = pokemonNumber;
+    _data = new Move[Constants.MOVESAVAILABLE];
 
-    List<MoveMap> maps = MoveMap.get(_pokemon.number(), 1);
+    List<MoveMap> maps = MoveMap.get(_pokemonNumber, 1);
 
-    for (MoveMap map : maps)
-      add(map.getMove_number());
-  }
-
-  public int amount() {
-    return _amount;
+    try {
+      for (MoveMap map : maps)
+        add(map.getMove_number());
+    } catch (IllegalStateException e) {
+      throw new LoadException(e.getMessage());
+    }
   }
 
   public Move get(int i) {
-    if (i < 0 || i >= _amount) return null;
-    return moves[i];
+    if (i < 0 || i >= _amount)
+      throw new IllegalArgumentException("Index out of bounds");
+
+    return _data[i];
   }
 
-  public boolean add(int number) {
-    int position;
+  public void add(int number) {
+    if (_amount == Constants.MOVESAVAILABLE)
+      throw new IllegalStateException("MoveBlock is full");
 
-    if (_amount < moves.length)
-      position = _amount++;
-    else {
-      try {
-        position = _pokemon.owner().screen.getMoveIndex("replace", _pokemon);
-      } catch (CancelException c) {
-        return false;
-      }
-    }
-
-    if (position > -1)
-      return add(number, position);
-    else
-      return false;
+    add(number, _amount);
   }
 
-  public boolean add(int number, int position) {
-    if (!contains(number)) {
-      moves[position] = new Move(number, _pokemon);
-      return true;
-    }
-    else
-      return false;
+  public void add(int number, int position) {
+    if (position < 0 || position >= Constants.MOVESAVAILABLE)
+      throw new IllegalArgumentException("Position out of bounds: " + position);
+    if (number < 1 || number > Constants.MOVENUMBER || contains(number))
+      throw new IllegalArgumentException("Illegal move number: " + number);
+
+    _data[position] = new Move(number);
+    _amount++;
   }
 
   public void restoreAll() {
-    for (int i = 0; i < _amount; i++) {
-      if (moves[i] != null) moves[i].pp(moves[i].ppmax());
-    }
+    for (Move move : this)
+      move.restore();
   }
 
   public void removeAll() {
-    for (int i = 0; i < Constants.MOVENUMBER; i++)
-      moves[i] = null;
-
+    _data = new Move[Constants.MOVESAVAILABLE];
     _amount = 0;
   }
 
-  public String[] list() {
-    List<String> response = new ArrayList<String>();
+  public boolean check(int level) {
+    List<MoveMap> maps = MoveMap.get(_pokemonNumber, level);
 
-    for (int moveIndex = 0; moveIndex < _amount; moveIndex++)
-      response.add(moves[moveIndex].toString());
-
-    return response.toArray(new String[_amount]);
+    return !maps.isEmpty();
   }
 
-  public void check() {
-    List<MoveMap> maps = MoveMap.get(_pokemon.number(), _pokemon.level());
+  public void randomize(int level) {
+    removeAll();
 
-    for (MoveMap map : maps)
-      add(map.getMove_number());
-  }
-
-  public void randomize() {
-    _amount = 0;
     ArrayList<Integer> possible = new ArrayList<Integer>();
 
-    for (int level = 0; level < _pokemon.level(); level++) {
-      List<MoveMap> maps = MoveMap.get(_pokemon.number(), level);
-      for (MoveMap map : maps)
-        possible.add(map.getMove_number());
-    }
+    for (int currentLevel = 1; currentLevel <= level; currentLevel++)
+      for (MoveMap map : MoveMap.get(_pokemonNumber, currentLevel))
+        if (!possible.contains(map.getMove_number()))
+          possible.add(map.getMove_number());
 
-    while (!possible.isEmpty() && _amount < moves.length)
+    while (!possible.isEmpty() && _amount < Constants.MOVESAVAILABLE)
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 
+  @Override
+  public Iterator<Move> iterator() {
+    return new MoveBlockIterator();
+  }
+
   private boolean contains(int number) {
-    for (Move m : moves)
-      if (m != null && m.number() == number) return true;
+    for (Move m : this)
+      if (m.number() == number)
+        return true;
+
     return false;
   }
 
-  private int _amount;
-  private Move[] moves;
-  private Pokemon _pokemon;
+  private class MoveBlockIterator implements Iterator<Move> {
+    public MoveBlockIterator() {
+      _index = 0;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return _index < MoveBlock.this._amount;
+    }
+
+    @Override
+    public Move next() {
+      return MoveBlock.this.get(_index++);
+    }
+
+    @Override
+    public void remove() { // Nope
+    }
+
+    private int _index;
+  }
+
+  private Move[] _data;
+  private int _amount, _pokemonNumber;
 }

@@ -11,10 +11,10 @@ public class AIParty {
   private String entry;
 
   public static List<AIParty> get(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<AIParty> data = new SqlStatement().select(AIParty.class)
+      List<AIParty> data = SqlStatement.select(AIParty.class)
           .where("ai_number").eq(number).getList();
 
       return data;

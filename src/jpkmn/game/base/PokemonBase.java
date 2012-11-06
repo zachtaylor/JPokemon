@@ -17,19 +17,20 @@ public class PokemonBase {
   private String name;
 
   private static PokemonBase[] initBases() {
-    // Eventually, this may be reading XML
     return new PokemonBase[Constants.POKEMONNUMBER];
   }
 
   public static PokemonBase get(int num) {
-    if (bases[num - 1] != null) return bases[num - 1];
+    if (bases[num - 1] != null)
+      return bases[num - 1];
 
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
     try {
-      List<PokemonBase> pokemonbase = new SqlStatement()
-          .select(PokemonBase.class).where("number").eq(num).getList();
+      List<PokemonBase> pokemonbase = SqlStatement.select(PokemonBase.class)
+          .where("number").eq(num).getList();
 
-      if (!pokemonbase.isEmpty()) return bases[num - 1] = pokemonbase.get(0);
+      if (!pokemonbase.isEmpty())
+        return bases[num - 1] = pokemonbase.get(0);
 
     } catch (DataConnectionException e) {
       e.printStackTrace();

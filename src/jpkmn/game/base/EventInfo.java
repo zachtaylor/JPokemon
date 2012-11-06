@@ -14,10 +14,10 @@ public class EventInfo {
   private int area, type, data1, data2, requirement, requirement_data;
 
   public static EventInfo get(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<EventInfo> info = new SqlStatement().select(EventInfo.class)
+      List<EventInfo> info = SqlStatement.select(EventInfo.class)
           .where("number").eq(number).getList();
 
       return info.isEmpty() ? null : info.get(0);
@@ -29,11 +29,11 @@ public class EventInfo {
   }
 
   public static List<EventInfo> getEventsForArea(int number) {
-    DataConnectionManager.init("Pokemon.db");
+    DataConnectionManager.init("data/Pokemon.db");
 
     try {
-      List<EventInfo> info = new SqlStatement().select(EventInfo.class)
-          .where("area").eq(number).getList();
+      List<EventInfo> info = SqlStatement.select(EventInfo.class).where("area")
+          .eq(number).getList();
 
       return info;
     } catch (DataConnectionException e) {

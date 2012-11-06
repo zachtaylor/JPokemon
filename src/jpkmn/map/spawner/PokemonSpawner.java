@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.SpawnInfo;
 import jpkmn.game.pokemon.Pokemon;
 
@@ -33,8 +34,10 @@ public class PokemonSpawner {
    * 
    * @param itemName Item used, ie "oldrod"
    * @return New instance of Pokemon
+   * @throws LoadException If the Pokemon generated is not properly configured
+   *           in the database
    */
-  public Pokemon spawn(String itemName) {
+  public Pokemon spawn(String itemName) throws LoadException {
     if (_spawnMap.get(itemName) == null)
       return null;
 
@@ -82,8 +85,10 @@ public class PokemonSpawner {
      * Generates a new instance of the Pokemon in the level range
      * 
      * @return New instance of this Pokemon.
+     * @throws LoadException If the Pokemon generated is not properly
+     *           configured in the database
      */
-    public Pokemon make() {
+    public Pokemon make() throws LoadException {
       int range = _high - _low;
       int level = _low + (int) (Math.random() * (range + 1));
 
