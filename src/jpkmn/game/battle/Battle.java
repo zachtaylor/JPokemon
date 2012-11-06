@@ -180,7 +180,7 @@ public class Battle implements Iterable<Slot> {
            P = move.power(), 
            D = 0, 
            STAB = move.STAB(user),
-           E = move.effectiveness(victim), 
+           E = move.type().effectiveness(victim), 
            R = Math.random() * .15 + .85,
            reps = move.reps(); // repetitions
     //@format

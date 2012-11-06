@@ -163,7 +163,7 @@ public class Slot {
         leader.removeIssue(Issue.WAIT);
         turn.nullify("Resting this turn.");
       }
-      else 
+      else
         leader.addIssue(Issue.WAIT);
     }
     else if (move.style() == MoveStyle.DELAYBEFORE) {
@@ -173,6 +173,14 @@ public class Slot {
         leader.addIssue(Issue.WAIT);
         turn.nullify("Resting this turn.");
       }
+    }
+    else if (move.style() == MoveStyle.OHKO) {
+      int levelDiff = leader.level() - _target.leader().level();
+
+      if (levelDiff < 0)
+        turn.nullify("Cannot perform OHKO on " + _target.leader().name());
+      else if ((levelDiff + 30.0) / 100.0 <= Math.random())
+        turn.nullify("It missed.");
     }
     else if (move.style() == MoveStyle.MISC) { // Misc
       turn.nullify("This doesn't work yet. Sorry about that!");
