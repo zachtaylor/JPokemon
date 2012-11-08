@@ -16,22 +16,12 @@ public class AreaRegistry {
    * @return The Area
    */
   public static Area get(int id) {
+    if (_areas[id - 1] == null) {
+      _areas[id - 1] = new Area(id);
+    }
+
     return _areas[id - 1];
   }
 
-  /**
-   * Trick to initialize the map on JVM load
-   * 
-   * @return doesn't matter
-   */
-  private static Area[] initAreas() {
-    Area[] areas = new Area[Constants.AREANUMBER];
-
-    for (int i = 0; i < Constants.AREANUMBER; i++)
-      areas[i] = new Area(i + 1);
-
-    return areas;
-  }
-
-  private static Area[] _areas = initAreas();
+  private static Area[] _areas = new Area[Constants.AREANUMBER];
 }
