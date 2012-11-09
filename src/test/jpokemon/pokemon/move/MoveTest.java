@@ -5,11 +5,12 @@ import java.util.Map;
 
 import jpkmn.Constants;
 import jpkmn.game.pokemon.Type;
-import jpkmn.game.pokemon.move.Move;
-import jpkmn.game.pokemon.move.MoveInfo;
-import jpkmn.game.pokemon.move.MoveStyle;
 import junit.framework.TestCase;
 
+import org.jpokemon.exception.ConfigurationException;
+import org.jpokemon.pokemon.move.Move;
+import org.jpokemon.pokemon.move.MoveInfo;
+import org.jpokemon.pokemon.move.MoveStyle;
 import org.junit.Test;
 
 public class MoveTest extends TestCase {
@@ -21,6 +22,22 @@ public class MoveTest extends TestCase {
     number = 1 + (int) (Math.random() * Constants.MOVENUMBER);
     move = new Move(number);
     answers = MoveInfo.get(number);
+  }
+
+  public void testMoveRange() {
+    try {
+      move = new Move(10000);
+      fail("Move out of range should throw IllegalArgumentException");
+    } catch (Exception e) {
+      assertTrue(e instanceof ConfigurationException);
+    }
+
+    try {
+      move = new Move(0);
+      fail("Move out of range should throw IllegalArgumentException");
+    } catch (Exception e) {
+      assertTrue(e instanceof ConfigurationException);
+    }
   }
 
   @Test
@@ -51,8 +68,8 @@ public class MoveTest extends TestCase {
   public void testPpCount() {
     // Prevent random accuracy issues. #141 never misses
     number = 141;
-    move = new Move(141);
-    answers = MoveInfo.get(141);
+    move = new Move(number);
+    answers = MoveInfo.get(number);
     int random = (int) (Math.random() * answers.getPp());
 
     for (int i = 0; i < random; i++)
@@ -64,8 +81,8 @@ public class MoveTest extends TestCase {
   public void testPpExhaustion() {
     // Prevent random accuracy issues. #141 never misses
     number = 141;
-    move = new Move(141);
-    answers = MoveInfo.get(141);
+    move = new Move(number);
+    answers = MoveInfo.get(number);
 
     assertTrue(move.enabled());
 
@@ -78,8 +95,8 @@ public class MoveTest extends TestCase {
   public void testRestore() {
     // Prevent random accuracy issues. #141 never misses
     number = 141;
-    move = new Move(141);
-    answers = MoveInfo.get(141);
+    move = new Move(number);
+    answers = MoveInfo.get(number);
 
     assertTrue(move.enabled());
 
@@ -131,7 +148,7 @@ public class MoveTest extends TestCase {
    * distribution of the calls made to reps()
    */
   public void testRepsDistribution() {
-    int sampleSize = 200, result;
+    int sampleSize = 128, result;
     Map<Integer, Integer> results = new HashMap<Integer, Integer>();
 
     MoveStyle style = MoveStyle.valueOf(answers.getStyle());
@@ -152,8 +169,10 @@ public class MoveTest extends TestCase {
     }
 
     System.out.println("\nDistribution of Reps");
-    for (Map.Entry<Integer, Integer> entry : results.entrySet())
-      System.out.println(entry.getKey() + ": " + entry.getValue());
+    for (Map.Entry<Integer, Integer> entry : results.entrySet()) {
+      System.out.print(entry.getKey() + ": ");
+      System.out.println(entry.getValue() * 1.0 / sampleSize + "%");
+    }
     System.out.println();
   }
 }

@@ -16,9 +16,10 @@ import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.move.Move;
 import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
+
+import org.jpokemon.pokemon.move.Move;
 
 public class GraphicsHandler {
   public static void main(String[] args) {

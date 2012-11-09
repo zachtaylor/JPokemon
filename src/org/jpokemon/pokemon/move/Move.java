@@ -1,12 +1,11 @@
-package jpkmn.game.pokemon.move;
+package org.jpokemon.pokemon.move;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Type;
-import jpkmn.game.pokemon.move.effect.MoveEffect;
-import jpkmn.game.pokemon.move.effect.MoveEffectInfo;
+
+import org.jpokemon.pokemon.move.effect.MoveEffect;
 
 public class Move {
   public Move(int number) {
@@ -21,10 +20,7 @@ public class Move {
     _type = Type.valueOf(info.getType());
     _style = MoveStyle.valueOf(info.getStyle());
 
-    _effects = new ArrayList<MoveEffect>();
-
-    for (MoveEffectInfo meinfo : info.getEffects())
-      _effects.add(new MoveEffect(meinfo));
+    _effects = info.getEffects();
   }
 
   /**
@@ -181,12 +177,16 @@ public class Move {
   }
 
   /**
-   * Applies any additional effects of this move to the appropriate Target
+   * Applies any additional effects of this Move to the appropriate Target
    * 
    * @param user User of the move
    * @param enemy Victim of the move
    */
   public void applyEffects(Pokemon user, Pokemon enemy) {
+    // Fix for SQLiteORM #1
+    if (_effects == null)
+      return;
+
     for (MoveEffect effect : _effects)
       effect.effect(user, enemy);
   }

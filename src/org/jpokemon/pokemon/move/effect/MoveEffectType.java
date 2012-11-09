@@ -1,4 +1,4 @@
-package jpkmn.game.pokemon.move.effect;
+package org.jpokemon.pokemon.move.effect;
 
 public enum MoveEffectType {
   ATTACK, DEFENSE, SPECATTACK, SPECDEFENSE, SPEED, BURN, PARALYZE, SLEEP,

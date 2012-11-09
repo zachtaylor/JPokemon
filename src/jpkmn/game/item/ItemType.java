@@ -3,8 +3,8 @@ package jpkmn.game.item;
 import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Type;
-import jpkmn.game.pokemon.move.Move;
 
+import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.stat.StatType;
 
 public enum ItemType {

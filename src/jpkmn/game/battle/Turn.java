@@ -9,7 +9,8 @@ import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.move.Move;
+
+import org.jpokemon.pokemon.move.Move;
 
 public class Turn {
   public Turn(Slot user, Battle b) {

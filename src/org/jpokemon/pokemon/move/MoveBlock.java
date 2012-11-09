@@ -1,14 +1,14 @@
-package jpkmn.game.pokemon.move;
+package org.jpokemon.pokemon.move;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import jpkmn.Constants;
-import jpkmn.exceptions.LoadException;
+import org.jpokemon.exception.ConfigurationException;
 
 public class MoveBlock implements Iterable<Move> {
-  public MoveBlock(int pokemonNumber) throws LoadException {
+  public MoveBlock(int pokemonNumber) throws ConfigurationException {
     _pokemonNumber = pokemonNumber;
     _data = new Move[Constants.MOVESAVAILABLE];
 
@@ -18,32 +18,45 @@ public class MoveBlock implements Iterable<Move> {
       for (MoveMap map : maps)
         add(map.getMove_number());
     } catch (IllegalStateException e) {
-      throw new LoadException(e.getMessage());
+      e.printStackTrace();
+      throw new ConfigurationException("Excessive default moves: "
+          + pokemonNumber);
+    } catch (IllegalArgumentException e) {
+      e.printStackTrace();
+      throw new ConfigurationException(e.getMessage());
     }
   }
 
+  public void setPokemonNumber(int number) {
+    _pokemonNumber = number;
+  }
+
+  public int count() {
+    return _count;
+  }
+
   public Move get(int i) {
-    if (i < 0 || i >= _amount)
+    if (i < 0 || i >= _count)
       throw new IllegalArgumentException("Index out of bounds");
 
     return _data[i];
   }
 
   public void add(int number) {
-    if (_amount == Constants.MOVESAVAILABLE)
+    if (_count == Constants.MOVESAVAILABLE)
       throw new IllegalStateException("MoveBlock is full");
 
-    add(number, _amount);
+    add(number, _count);
   }
 
   public void add(int number, int position) {
     if (position < 0 || position >= Constants.MOVESAVAILABLE)
       throw new IllegalArgumentException("Position out of bounds: " + position);
-    if (number < 1 || number > Constants.MOVENUMBER || contains(number))
-      throw new IllegalArgumentException("Illegal move number: " + number);
+    if (contains(number))
+      throw new IllegalArgumentException("Duplicate move: " + number);
 
     _data[position] = new Move(number);
-    _amount++;
+    _count++;
   }
 
   public void restoreAll() {
@@ -53,18 +66,20 @@ public class MoveBlock implements Iterable<Move> {
 
   public void removeAll() {
     _data = new Move[Constants.MOVESAVAILABLE];
-    _amount = 0;
+    _count = 0;
   }
 
-  public boolean check(int level) {
+  public List<String> newMoves(int level) {
     List<MoveMap> maps = MoveMap.get(_pokemonNumber, level);
+    List<String> names = new ArrayList<String>();
 
-    return !maps.isEmpty();
+    for (MoveMap map : maps)
+      names.add(MoveInfo.get(map.getMove_number()).getName());
+
+    return names;
   }
 
   public void randomize(int level) {
-    removeAll();
-
     ArrayList<Integer> possible = new ArrayList<Integer>();
 
     for (int currentLevel = 1; currentLevel <= level; currentLevel++)
@@ -72,7 +87,11 @@ public class MoveBlock implements Iterable<Move> {
         if (!possible.contains(map.getMove_number()))
           possible.add(map.getMove_number());
 
-    while (!possible.isEmpty() && _amount < Constants.MOVESAVAILABLE)
+    if (possible.isEmpty())
+      return;
+
+    removeAll();
+    while (!possible.isEmpty() && _count < Constants.MOVESAVAILABLE)
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 
@@ -96,7 +115,7 @@ public class MoveBlock implements Iterable<Move> {
 
     @Override
     public boolean hasNext() {
-      return _index < MoveBlock.this._amount;
+      return _index < MoveBlock.this._count;
     }
 
     @Override
@@ -112,5 +131,5 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   private Move[] _data;
-  private int _amount, _pokemonNumber;
+  private int _count, _pokemonNumber;
 }

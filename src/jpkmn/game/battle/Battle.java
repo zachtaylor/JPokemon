@@ -8,9 +8,10 @@ import java.util.Map;
 
 import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.move.Move;
-import jpkmn.game.pokemon.move.MoveStyle;
 import jpkmn.game.pokemon.storage.Party;
+
+import org.jpokemon.pokemon.move.Move;
+import org.jpokemon.pokemon.move.MoveStyle;
 
 public class Battle implements Iterable<Slot> {
   public Battle() {

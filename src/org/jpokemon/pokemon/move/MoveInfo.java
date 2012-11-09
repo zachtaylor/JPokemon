@@ -1,10 +1,12 @@
-package jpkmn.game.pokemon.move;
+package org.jpokemon.pokemon.move;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jpkmn.Constants;
-import jpkmn.game.pokemon.move.effect.MoveEffectInfo;
+
+import org.jpokemon.exception.ConfigurationException;
+import org.jpokemon.pokemon.move.effect.MoveEffect;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -21,12 +23,15 @@ public class MoveInfo {
   private int type, power, pp, style;
 
   @OneToMany("move_number")
-  private List<MoveEffectInfo> effects = new ArrayList<MoveEffectInfo>();
+  private List<MoveEffect> effects = new ArrayList<MoveEffect>();
 
   private static MoveInfo[] cache = new MoveInfo[Constants.MOVENUMBER];
 
   public static MoveInfo get(int number) {
     DataConnectionManager.init("data/Pokemon.db");
+
+    if (number < 1 || number > Constants.MOVENUMBER)
+      throw new ConfigurationException(number + " is outside move range.");
 
     if (cache[number - 1] == null) {
       try {
@@ -36,7 +41,6 @@ public class MoveInfo {
         cache[number - 1] = moves.isEmpty() ? null : moves.get(0);
       } catch (DataConnectionException e) {
         e.printStackTrace();
-        return null;
       }
     }
 
@@ -51,6 +55,6 @@ public class MoveInfo {
   public int getPower() {return power;} public void setPower(int p) {power = p;}
   public int getPp() {return pp;} public void setPp(int p) {pp = p;}
   public int getStyle() {return style;} public void setStyle(int s) {style = s;}
-  public List<MoveEffectInfo> getEffects() {return effects;} public void setEffects(List<MoveEffectInfo> l) {effects = l;}
+  public List<MoveEffect> getEffects() {return effects;} public void setEffects(List<MoveEffect> l) {effects = l;}
   //@format
 }

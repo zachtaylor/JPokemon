@@ -15,7 +15,7 @@ public class Constants {
   public static final int BOXSIZE = 20;
 
   public static final int MOVESAVAILABLE = 4;
-  public static final int MOVENUMBER = 163;
+  public static final int MOVENUMBER = 164;
   
   public static final int MAXBATTLESIZE = 4;
   public static final int STATCHANGEMAX = 6;

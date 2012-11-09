@@ -3,8 +3,8 @@ package jpkmn.game.battle;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.game.pokemon.move.Move;
-import jpkmn.game.pokemon.move.MoveStyle;
+import org.jpokemon.pokemon.move.Move;
+import org.jpokemon.pokemon.move.MoveStyle;
 
 public class Shield {
   public Shield(Field.Effect type, int duration, double reduction) {

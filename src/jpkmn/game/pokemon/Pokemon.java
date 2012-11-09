@@ -5,9 +5,9 @@ import java.util.Scanner;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
 import jpkmn.game.player.Trainer;
-import jpkmn.game.pokemon.move.Move;
-import jpkmn.game.pokemon.move.MoveBlock;
 
+import org.jpokemon.pokemon.move.Move;
+import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Health;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
@@ -66,8 +66,7 @@ public class Pokemon {
       _stats.points(_stats.points() + 1);
     }
 
-    if (moves.check(level()))
-      ; // TODO : notify of new moves
+    checkNewMoves();
 
     condition.reset();
   }
@@ -170,8 +169,8 @@ public class Pokemon {
 
     PokemonBase base = PokemonBase.get(_number);
 
-    if (moves.check(level()))
-      ; // TODO : notify of new moves
+    moves.setPokemonNumber(_number);
+    checkNewMoves();
 
     _stats.rebase(base);
     type1 = Type.valueOf(base.getType1());
@@ -304,6 +303,11 @@ public class Pokemon {
     }
 
     return null;
+  }
+
+  private void checkNewMoves() {
+    if (!moves.newMoves(level()).isEmpty())
+      ; // TODO : notify of new moves
   }
 
   @Override
