@@ -35,7 +35,8 @@ public class Bag {
     data.append("BAG: ");
 
     for (Item item : _allItems) {
-      if (item.amount() == 0) continue;
+      if (item.amount() == 0)
+        continue;
 
       data.append(item.toString());
       data.append(" ");
@@ -48,15 +49,18 @@ public class Bag {
 
   public void load(String s) throws LoadException {
     try {
-      Scanner scan = new Scanner(s);
+      if (!s.startsWith("BAG: "))
+        throw new Exception();
 
-      if (!scan.next().equals("BAG:")) throw new Exception();
+      Scanner scan = new Scanner(s);
+      scan.next(); // Throw away "BAG: "
 
       String[] parts;
       while (scan.hasNext()) {
         parts = scan.next().split("-");
         get(Integer.parseInt(parts[0])).amount(Integer.parseInt(parts[1]));
       }
+      scan.close();
     } catch (Exception e) {
       throw new LoadException("Bag could not load: " + s);
     }

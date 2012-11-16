@@ -24,7 +24,7 @@ public class Requirement {
   public boolean test(Player p) {
     switch (_type) {
     case EVENT:
-      return p.progress.event(_value);
+      return p.getEvent(_value);
     case BADGE:
       return p.badge() >= _value;
     }

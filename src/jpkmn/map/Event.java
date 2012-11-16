@@ -47,7 +47,7 @@ public class Event {
   }
 
   public boolean test(Player p) {
-    if (p.progress.event(_id))
+    if (p.getEvent(_id))
       return false;
 
     switch (_type) {
@@ -78,7 +78,7 @@ public class Event {
       break;
     case ITEM:
       p.bag.get(_int1).add(_int2);
-      p.progress.event(_id, true);
+      p.getEvent(_id);
       break;
     }
     // TODO

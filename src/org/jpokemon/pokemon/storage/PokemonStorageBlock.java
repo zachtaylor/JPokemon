@@ -52,8 +52,10 @@ public class PokemonStorageBlock {
         box = lineScan.nextInt();
         pokemon = lineScan.nextLine();
 
-        if (!_data[box].add(Pokemon.load(pokemon)))
+        if (!_data[box].add(Pokemon.load(pokemon))) {
+          lineScan.close();
           throw new LoadException("Box " + box + " full on " + line);
+        }
       }
     } catch (InputMismatchException e) {
       throw new LoadException("Improper form on line: " + line);

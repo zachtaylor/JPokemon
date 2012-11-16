@@ -8,13 +8,13 @@ import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 
+import org.jpokemon.player.Progress;
 import org.jpokemon.pokedex.Pokedex;
 
 public class Player extends Trainer {
   public final Bag bag;
   public final Pokedex dex;
   public final PCStorage box;
-  public final Progress progress;
 
   public Player(int playerID) {
     super();
@@ -25,7 +25,7 @@ public class Player extends Trainer {
     bag = new Bag();
     dex = new Pokedex();
     box = new PCStorage();
-    progress = new Progress();
+    _progress = new Progress();
   }
 
   public int area() {
@@ -42,6 +42,14 @@ public class Player extends Trainer {
 
   public void badge(int b) {
     _badge = b;
+  }
+
+  public boolean getEvent(int id) {
+    return _progress.get(id);
+  }
+
+  public void putEvent(int id) {
+    _progress.put(id);
   }
 
   public String save() {
@@ -70,7 +78,7 @@ public class Player extends Trainer {
     data.append(dex.save());
 
     // save progress
-    data.append(progress.save());
+    data.append(_progress.save());
 
     // save pcstorage
     for (Pokemon p : box)
@@ -97,7 +105,7 @@ public class Player extends Trainer {
       dex.load(scan.nextLine());
 
       // Load progress
-      progress.load(scan.nextLine());
+      _progress.load(scan.nextLine());
 
       // load pcstorage
       while (scan.hasNextLine())
@@ -122,4 +130,5 @@ public class Player extends Trainer {
   }
 
   private int _area, _badge;
+  private Progress _progress;
 }
