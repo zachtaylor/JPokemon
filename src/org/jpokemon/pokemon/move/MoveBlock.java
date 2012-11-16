@@ -9,18 +9,18 @@ import org.jpokemon.exception.ConfigurationException;
 
 public class MoveBlock implements Iterable<Move> {
   public MoveBlock(int pokemonNumber) throws ConfigurationException {
-    _pokemonNumber = pokemonNumber;
+    _pokemon = pokemonNumber;
     _data = new Move[Constants.MOVESAVAILABLE];
 
-    List<MoveMap> maps = MoveMap.get(_pokemonNumber, 1);
+    for (int i = 0; i < Constants.MOVESAVAILABLE; i++)
+      _data[i] = new Move(-1);
 
     try {
-      for (MoveMap map : maps)
+      for (MoveMap map : MoveMap.get(_pokemon, 1))
         add(map.getMove_number());
     } catch (IllegalStateException e) {
       e.printStackTrace();
-      throw new ConfigurationException("Excessive default moves: "
-          + pokemonNumber);
+      throw new ConfigurationException("Excessive default moves: " + _pokemon);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
       throw new ConfigurationException(e.getMessage());
@@ -28,7 +28,7 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   public void setPokemonNumber(int number) {
-    _pokemonNumber = number;
+    _pokemon = number;
   }
 
   public int count() {
@@ -55,7 +55,7 @@ public class MoveBlock implements Iterable<Move> {
     if (contains(number))
       throw new IllegalArgumentException("Duplicate move: " + number);
 
-    _data[position] = new Move(number);
+    _data[position].setNumber(number);
     _count++;
   }
 
@@ -65,12 +65,14 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   public void removeAll() {
-    _data = new Move[Constants.MOVESAVAILABLE];
+    for (Move m : _data)
+      m.setNumber(-1);
+
     _count = 0;
   }
 
   public List<String> newMoves(int level) {
-    List<MoveMap> maps = MoveMap.get(_pokemonNumber, level);
+    List<MoveMap> maps = MoveMap.get(_pokemon, level);
     List<String> names = new ArrayList<String>();
 
     for (MoveMap map : maps)
@@ -83,7 +85,7 @@ public class MoveBlock implements Iterable<Move> {
     ArrayList<Integer> possible = new ArrayList<Integer>();
 
     for (int currentLevel = 1; currentLevel <= level; currentLevel++)
-      for (MoveMap map : MoveMap.get(_pokemonNumber, currentLevel))
+      for (MoveMap map : MoveMap.get(_pokemon, currentLevel))
         if (!possible.contains(map.getMove_number()))
           possible.add(map.getMove_number());
 
@@ -131,5 +133,5 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   private Move[] _data;
-  private int _count, _pokemonNumber;
+  private int _count, _pokemon;
 }

@@ -1,7 +1,5 @@
 package org.jpokemon.pokemon.move;
 
-import java.util.List;
-
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.Type;
 
@@ -9,18 +7,7 @@ import org.jpokemon.pokemon.move.effect.MoveEffect;
 
 public class Move {
   public Move(int number) {
-    _enabled = true;
-    _number = number;
-
-    MoveInfo info = MoveInfo.get(number);
-    _name = info.getName();
-    _power = info.getPower();
-    _pp = _ppmax = info.getPp();
-    _accuracy = info.getAccuracy();
-    _type = Type.valueOf(info.getType());
-    _style = MoveStyle.valueOf(info.getStyle());
-
-    _effects = info.getEffects();
+    setNumber(number);
   }
 
   /**
@@ -29,7 +16,7 @@ public class Move {
    * @return Number used to identify this Move
    */
   public int number() {
-    return _number;
+    return _info.getNumber();
   }
 
   /**
@@ -38,7 +25,7 @@ public class Move {
    * @return What people call this Move
    */
   public String name() {
-    return _name;
+    return _info.getName();
   }
 
   /**
@@ -47,7 +34,7 @@ public class Move {
    * @return The power of the Move, as applicable
    */
   public int power() {
-    return _power;
+    return _info.getPower();
   }
 
   /**
@@ -66,7 +53,7 @@ public class Move {
    *         will be effectively executed
    */
   public double accuracy() {
-    return _accuracy;
+    return _info.getAccuracy();
   }
 
   /**
@@ -106,11 +93,31 @@ public class Move {
   }
 
   /**
+   * Fully mutate this Move to a new instance of the specified number.
+   * 
+   * @param number New move number
+   */
+  public void setNumber(int number) {
+    if (number == -1) {
+      _enabled = false;
+      _info = null;
+    }
+    else {
+      _enabled = true;
+
+      _info = MoveInfo.get(number);
+      _pp = _ppMax = _info.getPp();
+      _type = Type.valueOf(_info.getType());
+      _style = MoveStyle.valueOf(_info.getStyle());
+    }
+  }
+
+  /**
    * Restores the PP of this Move to the maximum value, and removes any
    * disabling effects
    */
   public void restore() {
-    _pp = _ppmax;
+    _pp = _ppMax;
     _enabled = true;
   }
 
@@ -120,7 +127,7 @@ public class Move {
    * @return If the move is used successfully
    */
   public boolean use() {
-    boolean success = enabled() & _accuracy >= Math.random();
+    boolean success = enabled() & accuracy() >= Math.random();
 
     if (success)
       _pp--;
@@ -183,11 +190,7 @@ public class Move {
    * @param enemy Victim of the move
    */
   public void applyEffects(Pokemon user, Pokemon enemy) {
-    // Fix for SQLiteORM #1
-    if (_effects == null)
-      return;
-
-    for (MoveEffect effect : _effects)
+    for (MoveEffect effect : _info.getEffects())
       effect.effect(user, enemy);
   }
 
@@ -198,19 +201,17 @@ public class Move {
 
     Move m = (Move) o;
 
-    return _number == m._number;
+    return _info == m._info && _ppMax == m._ppMax;
   }
 
   public int hashCode() {
-    return _number;
+    return _type.ordinal() * 1375 + _style.ordinal() * 71;
   }
 
   private Type _type;
-  private String _name;
-  private double _accuracy;
   private boolean _enabled;
   private MoveStyle _style;
-  private int _number, _power, _pp, _ppmax;
+  private int _pp, _ppMax;
 
-  private List<MoveEffect> _effects;
+  private MoveInfo _info;
 }
