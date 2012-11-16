@@ -3,15 +3,15 @@ package test.jpokemon.pokedex;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import junit.framework.TestCase;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokedex.PokedexStatus;
 
-public class PokedexTest extends TestCase {
-  public static int power = 25, defaultSize = Constants.POKEMONNUMBER;
+public class PokedexTest extends TestCase implements JPokemonConstants {
+  public static int power = 25, defaultSize = POKEMONNUMBER;
 
   public static Pokedex dex;
 

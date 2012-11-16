@@ -1,6 +1,6 @@
-package jpkmn;
+package org.jpokemon;
 
-public class Constants {
+public interface JPokemonConstants {
   // Later incorporated into server settings
   public static final String SAVE_DIR = "data/save/";
 
@@ -16,7 +16,7 @@ public class Constants {
 
   public static final int MOVESAVAILABLE = 4;
   public static final int MOVENUMBER = 164;
-  
+
   public static final int MAXBATTLESIZE = 4;
   public static final int STATCHANGEMAX = 6;
   public static final double TYPEADVANTAGE = 2.0;

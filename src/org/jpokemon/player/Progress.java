@@ -1,14 +1,15 @@
 package org.jpokemon.player;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
+
+import org.jpokemon.JPokemonConstants;
 
 /**
  * A representation of the progress a Player has made
  */
-public class Progress {
+public class Progress implements JPokemonConstants {
   public Progress() {
-    _events = new boolean[Constants.EVENTNUMBER];
+    _events = new boolean[EVENTNUMBER];
   }
 
   /**
@@ -17,7 +18,7 @@ public class Progress {
    * @param id Event number to record
    */
   public void put(int id) {
-    if (id < 1 || id >= Constants.EVENTNUMBER)
+    if (id < 1 || id >= EVENTNUMBER)
       throw new IllegalArgumentException("Out of bounds event: " + id);
     if (_events[id - 1])
       throw new IllegalArgumentException("Duplicate put for event: " + id);
@@ -32,7 +33,7 @@ public class Progress {
    * @return True if the event has been completed
    */
   public boolean get(int id) {
-    if (id < 1 || id >= Constants.EVENTNUMBER)
+    if (id < 1 || id >= EVENTNUMBER)
       throw new IllegalArgumentException("Out of bounds event: " + id);
 
     return _events[id - 1];
@@ -43,7 +44,7 @@ public class Progress {
 
     data.append("PROGRESS: ");
 
-    for (int i = 0; i < Constants.EVENTNUMBER; i++) {
+    for (int i = 0; i < EVENTNUMBER; i++) {
       if (_events[i]) {
         data.append(i);
         data.append(" ");

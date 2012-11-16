@@ -1,6 +1,6 @@
 package jpkmn.map;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 
 /**
  * Properly initializes and maintains a list of areas.
@@ -23,5 +23,5 @@ public class AreaRegistry {
     return _areas[id - 1];
   }
 
-  private static Area[] _areas = new Area[Constants.AREANUMBER];
+  private static Area[] _areas = new Area[JPokemonConstants.AREANUMBER];
 }

@@ -3,23 +3,23 @@ package test.jpokemon.pokemon.move;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Type;
 import junit.framework.TestCase;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveInfo;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.junit.Test;
 
-public class MoveTest extends TestCase {
+public class MoveTest extends TestCase implements JPokemonConstants {
   private int number;
   private Move move;
   private MoveInfo answers;
 
   public void setUp() {
-    number = 1 + (int) (Math.random() * Constants.MOVENUMBER);
+    number = 1 + (int) (Math.random() * MOVENUMBER);
     move = new Move(number);
     answers = MoveInfo.get(number);
   }
@@ -114,7 +114,7 @@ public class MoveTest extends TestCase {
     MoveStyle style = MoveStyle.valueOf(answers.getStyle());
 
     while (style != MoveStyle.REPEAT) {
-      number = 1 + (int) (Math.random() * Constants.MOVENUMBER);
+      number = 1 + (int) (Math.random() * MOVENUMBER);
       move = new Move(number);
       answers = MoveInfo.get(number);
       style = MoveStyle.valueOf(answers.getStyle());
@@ -123,7 +123,7 @@ public class MoveTest extends TestCase {
     assertTrue(move.reps() != 1);
 
     while (style == MoveStyle.REPEAT) {
-      number = 1 + (int) (Math.random() * Constants.MOVENUMBER);
+      number = 1 + (int) (Math.random() * MOVENUMBER);
       move = new Move(number);
       answers = MoveInfo.get(number);
       style = MoveStyle.valueOf(answers.getStyle());
@@ -154,7 +154,7 @@ public class MoveTest extends TestCase {
     MoveStyle style = MoveStyle.valueOf(answers.getStyle());
 
     while (style != MoveStyle.REPEAT) {
-      number = 1 + (int) (Math.random() * Constants.MOVENUMBER);
+      number = 1 + (int) (Math.random() * MOVENUMBER);
       move = new Move(number);
       answers = MoveInfo.get(number);
       style = MoveStyle.valueOf(answers.getStyle());

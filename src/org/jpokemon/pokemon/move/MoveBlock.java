@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 
-public class MoveBlock implements Iterable<Move> {
+public class MoveBlock implements Iterable<Move>, JPokemonConstants {
   public MoveBlock(int pokemonNumber) throws ConfigurationException {
     _pokemon = pokemonNumber;
-    _data = new Move[Constants.MOVESAVAILABLE];
+    _data = new Move[MOVESAVAILABLE];
 
-    for (int i = 0; i < Constants.MOVESAVAILABLE; i++)
+    for (int i = 0; i < MOVESAVAILABLE; i++)
       _data[i] = new Move(-1);
 
     try {
@@ -43,14 +43,14 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   public void add(int number) {
-    if (_count == Constants.MOVESAVAILABLE)
+    if (_count == MOVESAVAILABLE)
       throw new IllegalStateException("MoveBlock is full");
 
     add(number, _count);
   }
 
   public void add(int number, int position) {
-    if (position < 0 || position >= Constants.MOVESAVAILABLE)
+    if (position < 0 || position >= MOVESAVAILABLE)
       throw new IllegalArgumentException("Position out of bounds: " + position);
     if (contains(number))
       throw new IllegalArgumentException("Duplicate move: " + number);
@@ -93,7 +93,7 @@ public class MoveBlock implements Iterable<Move> {
       return;
 
     removeAll();
-    while (!possible.isEmpty() && _count < Constants.MOVESAVAILABLE)
+    while (!possible.isEmpty() && _count < MOVESAVAILABLE)
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 

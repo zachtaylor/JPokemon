@@ -2,16 +2,17 @@ package org.jpokemon.pokedex;
 
 import java.util.Scanner;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
+
+import org.jpokemon.JPokemonConstants;
 
 /**
  * A gadget which helps keep track of which Pokemon have been seen or caught in
  * the world. Pokedex maintains a status on each Pokemon it tracks.
  */
-public class Pokedex {
+public class Pokedex implements JPokemonConstants {
   public Pokedex() {
-    _size = Constants.POKEMONNUMBER;
+    _size = POKEMONNUMBER;
 
     _data = new PokedexStatus[_size];
 

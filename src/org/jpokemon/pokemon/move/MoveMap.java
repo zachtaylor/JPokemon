@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
-public class MoveMap {
+public class MoveMap implements JPokemonConstants {
   private int pokemon_number, pokemon_level, move_number;
 
   private static Map<Integer, Map<Integer, List<MoveMap>>> cache = new HashMap<Integer, Map<Integer, List<MoveMap>>>(
-      Constants.POKEMONNUMBER);
+      POKEMONNUMBER);
 
   public static List<MoveMap> get(int number, int level) {
     DataConnectionManager.init("data/Pokemon.db");

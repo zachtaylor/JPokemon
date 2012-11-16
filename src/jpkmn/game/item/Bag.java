@@ -4,18 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
+
+import org.jpokemon.JPokemonConstants;
 
 public class Bag {
   public Bag() {
-    _allItems = new Item[Constants.ITEMNUMBER];
+    _allItems = new Item[JPokemonConstants.ITEMNUMBER];
     _pockets = new HashMap<ItemType, BagPocket>();
 
     for (ItemType type : ItemType.values())
       _pockets.put(type, new BagPocket());
 
-    for (int id = 1; id <= Constants.ITEMNUMBER; id++) {
+    for (int id = 1; id <= JPokemonConstants.ITEMNUMBER; id++) {
       _allItems[id - 1] = new Item(id);
       _pockets.get(_allItems[id - 1].type()).add(_allItems[id - 1]);
     }

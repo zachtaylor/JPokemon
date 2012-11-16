@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.JPokemonConstants;
 
 public class PCStorage implements Iterable<Pokemon> {
   public PCStorage() {
-    _boxes = new StorageBox[Constants.BOXNUMBER];
+    _boxes = new StorageBox[JPokemonConstants.BOXNUMBER];
     addBox();
   }
 
@@ -23,7 +24,7 @@ public class PCStorage implements Iterable<Pokemon> {
   }
 
   public void addBox() {
-    if (_available < Constants.BOXNUMBER)
+    if (_available < JPokemonConstants.BOXNUMBER)
       _boxes[_available++] = new StorageBox();
   }
 

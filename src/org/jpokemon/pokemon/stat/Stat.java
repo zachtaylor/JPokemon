@@ -1,8 +1,8 @@
 package org.jpokemon.pokemon.stat;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 
-public class Stat {
+public class Stat implements JPokemonConstants {
   public Stat() {
     _level = 1;
     _modifier = 1;
@@ -40,8 +40,8 @@ public class Stat {
   public void effect(int power) {
     _delta += power;
 
-    if (Math.abs(_delta) > Constants.STATCHANGEMAX)
-      _delta = (int) Math.copySign(Constants.STATCHANGEMAX, _delta);
+    if (Math.abs(_delta) > STATCHANGEMAX)
+      _delta = (int) Math.copySign(STATCHANGEMAX, _delta);
 
     doCalculation();
   }

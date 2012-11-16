@@ -2,7 +2,7 @@ package jpkmn.game.base;
 
 import java.util.List;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -17,7 +17,7 @@ public class PokemonBase {
   private String name;
 
   private static PokemonBase[] initBases() {
-    return new PokemonBase[Constants.POKEMONNUMBER];
+    return new PokemonBase[JPokemonConstants.POKEMONNUMBER];
   }
 
   public static PokemonBase get(int num) {

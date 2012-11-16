@@ -4,10 +4,11 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.JPokemonConstants;
 
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
@@ -15,15 +16,15 @@ import jpkmn.game.pokemon.Pokemon;
  * PokemonStorageBlock supports 1 unit of unique size, to be used for the
  * party. Other units have common size.
  */
-public class PokemonStorageBlock {
+public class PokemonStorageBlock implements JPokemonConstants {
   public PokemonStorageBlock(Trainer trainer) {
     _trainer = trainer;
 
-    _data = new PokemonStorageUnit[Constants.BOXNUMBER + 1];
+    _data = new PokemonStorageUnit[BOXNUMBER + 1];
 
-    _data[0] = new PokemonStorageUnit(Constants.PARTYSIZE, _trainer);
-    for (int i = 1; i <= Constants.BOXNUMBER; i++)
-      _data[i] = new PokemonStorageUnit(Constants.BOXSIZE, _trainer);
+    _data[0] = new PokemonStorageUnit(PARTYSIZE, _trainer);
+    for (int i = 1; i <= BOXNUMBER; i++)
+      _data[i] = new PokemonStorageUnit(BOXSIZE, _trainer);
   }
 
   public String save() {

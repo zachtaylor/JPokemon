@@ -2,7 +2,7 @@ package jpkmn.game.base;
 
 import java.util.List;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -60,5 +60,5 @@ public class AIInfo {
   public String getName() {return name;} public void setName(String _val) {name = _val;}
   //@format
 
-  private static AIInfo[] cache = new AIInfo[Constants.AINUMBER];
+  private static AIInfo[] cache = new AIInfo[JPokemonConstants.AINUMBER];
 }

@@ -7,9 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.JPokemonConstants;
 
 public class PlayerRegistry {
   public static Player get(int playerID) {
@@ -28,7 +29,7 @@ public class PlayerRegistry {
       s += ".jpkmn";
 
     try {
-      File playerFile = new File(Constants.SAVE_DIR + s);
+      File playerFile = new File(JPokemonConstants.SAVE_DIR + s);
       Scanner scan = new Scanner(playerFile);
 
       return newPlayer().load(scan);
@@ -46,7 +47,7 @@ public class PlayerRegistry {
     String path = player.name() + ".jpkmn";
 
     try {
-      File file = new File(Constants.SAVE_DIR + path);
+      File file = new File(JPokemonConstants.SAVE_DIR + path);
       if (!file.exists())
         file.createNewFile();
 

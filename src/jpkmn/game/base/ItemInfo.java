@@ -2,7 +2,7 @@ package jpkmn.game.base;
 
 import java.util.List;
 
-import jpkmn.Constants;
+import org.jpokemon.JPokemonConstants;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -16,7 +16,7 @@ public class ItemInfo {
   private String name;
   private int type, data, value;
 
-  private static ItemInfo[] cache = new ItemInfo[Constants.ITEMNUMBER];
+  private static ItemInfo[] cache = new ItemInfo[JPokemonConstants.ITEMNUMBER];
 
   public static ItemInfo getInfo(int number) {
     DataConnectionManager.init("data/Pokemon.db");
@@ -25,8 +25,8 @@ public class ItemInfo {
       return cache[number - 1];
 
     try {
-      List<ItemInfo> info = SqlStatement.select(ItemInfo.class)
-          .where("number").eq(number).getList();
+      List<ItemInfo> info = SqlStatement.select(ItemInfo.class).where("number")
+          .eq(number).getList();
 
       if (info.isEmpty())
         return null;

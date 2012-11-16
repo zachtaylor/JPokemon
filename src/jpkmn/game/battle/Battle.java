@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.Party;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
@@ -20,7 +20,7 @@ public class Battle implements Iterable<Slot> {
   }
 
   public int add(SlotType t, Party p) {
-    if (ready() || _slots.size() == Constants.MAXBATTLESIZE)
+    if (ready() || _slots.size() == JPokemonConstants.MAXBATTLESIZE)
       return -1;
 
     int id = _slots.size();

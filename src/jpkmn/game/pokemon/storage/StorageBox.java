@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.JPokemonConstants;
 
 public class StorageBox implements Iterable<Pokemon> {
   public StorageBox() {
@@ -18,7 +19,7 @@ public class StorageBox implements Iterable<Pokemon> {
   }
 
   public boolean add(Pokemon p) {
-    if (_size == Constants.BOXSIZE || _storage.contains(p)) return false;
+    if (_size == JPokemonConstants.BOXSIZE || _storage.contains(p)) return false;
 
     _size++;
     _storage.add(p);

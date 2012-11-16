@@ -2,15 +2,16 @@ package jpkmn.game.pokemon.storage;
 
 import java.util.Iterator;
 
-import jpkmn.Constants;
 import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.JPokemonConstants;
 
 public class Party implements Iterable<Pokemon> {
   public Party(Trainer p) {
     _owner = p;
     _amount = 0;
-    _data = new Pokemon[Constants.PARTYSIZE];
+    _data = new Pokemon[JPokemonConstants.PARTYSIZE];
   }
 
   public Trainer owner() {
@@ -28,7 +29,7 @@ public class Party implements Iterable<Pokemon> {
   }
 
   public boolean add(Pokemon p) {
-    if (p == null || _amount == Constants.PARTYSIZE || contains(p))
+    if (p == null || _amount == JPokemonConstants.PARTYSIZE || contains(p))
       return false;
 
     _data[_amount++] = p;

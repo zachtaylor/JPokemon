@@ -2,12 +2,12 @@ package jpkmn.game.player;
 
 import java.util.Scanner;
 
-import jpkmn.Constants;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.PCStorage;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.player.Progress;
 import org.jpokemon.pokedex.Pokedex;
 
@@ -64,7 +64,7 @@ public class Player extends Trainer {
     data.append(area());
     data.append("\n");
 
-    for (int partyIndex = 0; partyIndex < Constants.PARTYSIZE; ++partyIndex) {
+    for (int partyIndex = 0; partyIndex < JPokemonConstants.PARTYSIZE; ++partyIndex) {
       if (party.get(partyIndex) != null)
         data.append(party.get(partyIndex).save());
       else
@@ -95,7 +95,7 @@ public class Player extends Trainer {
       area(Integer.parseInt(scan.nextLine().trim()));
 
       // Load party
-      for (int partyIndex = 0; partyIndex < Constants.PARTYSIZE; ++partyIndex)
+      for (int partyIndex = 0; partyIndex < JPokemonConstants.PARTYSIZE; ++partyIndex)
         party.add(Pokemon.load(scan.nextLine()));
 
       // Load bag

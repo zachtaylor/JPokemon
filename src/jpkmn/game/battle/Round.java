@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Condition.Issue;
+
+import org.jpokemon.JPokemonConstants;
 
 public class Round {
   public Round(Battle b) {
     _battle = b;
-    _turns = new PriorityQueue<Turn>(Constants.MAXBATTLESIZE,
+    _turns = new PriorityQueue<Turn>(JPokemonConstants.MAXBATTLESIZE,
         new Turn.TurnComparator());
     _haveSelectedTurn = new ArrayList<Slot>();
     _forceNextAttack = new ArrayList<Slot>();

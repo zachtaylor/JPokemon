@@ -9,10 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import jpkmn.Constants;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
+
+import org.jpokemon.JPokemonConstants;
 
 public class PartyPanel extends JPanel {
   public PartyPanel() {
@@ -70,7 +71,7 @@ public class PartyPanel extends JPanel {
     Pokemon lead = p.get(0); // shortcut
 
     partyStatus.removeAll();
-    for (int i = 0; i < Constants.PARTYSIZE; i++) {
+    for (int i = 0; i < JPokemonConstants.PARTYSIZE; i++) {
       if (p.get(i) != null && p.get(i).condition.awake())
         partyStatus.add(new JLabel(ImageFinder.find("aslot")));
       else

@@ -3,8 +3,7 @@ package org.jpokemon.pokemon.move;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.Constants;
-
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
 
@@ -14,7 +13,7 @@ import com.kremerk.Sqlite.SqlStatement;
 import com.kremerk.Sqlite.Annotations.OneToMany;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
-public class MoveInfo {
+public class MoveInfo implements JPokemonConstants {
   @PrimaryKey
   private int number;
 
@@ -25,12 +24,12 @@ public class MoveInfo {
   @OneToMany("move_number")
   private List<MoveEffect> effects = new ArrayList<MoveEffect>();
 
-  private static MoveInfo[] cache = new MoveInfo[Constants.MOVENUMBER];
+  private static MoveInfo[] cache = new MoveInfo[MOVENUMBER];
 
   public static MoveInfo get(int number) {
     DataConnectionManager.init("data/Pokemon.db");
 
-    if (number < 1 || number > Constants.MOVENUMBER)
+    if (number < 1 || number > MOVENUMBER)
       throw new ConfigurationException(number + " is outside move range.");
 
     if (cache[number - 1] == null) {
