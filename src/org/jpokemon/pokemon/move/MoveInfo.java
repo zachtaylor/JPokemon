@@ -36,8 +36,13 @@ public class MoveInfo implements JPokemonConstants {
       try {
         List<MoveInfo> moves = SqlStatement.select(MoveInfo.class)
             .where("number").eq(number).getList();
+        List<MoveEffect> effects = SqlStatement.select(MoveEffect.class)
+            .where("move_number").eq(number).getList();
 
-        cache[number - 1] = moves.isEmpty() ? null : moves.get(0);
+        if (!moves.isEmpty()) {
+          moves.get(0).setEffects(effects);
+          cache[number - 1] = moves.get(0);
+        }
       } catch (DataConnectionException e) {
         e.printStackTrace();
       }

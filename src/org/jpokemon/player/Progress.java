@@ -18,7 +18,7 @@ public class Progress implements JPokemonConstants {
    * @param id Event number to record
    */
   public void put(int id) {
-    if (id < 1 || id >= EVENTNUMBER)
+    if (id < 1 || id > EVENTNUMBER)
       throw new IllegalArgumentException("Out of bounds event: " + id);
     if (_events[id - 1])
       throw new IllegalArgumentException("Duplicate put for event: " + id);
@@ -33,7 +33,7 @@ public class Progress implements JPokemonConstants {
    * @return True if the event has been completed
    */
   public boolean get(int id) {
-    if (id < 1 || id >= EVENTNUMBER)
+    if (id < 1 || id > EVENTNUMBER)
       throw new IllegalArgumentException("Out of bounds event: " + id);
 
     return _events[id - 1];
