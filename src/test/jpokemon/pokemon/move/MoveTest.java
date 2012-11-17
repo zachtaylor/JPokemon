@@ -3,11 +3,11 @@ package test.jpokemon.pokemon.move;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.game.pokemon.Type;
 import junit.framework.TestCase;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
+import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveInfo;
 import org.jpokemon.pokemon.move.MoveStyle;

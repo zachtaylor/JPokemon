@@ -6,6 +6,7 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
 import jpkmn.game.player.Trainer;
 
+import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Health;

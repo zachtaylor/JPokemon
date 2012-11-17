@@ -19,5 +19,7 @@ public interface JPokemonConstants {
 
   public static final int MAXBATTLESIZE = 4;
   public static final int STATCHANGEMAX = 6;
-  public static final double TYPEADVANTAGE = 2.0;
+
+  public static final double TYPE_ADVANTAGE_MODIFIER = 2.0;
+  public static final double TYPE_DISADVANTAGE_MODIFIER = .5;
 }

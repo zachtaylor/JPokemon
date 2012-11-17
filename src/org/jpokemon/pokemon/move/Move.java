@@ -1,8 +1,8 @@
 package org.jpokemon.pokemon.move;
 
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.Type;
 
+import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
 
 public class Move {
@@ -110,6 +110,23 @@ public class Move {
       _type = Type.valueOf(_info.getType());
       _style = MoveStyle.valueOf(_info.getStyle());
     }
+  }
+
+  /**
+   * Tells this Move's effectiveness against the Pokemon specified
+   * 
+   * @param p Pokemon targeted by this Move
+   * @return Modifier for the strength of the Move due to Type
+   */
+  public double effectiveness(Pokemon p) {
+    double answer = 1.0;
+
+    if (p.type1() != null)
+      answer *= _type.effectiveness(p.type1());
+    if (p.type2() != null)
+      answer *= _type.effectiveness(p.type2());
+
+    return answer;
   }
 
   /**
