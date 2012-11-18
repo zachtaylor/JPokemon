@@ -9,7 +9,7 @@ import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
-public class ItemInfo {
+public class ItemInfo implements JPokemonConstants {
   @PrimaryKey
   private int number;
 
@@ -19,7 +19,7 @@ public class ItemInfo {
   private static ItemInfo[] cache = new ItemInfo[JPokemonConstants.ITEMNUMBER];
 
   public static ItemInfo getInfo(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     if (cache[number - 1] != null)
       return cache[number - 1];

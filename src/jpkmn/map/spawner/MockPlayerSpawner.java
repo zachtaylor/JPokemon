@@ -5,7 +5,7 @@ import java.util.List;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
-import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.player.Player;
 
 import org.json.JSONArray;
@@ -38,7 +38,7 @@ public class MockPlayerSpawner {
     return array;
   }
 
-  public MockPlayer spawn(int trainerID, Player p) {
+  public Trainer spawn(int trainerID, Player p) {
     Spawn target = null;
 
     for (Spawn cur : _data)
@@ -47,7 +47,7 @@ public class MockPlayerSpawner {
 
     try {
       if (target != null && !target.test(p))
-        return new MockPlayer(target.id());
+        return new Trainer(target.id());
     } catch (LoadException e) {
       e.printStackTrace();
     }

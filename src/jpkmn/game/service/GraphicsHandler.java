@@ -16,29 +16,29 @@ import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
 
 import org.jpokemon.pokemon.move.Move;
+import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
 public class GraphicsHandler {
   public static void main(String[] args) {
-    Player zach;
-    Party party;
-    GraphicsHandler g;
+    Player zach = null;
+    GraphicsHandler g = null;
+    PokemonStorageUnit party = null;
 
     try {
-      zach = PlayerRegistry.fromFile("newfile");
+      zach = PlayerRegistry.load("Zach");
 
     } catch (LoadException le) {
       le.printStackTrace();
-      return;
+      System.exit(0);
     }
 
-    g = zach.screen;
-    party = zach.party;
+    g = new GraphicsHandler(zach);
+    party = zach.party();
 
-    g.notify("Test Notification", "Line1", "Line2");
+    zach.notify("Test Notification", "Line1", "Line2");
 
     try {
       if (g.isEvolutionOkay(party.get(0))) {
@@ -78,12 +78,11 @@ public class GraphicsHandler {
       g.notify("Item Selection exception");
       return;
     }
+
+    System.exit(0);
   }
 
-  public GraphicsHandler() {
-  }
-
-  public void player(Player p) {
+  public GraphicsHandler(Player p) {
     _player = p;
     _window = new GameWindow(this, p.id());
   }
@@ -159,10 +158,10 @@ public class GraphicsHandler {
     }
 
     int index;
-    ImageIcon[] options = new ImageIcon[_player.party.size()];
+    ImageIcon[] options = new ImageIcon[_player.party().size()];
 
-    for (int i = _player.party.size() - 1; i >= 0; i--)
-      options[i] = ImageFinder.find(_player.party.get(i));
+    for (int i = _player.party().size() - 1; i >= 0; i--)
+      options[i] = ImageFinder.find(_player.party().get(i));
 
     index = JOptionPane.showOptionDialog(null, message, "Select From Party",
         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,

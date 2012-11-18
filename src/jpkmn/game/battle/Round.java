@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import jpkmn.game.battle.turn.AbstractTurn;
+import jpkmn.game.battle.turn.AttackTurn;
 import jpkmn.game.pokemon.Condition.Issue;
-
-import org.jpokemon.JPokemonConstants;
 
 public class Round {
   public Round(Battle b) {
     _battle = b;
-    _turns = new PriorityQueue<Turn>(JPokemonConstants.MAXBATTLESIZE,
-        new Turn.TurnComparator());
+    _turns = new PriorityQueue<AbstractTurn>();
     _haveSelectedTurn = new ArrayList<Slot>();
     _forceNextAttack = new ArrayList<Slot>();
   }
@@ -22,19 +21,21 @@ public class Round {
     return _turns.size();
   }
 
-  public void add(Turn t) {
-    if (_haveSelectedTurn.contains(t.getUserSlot())) return;
+  public void add(AbstractTurn t) {
+    if (_haveSelectedTurn.contains(t.getUserSlot()))
+      return;
     _haveSelectedTurn.add(t.getUserSlot());
     _turns.add(t);
   }
 
   public void play() {
-    Turn turn;
+    AbstractTurn turn;
 
     // Setup rivals
     for (Slot a : _battle) {
       for (Slot b : _battle) {
-        if (a.id() != b.id()) a.rival(b.leader());
+        if (a.id() != b.id())
+          a.rival(b.leader());
       }
     }
 
@@ -52,30 +53,31 @@ public class Round {
     }
 
     setForcedNextAttacks();
-
   }
 
   private void verifyTurnList() {
     Slot slot;
 
-    for (Turn turn : _turns) {
+    for (AbstractTurn turn : _turns) {
       slot = turn.getUserSlot();
 
       if (slot.party().size() > 0 && !slot.leader().condition.awake()) {
         _battle.rewardFrom(slot.id());
-        if (slot.party().countAwake() > 0) turn.changeToSwap();
+        if (slot.party().awake() > 0)
+          turn.changeToSwap();
       }
 
-      if (slot.party().countAwake() == 0) {
+      if (slot.party().awake() == 0) {
         _turns.remove(turn);
         _battle.remove(slot.id());
       }
     }
 
-    for (Turn turn : _turns) {
-      slot = turn.getUserSlot().target();
+    for (AbstractTurn turn : _turns) {
+      boolean attackTargetMissing = turn instanceof AttackTurn
+          && _battle.get(turn.getUserSlot().target()) == null;
 
-      if (_battle.get(slot.id()) == null) {
+      if (attackTargetMissing) {
         // TODO shit bricks
       }
     }
@@ -83,10 +85,10 @@ public class Round {
 
   private void setForcedNextAttacks() {
     for (Slot slot : _forceNextAttack)
-      _battle.fight(slot.id());
+      _battle.add(slot.attack());
   }
 
   private Battle _battle;
-  private Queue<Turn> _turns;
+  private Queue<AbstractTurn> _turns;
   private List<Slot> _haveSelectedTurn, _forceNextAttack;
 }

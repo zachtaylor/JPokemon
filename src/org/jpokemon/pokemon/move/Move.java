@@ -92,6 +92,10 @@ public class Move {
     _enabled = b;
   }
 
+  public boolean hurtUserOnMiss() {
+    return (this.number() == 60 || this.number() == 69);
+  }
+  
   /**
    * Fully mutate this Move to a new instance of the specified number.
    * 

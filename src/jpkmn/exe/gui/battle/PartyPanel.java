@@ -8,12 +8,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.Party;
 import jpkmn.img.ImageFinder;
 
-import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
 public class PartyPanel extends JPanel {
   public PartyPanel() {
@@ -56,23 +56,24 @@ public class PartyPanel extends JPanel {
     add(info);
   }
 
-  public PartyPanel(Party p, boolean showXP) {
+  public PartyPanel(PokemonStorageUnit p, boolean showXP) {
     this();
     setup(p, showXP);
   }
 
-  public void setup(Party p, boolean showXP) {
-    if (!showXP) info.remove(xpBar);
+  public void setup(PokemonStorageUnit p, boolean showXP) {
+    if (!showXP)
+      info.remove(xpBar);
 
     refresh(p);
   }
 
-  public void refresh(Party p) {
+  public void refresh(PokemonStorageUnit p) {
     Pokemon lead = p.get(0); // shortcut
 
     partyStatus.removeAll();
-    for (int i = 0; i < JPokemonConstants.PARTYSIZE; i++) {
-      if (p.get(i) != null && p.get(i).condition.awake())
+    for (Pokemon pokemon : p) {
+      if (pokemon.condition.awake())
         partyStatus.add(new JLabel(ImageFinder.find("aslot")));
       else
         partyStatus.add(new JLabel(ImageFinder.find("eslot")));

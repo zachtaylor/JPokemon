@@ -27,7 +27,7 @@ public class MoveInfo implements JPokemonConstants {
   private static MoveInfo[] cache = new MoveInfo[MOVENUMBER];
 
   public static MoveInfo get(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     if (number < 1 || number > MOVENUMBER)
       throw new ConfigurationException(number + " is outside move range.");

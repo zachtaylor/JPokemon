@@ -1,0 +1,40 @@
+package jpkmn.game.battle.turn;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jpkmn.game.battle.Slot;
+
+public abstract class AbstractTurn implements Comparable<AbstractTurn> {
+  public AbstractTurn(Slot user) {
+    _user = user;
+    _needSwap = false;
+    _messages = new ArrayList<String>();
+  }
+
+  public Slot getUserSlot() {
+    return _user;
+  }
+
+  public abstract void execute();
+
+  public void changeToSwap() {
+    _needSwap = true;
+  }
+
+  public boolean needSwap() {
+    return _needSwap;
+  }
+
+  public void executeForcedSwap() {
+    // TODO
+  }
+
+  public String[] getNotifications() {
+    return _messages.toArray(new String[_messages.size()]);
+  }
+
+  protected Slot _user;
+  private boolean _needSwap;
+  protected List<String> _messages;
+}

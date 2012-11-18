@@ -1,44 +1,58 @@
 package jpkmn.game.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.exception.ConfigurationException;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
+import com.kremerk.Sqlite.Annotations.OneToMany;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
-public class AIInfo {
+public class AIInfo implements JPokemonConstants {
   @PrimaryKey
   private int number;
 
   private int area, cash, type;
   private String name;
 
+  @OneToMany("ai_number")
+  private List<String> pokemon = new ArrayList<String>();
+
+  private static AIInfo[] cache = new AIInfo[JPokemonConstants.AINUMBER];
+
   public static AIInfo get(int number) {
-    if (cache[number - 1] != null)
-      return cache[number - 1];
+    DataConnectionManager.init(DATABASE_PATH);
 
-    DataConnectionManager.init("data/Pokemon.db");
+    if (number < 1 || number > AINUMBER)
+      throw new ConfigurationException(number + " is outside move range.");
 
-    try {
-      List<AIInfo> info = SqlStatement.select(AIInfo.class).where("number")
-          .eq(number).getList();
+    if (cache[number - 1] == null) {
+      try {
+        List<AIInfo> info = SqlStatement.select(AIInfo.class).where("number")
+            .eq(number).getList();
+        List<AIPokemon> pokemon = SqlStatement.select(AIPokemon.class)
+            .where("ai_number").eq(number).getList();
 
-      if (info == null || info.isEmpty())
-        return null;
+        if (!info.isEmpty()) {
+          for (AIPokemon p : pokemon)
+            info.get(0).getPokemon().add(p.getEntry());
 
-      return cache[number - 1] = info.get(0);
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
+          cache[number - 1] = info.get(0);
+        }
+      } catch (DataConnectionException e) {
+        e.printStackTrace();
+      }
     }
 
-    return null;
+    return cache[number - 1];
   }
 
   public static List<AIInfo> getAIForArea(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     try {
       List<AIInfo> info = SqlStatement.select(AIInfo.class).where("area")
@@ -58,7 +72,6 @@ public class AIInfo {
   public int getNumber() {return number;} public void setNumber(int _val) {number = _val;}
   public int getType() {return type;} public void setType(int t) {type = t;}
   public String getName() {return name;} public void setName(String _val) {name = _val;}
+  public List<String> getPokemon() {return pokemon;} public void setPokemon(List<String> p) {pokemon = p;}
   //@format
-
-  private static AIInfo[] cache = new AIInfo[JPokemonConstants.AINUMBER];
 }

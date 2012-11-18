@@ -6,7 +6,6 @@
 *.exe
 *.o
 *.so
-*.jar
 
 # OS generated files #
 ######################

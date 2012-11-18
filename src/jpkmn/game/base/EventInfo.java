@@ -2,19 +2,21 @@ package jpkmn.game.base;
 
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
+
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
-public class EventInfo {
+public class EventInfo implements JPokemonConstants {
   @PrimaryKey
   private int number;
 
   private int area, type, data1, data2, requirement, requirement_data;
 
   public static EventInfo get(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     try {
       List<EventInfo> info = SqlStatement.select(EventInfo.class)
@@ -29,7 +31,7 @@ public class EventInfo {
   }
 
   public static List<EventInfo> getEventsForArea(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     try {
       List<EventInfo> info = SqlStatement.select(EventInfo.class).where("area")

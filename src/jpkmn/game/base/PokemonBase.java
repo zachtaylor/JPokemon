@@ -9,7 +9,7 @@ import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
-public class PokemonBase {
+public class PokemonBase implements JPokemonConstants {
   @PrimaryKey
   private int number;
   private int type1, type2, attack, specattack, defense, specdefense, speed,
@@ -24,7 +24,7 @@ public class PokemonBase {
     if (bases[num - 1] != null)
       return bases[num - 1];
 
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
     try {
       List<PokemonBase> pokemonbase = SqlStatement.select(PokemonBase.class)
           .where("number").eq(num).getList();

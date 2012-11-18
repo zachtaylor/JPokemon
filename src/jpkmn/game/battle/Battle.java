@@ -6,8 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.battle.turn.AbstractTurn;
+import jpkmn.game.player.Player;
+import jpkmn.game.player.PokemonTrainer;
+import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.Party;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
@@ -19,13 +22,13 @@ public class Battle implements Iterable<Slot> {
     _round = new Round(this);
   }
 
-  public int add(SlotType t, Party p) {
+  public int add(PokemonTrainer trainer) {
     if (ready() || _slots.size() == JPokemonConstants.MAXBATTLESIZE)
       return -1;
 
     int id = _slots.size();
 
-    _slots.put(id, new Slot(id, t, p));
+    _slots.put(id, new Slot(this, trainer, id));
 
     return id;
   }
@@ -38,17 +41,19 @@ public class Battle implements Iterable<Slot> {
       BattleRegistry.remove(_id);
     }
 
-    slot.party().owner().screen.showWorld();
+    if (slot.trainer().type() == TrainerType.PLAYER)
+      ((Player) slot.trainer()).setState("world");
   }
 
   public void start(int battleID) {
     _id = battleID;
 
     for (Slot slot : this) {
-      slot.party().owner().screen.showBattle(battleID, slot.id());
+      if (slot.trainer().type() == TrainerType.PLAYER)
+        ((Player) slot.trainer()).setState("battle", battleID, slot.id());
     }
 
-    makeMockAttacks();
+    doMockAttacks();
   }
 
   public void rewardFrom(int slotID) {
@@ -60,14 +65,14 @@ public class Battle implements Iterable<Slot> {
       }
     }
 
-    if (loser.party().countAwake() == 0) {
-      if (loser.type() == SlotType.PLAYER) {
+    if (loser.party().awake() == 0) {
+      if (loser.trainer().type() == TrainerType.PLAYER) {
         // TODO : Punish player
       }
-      else if (loser.type() == SlotType.GYM) {
+      else if (loser.trainer().type() == TrainerType.GYM) {
         // TODO : Reward from gym
       }
-      else if (loser.type() == SlotType.TRAINER) {
+      else if (loser.trainer().type() == TrainerType.TRAINER) {
         // TODO : Prevent players from fighting this trainer again
       }
     }
@@ -85,62 +90,40 @@ public class Battle implements Iterable<Slot> {
     return _slots.get(slotID);
   }
 
-  public void fight(int slotID) {
+  public void fight(int slotID, int enemySlotID, int moveIndex) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null)
-      return;
+    slot.target(enemySlotID);
+    slot.setMoveChoice(moveIndex);
 
-    if (!slot.chooseMove())
-      return;
-    if (!slot.chooseAttackTarget(getEnemySlotsForSlot(slot)))
-      return;
-
-    _round.add(slot.attack());
-
-    if (_round.size() == _slots.size())
-      executeRound();
+    add(slot.attack());
   }
 
-  public void item(int slotID) {
+  public void item(int slotID, int slotIndex, int itemID) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null)
-      return;
+    slot.target(slotIndex);
+    slot.setItemID(itemID);
 
-    if (!slot.chooseItem())
-      return;
-    if (!slot.chooseItemTarget(getEnemySlotsForSlot(slot)))
-      return;
-
-    _round.add(slot.item());
-
-    if (_round.size() == _slots.size())
-      executeRound();
+    add(slot.item());
   }
 
-  public void swap(int slotID) {
+  public void swap(int slotID, int slotIndex) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null)
-      return;
+    slot.setSwapPosition(slotIndex);
 
-    if (!slot.chooseSwapPosition())
-      return;
-
-    _round.add(slot.swap());
-
-    if (_round.size() == _slots.size())
-      executeRound();
+    add(slot.swap());
   }
 
   public void run(int slotID) {
     Slot slot = _slots.get(slotID);
 
-    if (!ready() || slot == null)
-      return;
+    add(slot.run(this));
+  }
 
-    _round.add(slot.run(this));
+  public void add(AbstractTurn turn) {
+    _round.add(turn);
 
     if (_round.size() == _slots.size())
       executeRound();
@@ -152,10 +135,7 @@ public class Battle implements Iterable<Slot> {
     current.play();
     executeConditionEffects();
 
-    for (Slot slot : this)
-      slot.party().owner().screen.refresh();
-
-    makeMockAttacks();
+    doMockAttacks();
   }
 
   private void executeConditionEffects() {
@@ -166,10 +146,19 @@ public class Battle implements Iterable<Slot> {
     }
   }
 
-  private void makeMockAttacks() {
-    for (Slot slot : this) {
-      if (slot.type() != SlotType.PLAYER)
-        fight(slot.id());
+  public void doMockAttacks() {
+    for (Slot slot : _slots.values()) {
+      if (slot.trainer().type() == TrainerType.PLAYER)
+        continue;
+
+      int randomSlot;
+      do {
+        randomSlot = (int) (Math.random() * _slots.entrySet().size());
+      } while (get(randomSlot).equals(slot));
+
+      int randomMove = (int) (Math.random()) * slot.leader().moves.count();
+
+      fight(slot.id(), randomSlot, randomMove);
     }
   }
 
@@ -198,12 +187,14 @@ public class Battle implements Iterable<Slot> {
       A = 10000000;
       D = 1;
     }
-    else if (move.style() == MoveStyle.DELAYNEXT || move.style() == MoveStyle.DELAYBEFORE) {
+    else if (move.style() == MoveStyle.DELAYNEXT
+        || move.style() == MoveStyle.DELAYBEFORE) {
       A = Math.max(user.attack(), user.specattack());
       D = Math.max(victim.defense(), victim.specdefense());
     }
 
-    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R * reps;
+    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R
+        * reps;
 
     if (damage < 1 && E != 0)
       damage = 1;
@@ -228,7 +219,7 @@ public class Battle implements Iterable<Slot> {
            E = 1, 
            R = 1.00;
     //@format
-    
+
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
@@ -239,7 +230,7 @@ public class Battle implements Iterable<Slot> {
 
   void notifyAll(String... s) {
     for (Slot slot : _slots.values()) {
-      slot.party().owner().screen.notify(s);
+      slot.trainer().notify(s);
     }
   }
 

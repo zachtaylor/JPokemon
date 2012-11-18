@@ -8,7 +8,7 @@ import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.EventInfo;
 import jpkmn.game.base.SpawnInfo;
-import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.spawner.EventSpawner;
@@ -109,7 +109,7 @@ public class Area {
    * @param trainerID ID of the trainer
    * @return A new instance of the specified Trainer
    */
-  public MockPlayer trainer(int trainerID, Player p) {
+  public Trainer trainer(int trainerID, Player p) {
     return _trainers.spawn(trainerID, p);
   }
 

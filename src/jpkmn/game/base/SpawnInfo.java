@@ -2,11 +2,13 @@ package jpkmn.game.base;
 
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
+
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
-public class SpawnInfo {
+public class SpawnInfo implements JPokemonConstants {
   private String tag;
   private int area, pokemon_number, min_level, max_level, flex;
 
@@ -17,7 +19,7 @@ public class SpawnInfo {
    * @return List of SpawnInfo from the database
    */
   public static List<SpawnInfo> get(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     try {
       List<SpawnInfo> info = SqlStatement.select(SpawnInfo.class).where("area")

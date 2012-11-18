@@ -3,24 +3,15 @@ package jpkmn.game.battle;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
-import jpkmn.game.player.OpponentType;
+import jpkmn.game.player.Trainer;
 
 public class BattleRegistry {
-  public static void make(Player player, MockPlayer enemy) {
+  public static void make(Player player, Trainer enemy) {
     Battle battle = new Battle();
 
-    SlotType type;
-    if (enemy.type() == OpponentType.GYM)
-      type = SlotType.GYM;
-    else if (enemy.type() == OpponentType.TRAINER)
-      type = SlotType.TRAINER;
-    else
-      type = SlotType.WILD;
-
-    battle.add(SlotType.PLAYER, player.party);
-    battle.add(type, enemy.party);
+    battle.add(player);
+    battle.add(enemy);
 
     start(battle);
   }
@@ -36,9 +27,10 @@ public class BattleRegistry {
   public static boolean enroll(Player player, int battle) {
     Battle b = _enroll.get(battle);
 
-    if (b == null) return false;
+    if (b == null)
+      return false;
 
-    b.add(SlotType.PLAYER, player.party);
+    b.add(player);
 
     return true;
   }
@@ -46,7 +38,8 @@ public class BattleRegistry {
   public static void finish(int battle) {
     Battle b = _enroll.remove(battle);
 
-    if (b != null) start(b);
+    if (b != null)
+      start(b);
   }
 
   public static void remove(int battleNumber) {

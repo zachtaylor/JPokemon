@@ -19,22 +19,22 @@ public class Shield {
       _exceptions.add(exception);
   }
 
-  public void reduceDamage(Turn t) {
-    Move move = t.getUserSlot().getMove();
-
-    if (_exceptions.contains(move.name())) {
-      // That move is an exception to this shield
-      t.damage(t.damage() * 2);
+  public double damageModifier(Move move) {
+    String name = move.name();
+    MoveStyle style = move.style();
+    if (_exceptions.contains(name)) {
+      return 2.0;
     }
     else if (_type == Field.Effect.INVULNERABLE) {
-      t.nullify("It didn't work");
+      return 0;
     }
-    else if (_type == Field.Effect.PHYSSHIELD && move.style() == MoveStyle.PHYSICAL) {
-      t.damage((int) (t.damage() * (1 - _reduction)));
+    else if (_type == Field.Effect.PHYSSHIELD && style == MoveStyle.PHYSICAL) {
+      return _reduction;
     }
-    else if (_type == Field.Effect.SPECSHIELD && move.style() == MoveStyle.SPECIAL) {
-      t.damage((int) (t.damage() * (1 - _reduction)));
+    else if (_type == Field.Effect.SPECSHIELD && style == MoveStyle.SPECIAL) {
+      return _reduction;
     }
+    return 1.0;
   }
 
   public boolean reduceDuration() {

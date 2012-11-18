@@ -2,10 +2,11 @@ package jpkmn.game.service;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
+import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.player.MockPlayer;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
@@ -29,8 +30,8 @@ public class BattleService {
       throw new ServiceException(e.getMessage());
     }
 
-    MockPlayer mock = new MockPlayer();
-    mock.party.add(wild);
+    Trainer mock = new Trainer();
+    mock.add(wild);
 
     BattleRegistry.make(player, mock);
   }
@@ -55,8 +56,8 @@ public class BattleService {
       throw new ServiceException(e.getMessage());
     }
 
-    MockPlayer mock = new MockPlayer();
-    mock.party.add(wild);
+    Trainer mock = new Trainer();
+    mock.add(wild);
 
     BattleRegistry.make(player, mock);
   }
@@ -72,7 +73,7 @@ public class BattleService {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    MockPlayer trainer = area.trainer(tID, player);
+    Trainer trainer = area.trainer(tID, player);
 
     if (trainer == null)
       throw new ServiceException("Trainer " + tID + " is not in this area");
@@ -81,5 +82,30 @@ public class BattleService {
     // throw new ServiceException(player.name() + " has already fought " +)
 
     BattleRegistry.make(player, trainer);
+  }
+
+  public static void attack(int battleID, int slotID, int enemySlotID,
+      int moveIndex) {
+    Battle battle = BattleRegistry.get(battleID);
+
+    battle.fight(slotID, enemySlotID, moveIndex);
+  }
+
+  public static void item(int battleID, int slotID, int targetID, int itemID) {
+    Battle battle = BattleRegistry.get(battleID);
+
+    battle.item(slotID, targetID, itemID);
+  }
+
+  public static void swap(int battleID, int slotID, int slotIndex) {
+    Battle battle = BattleRegistry.get(battleID);
+
+    battle.swap(slotID, slotIndex);
+  }
+  
+  public static void run(int battleID, int slotID) {
+    Battle battle = BattleRegistry.get(battleID);
+    
+    battle.run(slotID);
   }
 }

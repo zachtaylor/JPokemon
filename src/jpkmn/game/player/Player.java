@@ -1,47 +1,110 @@
 package jpkmn.game.player;
 
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.item.Bag;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.PCStorage;
+import jpkmn.game.service.GraphicsHandler;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.player.Progress;
 import org.jpokemon.pokedex.Pokedex;
+import org.jpokemon.pokedex.PokedexStatus;
+import org.jpokemon.pokemon.storage.PokemonStorageBlock;
+import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
-public class Player extends Trainer {
+public class Player implements PokemonTrainer {
   public final Bag bag;
-  public final Pokedex dex;
-  public final PCStorage box;
 
-  public Player(int playerID) {
+  public Player() {
     super();
 
-    _id = playerID;
+    _id = PLAYER_COUNT++;
     _area = 1;
 
     bag = new Bag();
-    dex = new Pokedex();
-    box = new PCStorage();
+    _pokedex = new Pokedex();
     _progress = new Progress();
+    _graphics = new GraphicsHandler(this);
+    _storage = new PokemonStorageBlock(this);
+  }
+
+  public int id() {
+    return _id;
+  }
+
+  public String name() {
+    return _name;
+  }
+
+  public void name(String name) {
+    _name = name;
   }
 
   public int area() {
     return _area;
   }
 
-  public void area(int a) {
-    _area = a;
+  public void area(int area) {
+    _area = area;
   }
 
   public int badge() {
     return _badge;
   }
 
-  public void badge(int b) {
-    _badge = b;
+  public void badge(int badge) {
+    _badge = badge;
+  }
+
+  public int cash() {
+    return _cash;
+  }
+
+  public void cash(int cash) {
+    _cash = cash;
+  }
+
+  public TrainerType type() {
+    return TrainerType.PLAYER;
+  }
+
+  public PokemonStorageUnit party() {
+    return _storage.get(0);
+  }
+
+  public boolean add(Pokemon p) {
+    putPokedex(p.number(), PokedexStatus.OWN);
+
+    for (PokemonStorageUnit unit : _storage) {
+      if (unit.add(p))
+        return true;
+    }
+
+    return false;
+  }
+
+  public void notify(String... message) {
+    _graphics.notify(message);
+  }
+
+  public void setState(String state, int... battleInfo) {
+    if (state.equalsIgnoreCase("world"))
+      _graphics.showWorld();
+    else if (state.equalsIgnoreCase("battle"))
+      _graphics.showBattle(battleInfo[0], battleInfo[1]);
+  }
+
+  public PokedexStatus getPokedex(int id) {
+    return _pokedex.status(id);
+  }
+
+  public void putPokedex(int id, PokedexStatus status) {
+    if (status == PokedexStatus.SAW)
+      _pokedex.saw(id);
+    else if (status == PokedexStatus.OWN)
+      _pokedex.own(id);
   }
 
   public boolean getEvent(int id) {
@@ -52,7 +115,7 @@ public class Player extends Trainer {
     _progress.put(id);
   }
 
-  public String save() {
+  public void save(PrintWriter writer) {
     StringBuilder data = new StringBuilder();
 
     data.append(name());
@@ -64,54 +127,40 @@ public class Player extends Trainer {
     data.append(area());
     data.append("\n");
 
-    for (int partyIndex = 0; partyIndex < JPokemonConstants.PARTYSIZE; ++partyIndex) {
-      if (party.get(partyIndex) != null)
-        data.append(party.get(partyIndex).save());
-      else
-        data.append(" \n");
-    }
-
     // save bag
     data.append(bag.save());
 
     // save pokedex
-    data.append(dex.save());
+    data.append(_pokedex.save());
 
     // save progress
     data.append(_progress.save());
 
     // save pcstorage
-    for (Pokemon p : box)
-      data.append(p.save());
+    data.append(_storage.save());
 
-    return data.toString();
+    // Write those daters
+    writer.write(data.toString());
   }
 
-  public Player load(Scanner scan) throws LoadException {
+  public void load(Scanner scan) throws LoadException {
     try {
       name(scan.nextLine());
       cash(scan.nextInt());
       badge(scan.nextInt());
       area(Integer.parseInt(scan.nextLine().trim()));
 
-      // Load party
-      for (int partyIndex = 0; partyIndex < JPokemonConstants.PARTYSIZE; ++partyIndex)
-        party.add(Pokemon.load(scan.nextLine()));
-
       // Load bag
       bag.load(scan.nextLine());
 
       // Load pokedex
-      dex.load(scan.nextLine());
+      _pokedex.load(scan.nextLine());
 
       // Load progress
       _progress.load(scan.nextLine());
 
       // load pcstorage
-      while (scan.hasNextLine())
-        box.add(Pokemon.load(scan.nextLine()));
-
-      return this;
+      _storage.load(scan);
     } catch (LoadException le) {
       throw le;
     } catch (Exception e) {
@@ -119,16 +168,24 @@ public class Player extends Trainer {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof Player))
       return false;
     return ((Player) o)._id == _id;
   }
 
+  @Override
   public int hashCode() {
     return _id;
   }
 
-  private int _area, _badge;
+  private String _name;
+  private Pokedex _pokedex;
   private Progress _progress;
+  private GraphicsHandler _graphics;
+  private PokemonStorageBlock _storage;
+  private int _id, _area, _badge, _cash;
+
+  private static int PLAYER_COUNT;
 }

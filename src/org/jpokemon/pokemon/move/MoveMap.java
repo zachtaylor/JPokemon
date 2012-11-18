@@ -17,7 +17,7 @@ public class MoveMap implements JPokemonConstants {
       POKEMONNUMBER);
 
   public static List<MoveMap> get(int number, int level) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     ensureCacheExists(number);
     if (cache.get(number).get(level) == null) {

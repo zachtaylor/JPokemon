@@ -5,20 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.exceptions.CancelException;
+import jpkmn.game.battle.turn.AttackTurn;
+import jpkmn.game.battle.turn.ItemTurn;
+import jpkmn.game.battle.turn.RunTurn;
+import jpkmn.game.battle.turn.SwapTurn;
+import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.item.Item;
-import jpkmn.game.pokemon.Condition.Issue;
+import jpkmn.game.player.Player;
+import jpkmn.game.player.PokemonTrainer;
+import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.storage.Party;
 
+import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.move.Move;
-import org.jpokemon.pokemon.move.MoveStyle;
+import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
 public class Slot {
-  public Slot(int id, SlotType t, Party p) {
+  public Slot(Battle battle, PokemonTrainer trainer, int id) {
     _id = id;
-    _type = t;
-    _party = p;
+    _battle = battle;
+    _trainer = trainer;
     _bide = false;
 
     _field = new Field(this);
@@ -29,185 +35,77 @@ public class Slot {
     return _id;
   }
 
-  public SlotType type() {
-    return _type;
+  public Battle battle() {
+    return _battle;
+  }
+
+  public PokemonTrainer trainer() {
+    return _trainer;
+  }
+
+  public PokemonStorageUnit party() {
+    return _trainer.party();
   }
 
   public Pokemon leader() {
-    return _party.get(0);
+    return party().get(0);
   }
 
-  public Party party() {
-    return _party;
+  public int target() {
+    return _targetID;
   }
 
-  public Slot target() {
-    return _target;
+  public void target(int targetID) {
+    _targetID = targetID;
   }
 
-  public boolean chooseMove() {
-    if (leader().hasIssue(Issue.WAIT))
-      return true;
-
-    try {
-      _index = _party.owner().screen.getMoveIndex("attack", leader());
-
-      if (_index != -1)
-        return true;
-    } catch (CancelException c) {
-    }
-
-    _party.owner().screen.refresh();
-    return false;
+  public void setMoveChoice(int moveIndex) {
+    _index = moveIndex;
   }
 
-  public Move getMove() {
-    return leader().moves.get(_index);
+  public void setItemID(int item) {
+    _index = item;
   }
 
-  public boolean chooseItem() {
-    try {
-      _item = _party.owner().screen.getItemChoice("item");
-
-      if (_item != null)
-        return true;
-    } catch (CancelException c) {
-    }
-
-    _party.owner().screen.refresh();
-    return false;
+  public void setSwapPosition(int slotIndex) {
+    _index = slotIndex;
   }
 
-  public Item getItem() {
-    return _item;
-  }
+  public AbstractTurn attack() {
+    Move move = leader().moves.get(_index);
 
-  public boolean chooseSwapPosition() {
-    try {
-      _index = _party.owner().screen.getPartyIndex("swap");
-
-      return true;
-    } catch (CancelException c) {
-    }
-
-    _party.owner().screen.refresh();
-    return false;
-  }
-
-  public boolean chooseAttackTarget(List<Slot> enemySlots) {
-    try {
-      _target = _party.owner().screen.getTargetSlot(enemySlots);
-      return true;
-    } catch (CancelException c) {
-    }
-
-    _party.owner().screen.refresh();
-    return false;
-  }
-
-  public boolean chooseItemTarget(List<Slot> enemySlots) {
-    try {
-      if (_item.target() == Target.SELF) {
-        _target = this;
-        _index = _party.owner().screen.getPartyIndex("item");
-        return true;
-      }
-      else {
-        _target = _party.owner().screen.getTargetSlot(enemySlots);
-        _index = -1;
-        return true;
-      }
-    } catch (CancelException c) {
-    }
-
-    _party.owner().screen.refresh();
-    return false;
-  }
-
-  public Turn attack() {
-    Pokemon leader = leader();
-    Move move = getMove();
-    Turn turn = new Turn(this, _index);
+    AttackTurn turn = new AttackTurn(this, move);
 
     if (_bide) {
-      turn.damageAbsolute(_bidedamage);
+      turn.absoluteDamage(_bidedamage);
       _bide = false;
       _bidedamage = 0;
-    }
-
-    // Don't perform any if they didn't choose this move
-    if (!leader.hasIssue(Issue.WAIT)) {
-      // 1 Measure if the user can attack
-      if (!leader.condition.canAttack())
-        turn.nullify(leader.condition.toString());
-
-      // 2 Reduce and measure PP
-      else if (!move.enabled())
-        turn.nullify("Move is not enabled!");
-
-      // 3 Measure accuracy
-      else if (!move.use()) {
-
-        // Move # 60 (Hi Jump Kick) and Move # 69 (Jump Kick) hurt on miss
-        if (move.number() == 60 || move.number() == 69) {
-          int damage = Battle.computeDamage(leader, move, _target.leader());
-          damage /= 8;
-          takeDamageAbsolute(damage);
-        }
-
-        turn.nullify("It missed.");
-      }
-    }
-
-    if (move.style() == MoveStyle.DELAYNEXT) {
-      if (leader.hasIssue(Issue.WAIT)) {
-        leader.removeIssue(Issue.WAIT);
-        turn.nullify("Resting this turn.");
-      }
-      else
-        leader.addIssue(Issue.WAIT);
-    }
-    else if (move.style() == MoveStyle.DELAYBEFORE) {
-      if (leader.hasIssue(Issue.WAIT))
-        leader.removeIssue(Issue.WAIT);
-      else {
-        leader.addIssue(Issue.WAIT);
-        turn.nullify("Resting this turn.");
-      }
-    }
-    else if (move.style() == MoveStyle.OHKO) {
-      int levelDiff = leader.level() - _target.leader().level();
-
-      if (levelDiff < 0)
-        turn.nullify("Cannot perform OHKO on " + _target.leader().name());
-      else if ((levelDiff + 30.0) / 100.0 <= Math.random())
-        turn.nullify("It missed.");
-    }
-    else if (move.style() == MoveStyle.MISC) { // Misc
-      turn.nullify("This doesn't work yet. Sorry about that!");
     }
 
     return turn;
   }
 
-  public Turn item() {
-    return new Turn(this, _item, _index);
+  public AbstractTurn item() {
+    Item item = ((Player) _trainer).bag.get(_index);
+
+    ItemTurn turn = new ItemTurn(this, item, _targetID);
+
+    return turn;
   }
 
-  public Turn swap() {
-    return new Turn(this, 0, _index);
+  public AbstractTurn swap() {
+    SwapTurn turn = new SwapTurn(this, _index);
+
+    return turn;
   }
 
-  public Turn run(Battle b) {
-    return new Turn(this, b);
+  public AbstractTurn run(Battle b) {
+    RunTurn turn = new RunTurn(this);
+
+    return turn;
   }
 
-  public void takeDamage(Turn turn) {
-    _field.effect(turn);
-    takeDamageAbsolute(turn.damage());
-  }
-
-  public void takeDamageAbsolute(int damage) {
+  public void takeDamage(int damage) {
     if (_bide)
       _bidedamage += damage;
 
@@ -216,8 +114,12 @@ public class Slot {
     _field.rollDownDuration();
   }
 
+  public double damageModifier(Move m) {
+    return _field.damageModifier(m);
+  }
+
   public int getXPAwarded() {
-    double factor = _type.getXPFactor();
+    double factor = _trainer.type().xpFactor();
     factor *= (Math.random() * .5 + 2);
     return (int) (factor * leader().level());
   }
@@ -230,6 +132,9 @@ public class Slot {
 
     if (!rivals.contains(p))
       rivals.add(p);
+
+    if (_trainer.type() == TrainerType.PLAYER)
+      ((Player) _trainer).putPokedex(p.number(), PokedexStatus.SAW);
   }
 
   public void rival(Slot s) {
@@ -243,7 +148,7 @@ public class Slot {
 
     message.add(dead.name() + " fained!");
 
-    for (Pokemon cur : _party) {
+    for (Pokemon cur : _trainer.party()) {
       rivals = _rivals.get(cur);
 
       // If cur holding xp share, add to earners
@@ -265,26 +170,22 @@ public class Slot {
       cur.xp(xp);
     }
 
-    _party.owner().screen.notify(message.toArray(new String[message.size()]));
+    _trainer.notify(message.toArray(new String[message.size()]));
   }
 
   // Slot
   private int _id;
   private Field _field;
-  private Slot _target;
-  private Party _party;
-  private SlotType _type;
+  private Battle _battle;
+  private PokemonTrainer _trainer;
   private Map<Pokemon, List<Pokemon>> _rivals;
 
   // Move
   private boolean _bide;
   private int _bidedamage;
 
-  // Item
-  private Item _item;
-
   // Attack: Move index
   // Item: index in party for user
   // Swap: index in party
-  private int _index;
+  private int _index, _targetID;
 }

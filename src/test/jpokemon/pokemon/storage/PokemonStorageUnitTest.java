@@ -1,7 +1,8 @@
 package test.jpokemon.pokemon.storage;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.PokemonTrainer;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import junit.framework.TestCase;
 
@@ -10,12 +11,12 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 public class PokemonStorageUnitTest extends TestCase {
   private static int size = 6;
 
-  public static MockPlayer trainer;
+  public static PokemonTrainer trainer;
   public static PokemonStorageUnit unit, ownedUnit;
 
   public void setUp() {
     unit = new PokemonStorageUnit(size);
-    trainer = new MockPlayer();
+    trainer = new Trainer();
     ownedUnit = new PokemonStorageUnit(size, trainer);
   }
 
@@ -116,7 +117,7 @@ public class PokemonStorageUnitTest extends TestCase {
     Pokemon p = new Pokemon(1);
     ownedUnit.add(p);
 
-    assertEquals(trainer, p.owner());
+    assertEquals(trainer, p.trainer());
   }
 
   public void testRemoveRemovesTrainer() throws LoadException {
@@ -124,7 +125,7 @@ public class PokemonStorageUnitTest extends TestCase {
     ownedUnit.add(p);
     ownedUnit.remove(p);
 
-    assertEquals(null, p.owner());
+    assertEquals(null, p.trainer());
   }
 
   public void testRemoveNotInPartyException() throws LoadException {

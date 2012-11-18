@@ -4,7 +4,6 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
-import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.AreaRegistry;
@@ -20,21 +19,16 @@ public class PlayerService {
     Player p;
 
     try {
-      p = PlayerRegistry.fromFile(name);
+      p = PlayerRegistry.load(name);
     } catch (LoadException e) {
       e.printStackTrace();
       throw new ServiceException(e.getMessage());
     }
 
     try {
-      if (p != null)
-        return JSONMaker.make(p);
-      else {
-        // THIS IS BAD... !!!!
-        JSONObject json = new JSONObject();
-        json.put("id", -1);
-        return json;
-      }
+      JSONObject data = JSONMaker.make(p);
+      p.setState("world");
+      return data;
     } catch (JSONException jsone) {
       jsone.printStackTrace();
       throw new ServiceException("There was an error. It's not your fault.");
@@ -43,7 +37,7 @@ public class PlayerService {
 
   public static JSONObject savePlayer(int playerID) throws ServiceException {
     try {
-      PlayerRegistry.saveFile(playerID);
+      PlayerRegistry.save(playerID);
     } catch (LoadException e) {
       throw new ServiceException(e.getMessage());
     }
@@ -69,7 +63,7 @@ public class PlayerService {
       throw new ServiceException("Starter not supported: " + starter);
 
     try {
-      Player player = PlayerRegistry.create(name, pokemon);
+      Player player = PlayerRegistry.start(name, pokemon);
       return JSONMaker.make(player);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -96,13 +90,10 @@ public class PlayerService {
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");
 
-    Pokemon pokemon = player.party.get(i);
-
-    if (pokemon == null)
-      throw new ServiceException(player.name() + " has no " + i + " Pokemon");
-
     try {
-      return JSONMaker.make(pokemon);
+      return JSONMaker.make(player.party().get(i));
+    } catch (IllegalArgumentException e) {
+      throw new ServiceException(player.name() + " has no " + i + " Pokemon");
     } catch (JSONException e) {
       throw new ServiceException("There was an error. It's not your fault.");
     }
@@ -176,13 +167,5 @@ public class PlayerService {
     } catch (LoadException l) {
       throw new ServiceException(l.getMessage());
     }
-  }
-
-  public static void attachGraphicsHandler(int playerID) {
-    Player player = PlayerRegistry.get(playerID);
-
-    player.screen.player(player);
-
-    player.screen.showWorld();
   }
 }

@@ -1,11 +1,12 @@
 package org.jpokemon.pokemon.storage;
 
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.player.Trainer;
+import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
@@ -13,11 +14,11 @@ import org.jpokemon.JPokemonConstants;
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
  * <br>
- * PokemonStorageBlock supports 1 unit of unique size, to be used for the
- * party. Other units have common size.
+ * PokemonStorageBlock supports 1 unit of unique size, to be used for the party.
+ * Other units have common size.
  */
-public class PokemonStorageBlock implements JPokemonConstants {
-  public PokemonStorageBlock(Trainer trainer) {
+public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokemonConstants {
+  public PokemonStorageBlock(PokemonTrainer trainer) {
     _trainer = trainer;
 
     _data = new PokemonStorageUnit[BOXNUMBER + 1];
@@ -25,6 +26,13 @@ public class PokemonStorageBlock implements JPokemonConstants {
     _data[0] = new PokemonStorageUnit(PARTYSIZE, _trainer);
     for (int i = 1; i <= BOXNUMBER; i++)
       _data[i] = new PokemonStorageUnit(BOXSIZE, _trainer);
+  }
+
+  public PokemonStorageUnit get(int box) {
+    if (box < 0 || box > BOXNUMBER)
+      throw new IllegalArgumentException("Invalid box number: " + box);
+
+    return _data[box];
   }
 
   public String save() {
@@ -65,6 +73,30 @@ public class PokemonStorageBlock implements JPokemonConstants {
     }
   }
 
-  private Trainer _trainer;
+  @Override
+  public Iterator<PokemonStorageUnit> iterator() {
+    return new PokemonStorageBlockIterator();
+  }
+
+  private class PokemonStorageBlockIterator implements Iterator<PokemonStorageUnit> {
+    @Override
+    public boolean hasNext() {
+      return index <= BOXNUMBER;
+    }
+
+    @Override
+    public PokemonStorageUnit next() {
+      return _data[index++];
+    }
+
+    @Override
+    public void remove() {
+      // No
+    }
+
+    private int index = 0;
+  }
+
+  private PokemonTrainer _trainer;
   private PokemonStorageUnit[] _data;
 }

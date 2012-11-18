@@ -2,19 +2,19 @@ package jpkmn.game.pokemon.storage;
 
 import java.util.Iterator;
 
-import jpkmn.game.player.Trainer;
+import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
 
 public class Party implements Iterable<Pokemon> {
-  public Party(Trainer p) {
+  public Party(PokemonTrainer p) {
     _owner = p;
     _amount = 0;
     _data = new Pokemon[JPokemonConstants.PARTYSIZE];
   }
 
-  public Trainer owner() {
+  public PokemonTrainer owner() {
     return _owner;
   }
 
@@ -33,7 +33,7 @@ public class Party implements Iterable<Pokemon> {
       return false;
 
     _data[_amount++] = p;
-    p.owner(_owner);
+    p.trainer(_owner);
 
     return true;
   }
@@ -45,7 +45,7 @@ public class Party implements Iterable<Pokemon> {
   public boolean remove(int index) {
     if (index < 0 || index >= _amount) return false;
 
-    _data[index].owner(null);
+    _data[index].trainer(null);
 
     for (int i = index; i < _amount - 1; i++)
       _data[i] = _data[i + 1];
@@ -123,5 +123,5 @@ public class Party implements Iterable<Pokemon> {
 
   private int _amount;
   private Pokemon[] _data;
-  private Trainer _owner;
+  private PokemonTrainer _owner;
 }

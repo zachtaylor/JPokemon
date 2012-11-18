@@ -158,8 +158,8 @@ public class Condition {
     return issues.toString();
   }
 
-  public void remove(Issue i) {
-    issues.remove(i);
+  public boolean remove(Issue i) {
+    return issues.remove(i);
   }
 
   private List<Issue> issues = new ArrayList<Issue>();

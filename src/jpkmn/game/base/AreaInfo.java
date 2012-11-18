@@ -2,13 +2,15 @@ package jpkmn.game.base;
 
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
+
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
-public class AreaInfo {
+public class AreaInfo implements JPokemonConstants {
   public static AreaInfo getInfo(int number) {
-    DataConnectionManager.init("data/Pokemon.db");
+    DataConnectionManager.init(DATABASE_PATH);
 
     try {
       List<AreaInfo> info = SqlStatement.select(AreaInfo.class)

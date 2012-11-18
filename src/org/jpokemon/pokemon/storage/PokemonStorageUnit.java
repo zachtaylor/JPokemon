@@ -3,7 +3,7 @@ package org.jpokemon.pokemon.storage;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
-import jpkmn.game.player.Trainer;
+import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
 /**
@@ -17,12 +17,12 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     _data = new Pokemon[_size];
   }
 
-  public PokemonStorageUnit(int size, Trainer trainer) {
+  public PokemonStorageUnit(int size, PokemonTrainer trainer) {
     this(size);
     _trainer = trainer;
   }
 
-  public Trainer trainer() {
+  public PokemonTrainer trainer() {
     return _trainer;
   }
 
@@ -32,7 +32,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public Pokemon get(int i) {
     if (i < 0 || i >= _amount)
-      throw new IllegalArgumentException("Index out of bounds");
+      throw new IllegalArgumentException("Index out of bounds: " + i);
 
     return _data[i];
   }
@@ -42,7 +42,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
       return false;
 
     _data[_amount++] = p;
-    p.owner(_trainer);
+    p.trainer(_trainer);
     _version++;
 
     return true;
@@ -54,7 +54,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     if (index < 0)
       throw new IllegalArgumentException("Not in this unit: " + p);
 
-    p.owner(null);
+    p.trainer(null);
     _version++;
 
     return remove(index);
@@ -76,6 +76,17 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public boolean contains(Pokemon p) {
     return indexOf(p) != -1;
+  }
+
+  public int awake() {
+    int answer = 0;
+
+    for (Pokemon pokemon : this) {
+      if (pokemon.condition.awake())
+        answer++;
+    }
+
+    return answer;
   }
 
   public Iterator<Pokemon> iterator() {
@@ -111,7 +122,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     public boolean hasNext() {
       checkVersion();
 
-      return _index < PokemonStorageUnit.this._amount - 1;
+      return _index < PokemonStorageUnit.this._amount;
     }
 
     @Override
@@ -134,6 +145,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   private Pokemon[] _data;
-  private Trainer _trainer;
+  private PokemonTrainer _trainer;
   private int _size, _amount, _version;
 }

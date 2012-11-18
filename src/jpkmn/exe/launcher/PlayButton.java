@@ -35,6 +35,8 @@ public class PlayButton extends JButton implements ActionListener {
 
     if (name == null)
       return;
+    if (!name.endsWith(".jpkmn"))
+      name += ".jpkmn";
 
     JSONObject player = null;
     try {
@@ -67,13 +69,7 @@ public class PlayButton extends JButton implements ActionListener {
       e.printStackTrace();
     }
 
-    try {
-      PlayerService.attachGraphicsHandler(player.getInt("id"));
-      _launcher.dispose();
-    } catch (JSONException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    _launcher.dispose();
   }
 
   private Launcher _launcher;

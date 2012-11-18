@@ -5,7 +5,7 @@ import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.EventInfo;
 import jpkmn.game.base.ItemInfo;
 import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.player.MockPlayer;
+import jpkmn.game.player.Trainer;
 import jpkmn.game.player.Player;
 
 public class Event {
@@ -69,11 +69,11 @@ public class Event {
     if (!test(p))
       return;
 
-    MockPlayer mock;
+    Trainer mock;
 
     switch (_type) {
     case BATTLE:
-      mock = new MockPlayer(_int1);
+      mock = new Trainer(_int1);
       BattleRegistry.make(p, mock);
       break;
     case ITEM:

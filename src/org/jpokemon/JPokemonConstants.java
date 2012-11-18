@@ -2,7 +2,6 @@ package org.jpokemon;
 
 public interface JPokemonConstants {
   // Later incorporated into server settings
-  public static final String SAVE_DIR = "data/save/";
 
   public static final int AINUMBER = 8;
   public static final int ITEMNUMBER = 19;
@@ -20,6 +19,14 @@ public interface JPokemonConstants {
   public static final int MAXBATTLESIZE = 4;
   public static final int STATCHANGEMAX = 6;
 
+  public static final String SAVE_PATH = "data/save/";
+  public static final String DATABASE_PATH = "data/Pokemon.db";
+
+  public static final int STARTER_POKEMON_LEVEL = 5;
+
   public static final double TYPE_ADVANTAGE_MODIFIER = 2.0;
   public static final double TYPE_DISADVANTAGE_MODIFIER = .5;
+
+  public static final double GYM_EXPERIENCE_MODIFIER = 1.7;
+  public static final double TRAINER_EXPERIENCE_MODIFIER = 1.3;
 }

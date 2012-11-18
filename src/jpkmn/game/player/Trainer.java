@@ -1,37 +1,71 @@
 package jpkmn.game.player;
 
-import jpkmn.game.pokemon.storage.Party;
-import jpkmn.game.service.GraphicsHandler;
+import jpkmn.exceptions.LoadException;
+import jpkmn.game.base.AIInfo;
+import jpkmn.game.pokemon.Pokemon;
 
-public abstract class Trainer {
-  public final Party party;
-  public final GraphicsHandler screen;
+import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
+public class Trainer implements PokemonTrainer, JPokemonConstants {
   public Trainer() {
-    party = new Party(this);
-    screen = new GraphicsHandler();
+    _id = -1;
+    _name = "Mock Player";
+    _type = TrainerType.WILD;
+    _party = new PokemonStorageUnit(PARTYSIZE);
+  }
+
+  public Trainer(int ai_number) throws LoadException {
+    this();
+    AIInfo info = AIInfo.get(ai_number);
+
+    _id = ai_number;
+    _name = info.getName();
+    _cash = info.getCash();
+    _type = TrainerType.valueOf(info.getType());
+
+    for (String entry : info.getPokemon())
+      add(Pokemon.load(entry));
   }
 
   public int id() {
     return _id;
   }
 
-  public int cash() {
-    return _cash;
-  }
-
-  public void cash(int c) {
-    _cash = c;
-  }
-
   public String name() {
     return _name;
   }
 
-  public void name(String s) {
-    _name = s;
+  public void name(String name) {
+    _name = name;
   }
 
-  protected String _name;
-  protected int _id, _cash;
+  public int cash() {
+    return _cash;
+  }
+
+  public void cash(int cash) {
+    _cash = cash;
+  }
+
+  public TrainerType type() {
+    return _type;
+  }
+
+  public PokemonStorageUnit party() {
+    return _party;
+  }
+
+  public boolean add(Pokemon p) {
+    return party().add(p);
+  }
+
+  public void notify(String... message) {
+    return;
+  }
+
+  private String _name;
+  private int _id, _cash;
+  private TrainerType _type;
+  private PokemonStorageUnit _party;
 }

@@ -60,9 +60,6 @@ public class GameWindow extends JFrame {
 
   public void refresh() {
     _active.refresh();
-
-    setVisible(false);
-    setVisible(true);
   }
 
   private void show(JPokemonView view) {

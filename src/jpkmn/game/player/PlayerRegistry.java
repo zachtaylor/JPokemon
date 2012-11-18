@@ -12,61 +12,65 @@ import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
 
-public class PlayerRegistry {
-  public static Player get(int playerID) {
-    return _players.get(playerID);
+public class PlayerRegistry implements JPokemonConstants {
+  public static Player get(int id) {
+    if (players.get(id) == null)
+      throw new IllegalArgumentException("Could not retrieve PlayerID: " + id);
+
+    return players.get(id);
   }
 
-  public static Player create(String name, int start) throws LoadException {
-    Player newPlayer = newPlayer();
-    newPlayer.name(name);
-    newPlayer.party.add(new Pokemon(start, 5));
-    return newPlayer;
+  public static Player start(String name, int pokemonNumber) {
+    Player player = newPlayer();
+
+    player.name(name);
+    player.add(new Pokemon(pokemonNumber, STARTER_POKEMON_LEVEL));
+
+    String filePath = name;
+
+    for (int n = 0; fileMapping.values().contains(filePath); n++)
+      filePath = name + n;
+    fileMapping.put(player.id(), filePath);
+
+    return player;
   }
 
-  public static Player fromFile(String s) throws LoadException {
-    if (!s.endsWith(".jpkmn"))
-      s += ".jpkmn";
+  public static Player load(String filepath) throws LoadException {
+    Player player = newPlayer();
+
+    if (fileMapping.values().contains(filepath))
+      throw new LoadException("File already in use: " + filepath);
 
     try {
-      File playerFile = new File(JPokemonConstants.SAVE_DIR + s);
-      Scanner scan = new Scanner(playerFile);
-
-      return newPlayer().load(scan);
+      fileMapping.put(player.id(), filepath);
+      player.load(new Scanner(new File(SAVE_PATH + filepath)));
     } catch (FileNotFoundException f) {
-      return null;
+      throw new LoadException(f.getMessage());
     }
+
+    return player;
   }
 
-  public static void saveFile(int playerID) throws LoadException {
-    Player player = get(playerID);
-
-    if (player == null)
-      throw new LoadException("Could not load player: " + playerID);
-
-    String path = player.name() + ".jpkmn";
+  public static void save(int playerID) throws LoadException {
+    String path = fileMapping.get(playerID);
 
     try {
-      File file = new File(JPokemonConstants.SAVE_DIR + path);
-      if (!file.exists())
-        file.createNewFile();
+      PrintWriter writer = new PrintWriter(new File(SAVE_PATH + path));
 
-      PrintWriter writer = new PrintWriter(file);
-
-      writer.write(player.save());
+      players.get(playerID).save(writer);
       writer.close();
-    } catch (Exception e) {
-      throw new LoadException(e.getMessage());
+    } catch (FileNotFoundException e) {
+      throw new LoadException("Cannot access file: " + path);
     }
   }
 
   private static Player newPlayer() {
-    // Eventually synchronize
-    Player player = new Player(PLAYER_COUNT++);
-    _players.put(player.id(), player);
+    Player player = new Player();
+    players.put(player.id(), player);
+
     return player;
   }
 
-  private static int PLAYER_COUNT; // Eventually move to DB
-  private static Map<Integer, Player> _players = new HashMap<Integer, Player>();
+  private static Map<Integer, Player> players = new HashMap<Integer, Player>();
+  private static Map<Integer, String> fileMapping = new HashMap<Integer, String>();
 }

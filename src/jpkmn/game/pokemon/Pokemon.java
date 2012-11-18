@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
-import jpkmn.game.player.Trainer;
+import jpkmn.game.player.PokemonTrainer;
 
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
@@ -18,7 +18,7 @@ public class Pokemon {
   public final MoveBlock moves;
   public final Condition condition;
 
-  public Pokemon(int num) throws LoadException {
+  public Pokemon(int num) {
     _number = num;
 
     PokemonBase base = PokemonBase.get(_number);
@@ -35,7 +35,7 @@ public class Pokemon {
     _id = CURRENT_ID++;
   }
 
-  public Pokemon(int num, int lvl) throws LoadException {
+  public Pokemon(int num, int lvl) {
     this(num);
     _level = lvl;
     _stats.level(lvl);
@@ -62,22 +62,9 @@ public class Pokemon {
     _level = l;
     _stats.level(l);
 
-    if (_xp >= xpNeeded()) {
-      _xp -= xpNeeded();
-      _stats.points(_stats.points() + 1);
-    }
-
     checkNewMoves();
 
     condition.reset();
-  }
-
-  public Trainer owner() {
-    return _owner;
-  }
-
-  public void owner(Trainer owner) {
-    _owner = owner;
   }
 
   public Type type1() {
@@ -101,8 +88,11 @@ public class Pokemon {
   public void xp(int amount) {
     _xp += amount;
 
-    if (_xp >= xpNeeded())
+    if (_xp >= xpNeeded()) {
+      _xp -= xpNeeded();
+      _stats.points(_stats.points() + 1);
       level(level() + 1);
+    }
   }
 
   public Stat getStat(StatType s) {
@@ -110,7 +100,8 @@ public class Pokemon {
   }
 
   public int health() {
-    return _stats.get(StatType.HEALTH).cur();
+    int val = getStat(StatType.HEALTH).cur();
+    return val;
   }
 
   public int maxHealth() {
@@ -118,23 +109,31 @@ public class Pokemon {
   }
 
   public int attack() {
-    return _stats.get(StatType.ATTACK).cur();
+    return getStat(StatType.ATTACK).cur();
   }
 
   public int specattack() {
-    return _stats.get(StatType.SPECATTACK).cur();
+    return getStat(StatType.SPECATTACK).cur();
   }
 
   public int defense() {
-    return _stats.get(StatType.DEFENSE).cur();
+    return getStat(StatType.DEFENSE).cur();
   }
 
   public int specdefense() {
-    return _stats.get(StatType.SPECDEFENSE).cur();
+    return getStat(StatType.SPECDEFENSE).cur();
   }
 
   public int speed() {
-    return _stats.get(StatType.SPEED).cur();
+    return getStat(StatType.SPEED).cur();
+  }
+
+  public PokemonTrainer trainer() {
+    return _trainer;
+  }
+
+  public void trainer(PokemonTrainer trainer) {
+    _trainer = trainer;
   }
 
   /**
@@ -148,15 +147,13 @@ public class Pokemon {
 
   /**
    * Changes a Pokemon into another one. This can be regular evolution
-   * (Charmander to Charmeleon) or other complicated changes (fire stone
-   * changes Eevee into Flareon).
+   * (Charmander to Charmeleon) or other complicated changes (fire stone changes
+   * Eevee into Flareon).
    * 
    * Evolve will fail if the Pokemon is not high enough level, and no arguments
    * are passed
    */
   public void evolve(int... num) {
-    String speciesUpdate = "Your " + species + " evolved into ";
-
     // No points for Vaporeon/Jolteon/Flareon
     if (_number < 134 || _number > 136)
       _stats.points(_stats.points() + 1);
@@ -164,15 +161,13 @@ public class Pokemon {
     if (num.length != 0)
       _number = num[0]; // special value
     else if (_level < evolutionlevel)
-      return; // stock evolution and they cannot evolve yet.
+      throw new IllegalStateException(name() + " is not ready to evolve");
     else
       _number++;
 
     PokemonBase base = PokemonBase.get(_number);
 
     moves.setPokemonNumber(_number);
-    checkNewMoves();
-
     _stats.rebase(base);
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
@@ -183,8 +178,7 @@ public class Pokemon {
     else
       species = base.getName();
 
-    speciesUpdate += species + "!";
-    _owner.screen.notify("Congratulations!", speciesUpdate);
+    checkNewMoves();
   }
 
   /**
@@ -221,9 +215,9 @@ public class Pokemon {
     return condition.contains(i);
   }
 
-  public void removeIssue(Condition.Issue i) {
+  public boolean removeIssue(Condition.Issue i) {
     _stats.removeIssue(i);
-    condition.remove(i);
+    return condition.remove(i);
   }
 
   /**
@@ -323,10 +317,10 @@ public class Pokemon {
     return _id;
   }
 
-  private Trainer _owner;
   private StatBlock _stats;
   private Type type1, type2;
   private String name, species;
+  private PokemonTrainer _trainer;
   private int _id, _number, _level, _xp, evolutionlevel;
 
   private static int CURRENT_ID;
