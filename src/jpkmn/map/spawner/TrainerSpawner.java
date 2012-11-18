@@ -12,8 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MockPlayerSpawner {
-  public MockPlayerSpawner(List<AIInfo> list) {
+public class TrainerSpawner {
+  public TrainerSpawner(List<AIInfo> list) {
     _data = new ArrayList<Spawn>();
 
     for (AIInfo info : list)

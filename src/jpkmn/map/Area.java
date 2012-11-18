@@ -12,7 +12,7 @@ import jpkmn.game.player.Trainer;
 import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.spawner.EventSpawner;
-import jpkmn.map.spawner.MockPlayerSpawner;
+import jpkmn.map.spawner.TrainerSpawner;
 import jpkmn.map.spawner.PokemonSpawner;
 
 import org.json.JSONArray;
@@ -30,7 +30,7 @@ public class Area {
 
     _pokemon = new PokemonSpawner(SpawnInfo.get(areaNumber));
     _events = new EventSpawner(EventInfo.getEventsForArea(areaNumber));
-    _trainers = new MockPlayerSpawner(AIInfo.getAIForArea(areaNumber));
+    _trainers = new TrainerSpawner(AIInfo.getAIForArea(areaNumber));
 
     _map = new HashMap<Direction, AreaConnection>();
     for (ConnectionInfo info : ConnectionInfo.get(areaNumber))
@@ -261,6 +261,6 @@ public class Area {
   private boolean _center;
   private EventSpawner _events;
   private PokemonSpawner _pokemon;
-  private MockPlayerSpawner _trainers;
+  private TrainerSpawner _trainers;
   private Map<Direction, AreaConnection> _map;
 }
