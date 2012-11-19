@@ -82,8 +82,10 @@ public class AttackTurn extends AbstractTurn {
       _damage *= targetSlot.damageModifier(_move);
     }
 
-    _messages.add(targetSlot.leader().name() + " took " + _damage + " damage!");
-    targetSlot.takeDamage(_damage);
+    if (_move.style() != MoveStyle.STATUS) {
+      _messages.add(targetSlot.leader().name() + " took " + _damage + " damage!");
+      targetSlot.takeDamage(_damage);
+    }
     applyMoveEffects();
   }
 
