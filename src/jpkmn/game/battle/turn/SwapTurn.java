@@ -8,12 +8,14 @@ public class SwapTurn extends AbstractTurn {
     _swapIndex = slotIndex;
   }
 
-  public void execute() {
+  public String[] execute() {
     _user.party().swap(0, _swapIndex);
 
     String trainerName = _user.trainer().name();
     String leaderName = _user.leader().name();
     _messages.add(trainerName + " sent out " + leaderName);
+
+    return getNotifications();
   }
 
   @Override

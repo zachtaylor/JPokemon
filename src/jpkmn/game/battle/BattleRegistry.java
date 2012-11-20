@@ -3,59 +3,50 @@ package jpkmn.game.battle;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.game.player.Player;
-import jpkmn.game.player.Trainer;
+import jpkmn.game.player.PokemonTrainer;
 
 public class BattleRegistry {
-  public static void make(Player player, Trainer enemy) {
-    Battle battle = new Battle();
-
-    battle.add(player);
-    battle.add(enemy);
-
-    start(battle);
-  }
-
-  public static int make() {
-    Battle b = new Battle();
-
-    _enroll.put(_enrollID, b);
+  public static int create() {
+    _enrollable.put(_enrollID, new Battle());
 
     return _enrollID++;
   }
 
-  public static boolean enroll(Player player, int battle) {
-    Battle b = _enroll.get(battle);
+  public static void enroll(PokemonTrainer trainer, int battleID) {
+    Battle b = _enrollable.get(battleID);
 
     if (b == null)
-      return false;
+      throw new IllegalArgumentException("Battle ID not valid: " + battleID);
 
-    b.add(player);
-
-    return true;
+    b.add(trainer);
   }
 
-  public static void finish(int battle) {
-    Battle b = _enroll.remove(battle);
+  public static int start(int battleID) {
+    Battle b = _enrollable.remove(battleID);
 
-    if (b != null)
-      start(b);
-  }
+    if (b == null)
+      throw new IllegalArgumentException("Battle ID not valid: " + battleID);
 
-  public static void remove(int battleNumber) {
-    _battles.remove(battleNumber);
+    b.start();
+    _battles.put(_battleID, b);
+    return _battleID++;
   }
 
   public static Battle get(int battleNumber) {
     return _battles.get(battleNumber);
   }
 
-  private static void start(Battle b) {
-    _battles.put(_battleID, b);
-    b.start(_battleID++);
+  public static void remove(Battle b) {
+    int key = -1;
+
+    for (Map.Entry<Integer, Battle> battle : _battles.entrySet())
+      if (battle.getValue().equals(b))
+        key = battle.getKey();
+
+    _battles.remove(key);
   }
 
   private static int _enrollID, _battleID;
-  private static Map<Integer, Battle> _enroll = new HashMap<Integer, Battle>();
   private static Map<Integer, Battle> _battles = new HashMap<Integer, Battle>();
+  private static Map<Integer, Battle> _enrollable = new HashMap<Integer, Battle>();
 }

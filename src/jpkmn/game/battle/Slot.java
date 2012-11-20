@@ -35,10 +35,6 @@ public class Slot {
     return _id;
   }
 
-  public Battle battle() {
-    return _battle;
-  }
-
   public PokemonTrainer trainer() {
     return _trainer;
   }
@@ -51,23 +47,27 @@ public class Slot {
     return party().get(0);
   }
 
-  public int target() {
-    return _targetID;
+  public Slot target() {
+    return _target;
   }
 
-  public void target(int targetID) {
-    _targetID = targetID;
+  public void target(Slot target) {
+    _target = target;
   }
 
-  public void setMoveChoice(int moveIndex) {
+  public void moveIndex(int moveIndex) {
     _index = moveIndex;
   }
 
-  public void setItemID(int item) {
-    _index = item;
+  public void itemID(int item) {
+    _itemID = item;
   }
 
-  public void setSwapPosition(int slotIndex) {
+  public void itemIndex(int itemIndex) {
+    _index = itemIndex;
+  }
+
+  public void swapIndex(int slotIndex) {
     _index = slotIndex;
   }
 
@@ -86,9 +86,9 @@ public class Slot {
   }
 
   public AbstractTurn item() {
-    Item item = ((Player) _trainer).bag.get(_index);
+    Item item = ((Player) _trainer).bag.get(_itemID);
 
-    ItemTurn turn = new ItemTurn(this, item, _targetID);
+    ItemTurn turn = new ItemTurn(this, item, _index);
 
     return turn;
   }
@@ -99,8 +99,8 @@ public class Slot {
     return turn;
   }
 
-  public AbstractTurn run(Battle b) {
-    RunTurn turn = new RunTurn(this);
+  public AbstractTurn run() {
+    RunTurn turn = new RunTurn(this, _battle);
 
     return turn;
   }
@@ -124,7 +124,7 @@ public class Slot {
     return (int) (factor * leader().level());
   }
 
-  public void rival(Pokemon p) {
+  public void addRival(Pokemon p) {
     if (_rivals.get(leader()) == null)
       _rivals.put(leader(), new ArrayList<Pokemon>());
 
@@ -137,55 +137,46 @@ public class Slot {
       ((Player) _trainer).putPokedex(p.number(), PokedexStatus.SAW);
   }
 
-  public void rival(Slot s) {
-    if (s.id() == id())
-      return;
+  public void removeRival(Pokemon p) {
+    int xpReward = (int) (p.trainer().type().xpFactor() * (p.level() + 6));
 
-    Pokemon dead = s.leader();
-    int xp = s.getXPAwarded(), count = 0;
+    List<Pokemon> rivalList;
+    List<Pokemon> earnList = new ArrayList<Pokemon>();
     List<String> message = new ArrayList<String>();
-    List<Pokemon> rivals, earners = new ArrayList<Pokemon>();
-
-    message.add(dead.name() + " fained!");
 
     for (Pokemon cur : _trainer.party()) {
-      rivals = _rivals.get(cur);
+      rivalList = _rivals.get(cur);
 
       // If cur holding xp share, add to earners
 
-      if (rivals == null)
-        continue;
-      if (rivals.contains(dead)) {
-        count++;
-        earners.add(cur);
-        rivals.remove(dead);
+      if (rivalList != null && rivalList.contains(p)) {
+        earnList.add(cur);
+        rivalList.remove(p);
       }
-      if (rivals.isEmpty())
-        _rivals.remove(cur);
     }
 
-    xp = (xp / count) > 0 ? (xp / count) : 1;
-    for (Pokemon cur : earners) {
-      message.add(cur.name() + " received " + xp + " experience!");
-      cur.xp(xp);
+    int xpEach = (xpReward / earnList.size());
+    if (xpEach == 0)
+      xpEach = 1;
+
+    message.add(p.name() + " fainted!");
+    for (Pokemon earner : earnList) {
+      earner.xp(earner.xp() + xpEach);
+      message.add(earner.name() + " received " + xpEach + " experience!");
     }
 
-    _trainer.notify(message.toArray(new String[message.size()]));
+    _trainer.notify((String[]) message.toArray());
   }
 
-  // Slot
   private int _id;
   private Field _field;
+  private Slot _target;
   private Battle _battle;
   private PokemonTrainer _trainer;
   private Map<Pokemon, List<Pokemon>> _rivals;
 
-  // Move
   private boolean _bide;
   private int _bidedamage;
 
-  // Attack: Move index
-  // Item: index in party for user
-  // Swap: index in party
-  private int _index, _targetID;
+  private int _index, _itemID;
 }

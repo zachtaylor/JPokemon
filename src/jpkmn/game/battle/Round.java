@@ -13,7 +13,6 @@ public class Round {
   public Round(Battle b) {
     _battle = b;
     _turns = new PriorityQueue<AbstractTurn>();
-    _haveSelectedTurn = new ArrayList<Slot>();
     _forceNextAttack = new ArrayList<Slot>();
   }
 
@@ -22,9 +21,6 @@ public class Round {
   }
 
   public void add(AbstractTurn t) {
-    if (_haveSelectedTurn.contains(t.getUserSlot()))
-      return;
-    _haveSelectedTurn.add(t.getUserSlot());
     _turns.add(t);
   }
 
@@ -35,16 +31,17 @@ public class Round {
     for (Slot a : _battle) {
       for (Slot b : _battle) {
         if (a.id() != b.id())
-          a.rival(b.leader());
+          a.addRival(b.leader());
       }
     }
 
     while (!_turns.isEmpty()) {
       turn = _turns.remove();
 
-      turn.execute();
+      String[] message = turn.execute();
 
-      _battle.notifyAll(turn.getNotifications());
+      for (Slot slot : _battle)
+        slot.trainer().notify(message);
 
       if (turn.getUserSlot().leader().hasIssue(Issue.WAIT))
         _forceNextAttack.add(turn.getUserSlot());
@@ -52,6 +49,7 @@ public class Round {
       verifyTurnList();
     }
 
+    executeConditionEffects();
     setForcedNextAttacks();
   }
 
@@ -62,9 +60,14 @@ public class Round {
       slot = turn.getUserSlot();
 
       if (slot.party().size() > 0 && !slot.leader().condition.awake()) {
-        _battle.rewardFrom(slot.id());
-        if (slot.party().awake() > 0)
+        _battle.remove(slot.id());
+
+        for (Slot s : _battle)
+          s.removeRival(slot.leader());
+
+        if (slot.party().awake() > 0) {
           turn.changeToSwap();
+        }
       }
 
       if (slot.party().awake() == 0) {
@@ -75,7 +78,7 @@ public class Round {
 
     for (AbstractTurn turn : _turns) {
       boolean attackTargetMissing = turn instanceof AttackTurn
-          && _battle.get(turn.getUserSlot().target()) == null;
+          && _battle.get(turn.getUserSlot().target().id()) == null;
 
       if (attackTargetMissing) {
         // TODO shit bricks
@@ -86,9 +89,19 @@ public class Round {
   private void setForcedNextAttacks() {
     for (Slot slot : _forceNextAttack)
       _battle.add(slot.attack());
+
+    _forceNextAttack = new ArrayList<Slot>();
+  }
+
+  private void executeConditionEffects() {
+    for (Slot slot : _battle) {
+      String[] messages = slot.leader().condition.applyEffects();
+      for (Slot s : _battle)
+        s.trainer().notify(messages);
+    }
   }
 
   private Battle _battle;
   private Queue<AbstractTurn> _turns;
-  private List<Slot> _haveSelectedTurn, _forceNextAttack;
+  private List<Slot> _forceNextAttack;
 }

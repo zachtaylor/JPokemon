@@ -7,103 +7,95 @@ import java.util.List;
 import java.util.Map;
 
 import jpkmn.game.battle.turn.AbstractTurn;
-import jpkmn.game.player.Player;
+import jpkmn.game.item.Item;
 import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
 public class Battle implements Iterable<Slot> {
   public Battle() {
-    _slots = new HashMap<Integer, Slot>();
     _round = new Round(this);
+    _slots = new HashMap<Integer, Slot>();
+    _haveSelectedTurn = new ArrayList<Slot>();
   }
 
-  public int add(PokemonTrainer trainer) {
-    if (ready() || _slots.size() == JPokemonConstants.MAXBATTLESIZE)
-      return -1;
+  public void add(PokemonTrainer trainer) {
+    Slot slot = new Slot(this, trainer, _slots.size());
 
-    int id = _slots.size();
-
-    _slots.put(id, new Slot(this, trainer, id));
-
-    return id;
+    _slots.put(_slots.size(), slot);
   }
 
   public void remove(int slotID) {
     Slot slot = _slots.remove(slotID);
 
-    if (_slots.size() == 1) {
-      remove((Integer) _slots.keySet().toArray()[0]);
-      BattleRegistry.remove(_id);
-    }
-
-    if (slot.trainer().type() == TrainerType.PLAYER)
-      ((Player) slot.trainer()).setState("world");
-  }
-
-  public void start(int battleID) {
-    _id = battleID;
-
-    for (Slot slot : this) {
-      if (slot.trainer().type() == TrainerType.PLAYER)
-        ((Player) slot.trainer()).setState("battle", battleID, slot.id());
-    }
-
-    doMockAttacks();
-  }
-
-  public void rewardFrom(int slotID) {
-    Slot loser = _slots.get(slotID);
-
-    for (Slot slot : this) {
-      if (slot.id() != slotID) {
-        slot.rival(loser);
-      }
-    }
-
-    if (loser.party().awake() == 0) {
-      if (loser.trainer().type() == TrainerType.PLAYER) {
+    if (slot.party().size() != 0 && slot.party().awake() == 0) {
+      if (slot.trainer().type() == TrainerType.PLAYER) {
         // TODO : Punish player
       }
-      else if (loser.trainer().type() == TrainerType.GYM) {
+      else if (slot.trainer().type() == TrainerType.GYM) {
         // TODO : Reward from gym
       }
-      else if (loser.trainer().type() == TrainerType.TRAINER) {
+      else if (slot.trainer().type() == TrainerType.TRAINER) {
         // TODO : Prevent players from fighting this trainer again
       }
     }
-  }
 
-  public int id() {
-    return _id;
-  }
-
-  public void id(int battleID) {
-    _id = battleID;
+    if (_slots.size() == 1) {
+      remove((Integer) _slots.keySet().toArray()[0]);
+      BattleRegistry.remove(this);
+    }
   }
 
   public Slot get(int slotID) {
     return _slots.get(slotID);
   }
 
+  public void add(AbstractTurn turn) {
+    if (_haveSelectedTurn.contains(turn.getUserSlot()))
+      return;
+
+    _haveSelectedTurn.add(turn.getUserSlot());
+    _round.add(turn);
+
+    if (_round.size() == _slots.size())
+      doRound();
+  }
+
+  public void start() {
+    doTrainerAttacks();
+  }
+
   public void fight(int slotID, int enemySlotID, int moveIndex) {
     Slot slot = _slots.get(slotID);
+    Slot enemySlot = _slots.get(enemySlotID);
 
-    slot.target(enemySlotID);
-    slot.setMoveChoice(moveIndex);
+    slot.target(enemySlot);
+    slot.moveIndex(moveIndex);
 
     add(slot.attack());
   }
 
   public void item(int slotID, int slotIndex, int itemID) {
     Slot slot = _slots.get(slotID);
+    Target itemTarget = new Item(itemID).target();
 
-    slot.target(slotIndex);
-    slot.setItemID(itemID);
+    int itemTargetIndex;
+    Slot targetSlot;
+    if (itemTarget == Target.SELF) {
+      itemTargetIndex = slotIndex;
+      targetSlot = slot;
+    }
+    else {
+      itemTargetIndex = 0;
+      targetSlot = get(slotIndex);
+    }
+
+    slot.target(targetSlot);
+    slot.itemID(itemID);
+    slot.itemIndex(itemTargetIndex);
 
     add(slot.item());
   }
@@ -111,7 +103,7 @@ public class Battle implements Iterable<Slot> {
   public void swap(int slotID, int slotIndex) {
     Slot slot = _slots.get(slotID);
 
-    slot.setSwapPosition(slotIndex);
+    slot.swapIndex(slotIndex);
 
     add(slot.swap());
   }
@@ -119,34 +111,24 @@ public class Battle implements Iterable<Slot> {
   public void run(int slotID) {
     Slot slot = _slots.get(slotID);
 
-    add(slot.run(this));
+    add(slot.run());
   }
 
-  public void add(AbstractTurn turn) {
-    _round.add(turn);
-
-    if (_round.size() == _slots.size())
-      executeRound();
+  @Override
+  public Iterator<Slot> iterator() {
+    return _slots.values().iterator();
   }
 
-  private void executeRound() {
+  private void doRound() {
     Round current = _round;
     _round = new Round(this);
+    _haveSelectedTurn = new ArrayList<Slot>();
+
     current.play();
-    executeConditionEffects();
-
-    doMockAttacks();
+    doTrainerAttacks();
   }
 
-  private void executeConditionEffects() {
-    for (Slot slot : _slots.values()) {
-      String[] messages = slot.leader().condition.applyEffects();
-      if (messages.length > 0)
-        notifyAll(messages);
-    }
-  }
-
-  public void doMockAttacks() {
+  private void doTrainerAttacks() {
     for (Slot slot : _slots.values()) {
       if (slot.trainer().type() == TrainerType.PLAYER)
         continue;
@@ -223,33 +205,7 @@ public class Battle implements Iterable<Slot> {
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
-  @Override
-  public Iterator<Slot> iterator() {
-    return _slots.values().iterator();
-  }
-
-  void notifyAll(String... s) {
-    for (Slot slot : _slots.values()) {
-      slot.trainer().notify(s);
-    }
-  }
-
-  // Later used to implement teams
-  private List<Slot> getEnemySlotsForSlot(Slot slot) {
-    List<Slot> enemySlots = new ArrayList<Slot>();
-
-    for (Slot s : _slots.values())
-      if (s.id() != slot.id())
-        enemySlots.add(s);
-
-    return enemySlots;
-  }
-
-  private boolean ready() {
-    return _id != Integer.MIN_VALUE;
-  }
-
   private Round _round;
   private Map<Integer, Slot> _slots;
-  private int _id = Integer.MIN_VALUE;
+  List<Slot> _haveSelectedTurn;
 }

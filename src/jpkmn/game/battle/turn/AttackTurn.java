@@ -23,23 +23,21 @@ public class AttackTurn extends AbstractTurn {
     _absolute = true;
   }
 
-  public void execute() {
-    if (needSwap()) {
-      executeForcedSwap();
-      return;
-    }
+  public String[] execute() {
+    if (needSwap())
+      return executeForcedSwap();
 
-    Slot targetSlot = _user.battle().get(_user.target());
+    Slot targetSlot = _user.target();
     Pokemon leader = _user.leader();
 
     if (!leader.hasIssue(Issue.WAIT)) {
       // 1 Measure if the user can attack
       if (!leader.condition.canAttack())
-        nullify(leader.condition.toString());
+        return nullify(leader.condition.toString());
 
       // 2 Reduce and measure PP
       else if (!_move.enabled())
-        nullify("Move is not enabled!");
+        return nullify("Move is not enabled!");
 
       // 3 Measure accuracy
       else if (!_move.use()) {
@@ -48,33 +46,32 @@ public class AttackTurn extends AbstractTurn {
           _user.takeDamage(d);
         }
 
-        nullify("It missed.");
-        return;
+        return nullify("It missed.");
       }
     }
 
     if (_move.style() == MoveStyle.DELAYNEXT) {
       if (leader.removeIssue(Issue.WAIT))
-        nullify("Resting this turn.");
+        return nullify("Resting this turn.");
       else
         leader.addIssue(Issue.WAIT);
     }
     else if (_move.style() == MoveStyle.DELAYBEFORE) {
       if (!leader.removeIssue(Issue.WAIT)) {
-        nullify("Resting this turn.");
         leader.addIssue(Issue.WAIT);
+        return nullify("Resting this turn.");
       }
     }
     else if (_move.style() == MoveStyle.OHKO) {
       int levelDiff = leader.level() - targetSlot.leader().level();
 
       if (levelDiff < 0)
-        nullify("Cannot perform OHKO on " + targetSlot.leader().name());
+        return nullify("Cannot perform OHKO on " + targetSlot.leader().name());
       else if ((levelDiff + 30.0) / 100.0 <= Math.random())
-        nullify("It missed.");
+        return nullify("It missed.");
     }
     else if (_move.style() == MoveStyle.MISC) { // Misc
-      nullify("This doesn't work yet. Sorry about that!");
+      return nullify("This doesn't work yet. Sorry about that!");
     }
 
     if (!_absolute) {
@@ -83,10 +80,13 @@ public class AttackTurn extends AbstractTurn {
     }
 
     if (_move.style() != MoveStyle.STATUS) {
-      _messages.add(targetSlot.leader().name() + " took " + _damage + " damage!");
+      _messages.add(targetSlot.leader().name() + " took " + _damage
+          + " damage!");
       targetSlot.takeDamage(_damage);
     }
     applyMoveEffects();
+
+    return getNotifications();
   }
 
   @Override
@@ -106,13 +106,15 @@ public class AttackTurn extends AbstractTurn {
 
   private void applyMoveEffects() {
     Pokemon leader = _user.leader();
-    Pokemon enemy = _user.battle().get(_user.target()).leader();
+    Pokemon enemy = _user.target().leader();
 
     _move.applyEffects(leader, enemy);
   }
 
-  private void nullify(String reason) {
+  private String[] nullify(String reason) {
     _messages.add(reason);
+
+    return getNotifications();
   }
 
   private Move _move;

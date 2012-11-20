@@ -1,7 +1,6 @@
 package jpkmn.game.battle.turn;
 
 import jpkmn.game.battle.Slot;
-import jpkmn.game.battle.Target;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 import jpkmn.game.player.TrainerType;
@@ -11,23 +10,17 @@ public class ItemTurn extends AbstractTurn {
   public ItemTurn(Slot user, Item item, int targetID) {
     super(user);
 
-    _targetID = targetID;
+    _itemIndex = targetID;
     _item = item;
 
     _messages.add(_user.trainer().name() + " used " + item.name());
   }
 
-  public void execute() {
-    if (needSwap()) {
-      executeForcedSwap();
-      return;
-    }
+  public String[] execute() {
+    if (needSwap())
+      return executeForcedSwap();
 
-    Pokemon target;
-    if (_item.target() == Target.SELF)
-      target = _user.party().get(_targetID);
-    else
-      target = _user.battle().get(_targetID).party().get(0);
+    Pokemon target = _user.party().get(_itemIndex);
 
     if (_item.type() == ItemType.MACHINE)
       _messages.add("Machines aren't allowed in battle!");
@@ -47,6 +40,8 @@ public class ItemTurn extends AbstractTurn {
       else
         _messages.add(target.name() + "broke free!");
     }
+
+    return getNotifications();
   }
 
   @Override
@@ -64,6 +59,6 @@ public class ItemTurn extends AbstractTurn {
     return 1;
   }
 
-  private int _targetID;
+  private int _itemIndex;
   private Item _item;
 }

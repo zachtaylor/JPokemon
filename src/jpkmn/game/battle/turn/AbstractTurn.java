@@ -16,7 +16,7 @@ public abstract class AbstractTurn implements Comparable<AbstractTurn> {
     return _user;
   }
 
-  public abstract void execute();
+  public abstract String[] execute();
 
   public void changeToSwap() {
     _needSwap = true;
@@ -26,11 +26,12 @@ public abstract class AbstractTurn implements Comparable<AbstractTurn> {
     return _needSwap;
   }
 
-  public void executeForcedSwap() {
+  public String[] executeForcedSwap() {
     // TODO
+    return null;
   }
 
-  public String[] getNotifications() {
+  protected String[] getNotifications() {
     return _messages.toArray(new String[_messages.size()]);
   }
 
