@@ -6,9 +6,13 @@ import java.util.Map;
 import jpkmn.game.player.PokemonTrainer;
 
 public class BattleRegistry {
-  public static int create() {
-    _enrollable.put(_enrollID, new Battle());
+  public static int create(PokemonTrainer... trainers) {
+    Battle battle = new Battle();
 
+    for (PokemonTrainer trainer : trainers)
+      battle.add(trainer);
+
+    _enrollable.put(_enrollID, battle);
     return _enrollID++;
   }
 

@@ -33,7 +33,7 @@ public class BattleService {
     Trainer mock = new Trainer();
     mock.add(wild);
 
-    BattleRegistry.make(player, mock);
+    BattleRegistry.start(BattleRegistry.create(player, mock));
   }
 
   public static void startWater(int playerID, String rodName)
@@ -59,7 +59,7 @@ public class BattleService {
     Trainer mock = new Trainer();
     mock.add(wild);
 
-    BattleRegistry.make(player, mock);
+    BattleRegistry.start(BattleRegistry.create(player, mock));
   }
 
   public static void startBattle(int pID, int tID) throws ServiceException {
@@ -81,7 +81,7 @@ public class BattleService {
     // if (player has fought this trainer)
     // throw new ServiceException(player.name() + " has already fought " +)
 
-    BattleRegistry.make(player, trainer);
+    BattleRegistry.start(BattleRegistry.create(player, trainer));
   }
 
   public static void attack(int battleID, int slotID, int enemySlotID,

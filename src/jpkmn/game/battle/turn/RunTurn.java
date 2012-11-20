@@ -24,7 +24,7 @@ public class RunTurn extends AbstractTurn {
     }
 
     if ((chance / 250.0) > Math.random()) {
-      _battle.remove(_user.id());
+      _battle.remove(_user);
       _messages.add("Got away successfully!");
     }
     else

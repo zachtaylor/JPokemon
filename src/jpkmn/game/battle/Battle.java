@@ -28,9 +28,7 @@ public class Battle implements Iterable<Slot> {
     _slots.put(_slots.size(), slot);
   }
 
-  public void remove(int slotID) {
-    Slot slot = _slots.remove(slotID);
-
+  public void remove(Slot slot) {
     if (slot.party().size() != 0 && slot.party().awake() == 0) {
       if (slot.trainer().type() == TrainerType.PLAYER) {
         // TODO : Punish player
@@ -44,7 +42,7 @@ public class Battle implements Iterable<Slot> {
     }
 
     if (_slots.size() == 1) {
-      remove((Integer) _slots.keySet().toArray()[0]);
+      remove((Slot) _slots.values().toArray()[0]);
       BattleRegistry.remove(this);
     }
   }

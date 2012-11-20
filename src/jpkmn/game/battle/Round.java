@@ -1,19 +1,18 @@
 package jpkmn.game.battle;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.battle.turn.AttackTurn;
-import jpkmn.game.pokemon.Condition.Issue;
+import jpkmn.game.pokemon.Condition;
 
 public class Round {
   public Round(Battle b) {
     _battle = b;
     _turns = new PriorityQueue<AbstractTurn>();
-    _forceNextAttack = new ArrayList<Slot>();
+    new ArrayList<Slot>();
   }
 
   public int size() {
@@ -37,20 +36,12 @@ public class Round {
 
     while (!_turns.isEmpty()) {
       turn = _turns.remove();
-
-      String[] message = turn.execute();
-
-      for (Slot slot : _battle)
-        slot.trainer().notify(message);
-
-      if (turn.getUserSlot().leader().hasIssue(Issue.WAIT))
-        _forceNextAttack.add(turn.getUserSlot());
-
+      notifyAllTrainers(turn.execute());
       verifyTurnList();
     }
 
-    executeConditionEffects();
-    setForcedNextAttacks();
+    applyConditionEffects();
+    applyForceNextAttacks();
   }
 
   private void verifyTurnList() {
@@ -59,49 +50,43 @@ public class Round {
     for (AbstractTurn turn : _turns) {
       slot = turn.getUserSlot();
 
-      if (slot.party().size() > 0 && !slot.leader().condition.awake()) {
-        _battle.remove(slot.id());
-
+      if (slot.party().size() == 0 || slot.party().awake() == 0) {
+        _turns.remove(turn);
+        _battle.remove(slot);
+      }
+      else if (!slot.leader().condition.awake()) {
         for (Slot s : _battle)
           s.removeRival(slot.leader());
 
-        if (slot.party().awake() > 0) {
-          turn.changeToSwap();
-        }
+        turn.changeToSwap();
       }
 
-      if (slot.party().awake() == 0) {
-        _turns.remove(turn);
-        _battle.remove(slot.id());
-      }
-    }
-
-    for (AbstractTurn turn : _turns) {
       boolean attackTargetMissing = turn instanceof AttackTurn
-          && _battle.get(turn.getUserSlot().target().id()) == null;
-
+          && _battle.get(slot.target().id()) == null;
       if (attackTargetMissing) {
         // TODO shit bricks
       }
     }
   }
 
-  private void setForcedNextAttacks() {
-    for (Slot slot : _forceNextAttack)
-      _battle.add(slot.attack());
-
-    _forceNextAttack = new ArrayList<Slot>();
+  private void applyForceNextAttacks() {
+    for (Slot slot : _battle)
+      if (slot.leader().hasIssue(Condition.Issue.WAIT))
+        _battle.add(slot.attack());
   }
 
-  private void executeConditionEffects() {
+  private void applyConditionEffects() {
     for (Slot slot : _battle) {
       String[] messages = slot.leader().condition.applyEffects();
-      for (Slot s : _battle)
-        s.trainer().notify(messages);
+      notifyAllTrainers(messages);
     }
+  }
+
+  private void notifyAllTrainers(String[] message) {
+    for (Slot s : _battle)
+      s.trainer().notify(message);
   }
 
   private Battle _battle;
   private Queue<AbstractTurn> _turns;
-  private List<Slot> _forceNextAttack;
 }

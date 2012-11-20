@@ -28,7 +28,7 @@ public class Slot {
     _bide = false;
 
     _field = new Field(this);
-    _rivals = new HashMap<Pokemon, List<Pokemon>>();
+    _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
   }
 
   public int id() {
@@ -125,13 +125,13 @@ public class Slot {
   }
 
   public void addRival(Pokemon p) {
-    if (_rivals.get(leader()) == null)
-      _rivals.put(leader(), new ArrayList<Pokemon>());
+    if (_rivalsLists.get(leader()) == null)
+      _rivalsLists.put(leader(), new ArrayList<Pokemon>());
 
-    List<Pokemon> rivals = _rivals.get(leader());
+    List<Pokemon> rivalsList = _rivalsLists.get(leader());
 
-    if (!rivals.contains(p))
-      rivals.add(p);
+    if (!rivalsList.contains(p))
+      rivalsList.add(p);
 
     if (_trainer.type() == TrainerType.PLAYER)
       ((Player) _trainer).putPokedex(p.number(), PokedexStatus.SAW);
@@ -140,24 +140,22 @@ public class Slot {
   public void removeRival(Pokemon p) {
     int xpReward = (int) (p.trainer().type().xpFactor() * (p.level() + 6));
 
-    List<Pokemon> rivalList;
+    List<Pokemon> rivalsList;
     List<Pokemon> earnList = new ArrayList<Pokemon>();
     List<String> message = new ArrayList<String>();
 
     for (Pokemon cur : _trainer.party()) {
-      rivalList = _rivals.get(cur);
+      rivalsList = _rivalsLists.get(cur);
 
       // If cur holding xp share, add to earners
 
-      if (rivalList != null && rivalList.contains(p)) {
+      if (rivalsList != null && rivalsList.contains(p)) {
         earnList.add(cur);
-        rivalList.remove(p);
+        rivalsList.remove(p);
       }
     }
 
-    int xpEach = (xpReward / earnList.size());
-    if (xpEach == 0)
-      xpEach = 1;
+    int xpEach = Math.max(xpReward / earnList.size(), 1);
 
     message.add(p.name() + " fainted!");
     for (Pokemon earner : earnList) {
@@ -173,7 +171,7 @@ public class Slot {
   private Slot _target;
   private Battle _battle;
   private PokemonTrainer _trainer;
-  private Map<Pokemon, List<Pokemon>> _rivals;
+  private Map<Pokemon, List<Pokemon>> _rivalsLists;
 
   private boolean _bide;
   private int _bidedamage;

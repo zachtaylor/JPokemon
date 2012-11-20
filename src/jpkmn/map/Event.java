@@ -52,11 +52,11 @@ public class Event {
 
     switch (_type) {
     case BATTLE:
-      break; // never block battle
+    break; // never block battle
     case ITEM:
       if (_int2 < 0 && p.bag.get(_int1).amount() < -_int2)
         return false;
-      break;
+    break;
     }
 
     if (_requirement == null)
@@ -74,12 +74,12 @@ public class Event {
     switch (_type) {
     case BATTLE:
       mock = new Trainer(_int1);
-      BattleRegistry.make(p, mock);
-      break;
+      BattleRegistry.start(BattleRegistry.create(p, mock));
+    break;
     case ITEM:
       p.bag.get(_int1).add(_int2);
-      p.getEvent(_id);
-      break;
+      p.putEvent(_id);
+    break;
     }
     // TODO
   }
