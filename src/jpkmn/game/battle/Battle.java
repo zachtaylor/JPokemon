@@ -9,6 +9,7 @@ import java.util.Map;
 import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.item.Item;
 import jpkmn.game.player.PokemonTrainer;
+import jpkmn.game.player.Player;
 import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
 
@@ -22,13 +23,17 @@ public class Battle implements Iterable<Slot> {
     _haveSelectedTurn = new ArrayList<Slot>();
   }
 
-  public void add(PokemonTrainer trainer) {
+  public int add(PokemonTrainer trainer) {
     Slot slot = new Slot(this, trainer, _slots.size());
 
     _slots.put(_slots.size(), slot);
+
+    return slot.id();
   }
 
   public void remove(Slot slot) {
+    _slots.remove(slot.id());
+
     if (slot.party().size() != 0 && slot.party().awake() == 0) {
       if (slot.trainer().type() == TrainerType.PLAYER) {
         // TODO : Punish player
@@ -40,6 +45,9 @@ public class Battle implements Iterable<Slot> {
         // TODO : Prevent players from fighting this trainer again
       }
     }
+
+    if (slot.trainer().type() == TrainerType.PLAYER)
+      ((Player) slot.trainer()).setState("world");
 
     if (_slots.size() == 1) {
       remove((Slot) _slots.values().toArray()[0]);
@@ -88,7 +96,7 @@ public class Battle implements Iterable<Slot> {
     }
     else {
       itemTargetIndex = 0;
-      targetSlot = get(slotIndex);
+      targetSlot = _slots.get(slotIndex);
     }
 
     slot.target(targetSlot);
@@ -131,14 +139,16 @@ public class Battle implements Iterable<Slot> {
       if (slot.trainer().type() == TrainerType.PLAYER)
         continue;
 
-      int randomSlot;
+      Slot[] allSlots;
+      Slot randomSlot;
       do {
-        randomSlot = (int) (Math.random() * _slots.entrySet().size());
-      } while (get(randomSlot).equals(slot));
+        allSlots = _slots.values().toArray(new Slot[_slots.values().size()]);
+        randomSlot = allSlots[(int) (Math.random() * allSlots.length)];
+      } while (slot.equals(randomSlot));
 
       int randomMove = (int) (Math.random()) * slot.leader().moves.count();
 
-      fight(slot.id(), randomSlot, randomMove);
+      fight(slot.id(), randomSlot.id(), randomMove);
     }
   }
 

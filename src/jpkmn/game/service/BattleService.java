@@ -33,7 +33,11 @@ public class BattleService {
     Trainer mock = new Trainer();
     mock.add(wild);
 
-    BattleRegistry.start(BattleRegistry.create(player, mock));
+    int battleID = BattleRegistry.create();
+    int slotID = BattleRegistry.enroll(player, battleID);
+    BattleRegistry.enroll(mock, battleID);
+    BattleRegistry.start(battleID);
+    player.setState("battle", battleID, slotID);
   }
 
   public static void startWater(int playerID, String rodName)
@@ -59,7 +63,11 @@ public class BattleService {
     Trainer mock = new Trainer();
     mock.add(wild);
 
-    BattleRegistry.start(BattleRegistry.create(player, mock));
+    int battleID = BattleRegistry.create();
+    int slotID = BattleRegistry.enroll(player, battleID);
+    BattleRegistry.enroll(mock, battleID);
+    BattleRegistry.start(battleID);
+    player.setState("battle", battleID, slotID);
   }
 
   public static void startBattle(int pID, int tID) throws ServiceException {
@@ -81,7 +89,11 @@ public class BattleService {
     // if (player has fought this trainer)
     // throw new ServiceException(player.name() + " has already fought " +)
 
-    BattleRegistry.start(BattleRegistry.create(player, trainer));
+    int battleID = BattleRegistry.create();
+    int slotID = BattleRegistry.enroll(player, battleID);
+    BattleRegistry.enroll(trainer, battleID);
+    BattleRegistry.start(battleID);
+    player.setState("battle", battleID, slotID);
   }
 
   public static void attack(int battleID, int slotID, int enemySlotID,
@@ -102,10 +114,10 @@ public class BattleService {
 
     battle.swap(slotID, slotIndex);
   }
-  
+
   public static void run(int battleID, int slotID) {
     Battle battle = BattleRegistry.get(battleID);
-    
+
     battle.run(slotID);
   }
 }

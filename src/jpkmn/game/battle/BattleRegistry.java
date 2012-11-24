@@ -6,23 +6,20 @@ import java.util.Map;
 import jpkmn.game.player.PokemonTrainer;
 
 public class BattleRegistry {
-  public static int create(PokemonTrainer... trainers) {
+  public static int create() {
     Battle battle = new Battle();
-
-    for (PokemonTrainer trainer : trainers)
-      battle.add(trainer);
 
     _enrollable.put(_enrollID, battle);
     return _enrollID++;
   }
 
-  public static void enroll(PokemonTrainer trainer, int battleID) {
+  public static int enroll(PokemonTrainer trainer, int battleID) {
     Battle b = _enrollable.get(battleID);
 
     if (b == null)
       throw new IllegalArgumentException("Battle ID not valid: " + battleID);
 
-    b.add(trainer);
+    return b.add(trainer);
   }
 
   public static int start(int battleID) {
