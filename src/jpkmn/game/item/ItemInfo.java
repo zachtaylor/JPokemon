@@ -3,6 +3,7 @@ package jpkmn.game.item;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.exception.ConfigurationException;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -16,10 +17,13 @@ public class ItemInfo implements JPokemonConstants {
   private String name;
   private int type, data, value;
 
-  private static ItemInfo[] cache = new ItemInfo[JPokemonConstants.ITEMNUMBER];
+  private static ItemInfo[] cache = new ItemInfo[ITEMNUMBER];
 
   public static ItemInfo getInfo(int number) {
     DataConnectionManager.init(DATABASE_PATH);
+
+    if (number < 1 || number > ITEMNUMBER)
+      throw new ConfigurationException(number + " is outside item range");
 
     if (cache[number - 1] == null) {
       try {

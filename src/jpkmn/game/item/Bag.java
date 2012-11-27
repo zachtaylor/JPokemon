@@ -1,29 +1,35 @@
 package jpkmn.game.item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 
-import org.jpokemon.JPokemonConstants;
+import org.jpokemon.exception.ConfigurationException;
 
 public class Bag {
   public Bag() {
-    _allItems = new Item[JPokemonConstants.ITEMNUMBER];
+    _allItems = new ArrayList<Item>();
     _pockets = new HashMap<ItemType, BagPocket>();
 
     for (ItemType type : ItemType.values())
       _pockets.put(type, new BagPocket());
 
-    for (int id = 1; id <= JPokemonConstants.ITEMNUMBER; id++) {
-      _allItems[id - 1] = new Item(id);
-      _pockets.get(_allItems[id - 1].type()).add(_allItems[id - 1]);
+    Item newItem;
+    try {
+      for (int id = 1; (newItem = new Item(id)) != null; id++) {
+        _allItems.add(newItem);
+        _pockets.get(newItem.type()).add(newItem);
+      }
+    } catch (ConfigurationException c) { // End items
     }
   }
 
   public Item get(int itemID) {
-    return _allItems[itemID - 1];
+    return _allItems.get(itemID);
   }
 
   public Iterable<Item> pocket(ItemType type) {
@@ -67,6 +73,6 @@ public class Bag {
     }
   }
 
-  private Item[] _allItems;
+  private List<Item> _allItems;
   private Map<ItemType, BagPocket> _pockets;
 }
