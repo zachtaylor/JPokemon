@@ -1,4 +1,4 @@
-package jpkmn.game.base;
+package jpkmn.game.item;
 
 import java.util.List;
 
@@ -21,22 +21,19 @@ public class ItemInfo implements JPokemonConstants {
   public static ItemInfo getInfo(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (cache[number - 1] != null)
-      return cache[number - 1];
+    if (cache[number - 1] == null) {
+      try {
+        List<ItemInfo> info = SqlStatement.select(ItemInfo.class)
+            .where("number").eq(number).getList();
 
-    try {
-      List<ItemInfo> info = SqlStatement.select(ItemInfo.class).where("number")
-          .eq(number).getList();
-
-      if (info.isEmpty())
-        return null;
-
-      return cache[number - 1] = info.get(0);
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
+        if (!info.isEmpty())
+          cache[number - 1] = info.get(0);
+      } catch (DataConnectionException e) {
+        e.printStackTrace();
+      }
     }
 
-    return null;
+    return cache[number - 1];
   }
 
   //@preformat

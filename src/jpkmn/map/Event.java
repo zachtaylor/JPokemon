@@ -3,10 +3,10 @@ package jpkmn.map;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.EventInfo;
-import jpkmn.game.base.ItemInfo;
 import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.player.Trainer;
+import jpkmn.game.item.ItemInfo;
 import jpkmn.game.player.Player;
+import jpkmn.game.player.Trainer;
 
 public class Event {
   private enum Type {

@@ -1,28 +1,16 @@
 package jpkmn.game.item;
 
-import jpkmn.game.base.ItemInfo;
 import jpkmn.game.battle.Target;
-import jpkmn.game.pokemon.*;
+import jpkmn.game.pokemon.Pokemon;
 
 public class Item {
   public Item(int itemID) {
-    _id = itemID;
-
-    ItemInfo info = ItemInfo.getInfo(itemID);
-
-    _name = info.getName();
-    _value = info.getValue();
-    _data = info.getData();
-
-    _type = ItemType.valueOf(info.getType());
+    _info = ItemInfo.getInfo(itemID);
+    _type = ItemType.valueOf(_info.getType());
   }
 
   public String name() {
-    return _name;
-  }
-
-  public int id() {
-    return _id;
+    return _info.getName();
   }
 
   public ItemType type() {
@@ -30,7 +18,7 @@ public class Item {
   }
 
   public int value() {
-    return _value;
+    return _info.getValue();
   }
 
   public Target target() {
@@ -52,15 +40,16 @@ public class Item {
   public boolean effect(Pokemon p) {
     if (_quantity < 1)
       return false;
+
     _quantity--;
-    return _type.effect(p, _data);
+    return _type.effect(p, _info.getData());
   }
 
   public String toString() {
-    return _id + "-" + _quantity;
+    return _info.getNumber() + "-" + _quantity;
   }
 
-  private String _name;
+  private int _quantity;
+  private ItemInfo _info;
   private ItemType _type;
-  private int _id, _value, _quantity, _data;
 }
