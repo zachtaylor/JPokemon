@@ -61,25 +61,27 @@ public class StatTest extends TestCase {
   public void testReset() {
     stat.base(100);
     stat.level(100);
-    stat.effect(-6);
+    assertEquals(205, stat.cur());
 
+    stat.effect(-6);
     assertEquals(51, stat.cur());
 
     stat.reset();
-
     assertEquals(205, stat.cur());
   }
 
   public void testResetDoesNotOverrideModify() {
     stat.base(100);
     stat.level(100);
-    stat.effect(-6);
-    stat.modify(1.0 / 2);
+    assertEquals(205, stat.cur());
 
+    stat.effect(-6);
+    assertEquals(51, stat.cur());
+
+    stat.modify(1.0 / 2);
     assertEquals(25, stat.cur());
 
     stat.reset();
-
     assertEquals(102, stat.cur());
   }
 
@@ -110,6 +112,14 @@ public class StatTest extends TestCase {
     stat.effect(-8);
 
     assertEquals(51, stat.cur());
+  }
+
+  public void testMinimumValue() {
+    stat.base(1);
+    stat.level(1);
+    stat.modify(1.0 / 100000);
+
+    assertEquals(1, stat.cur());
   }
 
   public void testModifyAndEffect() {

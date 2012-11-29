@@ -60,6 +60,15 @@ public class StatBlock {
     _points = p;
   }
 
+  public void usePoint(StatType st) {
+    if (points() == 0)
+      throw new IllegalStateException("No points available");
+
+    points(points() - 1);
+    Stat stat = get(st);
+    stat.points(stat.points() + 1);
+  }
+
   /**
    * Sets up each stat to use the value from the PokemonBase specified
    * 
