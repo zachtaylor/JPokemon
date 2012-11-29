@@ -5,6 +5,9 @@ import java.util.Scanner;
 import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A gadget which helps keep track of which Pokemon have been seen or caught in
@@ -12,11 +15,9 @@ import org.jpokemon.JPokemonConstants;
  */
 public class Pokedex implements JPokemonConstants {
   public Pokedex() {
-    _size = POKEMONNUMBER;
+    _data = new PokedexStatus[POKEMONNUMBER];
 
-    _data = new PokedexStatus[_size];
-
-    for (int i = 0; i < _size; i++)
+    for (int i = 0; i < POKEMONNUMBER; i++)
       _data[i] = PokedexStatus.NONE;
   }
 
@@ -26,7 +27,7 @@ public class Pokedex implements JPokemonConstants {
    * @param num Pokemon number
    */
   public void saw(int num) {
-    if (num < 1 || num > _size || _data[num - 1] == PokedexStatus.OWN)
+    if (num < 1 || num > POKEMONNUMBER || _data[num - 1] == PokedexStatus.OWN)
       return;
 
     _data[num - 1] = PokedexStatus.SAW;
@@ -38,7 +39,7 @@ public class Pokedex implements JPokemonConstants {
    * @param num Pokemon number
    */
   public void own(int num) {
-    if (num < 1 || num > _size)
+    if (num < 1 || num > POKEMONNUMBER)
       return;
 
     _data[num - 1] = PokedexStatus.OWN;
@@ -51,36 +52,33 @@ public class Pokedex implements JPokemonConstants {
    * @return PokedexStatus which describes the Pokemon number in question
    */
   public PokedexStatus status(int num) {
-    if (num < 1 || num > _size)
-      throw new IllegalArgumentException("#" + num + " out of range: " + _size);
+    if (num < 1 || num > POKEMONNUMBER)
+      throw new IllegalArgumentException("#" + num + " out of range");
 
     return _data[num - 1];
   }
 
-  /**
-   * Gets a string representation of the current data in the Pokedex, which can
-   * be used to restore the Pokdex
-   * 
-   * @return A string representation of the data
-   */
-  public String save() {
-    StringBuilder list = new StringBuilder();
-    list.append("DEX: ");
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
+    JSONArray own = new JSONArray();
+    JSONArray saw = new JSONArray();
 
-    for (int i = 0; i < _size; i++) {
-      int status = _data[i].ordinal();
-
-      if (status > 0) {
-        list.append(i);
-        list.append("-");
-        list.append(status);
-        list.append(" ");
-      }
+    for (int i = 0; i < POKEMONNUMBER; i++) {
+      if (_data[i] == PokedexStatus.SAW)
+        saw.put(i);
+      else if (_data[i] == PokedexStatus.OWN)
+        own.put(i);
     }
 
-    list.append("\n");
+    try {
+      data.put("saw", saw);
+      data.put("own", own);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
 
-    return list.toString();
+    return data;
   }
 
   /**
@@ -114,6 +112,5 @@ public class Pokedex implements JPokemonConstants {
     }
   }
 
-  private int _size;
   private PokedexStatus[] _data;
 }

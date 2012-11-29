@@ -4,6 +4,8 @@ import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Move {
   public Move(int number) {
@@ -95,7 +97,7 @@ public class Move {
   public boolean hurtUserOnMiss() {
     return (this.number() == 60 || this.number() == 69);
   }
-  
+
   /**
    * Fully mutate this Move to a new instance of the specified number.
    * 
@@ -213,6 +215,23 @@ public class Move {
   public void applyEffects(Pokemon user, Pokemon enemy) {
     for (MoveEffect effect : _info.getEffects())
       effect.effect(user, enemy);
+  }
+
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
+
+    try {
+      data.put("name", name());
+      data.put("pp", _pp);
+      data.put("pp_max", _ppMax);
+      data.put("enabled", enabled());
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
   }
 
   @Override

@@ -1,8 +1,11 @@
 package jpkmn.game.player;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -52,15 +55,14 @@ public class PlayerRegistry implements JPokemonConstants {
   }
 
   public static void save(int playerID) throws LoadException {
-    String path = fileMapping.get(playerID);
+    String path = SAVE_PATH + fileMapping.get(playerID);
 
     try {
-      PrintWriter writer = new PrintWriter(new File(SAVE_PATH + path));
-
-      players.get(playerID).save(writer);
+      Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
+      writer.write(PlayerRegistry.get(playerID).toJSONObject().toString());
       writer.close();
-    } catch (FileNotFoundException e) {
-      throw new LoadException("Cannot access file: " + path);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 

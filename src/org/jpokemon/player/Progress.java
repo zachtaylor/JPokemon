@@ -3,6 +3,7 @@ package org.jpokemon.player;
 import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
+import org.json.JSONArray;
 
 /**
  * A representation of the progress a Player has made
@@ -39,21 +40,14 @@ public class Progress implements JPokemonConstants {
     return _events[id - 1];
   }
 
-  public String save() {
-    StringBuilder data = new StringBuilder();
+  public JSONArray toJSONArray() {
+    JSONArray data = new JSONArray();
 
-    data.append("PROGRESS: ");
+    for (int i = 0; i < EVENTNUMBER; i++)
+      if (_events[i])
+        data.put(i);
 
-    for (int i = 0; i < EVENTNUMBER; i++) {
-      if (_events[i]) {
-        data.append(i);
-        data.append(" ");
-      }
-    }
-
-    data.append("\n");
-
-    return data.toString();
+    return data;
   }
 
   public void load(String s) throws LoadException {

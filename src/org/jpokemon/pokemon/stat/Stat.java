@@ -1,6 +1,8 @@
 package org.jpokemon.pokemon.stat;
 
 import org.jpokemon.JPokemonConstants;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Stat implements JPokemonConstants {
   public Stat() {
@@ -51,6 +53,22 @@ public class Stat implements JPokemonConstants {
     _delta = 0;
 
     doCalculation();
+  }
+
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
+
+    try {
+      data.put("cur", _cur);
+      data.put("max", _max);
+      data.put("points", _pts);
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
   }
 
   private void doCalculation() {

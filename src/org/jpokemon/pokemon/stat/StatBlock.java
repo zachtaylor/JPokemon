@@ -3,6 +3,9 @@ package org.jpokemon.pokemon.stat;
 import jpkmn.game.base.PokemonBase;
 import jpkmn.game.pokemon.Condition;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class StatBlock {
   public StatBlock(PokemonBase base) {
     _data = new Stat[StatType.values().length];
@@ -117,6 +120,23 @@ public class StatBlock {
       _paralyze = false;
       _data[StatType.SPEED.ordinal()].modify(1);
     }
+  }
+
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
+
+    try {
+      data.put("points", _points);
+
+      for (StatType st : StatType.values())
+        data.put(st.name(), get(st).toJSONObject());
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
   }
 
   private int _points;

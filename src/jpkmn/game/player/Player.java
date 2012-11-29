@@ -1,6 +1,5 @@
 package jpkmn.game.player;
 
-import java.io.PrintWriter;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
@@ -13,6 +12,8 @@ import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Player implements PokemonTrainer {
   public final Bag bag;
@@ -115,32 +116,25 @@ public class Player implements PokemonTrainer {
     _progress.put(id);
   }
 
-  public void save(PrintWriter writer) {
-    StringBuilder data = new StringBuilder();
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
 
-    data.append(name());
-    data.append("\n");
-    data.append(cash());
-    data.append(" ");
-    data.append(badge());
-    data.append(" ");
-    data.append(area());
-    data.append("\n");
+    try {
+      data.put("name", name());
+      data.put("cash", cash());
+      data.put("badges", badge());
+      data.put("area", area());
+      data.put("bag", bag.toJSONArray());
+      data.put("pokedex", _pokedex.toJSONObject());
+      data.put("progress", _progress.toJSONArray());
+      data.put("pokemon", _storage.toJSONObject());
 
-    // save bag
-    data.append(bag.save());
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
 
-    // save pokedex
-    data.append(_pokedex.save());
-
-    // save progress
-    data.append(_progress.save());
-
-    // save pcstorage
-    data.append(_storage.save());
-
-    // Write those daters
-    writer.write(data.toString());
+    return data;
   }
 
   public void load(Scanner scan) throws LoadException {

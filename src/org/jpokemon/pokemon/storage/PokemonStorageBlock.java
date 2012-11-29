@@ -10,6 +10,8 @@ import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
@@ -35,16 +37,21 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     return _data[box];
   }
 
-  public String save() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("POKEMON START\n");
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
 
-    for (int i = 0; i < _data.length; i++)
-      for (Pokemon pokemon : _data[i])
-        sb.append(i + " " + pokemon.save());
+    try {
+      data.put("party", _data[0].toJSONArray());
 
-    sb.append("POKEMON END\n");
-    return sb.toString();
+      for (int i = 1; i <= BOXNUMBER; i++)
+        data.put("box" + i, _data[i].toJSONArray());
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
   }
 
   public void load(Scanner scan) throws LoadException {

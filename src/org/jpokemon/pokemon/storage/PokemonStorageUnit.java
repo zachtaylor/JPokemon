@@ -6,6 +6,8 @@ import java.util.Iterator;
 import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
+import org.json.JSONArray;
+
 /**
  * A unit of storage for Pokemon.
  */
@@ -87,6 +89,15 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     }
 
     return answer;
+  }
+
+  public JSONArray toJSONArray() {
+    JSONArray data = new JSONArray();
+
+    for (Pokemon p : this)
+      data.put(p.toJSONObject());
+
+    return data;
   }
 
   public Iterator<Pokemon> iterator() {

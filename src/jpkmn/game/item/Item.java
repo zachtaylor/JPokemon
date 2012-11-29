@@ -1,11 +1,13 @@
 package jpkmn.game.item;
 
+import jpkmn.game.battle.Target;
+import jpkmn.game.pokemon.Pokemon;
+
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.stat.StatType;
-
-import jpkmn.game.battle.Target;
-import jpkmn.game.pokemon.Pokemon;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Item {
   public Item(int itemID) {
@@ -52,6 +54,24 @@ public class Item {
     return result;
   }
 
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
+
+    try {
+      data.put("id", _info.getNumber());
+      data.put("name", name());
+      data.put("value", value());
+      data.put("amount", amount());
+      data.put("type", _type.name().toLowerCase());
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
+  }
+
   public String toString() {
     return _info.getNumber() + "-" + _quantity;
   }
@@ -91,29 +111,29 @@ public class Item {
           p.evolve();
         else if (n == 133)
           p.evolve(136);
-        break;
+      break;
       case WATER:
         if (n == 60 || n == 90 || n == 120)
           p.evolve();
         else if (n == 133)
           p.evolve(134);
-        break;
+      break;
       case ELECTRIC:
         if (p.number() == 25)
           p.evolve();
         else if (n == 133)
           p.evolve(135);
-        break;
+      break;
       case GRASS:
         if (n == 44 || n == 70 || n == 102)
           p.evolve();
-        break;
+      break;
       case NORMAL:
         if (n == 30 || n == 33 || n == 35 || n == 39)
           p.evolve();
-        break;
+      break;
       default:
-        break;
+      break;
       }
       return p.number() != n;
     case MACHINE:

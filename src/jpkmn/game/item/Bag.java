@@ -9,6 +9,7 @@ import java.util.Scanner;
 import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.exception.ConfigurationException;
+import org.json.JSONArray;
 
 public class Bag {
   public Bag() {
@@ -36,22 +37,13 @@ public class Bag {
     return _pockets.get(type);
   }
 
-  public String save() {
-    StringBuilder data = new StringBuilder();
+  public JSONArray toJSONArray() {
+    JSONArray data = new JSONArray();
 
-    data.append("BAG: ");
+    for (Item item : _allItems)
+      data.put(item.toJSONObject());
 
-    for (Item item : _allItems) {
-      if (item.amount() == 0)
-        continue;
-
-      data.append(item.toString());
-      data.append(" ");
-    }
-
-    data.append("\n");
-
-    return data.toString();
+    return data;
   }
 
   public void load(String s) throws LoadException {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
+import org.json.JSONArray;
 
 public class MoveBlock implements Iterable<Move>, JPokemonConstants {
   public MoveBlock(int pokemonNumber) throws ConfigurationException {
@@ -95,6 +96,15 @@ public class MoveBlock implements Iterable<Move>, JPokemonConstants {
     removeAll();
     while (!possible.isEmpty() && _count < MOVESAVAILABLE)
       add(possible.remove((int) (Math.random() * possible.size())));
+  }
+
+  public JSONArray toJSONArray() {
+    JSONArray data = new JSONArray();
+
+    for (Move m : this)
+      data.put(m.toJSONObject());
+
+    return data;
   }
 
   @Override

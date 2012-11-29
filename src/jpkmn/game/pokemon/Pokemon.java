@@ -7,12 +7,13 @@ import jpkmn.game.base.PokemonBase;
 import jpkmn.game.player.PokemonTrainer;
 
 import org.jpokemon.pokemon.Type;
-import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Health;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Pokemon {
   public final MoveBlock moves;
@@ -220,38 +221,23 @@ public class Pokemon {
     return condition.remove(i);
   }
 
-  /**
-   * Properly writes this Pokemon to a save file
-   */
-  public String save() {
-    StringBuilder save = new StringBuilder();
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
 
-    save.append("|( ");
-    save.append(_number);
-    save.append(" ");
-    save.append(_level);
-    save.append(" ");
-    save.append(_stats.points());
-    save.append(" ");
-    save.append(_xp);
-    save.append(" ) ");
-    save.append(getStat(StatType.ATTACK).points());
-    save.append(" ");
-    save.append(getStat(StatType.SPECATTACK).points());
-    save.append(" ");
-    save.append(getStat(StatType.DEFENSE).points());
-    save.append(" ");
-    save.append(getStat(StatType.SPECDEFENSE).points());
-    save.append(" ");
-    save.append(getStat(StatType.SPEED).points());
-    save.append(" ( ");
+    try {
+      data.put("name", name);
+      data.put("number", _number);
+      data.put("level", _level);
+      data.put("xp", _xp);
+      data.put("stats", _stats.toJSONObject());
+      data.put("moves", moves.toJSONArray());
 
-    for (Move move : moves)
-      save.append(move.number() + " ");
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
 
-    save.append(") " + name + " |\n");
-
-    return save.toString();
+    return data;
   }
 
   /**
