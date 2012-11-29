@@ -75,11 +75,8 @@ public class Event {
     case BATTLE:
       mock = new Trainer(_int1);
 
-      int battleID = BattleRegistry.create();
-      int slotID = BattleRegistry.enroll(p, battleID);
-      BattleRegistry.enroll(mock, battleID);
-      BattleRegistry.start(battleID);
-      p.setState("battle", battleID, slotID);
+      BattleRegistry.start(p, mock);
+      p.setState("battle");
     break;
     case ITEM:
       p.bag.get(_int1).add(_int2);

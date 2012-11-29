@@ -33,11 +33,8 @@ public class BattleService {
     Trainer mock = new Trainer();
     mock.add(wild);
 
-    int battleID = BattleRegistry.create();
-    int slotID = BattleRegistry.enroll(player, battleID);
-    BattleRegistry.enroll(mock, battleID);
-    BattleRegistry.start(battleID);
-    player.setState("battle", battleID, slotID);
+    BattleRegistry.start(player, mock);
+    player.setState("battle");
   }
 
   public static void startWater(int playerID, String rodName)
@@ -63,11 +60,8 @@ public class BattleService {
     Trainer mock = new Trainer();
     mock.add(wild);
 
-    int battleID = BattleRegistry.create();
-    int slotID = BattleRegistry.enroll(player, battleID);
-    BattleRegistry.enroll(mock, battleID);
-    BattleRegistry.start(battleID);
-    player.setState("battle", battleID, slotID);
+    BattleRegistry.start(player, mock);
+    player.setState("battle");
   }
 
   public static void startBattle(int pID, int tID) throws ServiceException {
@@ -89,35 +83,35 @@ public class BattleService {
     // if (player has fought this trainer)
     // throw new ServiceException(player.name() + " has already fought " +)
 
-    int battleID = BattleRegistry.create();
-    int slotID = BattleRegistry.enroll(player, battleID);
-    BattleRegistry.enroll(trainer, battleID);
-    BattleRegistry.start(battleID);
-    player.setState("battle", battleID, slotID);
+    BattleRegistry.start(player, trainer);
+    player.setState("battle");
   }
 
-  public static void attack(int battleID, int slotID, int enemySlotID,
-      int moveIndex) {
-    Battle battle = BattleRegistry.get(battleID);
+  public static void attack(int playerID, int enemySlotID, int moveIndex) {
+    Player player = PlayerRegistry.get(playerID);
+    Battle battle = BattleRegistry.get(player);
 
-    battle.fight(slotID, enemySlotID, moveIndex);
+    battle.fight(player.id(), enemySlotID, moveIndex);
   }
 
-  public static void item(int battleID, int slotID, int targetID, int itemID) {
-    Battle battle = BattleRegistry.get(battleID);
+  public static void item(int playerID, int targetID, int itemID) {
+    Player player = PlayerRegistry.get(playerID);
+    Battle battle = BattleRegistry.get(player);
 
-    battle.item(slotID, targetID, itemID);
+    battle.item(player.id(), targetID, itemID);
   }
 
-  public static void swap(int battleID, int slotID, int slotIndex) {
-    Battle battle = BattleRegistry.get(battleID);
+  public static void swap(int playerID, int slotIndex) {
+    Player player = PlayerRegistry.get(playerID);
+    Battle battle = BattleRegistry.get(player);
 
-    battle.swap(slotID, slotIndex);
+    battle.swap(player.id(), slotIndex);
   }
 
-  public static void run(int battleID, int slotID) {
-    Battle battle = BattleRegistry.get(battleID);
+  public static void run(int playerID) {
+    Player player = PlayerRegistry.get(playerID);
+    Battle battle = BattleRegistry.get(player);
 
-    battle.run(slotID);
+    battle.run(player.id());
   }
 }

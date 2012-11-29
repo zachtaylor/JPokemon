@@ -5,7 +5,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 import jpkmn.game.battle.turn.AbstractTurn;
-import jpkmn.game.battle.turn.AttackTurn;
 import jpkmn.game.pokemon.Condition;
 
 public class Round {
@@ -29,7 +28,7 @@ public class Round {
     // Setup rivals
     for (Slot a : _battle) {
       for (Slot b : _battle) {
-        if (a.id() != b.id())
+        if (!a.trainer().equals(b))
           a.addRival(b.leader());
       }
     }
@@ -61,9 +60,7 @@ public class Round {
         turn.changeToSwap();
       }
 
-      boolean attackTargetMissing = turn instanceof AttackTurn
-          && _battle.get(slot.target().id()) == null;
-      if (attackTargetMissing) {
+      if (!_battle.contains(slot.target())) {
         // TODO shit bricks
       }
     }

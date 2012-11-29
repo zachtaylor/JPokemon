@@ -23,16 +23,14 @@ public class Battle implements Iterable<Slot> {
     _haveSelectedTurn = new ArrayList<Slot>();
   }
 
-  public int add(PokemonTrainer trainer) {
-    Slot slot = new Slot(this, trainer, _slots.size());
-
-    _slots.put(_slots.size(), slot);
-
-    return slot.id();
+  public void add(PokemonTrainer trainer) {
+    _slots.put(trainer.id(), new Slot(trainer));
   }
 
   public void remove(Slot slot) {
-    _slots.remove(slot.id());
+    PokemonTrainer trainer = slot.trainer();
+    _slots.remove(trainer.id());
+    BattleRegistry.remove(trainer);
 
     if (slot.party().size() != 0 && slot.party().awake() == 0) {
       if (slot.trainer().type() == TrainerType.PLAYER) {
@@ -49,14 +47,12 @@ public class Battle implements Iterable<Slot> {
     if (slot.trainer().type() == TrainerType.PLAYER)
       ((Player) slot.trainer()).setState("world");
 
-    if (_slots.size() == 1) {
+    if (_slots.size() == 1)
       remove((Slot) _slots.values().toArray()[0]);
-      BattleRegistry.remove(this);
-    }
   }
 
-  public Slot get(int slotID) {
-    return _slots.get(slotID);
+  public boolean contains(Slot slot) {
+    return _slots.get(slot.trainer().id()) != null;
   }
 
   public void add(AbstractTurn turn) {
@@ -74,9 +70,9 @@ public class Battle implements Iterable<Slot> {
     doTrainerAttacks();
   }
 
-  public void fight(int slotID, int enemySlotID, int moveIndex) {
-    Slot slot = _slots.get(slotID);
-    Slot enemySlot = _slots.get(enemySlotID);
+  public void fight(int trainerID, int enemyID, int moveIndex) {
+    Slot slot = _slots.get(trainerID);
+    Slot enemySlot = _slots.get(enemyID);
 
     slot.target(enemySlot);
     slot.moveIndex(moveIndex);
@@ -84,8 +80,8 @@ public class Battle implements Iterable<Slot> {
     add(slot.attack());
   }
 
-  public void item(int slotID, int slotIndex, int itemID) {
-    Slot slot = _slots.get(slotID);
+  public void item(int trainerID, int slotIndex, int itemID) {
+    Slot slot = _slots.get(trainerID);
     Target itemTarget = new Item(itemID).target();
 
     int itemTargetIndex;
@@ -106,16 +102,16 @@ public class Battle implements Iterable<Slot> {
     add(slot.item());
   }
 
-  public void swap(int slotID, int slotIndex) {
-    Slot slot = _slots.get(slotID);
+  public void swap(int trainerID, int slotIndex) {
+    Slot slot = _slots.get(trainerID);
 
     slot.swapIndex(slotIndex);
 
     add(slot.swap());
   }
 
-  public void run(int slotID) {
-    Slot slot = _slots.get(slotID);
+  public void run(int trainerID) {
+    Slot slot = _slots.get(trainerID);
 
     add(slot.run());
   }
@@ -148,7 +144,7 @@ public class Battle implements Iterable<Slot> {
 
       int randomMove = (int) (Math.random()) * slot.leader().moves.count();
 
-      fight(slot.id(), randomSlot.id(), randomMove);
+      fight(slot.trainer().id(), randomSlot.trainer().id(), randomMove);
     }
   }
 
@@ -195,7 +191,8 @@ public class Battle implements Iterable<Slot> {
   /**
    * Calculates the confused damage a Pokemon does to itself.
    * 
-   * @param p Pokemon to calculate for
+   * @param p
+   *          Pokemon to calculate for
    * @return Damage done
    */
   public static int confusedDamage(Pokemon p) {
@@ -215,5 +212,5 @@ public class Battle implements Iterable<Slot> {
 
   private Round _round;
   private Map<Integer, Slot> _slots;
-  List<Slot> _haveSelectedTurn;
+  private List<Slot> _haveSelectedTurn;
 }

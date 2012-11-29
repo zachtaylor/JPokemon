@@ -181,5 +181,5 @@ public class Player implements PokemonTrainer {
   private PokemonStorageBlock _storage;
   private int _id, _area, _badge, _cash;
 
-  private static int PLAYER_COUNT;
+  private static int PLAYER_COUNT = 1;
 }

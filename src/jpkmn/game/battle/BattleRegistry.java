@@ -13,41 +13,45 @@ public class BattleRegistry {
     return _enrollID++;
   }
 
-  public static int enroll(PokemonTrainer trainer, int battleID) {
+  public static void enroll(PokemonTrainer trainer, int battleID) {
     Battle b = _enrollable.get(battleID);
 
     if (b == null)
       throw new IllegalArgumentException("Battle ID not valid: " + battleID);
-
-    return b.add(trainer);
   }
 
-  public static int start(int battleID) {
+  public static void start(int battleID) {
     Battle b = _enrollable.remove(battleID);
 
     if (b == null)
-      throw new IllegalArgumentException("Battle ID not valid: " + battleID);
+      throw new IllegalArgumentException("Invalid enrollable battle id");
+
+    for (Slot slot : b)
+      _battles.put(slot.trainer(), b);
 
     b.start();
-    _battles.put(_battleID, b);
-    return _battleID++;
   }
 
-  public static Battle get(int battleNumber) {
-    return _battles.get(battleNumber);
+  public static void start(PokemonTrainer... trainers) {
+    Battle b = new Battle();
+
+    for (PokemonTrainer trainer : trainers) {
+      b.add(trainer);
+      _battles.put(trainer, b);
+    }
+
+    b.start();
   }
 
-  public static void remove(Battle b) {
-    int key = -1;
+  public static Battle get(PokemonTrainer trainer) {
+    return _battles.get(trainer);
+  }
 
-    for (Map.Entry<Integer, Battle> battle : _battles.entrySet())
-      if (battle.getValue().equals(b))
-        key = battle.getKey();
-
+  public static void remove(PokemonTrainer key) {
     _battles.remove(key);
   }
 
-  private static int _enrollID, _battleID;
-  private static Map<Integer, Battle> _battles = new HashMap<Integer, Battle>();
+  private static int _enrollID;
+  private static Map<PokemonTrainer, Battle> _battles = new HashMap<PokemonTrainer, Battle>();
   private static Map<Integer, Battle> _enrollable = new HashMap<Integer, Battle>();
 }

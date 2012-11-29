@@ -21,18 +21,12 @@ import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
 public class Slot {
-  public Slot(Battle battle, PokemonTrainer trainer, int id) {
-    _id = id;
-    _battle = battle;
+  public Slot(PokemonTrainer trainer) {
     _trainer = trainer;
     _bide = false;
 
     _field = new Field(this);
     _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
-  }
-
-  public int id() {
-    return _id;
   }
 
   public PokemonTrainer trainer() {
@@ -100,7 +94,7 @@ public class Slot {
   }
 
   public AbstractTurn run() {
-    RunTurn turn = new RunTurn(this, _battle);
+    RunTurn turn = new RunTurn(this);
 
     return turn;
   }
@@ -166,15 +160,10 @@ public class Slot {
     _trainer.notify((String[]) message.toArray());
   }
 
-  private int _id;
   private Field _field;
   private Slot _target;
-  private Battle _battle;
-  private PokemonTrainer _trainer;
-  private Map<Pokemon, List<Pokemon>> _rivalsLists;
-
   private boolean _bide;
-  private int _bidedamage;
-
-  private int _index, _itemID;
+  private PokemonTrainer _trainer;
+  private int _bidedamage, _index, _itemID;
+  private Map<Pokemon, List<Pokemon>> _rivalsLists;
 }

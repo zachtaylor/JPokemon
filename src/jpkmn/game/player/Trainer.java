@@ -9,7 +9,7 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
 public class Trainer implements PokemonTrainer, JPokemonConstants {
   public Trainer() {
-    _id = -1;
+    _id = 0;
     _name = "Mock Player";
     _type = TrainerType.WILD;
     _party = new PokemonStorageUnit(PARTYSIZE);
@@ -19,7 +19,7 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
     this();
     AIInfo info = AIInfo.get(ai_number);
 
-    _id = ai_number;
+    _id = -ai_number;
     _name = info.getName();
     _cash = info.getCash();
     _type = TrainerType.valueOf(info.getType());
@@ -62,6 +62,12 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
 
   public void notify(String... message) {
     return;
+  }
+  
+  public boolean equals(Object o) {
+    if (!(o instanceof Trainer))
+      return false;
+    return ((Trainer) o)._id == _id;
   }
 
   private String _name;
