@@ -1,4 +1,4 @@
-package test.jpokemon.pokemon.move;
+package org.jpokemon.pokemon.move;
 
 import java.util.ArrayList;
 import java.util.List;

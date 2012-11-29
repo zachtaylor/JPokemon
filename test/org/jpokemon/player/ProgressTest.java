@@ -1,4 +1,4 @@
-package test.jpokemon.player;
+package org.jpokemon.player;
 
 import jpkmn.exceptions.LoadException;
 import junit.framework.TestCase;

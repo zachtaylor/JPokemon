@@ -1,4 +1,4 @@
-package test.jpokemon.pokemon.stat;
+package org.jpokemon.pokemon.stat;
 
 import junit.framework.TestCase;
 

@@ -1,4 +1,4 @@
-package test.jpokemon.pokemon.storage;
+package org.jpokemon.pokemon.storage;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.player.PokemonTrainer;

@@ -1,4 +1,4 @@
-package test.jpokemon.pokedex;
+package org.jpokemon.pokedex;
 
 import java.util.HashMap;
 import java.util.Map;
