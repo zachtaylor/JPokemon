@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.battle.turn.AttackTurn;
 import jpkmn.game.battle.turn.ItemTurn;
 import jpkmn.game.battle.turn.RunTurn;
 import jpkmn.game.battle.turn.SwapTurn;
-import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.item.Item;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PokemonTrainer;
@@ -19,11 +19,14 @@ import jpkmn.game.pokemon.Pokemon;
 import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Slot {
   public Slot(PokemonTrainer trainer) {
     _trainer = trainer;
     _bide = false;
+    _team = TEAM_COUNTER++;
 
     _field = new Field(this);
     _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
@@ -35,6 +38,14 @@ public class Slot {
 
   public PokemonStorageUnit party() {
     return _trainer.party();
+  }
+
+  public int team() {
+    return _team;
+  }
+
+  public void team(int t) {
+    _team = t; // TODO
   }
 
   public Pokemon leader() {
@@ -160,6 +171,31 @@ public class Slot {
     _trainer.notify((String[]) message.toArray());
   }
 
+  public JSONObject toJSONObject(boolean trainerPerspective) {
+    JSONObject data = new JSONObject();
+
+    try {
+      data.put("trainer", _trainer.id());
+      data.put("team", team());
+      data.put("leader", leader().toJSONObject());
+
+      if (trainerPerspective) {
+        JSONObject leaderData = data.getJSONObject("leader");
+        leaderData.put("xp", leader().xp());
+        leaderData.put("xp_needed", leader().xpNeeded());
+      }
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
+  }
+
+  private static int TEAM_COUNTER; // TEMPORARY
+
+  private int _team;
   private Field _field;
   private Slot _target;
   private boolean _bide;

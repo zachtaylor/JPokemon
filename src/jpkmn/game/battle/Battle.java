@@ -8,13 +8,16 @@ import java.util.Map;
 
 import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.item.Item;
-import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.player.Player;
+import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Battle implements Iterable<Slot> {
   public Battle() {
@@ -116,6 +119,35 @@ public class Battle implements Iterable<Slot> {
     add(slot.run());
   }
 
+  public JSONObject toJSONObject(PokemonTrainer perspective) {
+    Slot slot = _slots.get(perspective);
+
+    JSONObject data = new JSONObject();
+    JSONArray teams = new JSONArray();
+
+    try {
+      data.put("user", slot.toJSONObject(true));
+
+      for (Slot cur : this) {
+        if (cur == slot)
+          continue;
+
+        if (teams.get(cur.team()) == null)
+          teams.put(cur.team(), new JSONArray());
+
+        ((JSONArray) teams.get(cur.team())).put(cur.toJSONObject(false));
+      }
+
+      data.put("teams", teams);
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
+  }
+
   @Override
   public Iterator<Slot> iterator() {
     return _slots.values().iterator();
@@ -191,8 +223,7 @@ public class Battle implements Iterable<Slot> {
   /**
    * Calculates the confused damage a Pokemon does to itself.
    * 
-   * @param p
-   *          Pokemon to calculate for
+   * @param p Pokemon to calculate for
    * @return Damage done
    */
   public static int confusedDamage(Pokemon p) {

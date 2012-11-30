@@ -11,6 +11,8 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
 
+import org.json.JSONObject;
+
 public class BattleService {
   public static void startWild(int playerID) throws ServiceException {
     Player player = PlayerRegistry.get(playerID);
@@ -113,5 +115,17 @@ public class BattleService {
     Battle battle = BattleRegistry.get(player);
 
     battle.run(player.id());
+  }
+
+  public static JSONObject info(int playerID) throws ServiceException {
+    Player player = PlayerRegistry.get(playerID);
+    if (player == null)
+      throw new ServiceException("PlayerID " + playerID + " not found");
+
+    Battle battle = BattleRegistry.get(player);
+    if (battle == null)
+      throw new ServiceException(player.name() + " is not in a battle");
+
+    return battle.toJSONObject(player);
   }
 }
