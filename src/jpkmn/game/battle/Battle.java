@@ -26,8 +26,8 @@ public class Battle implements Iterable<Slot> {
     _haveSelectedTurn = new ArrayList<Slot>();
   }
 
-  public void add(PokemonTrainer trainer) {
-    _slots.put(trainer.id(), new Slot(trainer));
+  public void add(PokemonTrainer trainer, int team) {
+    _slots.put(trainer.id(), new Slot(trainer, team));
   }
 
   public void remove(Slot slot) {
@@ -126,7 +126,8 @@ public class Battle implements Iterable<Slot> {
     JSONArray teams = new JSONArray();
 
     try {
-      data.put("user", slot.toJSONObject(true));
+      if (slot != null)
+        data.put("user", slot.toJSONObject(true));
 
       for (Slot cur : this) {
         if (cur == slot)

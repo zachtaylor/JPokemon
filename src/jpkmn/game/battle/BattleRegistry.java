@@ -35,8 +35,10 @@ public class BattleRegistry {
   public static void start(PokemonTrainer... trainers) {
     Battle b = new Battle();
 
-    for (PokemonTrainer trainer : trainers) {
-      b.add(trainer);
+    PokemonTrainer trainer;
+    for (int i = 0; i < trainers.length; i++) {
+      trainer = trainers[i];
+      b.add(trainer, i);
       _battles.put(trainer, b);
     }
 

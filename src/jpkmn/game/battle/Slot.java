@@ -23,10 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Slot {
-  public Slot(PokemonTrainer trainer) {
+  public Slot(PokemonTrainer trainer, int team) {
     _trainer = trainer;
     _bide = false;
-    _team = TEAM_COUNTER++;
+    _team = team;
 
     _field = new Field(this);
     _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
@@ -42,10 +42,6 @@ public class Slot {
 
   public int team() {
     return _team;
-  }
-
-  public void team(int t) {
-    _team = t; // TODO
   }
 
   public Pokemon leader() {
@@ -192,8 +188,6 @@ public class Slot {
 
     return data;
   }
-
-  private static int TEAM_COUNTER; // TEMPORARY
 
   private int _team;
   private Field _field;
