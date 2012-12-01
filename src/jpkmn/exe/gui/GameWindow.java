@@ -14,12 +14,12 @@ public class GameWindow extends JFrame {
     _graphics = graphics;
     _playerID = playerID;
     _inbox = new MessageView();
-    _battle = new BattleView();
+    _battle = new BattleView(playerID);
     _main = new WorldView(this);
     _start = new StartView(this);
     _upgrade = new PokemonUpgradeView(this);
 
-    setResizable(false);
+    //setResizable(false);
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setIconImage(ImageFinder.find("main-icon").getImage());
 
@@ -46,9 +46,7 @@ public class GameWindow extends JFrame {
     show(_start);
   }
 
-  public void showBattle(int battleID, int slotID) {
-    _battle.setup(battleID, slotID);
-
+  public void showBattle() {
     show(_battle);
   }
 

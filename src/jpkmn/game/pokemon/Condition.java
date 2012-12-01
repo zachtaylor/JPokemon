@@ -7,8 +7,7 @@ import jpkmn.game.battle.Battle;
 
 public class Condition {
   public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDVIC, WRAP, SEEDUSR, FREEZE, CONFUSE,
-    FLINCH, WAIT;
+    BURN, PARALYZE, SLEEP, POISON, SEEDVIC, WRAP, SEEDUSR, FREEZE, CONFUSE, FLINCH, WAIT;
   }
 
   /**
@@ -155,6 +154,8 @@ public class Condition {
   }
 
   public String toString() {
+    if (issues.isEmpty())
+      return "";
     return issues.toString();
   }
 

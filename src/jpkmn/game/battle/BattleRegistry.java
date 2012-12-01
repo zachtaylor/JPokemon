@@ -19,8 +19,10 @@ public class BattleRegistry {
     if (b == null)
       throw new IllegalArgumentException("Invalid enrollable battle id");
 
-    for (Slot slot : b)
+    for (Slot slot : b) {
       _battles.put(slot.trainer(), b);
+      slot.trainer().setState("battle");
+    }
 
     b.start();
   }

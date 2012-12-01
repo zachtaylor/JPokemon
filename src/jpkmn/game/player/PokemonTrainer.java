@@ -22,4 +22,6 @@ public interface PokemonTrainer {
   public boolean add(Pokemon p);
 
   public void notify(String... message);
+
+  public void setState(String state);
 }

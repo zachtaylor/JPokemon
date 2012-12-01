@@ -6,6 +6,7 @@ import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
+import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
@@ -70,12 +71,7 @@ public class BattleService {
     return BattleRegistry.createEnrollable();
   }
 
-  public static void enroll(int bID, int pID, int team) throws ServiceException {
-    Player player = PlayerRegistry.get(pID);
-
-    if (player == null)
-      throw new ServiceException("PlayerID " + pID + " not found");
-
+  public static void enroll(int bID, PokemonTrainer player, int team) throws ServiceException {
     Battle battle = BattleRegistry.getEnrollable(bID);
 
     if (battle == null)

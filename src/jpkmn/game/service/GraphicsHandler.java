@@ -101,11 +101,11 @@ public class GraphicsHandler {
     _window.showMain();
   }
 
-  public void showBattle(int battleID, int slotID) {
+  public void showBattle() {
     if (mock())
       return;
 
-    _window.showBattle(battleID, slotID);
+    _window.showBattle();
   }
 
   public void showUpgrade(int partyIndex) {

@@ -123,21 +123,22 @@ public class Battle implements Iterable<Slot> {
   }
 
   public JSONObject toJSONObject(PokemonTrainer perspective) {
-    Slot slot = _slots.get(perspective);
+    Slot slot = _slots.get(perspective.id());
 
     JSONObject data = new JSONObject();
     JSONArray teams = new JSONArray();
 
     try {
       if (slot != null)
-        data.put("user", slot.toJSONObject(true));
+        data.put("user_team", slot.team());
 
       for (Slot cur : this) {
-        if (cur == slot)
-          continue;
-
-        if (teams.get(cur.team()) == null)
+        try {
+          if (teams.get(cur.team()) == JSONObject.NULL)
+            teams.put(cur.team(), new JSONArray());
+        } catch (JSONException e) {
           teams.put(cur.team(), new JSONArray());
+        }
 
         ((JSONArray) teams.get(cur.team())).put(cur.toJSONObject(false));
       }

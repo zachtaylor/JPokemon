@@ -90,11 +90,11 @@ public class Player implements PokemonTrainer {
     _graphics.notify(message);
   }
 
-  public void setState(String state, int... battleInfo) {
+  public void setState(String state) {
     if (state.equalsIgnoreCase("world"))
       _graphics.showWorld();
     else if (state.equalsIgnoreCase("battle"))
-      _graphics.showBattle(battleInfo[0], battleInfo[1]);
+      _graphics.showBattle();
   }
 
   public PokedexStatus getPokedex(int id) {

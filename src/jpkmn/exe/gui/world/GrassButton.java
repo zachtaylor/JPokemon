@@ -28,8 +28,6 @@ public class GrassButton extends JButton implements ActionListener {
     } catch (ServiceException s) {
       _window.inbox().addMessage(s.getMessage());
     }
-
-    _window.refresh();
   }
 
   private GameWindow _window;

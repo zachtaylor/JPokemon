@@ -8,20 +8,24 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.JPokemonView;
-import jpkmn.game.battle.Battle;
-import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.battle.Slot;
 import jpkmn.game.service.BattleService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class BattleView extends JPokemonView {
-  public BattleView() {
+  public BattleView(int playerID) {
+    _playerID = playerID;
+    _user = new JPanel();
     _enemies = new JPanel();
-    JPanel userPanel = new JPanel();
-    _user = new PartyPanel();
+    JPanel userAndButtons = new JPanel();
     JPanel buttonPanel = new JPanel();
 
     _fightButton = new JButton("FIGHT");
+    buttonPanel.add(_fightButton);
     _fightButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -30,6 +34,7 @@ public class BattleView extends JPokemonView {
     });
 
     _itemButton = new JButton("ITEM");
+    buttonPanel.add(_itemButton);
     _itemButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -38,6 +43,7 @@ public class BattleView extends JPokemonView {
     });
 
     _swapButton = new JButton("SWAP");
+    buttonPanel.add(_swapButton);
     _swapButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -46,6 +52,7 @@ public class BattleView extends JPokemonView {
     });
 
     _runButton = new JButton("RUN");
+    buttonPanel.add(_runButton);
     _runButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -53,80 +60,89 @@ public class BattleView extends JPokemonView {
       }
     });
 
-    buttonPanel.add(_fightButton);
-    buttonPanel.add(_itemButton);
-    buttonPanel.add(_swapButton);
-    buttonPanel.add(_runButton);
+    userAndButtons.add(_user);
+    userAndButtons.add(buttonPanel);
+    userAndButtons.add(spacer());
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-    userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
-    _enemies.setLayout(new BoxLayout(_enemies, BoxLayout.Y_AXIS));
+    _user.setLayout(new BoxLayout(_user, BoxLayout.Y_AXIS));
+    _enemies.setLayout(new BoxLayout(_enemies, BoxLayout.X_AXIS));
+    userAndButtons.setLayout(new BoxLayout(userAndButtons, BoxLayout.Y_AXIS));
 
-    userPanel.add(_user);
-    userPanel.add(buttonPanel);
-    userPanel.add(new JPanel());
-
-    add(userPanel);
+    add(userAndButtons);
     add(_enemies);
   }
 
-  public void setup(int battleID, int slotID) {
-    _slotID = slotID;
-    _battleID = battleID;
-
-    Battle b = BattleRegistry.get(battleID);
-
-    _user.setup(b.get(slotID).party(), true);
-  }
-
   public void refresh() {
-    Battle b = BattleRegistry.get(_battleID);
-
-    if (b == null)
+    try {
+      _data = BattleService.info(_playerID);
+    } catch (ServiceException e) {
+      e.printStackTrace();
       return;
-
-    _enemies.removeAll();
-    for (Slot s : b) {
-      if (s.id() != _slotID) {
-        _enemies.add(new PartyPanel(s.party(), false));
-      }
     }
 
-    _user.refresh(b.get(_slotID).party());
+    _user.removeAll();
+    _enemies.removeAll();
+
+    try {
+      JSONArray allTeams = _data.getJSONArray("teams");
+      JSONArray teamData;
+      JSONObject trainerData;
+      JPanel teamPanel;
+
+      for (int i = 0; i < allTeams.length(); i++) {
+        teamPanel = new JPanel();
+        teamPanel.setLayout(new BoxLayout(teamPanel, BoxLayout.Y_AXIS));
+
+        teamData = allTeams.getJSONArray(i);
+
+        for (int j = 0; j < teamData.length(); j++) {
+          trainerData = teamData.getJSONObject(j);
+          if (trainerData.getInt("team") == _data.getInt("user_team"))
+            _user.add(new PartyPanel(trainerData, _playerID));
+          else
+            teamPanel.add(new PartyPanel(trainerData, _playerID));
+        }
+        _enemies.add(teamPanel);
+      }
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      return;
+    }
 
     enableButtons(true);
-    setVisible(false);
-    setVisible(true);
+    validate();
   }
 
   public Dimension dimension() {
     return new Dimension(625, 200);
   }
 
-  public void fight() {
+  private void fight() {
     enableButtons(false);
 
     int moveIndex = 0;
     // TODO : getMoveIndex
 
-    int enemySlotID = (_slotID + 1) % 2;
+    int enemySlotID = 1;
     // TODO : target choice
 
-    BattleService.attack(_battleID, _slotID, enemySlotID, moveIndex);
+    BattleService.attack(_playerID, enemySlotID, moveIndex);
     refresh();
   }
 
-  public void swap() {
+  private void swap() {
     enableButtons(false);
 
     int slotIndex = 0;
     // TODO : getSwapIndex
 
-    BattleService.swap(_battleID, _slotID, slotIndex);
+    BattleService.swap(_playerID, slotIndex);
     refresh();
   }
 
-  public void item() {
+  private void item() {
     enableButtons(false);
 
     int itemID = 0;
@@ -135,14 +151,14 @@ public class BattleView extends JPokemonView {
     int targetID = 0;
     // TODO : target choice
 
-    BattleService.item(_battleID, _slotID, targetID, itemID);
+    BattleService.item(_playerID, targetID, itemID);
     refresh();
   }
 
-  public void run() {
+  private void run() {
     enableButtons(false);
 
-    BattleService.run(_battleID, _slotID);
+    BattleService.run(_playerID);
     refresh();
   }
 
@@ -153,9 +169,9 @@ public class BattleView extends JPokemonView {
     _runButton.setEnabled(enable);
   }
 
-  private JPanel _enemies;
-  private PartyPanel _user;
-  private int _battleID, _slotID;
+  private int _playerID;
+  private JPanel _enemies, _user;
+  private JSONObject _data;
   private JButton _fightButton, _itemButton, _swapButton, _runButton;
   private static final long serialVersionUID = 1L;
 }

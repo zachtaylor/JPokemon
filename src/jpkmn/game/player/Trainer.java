@@ -63,7 +63,10 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
   public void notify(String... message) {
     return;
   }
-  
+
+  public void setState(String state) { // Do nothing
+  }
+
   public boolean equals(Object o) {
     if (!(o instanceof Trainer))
       return false;

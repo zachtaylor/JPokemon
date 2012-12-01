@@ -173,13 +173,10 @@ public class Slot {
     try {
       data.put("trainer", _trainer.id());
       data.put("team", team());
-      data.put("leader", leader().toJSONObject());
+      data.put("pokemon", _trainer.party().toJSONArray());
 
-      if (trainerPerspective) {
-        JSONObject leaderData = data.getJSONObject("leader");
-        leaderData.put("xp", leader().xp());
-        leaderData.put("xp_needed", leader().xpNeeded());
-      }
+      JSONObject leader = (JSONObject) data.getJSONArray("pokemon").get(0);
+      leader.put("xp_needed", leader().xpNeeded());
 
     } catch (JSONException e) {
       e.printStackTrace();

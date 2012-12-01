@@ -67,7 +67,7 @@ public class WorldView extends JPokemonView implements KeyListener {
 
   public void refresh() {
     try {
-      JSONObject areaInfo = PlayerService.areaInfo(_playerID);
+      JSONObject areaInfo = PlayerService.areaInfo(window.playerID());
 
       _title.setText(areaInfo.getString("name"));
 
@@ -158,7 +158,6 @@ public class WorldView extends JPokemonView implements KeyListener {
   }
 
   GameWindow window;
-  private int _playerID;
   private JLabel _title;
   private JPanel _buttons;
   private FishButton _fish;
