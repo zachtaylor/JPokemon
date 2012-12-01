@@ -66,6 +66,28 @@ public class BattleService {
     player.setState("battle");
   }
 
+  public static int createEnrollable() {
+    return BattleRegistry.createEnrollable();
+  }
+
+  public static void enroll(int bID, int pID, int team) throws ServiceException {
+    Player player = PlayerRegistry.get(pID);
+
+    if (player == null)
+      throw new ServiceException("PlayerID " + pID + " not found");
+
+    Battle battle = BattleRegistry.getEnrollable(bID);
+
+    if (battle == null)
+      throw new ServiceException("Invalid enrollable battle: " + bID);
+
+    battle.add(player, team);
+  }
+
+  public static void startEnrollable(int battleID) {
+    BattleRegistry.startEnrollable(battleID);
+  }
+
   public static void startBattle(int pID, int tID) throws ServiceException {
     Player player = PlayerRegistry.get(pID);
 
@@ -127,5 +149,14 @@ public class BattleService {
       throw new ServiceException(player.name() + " is not in a battle");
 
     return battle.toJSONObject(player);
+  }
+
+  public static JSONObject enrollableInfo(int battleID) throws ServiceException {
+    Battle b = BattleRegistry.getEnrollable(battleID);
+
+    if (b == null)
+      throw new ServiceException("Invalid enrollable battle: " + battleID);
+
+    return b.toJSONObject(null);
   }
 }

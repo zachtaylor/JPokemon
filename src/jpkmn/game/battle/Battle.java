@@ -27,6 +27,9 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void add(PokemonTrainer trainer, int team) {
+    if (contains(trainer))
+      throw new IllegalArgumentException("Duplicate trainer: " + trainer);
+
     _slots.put(trainer.id(), new Slot(trainer, team));
   }
 
@@ -54,8 +57,8 @@ public class Battle implements Iterable<Slot> {
       remove((Slot) _slots.values().toArray()[0]);
   }
 
-  public boolean contains(Slot slot) {
-    return _slots.get(slot.trainer().id()) != null;
+  public boolean contains(PokemonTrainer trainer) {
+    return _slots.get(trainer.id()) != null;
   }
 
   public void add(AbstractTurn turn) {

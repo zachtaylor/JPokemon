@@ -60,7 +60,7 @@ public class Round {
         turn.changeToSwap();
       }
 
-      if (!_battle.contains(slot.target())) {
+      if (!_battle.contains(slot.target().trainer())) {
         // TODO shit bricks
       }
     }
