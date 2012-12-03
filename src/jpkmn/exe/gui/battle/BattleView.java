@@ -5,12 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.service.BattleService;
+import jpkmn.img.ImageFinder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,8 +101,12 @@ public class BattleView extends JPokemonView {
 
         for (int j = 0; j < teamData.length(); j++) {
           trainerData = teamData.getJSONObject(j);
-          if (trainerData.getInt("team") == _data.getInt("user_team"))
+          if (trainerData.getInt("team") == _data.getInt("user_team")) {
+            if (trainerData.getInt("trainer") == _playerID)
+              _trainerData = trainerData;
+
             _user.add(new PartyPanel(trainerData, _playerID));
+          }
           else
             teamPanel.add(new PartyPanel(trainerData, _playerID));
         }
@@ -122,8 +129,11 @@ public class BattleView extends JPokemonView {
   private void fight() {
     enableButtons(false);
 
-    int moveIndex = 0;
-    // TODO : getMoveIndex
+    int moveIndex = doMoveIndex();
+    if (moveIndex == -1) {
+      enableButtons(true);
+      return;
+    }
 
     int enemySlotID = 1;
     // TODO : target choice
@@ -169,9 +179,33 @@ public class BattleView extends JPokemonView {
     _runButton.setEnabled(enable);
   }
 
+  private int doMoveIndex() {
+    String name = null;
+    String[] move_names = new String[0];
+    ImageIcon image = null;
+
+    try {
+      JSONObject data = _trainerData.getJSONArray("pokemon").getJSONObject(0);
+
+      name = data.getString("name");
+      image = ImageFinder.find("pkmn/" + data.getInt("number"));
+
+      JSONArray moves = data.getJSONArray("moves");
+      move_names = new String[moves.length()];
+      for (int i = 0; i < moves.length(); i++)
+        move_names[i] = moves.getJSONObject(i).getString("name");
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    return JOptionPane.showOptionDialog(this, "Select a move for " + name,
+        "MOVE CHOICE", 0, 0, image, move_names, null);
+  }
+
   private int _playerID;
   private JPanel _enemies, _user;
-  private JSONObject _data;
+  private JSONObject _data, _trainerData;
   private JButton _fightButton, _itemButton, _swapButton, _runButton;
   private static final long serialVersionUID = 1L;
 }
