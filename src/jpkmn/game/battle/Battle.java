@@ -50,8 +50,7 @@ public class Battle implements Iterable<Slot> {
       }
     }
 
-    if (slot.trainer().type() == TrainerType.PLAYER)
-      ((Player) slot.trainer()).setState("world");
+    slot.trainer().setState("world");
 
     if (_slots.size() == 1)
       remove((Slot) _slots.values().toArray()[0]);

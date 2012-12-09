@@ -3,6 +3,10 @@ package jpkmn.exe.gui.battle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -80,6 +84,7 @@ public class BattleView extends JPokemonView {
     try {
       _data = BattleService.info(_playerID);
     } catch (ServiceException e) {
+      // Usually means that Player is no longer in a battle
       e.printStackTrace();
       return;
     }
@@ -135,8 +140,11 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    int enemySlotID = 1;
-    // TODO : target choice
+    int enemySlotID = doMoveTarget(moveIndex);
+    if (enemySlotID == _playerID) {
+      enableButtons(true);
+      return;
+    }
 
     BattleService.attack(_playerID, enemySlotID, moveIndex);
     refresh();
@@ -181,7 +189,7 @@ public class BattleView extends JPokemonView {
 
   private int doMoveIndex() {
     String name = null;
-    String[] move_names = new String[0];
+    String[] move_names = null;
     ImageIcon image = null;
 
     try {
@@ -201,6 +209,49 @@ public class BattleView extends JPokemonView {
 
     return JOptionPane.showOptionDialog(this, "Select a move for " + name,
         "MOVE CHOICE", 0, 0, image, move_names, null);
+  }
+
+  private int doMoveTarget(int moveIndex) {
+    String move = null;
+    List<String> slot_names = new ArrayList<String>();
+    ImageIcon image = null;
+
+    int slotCounter = 0;
+    Map<Integer, Integer> answerKey = new HashMap<Integer, Integer>();
+
+    try {
+      JSONArray allTeams = _data.getJSONArray("teams");
+      JSONArray teamData;
+      JSONObject trainerData;
+
+      JSONObject leader = _trainerData.getJSONArray("pokemon").getJSONObject(0);
+      move = leader.getJSONArray("moves").getJSONObject(moveIndex)
+          .getString("name");
+      image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+
+      for (int i = 0; i < allTeams.length(); i++) {
+        teamData = allTeams.getJSONArray(i);
+
+        for (int j = 0; j < teamData.length(); j++) {
+          trainerData = teamData.getJSONObject(j);
+          if (trainerData.getInt("team") != _data.getInt("user_team")) {
+            slot_names.add(trainerData.getJSONArray("pokemon").getJSONObject(0)
+                .getString("name"));
+            answerKey.put(slotCounter++, trainerData.getInt("trainer"));
+          }
+        }
+      }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    int choice = JOptionPane.showOptionDialog(this, "Select a target for "
+        + move, "MOVE CHOICE", 0, 0, image, slot_names.toArray(), null);
+
+    if (choice == -1)
+      return _playerID;
+
+    return answerKey.get(choice);
   }
 
   private int _playerID;
