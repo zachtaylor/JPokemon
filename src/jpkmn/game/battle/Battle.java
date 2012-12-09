@@ -8,7 +8,6 @@ import java.util.Map;
 
 import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.item.Item;
-import jpkmn.game.player.Player;
 import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
@@ -37,6 +36,7 @@ public class Battle implements Iterable<Slot> {
     PokemonTrainer trainer = slot.trainer();
     _slots.remove(trainer.id());
     BattleRegistry.remove(trainer);
+    trainer.setState("world");
 
     if (slot.party().size() != 0 && slot.party().awake() == 0) {
       if (slot.trainer().type() == TrainerType.PLAYER) {
@@ -50,10 +50,7 @@ public class Battle implements Iterable<Slot> {
       }
     }
 
-    slot.trainer().setState("world");
-
-    if (_slots.size() == 1)
-      remove((Slot) _slots.values().toArray()[0]);
+    verifyTeamCount();
   }
 
   public boolean contains(PokemonTrainer trainer) {
@@ -184,6 +181,29 @@ public class Battle implements Iterable<Slot> {
     }
   }
 
+  private void verifyTeamCount() {
+    int curTeam = -1;
+    boolean onlyOneTeamLeft = true;
+
+    for (Slot s : this) {
+      if (curTeam == -1) {
+        curTeam = s.team();
+      }
+      else if (curTeam != s.team()) {
+        onlyOneTeamLeft = false;
+        break;
+      }
+    }
+
+    if (onlyOneTeamLeft) {
+      for (Slot slot : this) {
+        PokemonTrainer trainer = slot.trainer();
+        BattleRegistry.remove(trainer);
+        trainer.setState("world");
+      }
+    }
+  }
+
   public static int computeDamage(Pokemon user, Move move, Pokemon victim) {
     //@preformat
     double damage = 1.0, 
@@ -227,7 +247,8 @@ public class Battle implements Iterable<Slot> {
   /**
    * Calculates the confused damage a Pokemon does to itself.
    * 
-   * @param p Pokemon to calculate for
+   * @param p
+   *          Pokemon to calculate for
    * @return Damage done
    */
   public static int confusedDamage(Pokemon p) {
