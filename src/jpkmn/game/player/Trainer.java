@@ -6,6 +6,8 @@ import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Trainer implements PokemonTrainer, JPokemonConstants {
   public Trainer() {
@@ -65,6 +67,28 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
   }
 
   public void setState(String state) { // Do nothing
+  }
+
+  public JSONObject toJSONObject() {
+    JSONObject data = new JSONObject();
+
+    try {
+      data.put("id", id());
+      data.put("name", name());
+      data.put("cash", cash());
+      data.put("badges", JSONObject.NULL);
+      data.put("area", JSONObject.NULL);
+      data.put("bag", JSONObject.NULL);
+      data.put("pokedex", JSONObject.NULL);
+      data.put("progress", JSONObject.NULL);
+      data.put("pokemon", new JSONObject().put("party", party().toJSONArray()));
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+      data = null;
+    }
+
+    return data;
   }
 
   public boolean equals(Object o) {

@@ -62,7 +62,7 @@ public class Item {
       data.put("name", name());
       data.put("value", value());
       data.put("amount", amount());
-      data.put("type", _type.name().toLowerCase());
+      data.put("type", _type.name());
 
     } catch (JSONException e) {
       e.printStackTrace();

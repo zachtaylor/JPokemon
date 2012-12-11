@@ -136,7 +136,7 @@ public class Battle implements Iterable<Slot> {
           teams.put(cur.team(), new JSONArray());
         }
 
-        ((JSONArray) teams.get(cur.team())).put(cur.toJSONObject(false));
+        ((JSONArray) teams.get(cur.team())).put(cur.toJSONObject());
       }
 
       data.put("teams", teams);

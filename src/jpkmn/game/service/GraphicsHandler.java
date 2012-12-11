@@ -7,7 +7,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import jpkmn.exceptions.CancelException;
+import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.battle.Slot;
@@ -47,7 +47,7 @@ public class GraphicsHandler {
       else {
         g.notify("Evolution not allowed");
       }
-    } catch (CancelException e) {
+    } catch (DialogCancelException e) {
       g.notify("Evolution exception");
       return;
     }
@@ -56,7 +56,7 @@ public class GraphicsHandler {
       int index = g.getMoveIndex("Select a move", party.get(0));
 
       g.notify("Move Selected", party.get(0).moves.get(index).name());
-    } catch (CancelException c) {
+    } catch (DialogCancelException c) {
       g.notify("Move Selection exception");
       return;
     }
@@ -65,7 +65,7 @@ public class GraphicsHandler {
       int index = g.getPartyIndex("Select a pokemon");
 
       g.notify("Pokemon Selected", party.get(index).name());
-    } catch (CancelException c) {
+    } catch (DialogCancelException c) {
       g.notify("Pokemon Selection exception");
       return;
     }
@@ -74,7 +74,7 @@ public class GraphicsHandler {
       Item item = g.getItemChoice("item");
 
       g.notify("Item Selected", item.name());
-    } catch (CancelException c) {
+    } catch (DialogCancelException c) {
       g.notify("Item Selection exception");
       return;
     }
@@ -122,7 +122,7 @@ public class GraphicsHandler {
     _window.refresh();
   }
 
-  public boolean isEvolutionOkay(Pokemon p) throws CancelException {
+  public boolean isEvolutionOkay(Pokemon p) throws DialogCancelException {
     if (mock())
       return true;
 
@@ -135,7 +135,8 @@ public class GraphicsHandler {
         JOptionPane.QUESTION_MESSAGE, icon);
   }
 
-  public int getMoveIndex(String message, Pokemon p) throws CancelException {
+  public int getMoveIndex(String message, Pokemon p)
+      throws DialogCancelException {
     if (mock()) {
       // TODO : stuff
     }
@@ -152,7 +153,7 @@ public class GraphicsHandler {
         moveNames.toArray(), null);
   }
 
-  public int getPartyIndex(String message) throws CancelException {
+  public int getPartyIndex(String message) throws DialogCancelException {
     if (mock()) {
       // TODO : stuff
     }
@@ -168,11 +169,11 @@ public class GraphicsHandler {
         options, null);
 
     if (index == -1)
-      throw new CancelException("cancel...?");
+      throw new DialogCancelException();
     return index;
   }
 
-  public Slot getTargetSlot(List<Slot> enemySlots) throws CancelException {
+  public Slot getTargetSlot(List<Slot> enemySlots) throws DialogCancelException {
     if (mock()) {
       // TODO : stuff
     }
@@ -183,7 +184,7 @@ public class GraphicsHandler {
     return null;
   }
 
-  public Item getItemChoice(String message) throws CancelException {
+  public Item getItemChoice(String message) throws DialogCancelException {
     if (mock()) {
       // TODO : stuff
     }
@@ -214,7 +215,7 @@ public class GraphicsHandler {
       return available.get(choice);
 
     } catch (Exception e) {
-      throw new CancelException(e.getMessage());
+      throw new DialogCancelException();
     }
   }
 

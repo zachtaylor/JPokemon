@@ -167,17 +167,12 @@ public class Slot {
     _trainer.notify((String[]) message.toArray());
   }
 
-  public JSONObject toJSONObject(boolean trainerPerspective) {
-    JSONObject data = new JSONObject();
+  public JSONObject toJSONObject() {
+    JSONObject data = null;
 
     try {
-      data.put("trainer", _trainer.id());
+      data = _trainer.toJSONObject();
       data.put("team", team());
-      data.put("pokemon", _trainer.party().toJSONArray());
-
-      JSONObject leader = (JSONObject) data.getJSONArray("pokemon").get(0);
-      leader.put("xp_needed", leader().xpNeeded());
-
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;

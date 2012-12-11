@@ -24,8 +24,8 @@ public class PartyPanel extends JPanel {
     List<String> partyIcons = new ArrayList<String>();
 
     try {
-      JSONArray pokemon = data.getJSONArray("pokemon");
-      JSONObject leader = pokemon.getJSONObject(0);
+      JSONArray party = data.getJSONObject("pokemon").getJSONArray("party");
+      JSONObject leader = party.getJSONObject(0);
       JSONObject stats = leader.getJSONObject("stats");
 
       name = leader.getString("name");
@@ -37,11 +37,11 @@ public class PartyPanel extends JPanel {
       xp = leader.getInt("xp");
       xp_needed = leader.getInt("xp_needed");
       team_id = data.getInt("team");
-      trainer_id = data.getInt("trainer");
+      trainer_id = data.getInt("id");
 
       JSONObject cur;
-      for (int i = 0; i < pokemon.length(); i++) {
-        cur = pokemon.getJSONObject(i);
+      for (int i = 0; i < party.length(); i++) {
+        cur = party.getJSONObject(i);
         if (cur.getJSONObject("stats").getJSONObject("HEALTH").getInt("cur") == 0)
           partyIcons.add("battle/slot_empty");
         else if (cur.getString("condition").equals(""))

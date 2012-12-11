@@ -3,21 +3,16 @@ package jpkmn.exe.gui.battle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exceptions.ServiceException;
+import jpkmn.exe.gui.JPokemonDialog;
 import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.service.BattleService;
-import jpkmn.img.ImageFinder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,7 +102,7 @@ public class BattleView extends JPokemonView {
         for (int j = 0; j < teamData.length(); j++) {
           trainerData = teamData.getJSONObject(j);
           if (trainerData.getInt("team") == _data.getInt("user_team")) {
-            if (trainerData.getInt("trainer") == _playerID)
+            if (trainerData.getInt("id") == _playerID)
               _trainerData = trainerData;
 
             _user.add(new PartyPanel(trainerData, _playerID));
@@ -132,16 +127,17 @@ public class BattleView extends JPokemonView {
   }
 
   private void fight() {
+    int moveIndex, enemySlotID;
     enableButtons(false);
 
-    int moveIndex = doMoveIndex();
-    if (moveIndex == -1) {
-      enableButtons(true);
-      return;
-    }
+    try {
+      moveIndex = JPokemonDialog.getMoveIndex(this, _trainerData);
+      enemySlotID = JPokemonDialog.getMoveTarget(this, _data, _trainerData,
+          moveIndex);
+    } catch (Exception e) {
+      if (!(e instanceof DialogCancelException))
+        e.printStackTrace();
 
-    int enemySlotID = doMoveTarget(moveIndex);
-    if (enemySlotID == _playerID) {
       enableButtons(true);
       return;
     }
@@ -161,10 +157,18 @@ public class BattleView extends JPokemonView {
   }
 
   private void item() {
+    int itemID;
     enableButtons(false);
 
-    int itemID = 0;
-    // TODO : getItemChoice
+    try {
+      itemID = JPokemonDialog.getItemChoice(this, _trainerData);
+    } catch (Exception e) {
+      if (!(e instanceof DialogCancelException))
+        e.printStackTrace();
+
+      enableButtons(true);
+      return;
+    }
 
     int targetID = 0;
     // TODO : target choice
@@ -185,73 +189,6 @@ public class BattleView extends JPokemonView {
     _itemButton.setEnabled(enable);
     _swapButton.setEnabled(enable);
     _runButton.setEnabled(enable);
-  }
-
-  private int doMoveIndex() {
-    String name = null;
-    String[] move_names = null;
-    ImageIcon image = null;
-
-    try {
-      JSONObject data = _trainerData.getJSONArray("pokemon").getJSONObject(0);
-
-      name = data.getString("name");
-      image = ImageFinder.find("pkmn/" + data.getInt("number"));
-
-      JSONArray moves = data.getJSONArray("moves");
-      move_names = new String[moves.length()];
-      for (int i = 0; i < moves.length(); i++)
-        move_names[i] = moves.getJSONObject(i).getString("name");
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-
-    return JOptionPane.showOptionDialog(this, "Select a move for " + name,
-        "MOVE CHOICE", 0, 0, image, move_names, null);
-  }
-
-  private int doMoveTarget(int moveIndex) {
-    String move = null;
-    List<String> slot_names = new ArrayList<String>();
-    ImageIcon image = null;
-
-    int slotCounter = 0;
-    Map<Integer, Integer> answerKey = new HashMap<Integer, Integer>();
-
-    try {
-      JSONArray allTeams = _data.getJSONArray("teams");
-      JSONArray teamData;
-      JSONObject trainerData;
-
-      JSONObject leader = _trainerData.getJSONArray("pokemon").getJSONObject(0);
-      move = leader.getJSONArray("moves").getJSONObject(moveIndex)
-          .getString("name");
-      image = ImageFinder.find("pkmn/" + leader.getInt("number"));
-
-      for (int i = 0; i < allTeams.length(); i++) {
-        teamData = allTeams.getJSONArray(i);
-
-        for (int j = 0; j < teamData.length(); j++) {
-          trainerData = teamData.getJSONObject(j);
-          if (trainerData.getInt("team") != _data.getInt("user_team")) {
-            slot_names.add(trainerData.getJSONArray("pokemon").getJSONObject(0)
-                .getString("name"));
-            answerKey.put(slotCounter++, trainerData.getInt("trainer"));
-          }
-        }
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-
-    int choice = JOptionPane.showOptionDialog(this, "Select a target for "
-        + move, "MOVE CHOICE", 0, 0, image, slot_names.toArray(), null);
-
-    if (choice == -1)
-      return _playerID;
-
-    return answerKey.get(choice);
   }
 
   private int _playerID;

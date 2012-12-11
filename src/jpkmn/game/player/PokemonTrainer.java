@@ -3,6 +3,7 @@ package jpkmn.game.player;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.json.JSONObject;
 
 public interface PokemonTrainer {
   public int id();
@@ -24,4 +25,6 @@ public interface PokemonTrainer {
   public void notify(String... message);
 
   public void setState(String state);
+
+  public JSONObject toJSONObject();
 }

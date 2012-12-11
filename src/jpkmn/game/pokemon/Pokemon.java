@@ -229,6 +229,7 @@ public class Pokemon {
       data.put("number", _number);
       data.put("level", _level);
       data.put("xp", _xp);
+      data.put("xp_needed", xpNeeded());
       data.put("condition", condition.toString());
       data.put("stats", _stats.toJSONObject());
       data.put("moves", moves.toJSONArray());

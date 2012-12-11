@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 
-import jpkmn.exceptions.CancelException;
+import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.exe.gui.JPokemonView;
@@ -49,7 +49,7 @@ public class StartView extends JPokemonView implements KeyListener {
   public void onUpgrade() {
     try {
       _gameWindow.showUpgrade(_gameWindow.graphics().getPartyIndex("upgrade"));
-    } catch (CancelException e) {
+    } catch (DialogCancelException e) {
       return;
     }
   }

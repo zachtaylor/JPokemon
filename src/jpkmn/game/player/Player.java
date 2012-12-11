@@ -120,6 +120,7 @@ public class Player implements PokemonTrainer {
     JSONObject data = new JSONObject();
 
     try {
+      data.put("id", id());
       data.put("name", name());
       data.put("cash", cash());
       data.put("badges", badge());
