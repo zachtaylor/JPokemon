@@ -1,7 +1,6 @@
 package jpkmn.game.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -10,9 +9,6 @@ import javax.swing.JOptionPane;
 import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.game.battle.Slot;
-import jpkmn.game.item.Item;
-import jpkmn.game.item.ItemType;
 import jpkmn.game.player.Player;
 import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
@@ -67,15 +63,6 @@ public class GraphicsHandler {
       g.notify("Pokemon Selected", party.get(index).name());
     } catch (DialogCancelException c) {
       g.notify("Pokemon Selection exception");
-      return;
-    }
-
-    try {
-      Item item = g.getItemChoice("item");
-
-      g.notify("Item Selected", item.name());
-    } catch (DialogCancelException c) {
-      g.notify("Item Selection exception");
       return;
     }
 
@@ -171,52 +158,6 @@ public class GraphicsHandler {
     if (index == -1)
       throw new DialogCancelException();
     return index;
-  }
-
-  public Slot getTargetSlot(List<Slot> enemySlots) throws DialogCancelException {
-    if (mock()) {
-      // TODO : stuff
-    }
-    if (enemySlots.size() == 1)
-      return enemySlots.get(0);
-
-    // TODO
-    return null;
-  }
-
-  public Item getItemChoice(String message) throws DialogCancelException {
-    if (mock()) {
-      // TODO : stuff
-    }
-
-    try {
-      Player player = (Player) _player; // Throws ClassCastException
-
-      int pocketChoice = JOptionPane.showOptionDialog(null, message,
-          "Select An Item", JOptionPane.DEFAULT_OPTION,
-          JOptionPane.QUESTION_MESSAGE, null, ItemType.values(), null);
-
-      Iterable<Item> pocket = player.bag.pocket(ItemType.valueOf(pocketChoice));
-
-      List<Item> available = new ArrayList<Item>();
-      List<ImageIcon> choices = new ArrayList<ImageIcon>();
-
-      for (Item item : pocket) {
-        available.add(item);
-        choices.add(ImageFinder.find(item));
-      }
-
-      int choice = JOptionPane.showOptionDialog(null, message,
-          "Select An Item", JOptionPane.DEFAULT_OPTION,
-          JOptionPane.QUESTION_MESSAGE, null,
-          choices.toArray(new ImageIcon[choices.size()]), null);
-
-      // Throws ArrayIndexOutOfBoundsException
-      return available.get(choice);
-
-    } catch (Exception e) {
-      throw new DialogCancelException();
-    }
   }
 
   private boolean mock() {

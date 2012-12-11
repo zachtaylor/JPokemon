@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.item.Bag;
+import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.service.GraphicsHandler;
 
@@ -16,19 +17,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Player implements PokemonTrainer {
-  public final Bag bag;
-
   public Player() {
-    super();
-
     _id = PLAYER_COUNT++;
     _area = 1;
 
-    bag = new Bag();
+    _bag = new Bag();
     _pokedex = new Pokedex();
     _progress = new Progress();
+    _storage = new PokemonStorageBlock();
     _graphics = new GraphicsHandler(this);
-    _storage = new PokemonStorageBlock(this);
   }
 
   public int id() {
@@ -65,6 +62,10 @@ public class Player implements PokemonTrainer {
 
   public void cash(int cash) {
     _cash = cash;
+  }
+  
+  public Item item(int itemID) {
+    return _bag.get(itemID);
   }
 
   public TrainerType type() {
@@ -125,7 +126,7 @@ public class Player implements PokemonTrainer {
       data.put("cash", cash());
       data.put("badges", badge());
       data.put("area", area());
-      data.put("bag", bag.toJSONArray());
+      data.put("bag", _bag.toJSONArray());
       data.put("pokedex", _pokedex.toJSONObject());
       data.put("progress", _progress.toJSONArray());
       data.put("pokemon", _storage.toJSONObject());
@@ -146,7 +147,7 @@ public class Player implements PokemonTrainer {
       area(Integer.parseInt(scan.nextLine().trim()));
 
       // Load bag
-      bag.load(scan.nextLine());
+      _bag.load(scan.nextLine());
 
       // Load pokedex
       _pokedex.load(scan.nextLine());
@@ -175,6 +176,7 @@ public class Player implements PokemonTrainer {
     return _id;
   }
 
+  private Bag _bag;
   private String _name;
   private Pokedex _pokedex;
   private Progress _progress;

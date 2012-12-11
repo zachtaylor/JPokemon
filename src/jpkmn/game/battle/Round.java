@@ -29,7 +29,7 @@ public class Round {
     for (Slot a : _battle) {
       for (Slot b : _battle) {
         if (!a.trainer().equals(b))
-          a.addRival(b.leader());
+          a.addRival(b);
       }
     }
 
@@ -55,7 +55,7 @@ public class Round {
       }
       else if (!slot.leader().condition.awake()) {
         for (Slot s : _battle)
-          s.removeRival(slot.leader());
+          s.removeRival(slot);
 
         turn.changeToSwap();
       }

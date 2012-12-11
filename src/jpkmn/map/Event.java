@@ -54,7 +54,7 @@ public class Event {
     case BATTLE:
     break; // never block battle
     case ITEM:
-      if (_int2 < 0 && p.bag.get(_int1).amount() < -_int2)
+      if (_int2 < 0 && p.item(_int1).amount() < -_int2)
         return false;
     break;
     }
@@ -79,7 +79,7 @@ public class Event {
       p.setState("battle");
     break;
     case ITEM:
-      p.bag.get(_int1).add(_int2);
+      p.item(_int1).add(_int2);
       p.putEvent(_id);
     break;
     }

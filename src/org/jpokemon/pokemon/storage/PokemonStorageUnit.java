@@ -19,15 +19,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     _data = new Pokemon[_size];
   }
 
-  public PokemonStorageUnit(int size, PokemonTrainer trainer) {
-    this(size);
-    _trainer = trainer;
-  }
-
-  public PokemonTrainer trainer() {
-    return _trainer;
-  }
-
   public int size() {
     return _amount;
   }
@@ -44,7 +35,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
       return false;
 
     _data[_amount++] = p;
-    p.trainer(_trainer);
     _version++;
 
     return true;
@@ -56,7 +46,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     if (index < 0)
       throw new IllegalArgumentException("Not in this unit: " + p);
 
-    p.trainer(null);
     _version++;
 
     return remove(index);

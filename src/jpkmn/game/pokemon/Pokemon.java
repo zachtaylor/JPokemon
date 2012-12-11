@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
-import jpkmn.game.player.PokemonTrainer;
 
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.MoveBlock;
@@ -127,14 +126,6 @@ public class Pokemon {
 
   public int speed() {
     return getStat(StatType.SPEED).cur();
-  }
-
-  public PokemonTrainer trainer() {
-    return _trainer;
-  }
-
-  public void trainer(PokemonTrainer trainer) {
-    _trainer = trainer;
   }
 
   /**
@@ -308,7 +299,6 @@ public class Pokemon {
   private StatBlock _stats;
   private Type type1, type2;
   private String name, species;
-  private PokemonTrainer _trainer;
   private int _id, _number, _level, _xp, evolutionlevel;
 
   private static int CURRENT_ID;

@@ -87,7 +87,7 @@ public class Slot {
   }
 
   public AbstractTurn item() {
-    Item item = ((Player) _trainer).bag.get(_itemID);
+    Item item = ((Player) _trainer).item(_itemID);
 
     ItemTurn turn = new ItemTurn(this, item, _index);
 
@@ -125,30 +125,30 @@ public class Slot {
     return (int) (factor * leader().level());
   }
 
-  public void addRival(Pokemon p) {
+  public void addRival(Slot s) {
     if (_rivalsLists.get(leader()) == null)
       _rivalsLists.put(leader(), new ArrayList<Pokemon>());
 
     List<Pokemon> rivalsList = _rivalsLists.get(leader());
 
-    if (!rivalsList.contains(p))
-      rivalsList.add(p);
+    if (!rivalsList.contains(s.leader()))
+      rivalsList.add(s.leader());
 
     if (_trainer.type() == TrainerType.PLAYER)
-      ((Player) _trainer).putPokedex(p.number(), PokedexStatus.SAW);
+      ((Player) _trainer).putPokedex(s.leader().number(), PokedexStatus.SAW);
   }
 
-  public void removeRival(Pokemon p) {
-    int xpReward = (int) (p.trainer().type().xpFactor() * (p.level() + 6));
+  public void removeRival(Slot s) {
+    Pokemon p = s.leader();
+    int xpReward = (int) (s.trainer().type().xpFactor() * (p.level() + 6));
 
-    List<Pokemon> rivalsList;
     List<Pokemon> earnList = new ArrayList<Pokemon>();
     List<String> message = new ArrayList<String>();
 
     for (Pokemon cur : _trainer.party()) {
-      rivalsList = _rivalsLists.get(cur);
+      List<Pokemon> rivalsList = _rivalsLists.get(cur);
 
-      // If cur holding xp share, add to earners
+      // TODO : If cur holding xp share, add to earners
 
       if (rivalsList != null && rivalsList.contains(p)) {
         earnList.add(cur);

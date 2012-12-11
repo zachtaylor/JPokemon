@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
@@ -20,14 +19,12 @@ import org.json.JSONObject;
  * Other units have common size.
  */
 public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokemonConstants {
-  public PokemonStorageBlock(PokemonTrainer trainer) {
-    _trainer = trainer;
-
+  public PokemonStorageBlock() {
     _data = new PokemonStorageUnit[BOXNUMBER + 1];
 
-    _data[0] = new PokemonStorageUnit(PARTYSIZE, _trainer);
+    _data[0] = new PokemonStorageUnit(PARTYSIZE);
     for (int i = 1; i <= BOXNUMBER; i++)
-      _data[i] = new PokemonStorageUnit(BOXSIZE, _trainer);
+      _data[i] = new PokemonStorageUnit(BOXSIZE);
   }
 
   public PokemonStorageUnit get(int box) {
@@ -104,6 +101,5 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     private int index = 0;
   }
 
-  private PokemonTrainer _trainer;
   private PokemonStorageUnit[] _data;
 }
