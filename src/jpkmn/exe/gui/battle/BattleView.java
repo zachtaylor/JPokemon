@@ -147,10 +147,18 @@ public class BattleView extends JPokemonView {
   }
 
   private void swap() {
+    int slotIndex;
     enableButtons(false);
 
-    int slotIndex = 0;
-    // TODO : getSwapIndex
+    try {
+      slotIndex = JPokemonDialog.getSwapIndex(this, _trainerData);
+    } catch (Exception e) {
+      if (!(e instanceof DialogCancelException))
+        e.printStackTrace();
+
+      enableButtons(true);
+      return;
+    }
 
     BattleService.swap(_playerID, slotIndex);
     refresh();

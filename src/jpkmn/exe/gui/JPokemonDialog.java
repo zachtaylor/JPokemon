@@ -20,23 +20,20 @@ public class JPokemonDialog {
   public static int getMoveIndex(Component parent, JSONObject trainer)
       throws DialogCancelException, JSONException {
 
-    String name = null;
-    String[] move_names = null;
-    ImageIcon image = null;
+    JSONObject leader = trainer.getJSONObject("leader");
+    JSONArray moves = leader.getJSONArray("moves");
 
-    JSONObject data = trainer.getJSONObject("pokemon").getJSONArray("party")
-        .getJSONObject(0);
+    String name = leader.getString("name");
+    ImageIcon image = ImageFinder.find("pkmn/" + leader.getInt("number"));
 
-    name = data.getString("name");
-    image = ImageFinder.find("pkmn/" + data.getInt("number"));
-
-    JSONArray moves = data.getJSONArray("moves");
-    move_names = new String[moves.length()];
-    for (int i = 0; i < moves.length(); i++)
-      move_names[i] = moves.getJSONObject(i).getString("name");
+    List<String> move_names = new ArrayList<String>();
+    for (int i = 0; i < moves.length(); i++) {
+      JSONObject move = moves.getJSONObject(i);
+      move_names.add(move.getString("name"));
+    }
 
     int answer = JOptionPane.showOptionDialog(parent, "Select a move for "
-        + name, "MOVE CHOICE", 0, 0, image, move_names, null);
+        + name, "MOVE CHOICE", 0, 0, image, move_names.toArray(), null);
 
     if (answer == -1)
       throw new DialogCancelException();
@@ -48,71 +45,59 @@ public class JPokemonDialog {
       JSONObject trainer, int moveIndex) throws DialogCancelException,
       JSONException {
 
-    String move = null;
-    List<String> slot_names = new ArrayList<String>();
-    ImageIcon image = null;
-
-    int slotCounter = 0;
-    Map<Integer, Integer> answerKey = new HashMap<Integer, Integer>();
-
     JSONArray allTeams = battle.getJSONArray("teams");
-    JSONArray teamData;
-    JSONObject trainerData;
+    JSONObject leader = trainer.getJSONObject("leader");
 
-    JSONObject leader = trainer.getJSONObject("pokemon").getJSONArray("party")
-        .getJSONObject(0);
-    move = leader.getJSONArray("moves").getJSONObject(moveIndex)
+    String move = leader.getJSONArray("moves").getJSONObject(moveIndex)
         .getString("name");
-    image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+    ImageIcon image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+
+    List<String> slot_names = new ArrayList<String>();
+    List<Integer> trainerID_key = new ArrayList<Integer>();
 
     for (int i = 0; i < allTeams.length(); i++) {
-      teamData = allTeams.getJSONArray(i);
+      JSONArray teamData = allTeams.getJSONArray(i);
 
       for (int j = 0; j < teamData.length(); j++) {
-        trainerData = teamData.getJSONObject(j);
+        JSONObject trainerData = teamData.getJSONObject(j);
+
         if (trainerData.getInt("team") != battle.getInt("user_team")) {
-          slot_names.add(trainerData.getJSONObject("pokemon")
-              .getJSONArray("party").getJSONObject(0).getString("name"));
-          answerKey.put(slotCounter++, trainerData.getInt("id"));
+          slot_names.add(trainerData.getJSONObject("leader").getString("name"));
+          trainerID_key.add(trainerData.getInt("id"));
         }
       }
     }
 
-    int choice = JOptionPane.showOptionDialog(parent, "Select a target for "
+    int answer = JOptionPane.showOptionDialog(parent, "Select a target for "
         + move, "MOVE CHOICE", 0, 0, image, slot_names.toArray(), null);
 
-    if (choice == -1)
+    if (answer == -1)
       throw new DialogCancelException();
 
-    return answerKey.get(choice);
+    return trainerID_key.get(answer);
   }
 
   public static int getItemChoice(Component parent, JSONObject trainer)
       throws DialogCancelException, JSONException {
 
-    List<String> itemTypeNames = new ArrayList<String>();
-    Map<String, List<String>> itemsByName = new HashMap<String, List<String>>();
-    Map<String, Integer> answerKey = new HashMap<String, Integer>();
     JSONArray items = trainer.getJSONArray("bag");
 
-    int itemID;
-    JSONObject itemData;
-    String itemType, itemName;
+    List<String> itemTypeNames = new ArrayList<String>();
+    Map<String, List<String>> itemsByType = new HashMap<String, List<String>>();
+    Map<String, Integer> answerKey = new HashMap<String, Integer>();
 
     for (int i = 0; i < items.length(); i++) {
-      itemData = items.getJSONObject(i);
-      itemType = itemData.getString("type");
-      itemName = itemData.getString("name");
-      itemID = itemData.getInt("id");
+      JSONObject itemData = items.getJSONObject(i);
+      String itemType = itemData.getString("type");
+      String itemName = itemData.getString("name");
+      int itemID = itemData.getInt("id");
       answerKey.put(itemName, itemID);
 
-      if (!itemTypeNames.contains(itemType)) {
-        if (!itemsByName.keySet().contains(itemType))
-          itemsByName.put(itemType, new ArrayList<String>());
-
+      if (!itemsByType.keySet().contains(itemType)) {
+        itemsByType.put(itemType, new ArrayList<String>());
         itemTypeNames.add(itemType);
-        itemsByName.get(itemType).add(itemName);
       }
+      itemsByType.get(itemType).add(itemName);
     }
 
     int itemTypeChoice = JOptionPane.showOptionDialog(parent,
@@ -122,15 +107,40 @@ public class JPokemonDialog {
     if (itemTypeChoice == -1)
       throw new DialogCancelException();
 
-    itemType = itemTypeNames.get(itemTypeChoice);
+    String itemType = itemTypeNames.get(itemTypeChoice);
+    List<String> itemsInType = itemsByType.get(itemType);
+
     int itemChoice = JOptionPane.showOptionDialog(parent,
         "Select an item to use", "ITEM CHOICE", 0, 0, null,
-        itemsByName.get(itemType).toArray(), null);
+        itemsInType.toArray(), null);
 
     if (itemChoice == -1)
       throw new DialogCancelException();
 
-    itemName = itemsByName.get(itemType).get(itemChoice);
+    String itemName = itemsInType.get(itemChoice);
     return answerKey.get(itemName);
+  }
+
+  public static int getSwapIndex(Component parent, JSONObject trainer)
+      throws DialogCancelException, JSONException {
+
+    JSONArray party = trainer.getJSONArray("pokemon");
+    JSONObject leader = trainer.getJSONObject("leader");
+
+    ImageIcon image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+
+    List<String> names = new ArrayList<String>();
+    for (int i = 1; i < party.length(); i++) {
+      JSONObject pokemon = party.getJSONObject(i);
+      names.add(pokemon.getString("name"));
+    }
+
+    int answer = JOptionPane.showOptionDialog(parent, "Select a Pokemon",
+        "SWAP CHOICE", 0, 0, image, names.toArray(), null);
+
+    if (answer <= 0)
+      throw new DialogCancelException();
+
+    return answer;
   }
 }

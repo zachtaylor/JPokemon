@@ -173,6 +173,7 @@ public class Slot {
     try {
       data = _trainer.toJSONObject();
       data.put("team", team());
+      data.put("leader", _trainer.party().get(0).toJSONObject());
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;
