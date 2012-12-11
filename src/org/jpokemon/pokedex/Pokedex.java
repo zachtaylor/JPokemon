@@ -58,7 +58,7 @@ public class Pokedex implements JPokemonConstants {
     return _data[num - 1];
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
     JSONArray own = new JSONArray();
     JSONArray saw = new JSONArray();

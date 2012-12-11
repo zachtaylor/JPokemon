@@ -69,7 +69,7 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
   public void setState(String state) { // Do nothing
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
@@ -81,7 +81,7 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
       data.put("bag", JSONObject.NULL);
       data.put("pokedex", JSONObject.NULL);
       data.put("progress", JSONObject.NULL);
-      data.put("pokemon", new JSONObject().put("party", party().toJSONArray()));
+      data.put("pokemon", new JSONObject().put("party", party().toJSON()));
 
     } catch (JSONException e) {
       e.printStackTrace();

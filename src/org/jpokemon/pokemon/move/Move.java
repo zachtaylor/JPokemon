@@ -217,7 +217,7 @@ public class Move {
       effect.effect(user, enemy);
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {

@@ -144,7 +144,7 @@ public class BattleService {
     if (battle == null)
       throw new ServiceException(player.name() + " is not in a battle");
 
-    return battle.toJSONObject(player);
+    return battle.toJSON(player);
   }
 
   public static JSONObject enrollableInfo(int battleID) throws ServiceException {
@@ -153,6 +153,6 @@ public class BattleService {
     if (b == null)
       throw new ServiceException("Invalid enrollable battle: " + battleID);
 
-    return b.toJSONObject(null);
+    return b.toJSON(null);
   }
 }

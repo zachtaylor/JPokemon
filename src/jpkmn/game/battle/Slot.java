@@ -167,13 +167,13 @@ public class Slot {
     _trainer.notify((String[]) message.toArray());
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = null;
 
     try {
-      data = _trainer.toJSONObject();
+      data = _trainer.toJSON();
       data.put("team", team());
-      data.put("leader", _trainer.party().get(0).toJSONObject());
+      data.put("leader", _trainer.party().get(0).toJSON());
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;

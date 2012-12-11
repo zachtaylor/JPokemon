@@ -80,11 +80,11 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     return answer;
   }
 
-  public JSONArray toJSONArray() {
+  public JSONArray toJSON() {
     JSONArray data = new JSONArray();
 
     for (Pokemon p : this)
-      data.put(p.toJSONObject());
+      data.put(p.toJSON());
 
     return data;
   }

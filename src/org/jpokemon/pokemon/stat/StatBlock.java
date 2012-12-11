@@ -122,14 +122,14 @@ public class StatBlock {
     }
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
       data.put("points", _points);
 
       for (StatType st : StatType.values())
-        data.put(st.name(), get(st).toJSONObject());
+        data.put(st.name(), get(st).toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();

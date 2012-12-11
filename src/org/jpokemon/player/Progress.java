@@ -40,7 +40,7 @@ public class Progress implements JPokemonConstants {
     return _events[id - 1];
   }
 
-  public JSONArray toJSONArray() {
+  public JSONArray toJSON() {
     JSONArray data = new JSONArray();
 
     for (int i = 0; i < EVENTNUMBER; i++)

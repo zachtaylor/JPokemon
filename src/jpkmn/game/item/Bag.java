@@ -37,11 +37,11 @@ public class Bag {
     return _pockets.get(type);
   }
 
-  public JSONArray toJSONArray() {
+  public JSONArray toJSON() {
     JSONArray data = new JSONArray();
 
     for (Item item : _allItems)
-      data.put(item.toJSONObject());
+      data.put(item.toJSON());
 
     return data;
   }

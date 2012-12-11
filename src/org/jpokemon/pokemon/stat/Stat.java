@@ -55,7 +55,7 @@ public class Stat implements JPokemonConstants {
     doCalculation();
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {

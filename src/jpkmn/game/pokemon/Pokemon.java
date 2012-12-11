@@ -212,7 +212,7 @@ public class Pokemon {
     return condition.remove(i);
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
@@ -222,8 +222,8 @@ public class Pokemon {
       data.put("xp", _xp);
       data.put("xp_needed", xpNeeded());
       data.put("condition", condition.toString());
-      data.put("stats", _stats.toJSONObject());
-      data.put("moves", moves.toJSONArray());
+      data.put("stats", _stats.toJSON());
+      data.put("moves", moves.toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();

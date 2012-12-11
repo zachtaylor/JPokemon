@@ -54,7 +54,7 @@ public class Item {
     return result;
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {

@@ -59,7 +59,7 @@ public class PlayerRegistry implements JPokemonConstants {
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(PlayerRegistry.get(playerID).toJSONObject().toString());
+      writer.write(PlayerRegistry.get(playerID).toJSON().toString());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();

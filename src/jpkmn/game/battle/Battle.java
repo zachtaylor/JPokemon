@@ -118,7 +118,7 @@ public class Battle implements Iterable<Slot> {
     add(slot.run());
   }
 
-  public JSONObject toJSONObject(PokemonTrainer perspective) {
+  public JSONObject toJSON(PokemonTrainer perspective) {
     Slot slot = _slots.get(perspective.id());
 
     JSONObject data = new JSONObject();
@@ -136,7 +136,7 @@ public class Battle implements Iterable<Slot> {
           teams.put(cur.team(), new JSONArray());
         }
 
-        ((JSONArray) teams.get(cur.team())).put(cur.toJSONObject());
+        ((JSONArray) teams.get(cur.team())).put(cur.toJSON());
       }
 
       data.put("teams", teams);

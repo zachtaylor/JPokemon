@@ -98,11 +98,11 @@ public class MoveBlock implements Iterable<Move>, JPokemonConstants {
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 
-  public JSONArray toJSONArray() {
+  public JSONArray toJSON() {
     JSONArray data = new JSONArray();
 
     for (Move m : this)
-      data.put(m.toJSONObject());
+      data.put(m.toJSON());
 
     return data;
   }

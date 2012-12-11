@@ -34,14 +34,14 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     return _data[box];
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("party", _data[0].toJSONArray());
+      data.put("party", _data[0].toJSON());
 
       for (int i = 1; i <= BOXNUMBER; i++)
-        data.put("box" + i, _data[i].toJSONArray());
+        data.put("box" + i, _data[i].toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();

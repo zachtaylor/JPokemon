@@ -26,5 +26,5 @@ public interface PokemonTrainer {
 
   public void setState(String state);
 
-  public JSONObject toJSONObject();
+  public JSONObject toJSON();
 }

@@ -117,7 +117,7 @@ public class Player implements PokemonTrainer {
     _progress.put(id);
   }
 
-  public JSONObject toJSONObject() {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
@@ -126,10 +126,10 @@ public class Player implements PokemonTrainer {
       data.put("cash", cash());
       data.put("badges", badge());
       data.put("area", area());
-      data.put("bag", _bag.toJSONArray());
-      data.put("pokedex", _pokedex.toJSONObject());
-      data.put("progress", _progress.toJSONArray());
-      data.put("pokemon", _storage.toJSONObject());
+      data.put("bag", _bag.toJSON());
+      data.put("pokedex", _pokedex.toJSON());
+      data.put("progress", _progress.toJSON());
+      data.put("pokemon", _storage.toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();
