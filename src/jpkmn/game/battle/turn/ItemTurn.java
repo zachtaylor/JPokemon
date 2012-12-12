@@ -34,8 +34,10 @@ public class ItemTurn extends AbstractTurn {
       else if (_item.effect(target)) {
         if (!_user.trainer().add(target))
           _messages.add("No room for " + target.name());
-        else
+        else {
+          _user.target().party().remove(target);
           _messages.add(target.name() + " was caught!");
+        }
       }
       else
         _messages.add(target.name() + "broke free!");
