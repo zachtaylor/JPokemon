@@ -11,11 +11,11 @@ import jpkmn.game.battle.turn.ItemTurn;
 import jpkmn.game.battle.turn.RunTurn;
 import jpkmn.game.battle.turn.SwapTurn;
 import jpkmn.game.item.Item;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PokemonTrainer;
-import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.player.Player;
+import org.jpokemon.player.PokemonTrainer;
+import org.jpokemon.player.TrainerType;
 import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;

@@ -1,7 +1,8 @@
 package jpkmn.map;
 
 import jpkmn.game.base.ConnectionInfo;
-import jpkmn.game.player.Player;
+
+import org.jpokemon.player.Player;
 
 /**
  * Representation of one Area connecting to another

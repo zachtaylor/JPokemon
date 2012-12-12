@@ -6,9 +6,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.player.Player;
+import org.jpokemon.player.PlayerFactory;
 
 public class CenterButton extends JButton implements ActionListener {
   public CenterButton(WorldView view) {
@@ -23,14 +24,13 @@ public class CenterButton extends JButton implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent arg0) {
     // TODO the right way
-    Player player = PlayerRegistry.get(_window.playerID());
+    Player player = PlayerFactory.get(_window.playerID());
 
     for (Pokemon p : player.party()) {
       p.healDamage(p.maxHealth());
     }
 
-    player.notify("Your Pokemon have been fully healed!",
-        "Please come again!");
+    player.notify("Your Pokemon have been fully healed!", "Please come again!");
   }
 
   private GameWindow _window;

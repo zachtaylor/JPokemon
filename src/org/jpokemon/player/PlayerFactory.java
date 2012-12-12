@@ -1,4 +1,4 @@
-package jpkmn.game.player;
+package org.jpokemon.player;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,8 +14,9 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.player.Player;
 
-public class PlayerRegistry implements JPokemonConstants {
+public class PlayerFactory implements JPokemonConstants {
   public static Player get(int id) {
     if (players.get(id) == null)
       throw new IllegalArgumentException("Could not retrieve PlayerID: " + id);
@@ -23,7 +24,7 @@ public class PlayerRegistry implements JPokemonConstants {
     return players.get(id);
   }
 
-  public static Player start(String name, int pokemonNumber) {
+  public static Player create(String name, int pokemonNumber) {
     Player player = newPlayer();
 
     player.name(name);
@@ -59,7 +60,7 @@ public class PlayerRegistry implements JPokemonConstants {
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(PlayerRegistry.get(playerID).toJSON().toString());
+      writer.write(PlayerFactory.get(playerID).toJSON().toString());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();

@@ -1,4 +1,4 @@
-package jpkmn.game.player;
+package org.jpokemon.player;
 
 import org.jpokemon.JPokemonConstants;
 

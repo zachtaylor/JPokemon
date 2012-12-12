@@ -3,7 +3,7 @@ package jpkmn.game.battle;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.game.player.PokemonTrainer;
+import org.jpokemon.player.PokemonTrainer;
 
 public class BattleRegistry {
   public static int createEnrollable() {

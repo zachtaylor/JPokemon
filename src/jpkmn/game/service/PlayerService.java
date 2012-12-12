@@ -2,14 +2,14 @@ package jpkmn.game.service;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.AreaRegistry;
 import jpkmn.map.Direction;
 import jpkmn.map.Event;
 
+import org.jpokemon.player.Player;
+import org.jpokemon.player.PlayerFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ public class PlayerService {
     Player p;
 
     try {
-      p = PlayerRegistry.load(name);
+      p = PlayerFactory.load(name);
     } catch (LoadException e) {
       e.printStackTrace();
       throw new ServiceException(e.getMessage());
@@ -37,13 +37,13 @@ public class PlayerService {
 
   public static JSONObject savePlayer(int playerID) throws ServiceException {
     try {
-      PlayerRegistry.save(playerID);
+      PlayerFactory.save(playerID);
     } catch (LoadException e) {
       throw new ServiceException(e.getMessage());
     }
 
     try {
-      return JSONMaker.make(PlayerRegistry.get(playerID));
+      return JSONMaker.make(PlayerFactory.get(playerID));
     } catch (JSONException e) {
       e.printStackTrace();
       throw new ServiceException("There was an error. It's not your fault.");
@@ -63,7 +63,7 @@ public class PlayerService {
       throw new ServiceException("Starter not supported: " + starter);
 
     try {
-      Player player = PlayerRegistry.start(name, pokemon);
+      Player player = PlayerFactory.create(name, pokemon);
       return JSONMaker.make(player);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -85,7 +85,7 @@ public class PlayerService {
   }
 
   public static JSONObject pokemonInfo(int pID, int i) throws ServiceException {
-    Player player = PlayerRegistry.get(pID);
+    Player player = PlayerFactory.get(pID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");
@@ -100,7 +100,7 @@ public class PlayerService {
   }
 
   public static JSONObject areaInfo(int playerID) throws ServiceException {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
@@ -118,7 +118,7 @@ public class PlayerService {
   }
 
   public static void areaChange(int pID, String dir) throws ServiceException {
-    Player player = PlayerRegistry.get(pID);
+    Player player = PlayerFactory.get(pID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");
@@ -144,7 +144,7 @@ public class PlayerService {
   }
 
   public static void triggerEvent(int pID, int eID) throws ServiceException {
-    Player player = PlayerRegistry.get(pID);
+    Player player = PlayerFactory.get(pID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");

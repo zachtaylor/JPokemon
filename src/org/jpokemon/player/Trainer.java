@@ -1,4 +1,4 @@
-package jpkmn.game.player;
+package org.jpokemon.player;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;

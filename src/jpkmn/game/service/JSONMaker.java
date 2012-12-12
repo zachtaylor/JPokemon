@@ -1,11 +1,11 @@
 package jpkmn.game.service;
 
-import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
 
+import org.jpokemon.player.Player;
 import org.jpokemon.pokemon.stat.StatType;
 import org.json.JSONArray;
 import org.json.JSONException;

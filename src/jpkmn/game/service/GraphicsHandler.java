@@ -9,11 +9,11 @@ import javax.swing.JOptionPane;
 import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.img.ImageFinder;
 
+import org.jpokemon.player.Player;
+import org.jpokemon.player.PlayerFactory;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
@@ -24,7 +24,7 @@ public class GraphicsHandler {
     PokemonStorageUnit party = null;
 
     try {
-      zach = PlayerRegistry.load("Zach");
+      zach = PlayerFactory.load("Zach");
 
     } catch (LoadException le) {
       le.printStackTrace();

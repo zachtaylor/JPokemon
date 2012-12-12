@@ -42,8 +42,9 @@ public class Stat implements JPokemonConstants {
   public void effect(int power) {
     _delta += power;
 
-    if (Math.abs(_delta) > STATCHANGEMAX)
-      _delta = (int) Math.copySign(STATCHANGEMAX, _delta);
+    if (Math.abs(_delta) > STAT_CHANGE_MAX_DELTA)
+      _delta = (int) Math.copySign(STAT_CHANGE_MAX_DELTA, _delta);
+    
 
     doCalculation();
   }

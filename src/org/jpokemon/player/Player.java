@@ -1,4 +1,4 @@
-package jpkmn.game.player;
+package org.jpokemon.player;
 
 import java.util.Scanner;
 
@@ -8,7 +8,6 @@ import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.service.GraphicsHandler;
 
-import org.jpokemon.player.Progress;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
@@ -71,7 +70,7 @@ public class Player implements PokemonTrainer {
   public TrainerType type() {
     return TrainerType.PLAYER;
   }
-  
+
   public double xpFactor() {
     return 0;
   }

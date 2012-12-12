@@ -3,8 +3,9 @@ package jpkmn.game.battle.turn;
 import jpkmn.game.battle.Slot;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
-import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.player.TrainerType;
 
 public class ItemTurn extends AbstractTurn {
   public ItemTurn(Slot user, Item item, int targetID) {

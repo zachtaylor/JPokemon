@@ -8,10 +8,10 @@ import java.util.Map;
 
 import jpkmn.game.battle.turn.AbstractTurn;
 import jpkmn.game.item.Item;
-import jpkmn.game.player.PokemonTrainer;
-import jpkmn.game.player.TrainerType;
 import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.player.PokemonTrainer;
+import org.jpokemon.player.TrainerType;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.json.JSONArray;

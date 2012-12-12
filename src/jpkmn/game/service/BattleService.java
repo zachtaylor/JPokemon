@@ -4,19 +4,19 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.player.Player;
-import jpkmn.game.player.PlayerRegistry;
-import jpkmn.game.player.PokemonTrainer;
-import jpkmn.game.player.Trainer;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
 
+import org.jpokemon.player.Player;
+import org.jpokemon.player.PlayerFactory;
+import org.jpokemon.player.PokemonTrainer;
+import org.jpokemon.player.Trainer;
 import org.json.JSONObject;
 
 public class BattleService {
   public static void startWild(int playerID) throws ServiceException {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
@@ -42,7 +42,7 @@ public class BattleService {
 
   public static void startWater(int playerID, String rodName)
       throws ServiceException {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
@@ -85,7 +85,7 @@ public class BattleService {
   }
 
   public static void startBattle(int pID, int tID) throws ServiceException {
-    Player player = PlayerRegistry.get(pID);
+    Player player = PlayerFactory.get(pID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + pID + " not found");
@@ -108,35 +108,35 @@ public class BattleService {
   }
 
   public static void attack(int playerID, int enemySlotID, int moveIndex) {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
     Battle battle = BattleRegistry.get(player);
 
     battle.fight(player.id(), enemySlotID, moveIndex);
   }
 
   public static void item(int playerID, int targetID, int itemID) {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
     Battle battle = BattleRegistry.get(player);
 
     battle.item(player.id(), targetID, itemID);
   }
 
   public static void swap(int playerID, int slotIndex) {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
     Battle battle = BattleRegistry.get(player);
 
     battle.swap(player.id(), slotIndex);
   }
 
   public static void run(int playerID) {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
     Battle battle = BattleRegistry.get(player);
 
     battle.run(player.id());
   }
 
   public static JSONObject info(int playerID) throws ServiceException {
-    Player player = PlayerRegistry.get(playerID);
+    Player player = PlayerFactory.get(playerID);
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
 

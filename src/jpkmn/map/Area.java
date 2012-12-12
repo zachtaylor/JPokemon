@@ -8,13 +8,13 @@ import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.ConnectionInfo;
 import jpkmn.game.base.EventInfo;
 import jpkmn.game.base.SpawnInfo;
-import jpkmn.game.player.Trainer;
-import jpkmn.game.player.Player;
 import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.spawner.EventSpawner;
-import jpkmn.map.spawner.TrainerSpawner;
 import jpkmn.map.spawner.PokemonSpawner;
+import jpkmn.map.spawner.TrainerSpawner;
 
+import org.jpokemon.player.Player;
+import org.jpokemon.player.Trainer;
 import org.json.JSONArray;
 
 /**
