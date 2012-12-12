@@ -71,6 +71,10 @@ public class Player implements PokemonTrainer {
   public TrainerType type() {
     return TrainerType.PLAYER;
   }
+  
+  public double xpFactor() {
+    return 0;
+  }
 
   public PokemonStorageUnit party() {
     return _storage.get(0);

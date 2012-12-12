@@ -119,12 +119,6 @@ public class Slot {
     return _field.damageModifier(m);
   }
 
-  public int getXPAwarded() {
-    double factor = _trainer.type().xpFactor();
-    factor *= (Math.random() * .5 + 2);
-    return (int) (factor * leader().level());
-  }
-
   public void addRival(Slot s) {
     if (_rivalsLists.get(leader()) == null)
       _rivalsLists.put(leader(), new ArrayList<Pokemon>());
@@ -140,7 +134,7 @@ public class Slot {
 
   public void removeRival(Slot s) {
     Pokemon p = s.leader();
-    int xpReward = (int) (s.trainer().type().xpFactor() * (p.level() + 6));
+    int xpReward = (int) (s.trainer().xpFactor() * (p.level() + 6));
 
     List<Pokemon> earnList = new ArrayList<Pokemon>();
     List<String> message = new ArrayList<String>();

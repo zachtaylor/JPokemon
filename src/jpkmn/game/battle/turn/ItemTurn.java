@@ -20,7 +20,7 @@ public class ItemTurn extends AbstractTurn {
     if (needSwap())
       return executeForcedSwap();
 
-    Pokemon target = _user.party().get(_itemIndex);
+    Pokemon target = _user.target().party().get(_itemIndex);
 
     if (_item.type() == ItemType.MACHINE)
       _messages.add("Machines aren't allowed in battle!");
@@ -29,7 +29,7 @@ public class ItemTurn extends AbstractTurn {
     else if (_item.type() == ItemType.POTION)
       _item.effect(target);
     else if (_item.type() == ItemType.BALL) {
-      if (_user.trainer().type() != TrainerType.WILD)
+      if (_user.target().trainer().type() != TrainerType.WILD)
         _messages.add("Cannot use a ball against " + target.name() + "!");
       else if (_item.effect(target)) {
         if (!_user.trainer().add(target))

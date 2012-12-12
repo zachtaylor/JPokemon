@@ -54,6 +54,18 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
     return _type;
   }
 
+  public double xpFactor() {
+    switch (_type) {
+    case GYM:
+      return GYM_EXPERIENCE_MODIFIER;
+    case RIVAL:
+    case TRAINER:
+      return TRAINER_EXPERIENCE_MODIFIER;
+    default:
+      return 1.0;
+    }
+  }
+
   public PokemonStorageUnit party() {
     return _party;
   }

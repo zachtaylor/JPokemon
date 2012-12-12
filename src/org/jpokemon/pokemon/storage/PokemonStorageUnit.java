@@ -3,7 +3,6 @@ package org.jpokemon.pokemon.storage;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
-import jpkmn.game.player.PokemonTrainer;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.json.JSONArray;
@@ -145,6 +144,5 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   private Pokemon[] _data;
-  private PokemonTrainer _trainer;
   private int _size, _amount, _version;
 }

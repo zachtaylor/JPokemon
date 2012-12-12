@@ -8,15 +8,17 @@ import org.json.JSONObject;
 public interface PokemonTrainer {
   public int id();
 
-  public TrainerType type();
+  public String name();
+
+  public void name(String s);
 
   public int cash();
 
   public void cash(int c);
 
-  public String name();
-
-  public void name(String s);
+  public TrainerType type();
+  
+  public double xpFactor();
 
   public PokemonStorageUnit party();
 

@@ -8,17 +8,4 @@ public enum TrainerType implements JPokemonConstants {
   public static TrainerType valueOf(int t) {
     return TrainerType.values()[t];
   }
-
-  public double xpFactor() {
-    switch (this) {
-    case GYM:
-      return GYM_EXPERIENCE_MODIFIER;
-    case RIVAL: case TRAINER:
-      return TRAINER_EXPERIENCE_MODIFIER;
-    case PLAYER:
-      return 0;
-    default:
-      return 1.0;
-    }
-  }
 }
