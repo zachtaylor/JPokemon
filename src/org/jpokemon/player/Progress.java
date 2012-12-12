@@ -4,6 +4,7 @@ import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * A representation of the progress a Player has made
@@ -50,19 +51,15 @@ public class Progress implements JPokemonConstants {
     return data;
   }
 
-  public void load(String s) throws LoadException {
+  public void loadJSON(JSONArray json) throws LoadException {
     try {
-      if (!s.startsWith("PROGRESS: "))
-        throw new Exception();
-
-      s = s.substring("PROGRESS: ".length(), s.length() - 1);
-
-      for (String event : s.split(" "))
-        put(Integer.parseInt(event) + 1);
-
+      for (int i = 0; i < json.length(); i++)
+        put(json.getInt(i) + 1);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new LoadException("Progress could not load: " + s);
+      if (e instanceof JSONException)
+        e.printStackTrace();
+
+      throw new LoadException("Progress could not load: " + json);
     }
   }
 

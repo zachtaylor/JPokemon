@@ -63,7 +63,7 @@ public class Player implements PokemonTrainer {
   public void cash(int cash) {
     _cash = cash;
   }
-  
+
   public Item item(int itemID) {
     return _bag.get(itemID);
   }
@@ -153,7 +153,8 @@ public class Player implements PokemonTrainer {
       _pokedex.load(scan.nextLine());
 
       // Load progress
-      _progress.load(scan.nextLine());
+      _progress.loadJSON(null); // BROKEN
+      scan.nextLine(); // BROKEN
 
       // load pcstorage
       _storage.load(scan);

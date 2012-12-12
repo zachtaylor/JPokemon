@@ -48,7 +48,7 @@ public class ProgressTest extends TestCase {
     progress.put(7);
 
     try {
-      other.load(progress.save());
+      other.loadJSON(progress.toJSON());
     } catch (LoadException e) {
       e.printStackTrace();
       fail("Should not cause LoadException");

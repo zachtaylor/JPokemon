@@ -87,39 +87,6 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     }
   }
 
-  public void testSaveEmpty() {
-    String expected = "DEX: \n";
-
-    assertEquals(expected, dex.save());
-  }
-
-  public void testSaveSome() {
-    Map<Integer, PokedexStatus> data = new HashMap<Integer, PokedexStatus>();
-
-    int cur;
-
-    for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * defaultSize);
-      dex.saw(cur + 1);
-      data.put(cur, PokedexStatus.SAW);
-    }
-
-    for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * defaultSize);
-      dex.own(cur + 1);
-      data.put(cur, PokedexStatus.OWN);
-    }
-
-    String expected = "DEX: ";
-    for (int i = 0; i < defaultSize; i++) {
-      if (data.get(i) != null)
-        expected += i + "-" + data.get(i).ordinal() + " ";
-    }
-    expected += "\n";
-
-    assertEquals(expected, dex.save());
-  }
-
   public void testLoad() {
     Map<Integer, PokedexStatus> data = new HashMap<Integer, PokedexStatus>();
 
