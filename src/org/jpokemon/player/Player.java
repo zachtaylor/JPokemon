@@ -9,7 +9,6 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.game.service.GraphicsHandler;
 
 import org.jpokemon.pokedex.Pokedex;
-import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
@@ -80,7 +79,7 @@ public class Player implements PokemonTrainer {
   }
 
   public boolean add(Pokemon p) {
-    putPokedex(p.number(), PokedexStatus.OWN);
+    _pokedex.own(p.number());
 
     for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p))
@@ -101,23 +100,12 @@ public class Player implements PokemonTrainer {
       _graphics.showBattle();
   }
 
-  public PokedexStatus getPokedex(int id) {
-    return _pokedex.status(id);
+  public Pokedex pokedex() {
+    return _pokedex;
   }
 
-  public void putPokedex(int id, PokedexStatus status) {
-    if (status == PokedexStatus.SAW)
-      _pokedex.saw(id);
-    else if (status == PokedexStatus.OWN)
-      _pokedex.own(id);
-  }
-
-  public boolean getEvent(int id) {
-    return _progress.get(id);
-  }
-
-  public void putEvent(int id) {
-    _progress.put(id);
+  public Progress events() {
+    return _progress;
   }
 
   public JSONObject toJSON() {

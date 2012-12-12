@@ -48,7 +48,7 @@ public class Event {
   }
 
   public boolean test(Player p) {
-    if (p.getEvent(_id))
+    if (p.events().get(_id))
       return false;
 
     switch (_type) {
@@ -81,7 +81,7 @@ public class Event {
     break;
     case ITEM:
       p.item(_int1).add(_int2);
-      p.putEvent(_id);
+      p.events().put(_id);
     break;
     }
     // TODO

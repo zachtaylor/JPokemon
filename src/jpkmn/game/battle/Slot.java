@@ -16,7 +16,6 @@ import jpkmn.game.pokemon.Pokemon;
 import org.jpokemon.player.Player;
 import org.jpokemon.player.PokemonTrainer;
 import org.jpokemon.player.TrainerType;
-import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
@@ -129,7 +128,7 @@ public class Slot {
       rivalsList.add(s.leader());
 
     if (_trainer.type() == TrainerType.PLAYER)
-      ((Player) _trainer).putPokedex(s.leader().number(), PokedexStatus.SAW);
+      ((Player) _trainer).pokedex().saw(s.leader().number());
   }
 
   public void removeRival(Slot s) {
