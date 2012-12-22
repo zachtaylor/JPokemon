@@ -1,6 +1,6 @@
 package jpkmn.game.battle.turn;
 
-import jpkmn.game.battle.Slot;
+import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 import jpkmn.game.pokemon.Pokemon;

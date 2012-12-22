@@ -1,4 +1,4 @@
-package jpkmn.game.battle;
+package jpkmn.game.battle.slot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class Slot {
     _bide = false;
     _team = team;
 
-    _field = new Field(this);
+    _effects = new ArrayList<SlotEffect>();
     _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
   }
 
@@ -53,6 +53,39 @@ public class Slot {
 
   public void target(Slot target) {
     _target = target;
+  }
+
+  public void addEffect(SlotEffect e) {
+    if (!_effects.contains(e))
+      _effects.add(e);
+  }
+
+  public String[] applyEffects() {
+    List<String> messages = new ArrayList<String>();
+
+    for (SlotEffect e : _effects) {
+      String message = e.apply();
+
+      if (message != null)
+        messages.add(message);
+    }
+
+    messages.addAll(rollDownEffectDuration());
+    return messages.toArray(new String[messages.size()]);
+  }
+
+  private List<String> rollDownEffectDuration() {
+    List<String> messages = new ArrayList<String>();
+    List<SlotEffect> nextEffects = new ArrayList<SlotEffect>();
+
+    for (SlotEffect e : _effects)
+      if (e.reduceDuration())
+        nextEffects.add(e);
+      else
+        messages.add(e.name() + " dissipated");
+
+    _effects = nextEffects;
+    return messages;
   }
 
   public void moveIndex(int moveIndex) {
@@ -111,11 +144,18 @@ public class Slot {
 
     leader().takeDamage(damage);
 
-    _field.rollDownDuration();
+    rollDownEffectDuration();
   }
 
   public double damageModifier(Move m) {
-    return _field.damageModifier(m);
+    double damageModifier = 1.0;
+
+    for (SlotEffect e : _effects)
+      damageModifier *= e.damageModifier(m);
+
+    // APPLY WEATHER CHANGES HERE WHEN APPLICABLE
+
+    return damageModifier;
   }
 
   public void addRival(Slot s) {
@@ -176,10 +216,10 @@ public class Slot {
   }
 
   private int _team;
-  private Field _field;
   private Slot _target;
   private boolean _bide;
   private PokemonTrainer _trainer;
+  private List<SlotEffect> _effects;
   private int _bidedamage, _index, _itemID;
   private Map<Pokemon, List<Pokemon>> _rivalsLists;
 }

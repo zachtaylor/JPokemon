@@ -1,12 +1,12 @@
 package jpkmn.game.battle.turn;
 
+import jpkmn.game.battle.Battle;
+import jpkmn.game.battle.slot.Slot;
+import jpkmn.game.pokemon.Condition.Issue;
+import jpkmn.game.pokemon.Pokemon;
+
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
-
-import jpkmn.game.battle.Battle;
-import jpkmn.game.battle.Slot;
-import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.pokemon.Condition.Issue;
 
 public class AttackTurn extends AbstractTurn {
   public AttackTurn(Slot user, Move move) {
@@ -84,8 +84,8 @@ public class AttackTurn extends AbstractTurn {
           + " damage!");
       targetSlot.takeDamage(_damage);
     }
-    applyMoveEffects();
 
+    _move.applyEffects(_user, _user.target(), _damage);
     return getNotifications();
   }
 
@@ -102,13 +102,6 @@ public class AttackTurn extends AbstractTurn {
     if (turn instanceof AttackTurn)
       return p2.speed() - p1.speed();
     return 1;
-  }
-
-  private void applyMoveEffects() {
-    Pokemon leader = _user.leader();
-    Pokemon enemy = _user.target().leader();
-
-    _move.applyEffects(leader, enemy);
   }
 
   private String[] nullify(String reason) {

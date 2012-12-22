@@ -22,8 +22,10 @@ public interface JPokemonConstants {
   public static final int STARTER_POKEMON_LEVEL = 5;
 
   public static final int STAT_CHANGE_MAX_DELTA = 6;
+  public static final int SHIELD_ROUND_DURATION = 5;
   public static final double TYPE_ADVANTAGE_MODIFIER = 2.0;
-  public static final double TYPE_DISADVANTAGE_MODIFIER = .5;
+  public static final double SHIELD_REDUCTION_MODIFIER = 1.0;
+  public static final double TYPE_DISADVANTAGE_MODIFIER = 0.5;
 
   public static final double GYM_EXPERIENCE_MODIFIER = 1.7;
   public static final double TRAINER_EXPERIENCE_MODIFIER = 1.3;

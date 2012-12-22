@@ -1,17 +1,16 @@
-package jpkmn.game.battle;
+package jpkmn.game.battle.turn;
 
-import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import jpkmn.game.battle.turn.AbstractTurn;
+import jpkmn.game.battle.Battle;
+import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.pokemon.Condition;
 
 public class Round {
   public Round(Battle b) {
     _battle = b;
     _turns = new PriorityQueue<AbstractTurn>();
-    new ArrayList<Slot>();
   }
 
   public int size() {
@@ -39,17 +38,16 @@ public class Round {
       verifyTurnList();
     }
 
-    applyConditionEffects();
-    applyForceNextAttacks();
+    applyEndOfRoundEffects();
   }
 
   private void verifyTurnList() {
     Slot slot;
 
     for (AbstractTurn turn : _turns) {
-      slot = turn.getUserSlot();
+      slot = turn.slot();
 
-      if (slot.party().size() == 0 || slot.party().awake() == 0) {
+      if (slot.party().awake() == 0) {
         _turns.remove(turn);
         _battle.remove(slot);
       }
@@ -66,15 +64,21 @@ public class Round {
     }
   }
 
-  private void applyForceNextAttacks() {
+  private void applyEndOfRoundEffects() {
+    // Force next attacks
     for (Slot slot : _battle)
       if (slot.leader().hasIssue(Condition.Issue.WAIT))
         _battle.add(slot.attack());
-  }
 
-  private void applyConditionEffects() {
+    // Condition effects
     for (Slot slot : _battle) {
       String[] messages = slot.leader().condition.applyEffects();
+      notifyAllTrainers(messages);
+    }
+
+    // Slot effects
+    for (Slot slot : _battle) {
+      String[] messages = slot.applyEffects();
       notifyAllTrainers(messages);
     }
   }

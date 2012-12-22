@@ -1,6 +1,6 @@
 package jpkmn.game.battle.turn;
 
-import jpkmn.game.battle.Slot;
+import jpkmn.game.battle.slot.Slot;
 
 public class SwapTurn extends AbstractTurn {
   public SwapTurn(Slot user, int slotIndex) {

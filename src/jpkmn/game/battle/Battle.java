@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.battle.turn.AbstractTurn;
+import jpkmn.game.battle.turn.Round;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 
@@ -58,10 +60,10 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void add(AbstractTurn turn) {
-    if (_haveSelectedTurn.contains(turn.getUserSlot()))
+    if (_haveSelectedTurn.contains(turn.slot()))
       return;
 
-    _haveSelectedTurn.add(turn.getUserSlot());
+    _haveSelectedTurn.add(turn.slot());
     _round.add(turn);
 
     if (_round.size() == _slots.size())

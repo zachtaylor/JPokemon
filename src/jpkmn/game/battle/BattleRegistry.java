@@ -3,6 +3,8 @@ package jpkmn.game.battle;
 import java.util.HashMap;
 import java.util.Map;
 
+import jpkmn.game.battle.slot.Slot;
+
 import org.jpokemon.player.PokemonTrainer;
 
 public class BattleRegistry {

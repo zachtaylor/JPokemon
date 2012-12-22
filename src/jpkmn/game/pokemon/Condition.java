@@ -121,14 +121,6 @@ public class Condition {
         remove(Issue.FREEZE);
         messages.add(pkmn.name() + " broke out of the ice!");
       }
-      else if (current == Issue.SEEDVIC) {
-        pkmn.takeDamage(pkmn.maxHealth() / 10);
-        messages.add(pkmn.name() + " was injured by the seeds!");
-      }
-      else if (current == Issue.SEEDUSR) {
-        pkmn.healDamage(pkmn.maxHealth() / 12);
-        messages.add(pkmn.name() + " recovered health!");
-      }
       else if (current == Issue.POISON) {
         pkmn.takeDamage(pkmn.maxHealth() / 10);
         messages.add(pkmn.name() + " was injured by the poison!");

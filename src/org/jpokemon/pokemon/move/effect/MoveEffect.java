@@ -1,5 +1,8 @@
 package org.jpokemon.pokemon.move.effect;
 
+import jpkmn.game.battle.slot.Slot;
+import jpkmn.game.battle.slot.SlotEffect;
+import jpkmn.game.battle.slot.SlotEffectType;
 import jpkmn.game.battle.Target;
 import jpkmn.game.pokemon.Condition;
 import jpkmn.game.pokemon.Pokemon;
@@ -7,27 +10,23 @@ import jpkmn.game.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;
 
 public class MoveEffect {
-  public void effect(Pokemon user, Pokemon enemy) {
+  public void effect(Slot user, Slot enemy, int damage) {
     if (chance < Math.random())
       return; // didn't hit
 
     MoveEffectType type = MoveEffectType.valueOf(this.type);
     Target target = Target.valueOf(this.target);
 
-    Pokemon pokemon = target == Target.SELF ? user : enemy;
+    Pokemon pokemon = target == Target.SELF ? user.leader() : enemy.leader();
 
     if (type.isStatModifier())
       pokemon.getStat(StatType.valueOf(type.toString())).effect(power);
     else if (type.isConditionModifier())
       pokemon.addIssue(Condition.Issue.valueOf(type.toString()));
-    else if (type == MoveEffectType.HEAL)
+    else if (type.isFieldModifier())
+      user.addEffect(new SlotEffect(SlotEffectType.valueOf(type.toString()), user, enemy));
+    else if (type == MoveEffectType.HEALTH_MOD)
       pokemon.healDamage((int) (pokemon.maxHealth() * power / 1000.0));
-    else if (type == MoveEffectType.KAMIKAZE)
-      pokemon.takeDamage((int) (pokemon.maxHealth() * power / 1000.0));
-    else if (type == MoveEffectType.LEECH) {
-      enemy.addIssue(Condition.Issue.SEEDVIC);
-      user.addIssue(Condition.Issue.SEEDUSR);
-    }
   }
 
   private double chance;

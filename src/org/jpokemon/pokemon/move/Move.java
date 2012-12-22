@@ -2,6 +2,7 @@ package org.jpokemon.pokemon.move;
 
 import jpkmn.game.pokemon.Pokemon;
 
+import jpkmn.game.battle.slot.Slot;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
 import org.json.JSONException;
@@ -105,17 +106,15 @@ public class Move {
    */
   public void setNumber(int number) {
     if (number == -1) {
-      _enabled = false;
       _info = null;
     }
     else {
-      _enabled = true;
-
       _info = MoveInfo.get(number);
       _pp = _ppMax = _info.getPp();
       _type = Type.valueOf(_info.getType());
       _style = MoveStyle.valueOf(_info.getStyle());
     }
+    _enabled = number > 0;
   }
 
   /**
@@ -210,11 +209,11 @@ public class Move {
    * Applies any additional effects of this Move to the appropriate Target
    * 
    * @param user User of the move
-   * @param enemy Victim of the move
+   * @param target Victim of the move
    */
-  public void applyEffects(Pokemon user, Pokemon enemy) {
+  public void applyEffects(Slot user, Slot target, int damage) {
     for (MoveEffect effect : _info.getEffects())
-      effect.effect(user, enemy);
+      effect.effect(user, target, damage);
   }
 
   public JSONObject toJSON() {

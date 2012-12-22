@@ -2,7 +2,7 @@ package jpkmn.game.battle.turn;
 
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.battle.Slot;
+import jpkmn.game.battle.slot.Slot;
 
 public class RunTurn extends AbstractTurn {
   public RunTurn(Slot user) {

@@ -3,7 +3,7 @@ package jpkmn.game.battle.turn;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.game.battle.Slot;
+import jpkmn.game.battle.slot.Slot;
 
 public abstract class AbstractTurn implements Comparable<AbstractTurn> {
   public AbstractTurn(Slot user) {
@@ -12,7 +12,7 @@ public abstract class AbstractTurn implements Comparable<AbstractTurn> {
     _messages = new ArrayList<String>();
   }
 
-  public Slot getUserSlot() {
+  public Slot slot() {
     return _user;
   }
 
