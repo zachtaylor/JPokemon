@@ -8,14 +8,13 @@ import jpkmn.game.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
-public class AttackTurn extends AbstractTurn {
+public class AttackTurn extends Turn {
   public AttackTurn(Slot user, Move move) {
     super(user);
     _move = move;
-
     _absolute = false;
 
-    _messages.add(user.leader().name() + " used " + move.name() + "!");
+    addMessage(user.leader().name() + " used " + move.name() + "!");
   }
 
   public void absoluteDamage(int d) {
@@ -23,55 +22,58 @@ public class AttackTurn extends AbstractTurn {
     _absolute = true;
   }
 
-  public String[] execute() {
-    if (needSwap())
-      return executeForcedSwap();
-
-    Slot targetSlot = _user.target();
-    Pokemon leader = _user.leader();
+  protected void doExecute() {
+    Slot targetSlot = slot().target();
+    Pokemon leader = slot().leader();
 
     if (!leader.hasIssue(Issue.WAIT)) {
-      // 1 Measure if the user can attack
-      if (!leader.condition.canAttack())
-        return nullify(leader.condition.toString());
-
-      // 2 Reduce and measure PP
-      else if (!_move.enabled())
-        return nullify("Move is not enabled!");
-
-      // 3 Measure accuracy
+      if (!leader.condition.canAttack()) {
+        addMessage(leader.condition.toString());
+        return;
+      }
+      else if (!_move.enabled()) {
+        addMessage("Move is not enabled!");
+        return;
+      }
       else if (!_move.use()) {
+        addMessage("It missed.");
+
         if (_move.hurtUserOnMiss()) {
           int d = Battle.computeDamage(leader, _move, targetSlot.leader()) / 8;
-          _user.takeDamage(d);
+          slot().takeDamage(d);
+          addMessage(leader.name() + " took " + d + " recoil damage!");
         }
 
-        return nullify("It missed.");
+        return;
       }
     }
 
     if (_move.style() == MoveStyle.DELAYNEXT) {
-      if (leader.removeIssue(Issue.WAIT))
-        return nullify("Resting this turn.");
+      if (leader.removeIssue(Issue.WAIT)) {
+        addMessage("Resting this turn");
+        return;
+      }
       else
         leader.addIssue(Issue.WAIT);
     }
     else if (_move.style() == MoveStyle.DELAYBEFORE) {
       if (!leader.removeIssue(Issue.WAIT)) {
         leader.addIssue(Issue.WAIT);
-        return nullify("Resting this turn.");
+        addMessage("Resting this turn");
+        return;
       }
     }
     else if (_move.style() == MoveStyle.OHKO) {
       int levelDiff = leader.level() - targetSlot.leader().level();
 
-      if (levelDiff < 0)
-        return nullify("Cannot perform OHKO on " + targetSlot.leader().name());
-      else if ((levelDiff + 30.0) / 100.0 <= Math.random())
-        return nullify("It missed.");
+      if (levelDiff < 0 || (levelDiff + 30.0) / 100.0 <= Math.random()) {
+        addMessage("It missed.");
+        return;
+      }
     }
     else if (_move.style() == MoveStyle.MISC) { // Misc
-      return nullify("This doesn't work yet. Sorry about that!");
+      addMessage("This doesn't work yet. Sorry about that!");
+      return;
     }
 
     if (!_absolute) {
@@ -80,34 +82,26 @@ public class AttackTurn extends AbstractTurn {
     }
 
     if (_move.style() != MoveStyle.STATUS) {
-      _messages.add(targetSlot.leader().name() + " took " + _damage
-          + " damage!");
+      addMessage(targetSlot.leader().name() + " took " + _damage + " damage!");
       targetSlot.takeDamage(_damage);
     }
 
-    _move.applyEffects(_user, _user.target(), _damage);
-    return getNotifications();
+    _move.applyEffects(slot(), slot().target(), _damage);
   }
 
   @Override
-  public int compareTo(AbstractTurn turn) {
-    if (turn.needSwap()) {
-      if (needSwap())
+  public int compareTo(Turn t) {
+    if (t._needSwap) {
+      if (_needSwap)
         return 0;
+
       return 1;
     }
 
-    Pokemon p1 = _user.leader(), p2 = turn._user.leader();
+    if (t instanceof AttackTurn)
+      return t.slot().leader().speed() - slot().leader().speed();
 
-    if (turn instanceof AttackTurn)
-      return p2.speed() - p1.speed();
     return 1;
-  }
-
-  private String[] nullify(String reason) {
-    _messages.add(reason);
-
-    return getNotifications();
   }
 
   private Move _move;

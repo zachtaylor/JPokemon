@@ -10,20 +10,18 @@ import jpkmn.game.pokemon.Condition;
 public class Round {
   public Round(Battle b) {
     _battle = b;
-    _turns = new PriorityQueue<AbstractTurn>();
+    _turns = new PriorityQueue<Turn>();
   }
 
   public int size() {
     return _turns.size();
   }
 
-  public void add(AbstractTurn t) {
+  public void add(Turn t) {
     _turns.add(t);
   }
 
-  public void play() {
-    AbstractTurn turn;
-
+  public void execute() {
     // Setup rivals
     for (Slot a : _battle) {
       for (Slot b : _battle) {
@@ -32,9 +30,11 @@ public class Round {
       }
     }
 
+    // MADNESS
     while (!_turns.isEmpty()) {
-      turn = _turns.remove();
-      notifyAllTrainers(turn.execute());
+      Turn turn = _turns.remove();
+      turn.execute();
+      notifyAllTrainers(turn.getMessages());
       verifyTurnList();
     }
 
@@ -44,7 +44,7 @@ public class Round {
   private void verifyTurnList() {
     Slot slot;
 
-    for (AbstractTurn turn : _turns) {
+    for (Turn turn : _turns) {
       slot = turn.slot();
 
       if (slot.party().awake() == 0) {
@@ -65,11 +65,6 @@ public class Round {
   }
 
   private void applyEndOfRoundEffects() {
-    // Force next attacks
-    for (Slot slot : _battle)
-      if (slot.leader().hasIssue(Condition.Issue.WAIT))
-        _battle.add(slot.attack());
-
     // Condition effects
     for (Slot slot : _battle) {
       String[] messages = slot.leader().condition.applyEffects();
@@ -81,6 +76,11 @@ public class Round {
       String[] messages = slot.applyEffects();
       notifyAllTrainers(messages);
     }
+
+    // Force next attacks
+    for (Slot slot : _battle)
+      if (slot.leader().hasIssue(Condition.Issue.WAIT))
+        _battle.add(slot.attack());
   }
 
   private void notifyAllTrainers(String[] message) {
@@ -89,5 +89,5 @@ public class Round {
   }
 
   private Battle _battle;
-  private Queue<AbstractTurn> _turns;
+  private Queue<Turn> _turns;
 }

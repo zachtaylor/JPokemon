@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.game.battle.turn.AbstractTurn;
+import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.battle.turn.AttackTurn;
 import jpkmn.game.battle.turn.ItemTurn;
 import jpkmn.game.battle.turn.RunTurn;
@@ -104,7 +104,7 @@ public class Slot {
     _index = slotIndex;
   }
 
-  public AbstractTurn attack() {
+  public Turn attack() {
     Move move = leader().moves.get(_index);
 
     AttackTurn turn = new AttackTurn(this, move);
@@ -118,7 +118,7 @@ public class Slot {
     return turn;
   }
 
-  public AbstractTurn item() {
+  public Turn item() {
     Item item = ((Player) _trainer).item(_itemID);
 
     ItemTurn turn = new ItemTurn(this, item, _index);
@@ -126,13 +126,13 @@ public class Slot {
     return turn;
   }
 
-  public AbstractTurn swap() {
+  public Turn swap() {
     SwapTurn turn = new SwapTurn(this, _index);
 
     return turn;
   }
 
-  public AbstractTurn run() {
+  public Turn run() {
     RunTurn turn = new RunTurn(this);
 
     return turn;

@@ -7,51 +7,47 @@ import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.player.TrainerType;
 
-public class ItemTurn extends AbstractTurn {
+public class ItemTurn extends Turn {
   public ItemTurn(Slot user, Item item, int targetID) {
     super(user);
 
     _itemIndex = targetID;
     _item = item;
 
-    _messages.add(_user.trainer().name() + " used " + item.name());
+    addMessage(slot().trainer().name() + " used " + item.name());
   }
 
-  public String[] execute() {
-    if (needSwap())
-      return executeForcedSwap();
-
-    Pokemon target = _user.target().party().get(_itemIndex);
+  protected void doExecute() {
+    Pokemon target = slot().target().party().get(_itemIndex);
 
     if (_item.type() == ItemType.MACHINE)
-      _messages.add("Machines aren't allowed in battle!");
+      addMessage("Machines aren't allowed in battle!");
     else if (_item.type() == ItemType.STONE)
-      _messages.add("Stones aren't allowed in battle!");
+      addMessage("Stones aren't allowed in battle!");
     else if (_item.type() == ItemType.POTION)
       _item.effect(target);
     else if (_item.type() == ItemType.BALL) {
-      if (_user.target().trainer().type() != TrainerType.WILD)
-        _messages.add("Cannot use a ball against " + target.name() + "!");
+      if (slot().target().trainer().type() != TrainerType.WILD)
+        addMessage("Cannot use a ball against " + target.name() + "!");
       else if (_item.effect(target)) {
-        if (!_user.trainer().add(target))
-          _messages.add("No room for " + target.name());
+        if (!slot().trainer().add(target))
+          addMessage("No room for " + target.name());
         else {
-          _user.target().party().remove(target);
-          _messages.add(target.name() + " was caught!");
+          slot().target().party().remove(target);
+          addMessage(target.name() + " was caught!");
         }
       }
       else
-        _messages.add(target.name() + "broke free!");
+        addMessage(target.name() + "broke free!");
     }
-
-    return getNotifications();
   }
 
   @Override
-  public int compareTo(AbstractTurn turn) {
-    if (turn.needSwap()) {
-      if (needSwap())
+  public int compareTo(Turn turn) {
+    if (turn._needSwap) {
+      if (_needSwap)
         return 0;
+
       return 1;
     }
 

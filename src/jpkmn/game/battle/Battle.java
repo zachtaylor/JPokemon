@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.battle.turn.AbstractTurn;
+import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.battle.turn.Round;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
@@ -59,7 +59,7 @@ public class Battle implements Iterable<Slot> {
     return _slots.get(trainer.id()) != null;
   }
 
-  public void add(AbstractTurn turn) {
+  public void add(Turn turn) {
     if (_haveSelectedTurn.contains(turn.slot()))
       return;
 
@@ -67,7 +67,7 @@ public class Battle implements Iterable<Slot> {
     _round.add(turn);
 
     if (_round.size() == _slots.size())
-      doRound();
+      executeRound();
   }
 
   public void start() {
@@ -156,12 +156,12 @@ public class Battle implements Iterable<Slot> {
     return _slots.values().iterator();
   }
 
-  private void doRound() {
+  private void executeRound() {
     Round current = _round;
     _round = new Round(this);
     _haveSelectedTurn = new ArrayList<Slot>();
 
-    current.play();
+    current.execute();
     doTrainerAttacks();
   }
 

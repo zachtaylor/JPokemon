@@ -4,39 +4,35 @@ import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.slot.Slot;
 
-public class RunTurn extends AbstractTurn {
+public class RunTurn extends Turn {
   public RunTurn(Slot user) {
     super(user);
   }
 
-  public String[] execute() {
-    if (needSwap())
-      return executeForcedSwap();
-
-    Battle battle = BattleRegistry.get(_user.trainer());
+  protected void doExecute() {
+    Battle battle = BattleRegistry.get(slot().trainer());
     double chance = 100;
 
     for (Slot s : battle) {
-      if (_user.leader().level() < s.leader().level())
-        chance -= 10 * (s.leader().level() - _user.leader().level());
-      else if (_user.leader().level() > s.leader().level())
-        chance += 7 * (_user.leader().level() - s.leader().level());
+      if (slot().leader().level() < s.leader().level())
+        chance -= 10 * (s.leader().level() - slot().leader().level());
+      else if (slot().leader().level() > s.leader().level())
+        chance += 7 * (slot().leader().level() - s.leader().level());
     }
 
     if ((chance / 250.0) > Math.random()) {
-      battle.remove(_user);
-      _messages.add("Got away successfully!");
+      battle.remove(slot());
+      addMessage("Got away successfully!");
     }
     else
-      _messages.add("Didn't get away!");
-
-    return getNotifications();
+      addMessage("Didn't get away!");
   }
 
   @Override
-  public int compareTo(AbstractTurn turn) {
+  public int compareTo(Turn turn) {
     if (turn instanceof RunTurn)
       return 0;
+
     return -1;
   }
 }
