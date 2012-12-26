@@ -9,7 +9,11 @@ public class SlotEffect implements JPokemonConstants {
     _type = t;
     _user = user;
     _target = target;
-    _time = SHIELD_ROUND_DURATION;
+
+    if (_type.hasFiniteDuration())
+      _time = SHIELD_ROUND_DURATION;
+    else
+      _time = 0;
   }
 
   public String name() {

@@ -56,8 +56,11 @@ public class Slot {
   }
 
   public void addEffect(SlotEffect e) {
-    if (!_effects.contains(e))
-      _effects.add(e);
+    // Remove and add to reset turn duration
+    if (_effects.contains(e))
+      _effects.remove(e);
+
+    _effects.add(e);
   }
 
   public String[] applyEffects() {
