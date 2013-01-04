@@ -47,11 +47,11 @@ public class StartView extends JPokemonView implements KeyListener {
   }
 
   public void onUpgrade() {
-    try {
-      _gameWindow.showUpgrade(_gameWindow.graphics().getPartyIndex("upgrade"));
-    } catch (DialogCancelException e) {
-      return;
-    }
+    // try {
+    // _gameWindow.showUpgrade(_gameWindow.graphics().getPartyIndex("upgrade"));
+    // } catch (DialogCancelException e) {
+    // return;
+    // }
   }
 
   public void onSave() {

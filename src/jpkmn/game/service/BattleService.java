@@ -8,10 +8,10 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
 
-import org.jpokemon.player.Player;
-import org.jpokemon.player.PlayerFactory;
-import org.jpokemon.player.PokemonTrainer;
-import org.jpokemon.player.Trainer;
+import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.PlayerFactory;
+import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.Trainer;
 import org.json.JSONObject;
 
 public class BattleService {

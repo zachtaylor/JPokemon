@@ -3,7 +3,7 @@ package org.jpokemon.player;
 import jpkmn.exceptions.LoadException;
 import junit.framework.TestCase;
 
-import org.jpokemon.player.Progress;
+import org.jpokemon.trainer.Progress;
 
 public class ProgressTest extends TestCase {
   private Progress progress;

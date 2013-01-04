@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokedex.PokedexStatus;
+import org.jpokemon.trainer.Player;
 
 public class PlayerTest extends TestCase implements JPokemonConstants {
   private static Player player;

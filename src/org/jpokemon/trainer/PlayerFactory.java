@@ -1,4 +1,4 @@
-package org.jpokemon.player;
+package org.jpokemon.trainer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,7 +14,6 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.player.Player;
 
 public class PlayerFactory implements JPokemonConstants {
   public static Player get(int id) {

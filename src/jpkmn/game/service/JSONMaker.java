@@ -5,8 +5,8 @@ import jpkmn.map.Area;
 import jpkmn.map.AreaConnection;
 import jpkmn.map.Direction;
 
-import org.jpokemon.player.Player;
 import org.jpokemon.pokemon.stat.StatType;
+import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

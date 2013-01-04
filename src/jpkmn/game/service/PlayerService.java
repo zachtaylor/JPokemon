@@ -8,8 +8,8 @@ import jpkmn.map.AreaRegistry;
 import jpkmn.map.Direction;
 import jpkmn.map.Event;
 
-import org.jpokemon.player.Player;
-import org.jpokemon.player.PlayerFactory;
+import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.PlayerFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -6,8 +6,8 @@ import java.util.List;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
 
-import org.jpokemon.player.Player;
-import org.jpokemon.player.Trainer;
+import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.Trainer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

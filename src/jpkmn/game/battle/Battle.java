@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.battle.turn.Round;
+import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 
-import org.jpokemon.player.PokemonTrainer;
-import org.jpokemon.player.TrainerType;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
+import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.TrainerType;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

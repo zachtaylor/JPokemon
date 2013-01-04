@@ -5,7 +5,7 @@ import java.util.Map;
 
 import jpkmn.game.battle.slot.Slot;
 
-import org.jpokemon.player.PokemonTrainer;
+import org.jpokemon.trainer.PokemonTrainer;
 
 public class BattleRegistry {
   public static int createEnrollable() {

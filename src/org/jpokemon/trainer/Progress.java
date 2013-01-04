@@ -1,4 +1,4 @@
-package org.jpokemon.player;
+package org.jpokemon.trainer;
 
 import jpkmn.exceptions.LoadException;
 

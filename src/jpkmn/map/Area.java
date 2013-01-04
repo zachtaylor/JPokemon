@@ -13,8 +13,8 @@ import jpkmn.map.spawner.EventSpawner;
 import jpkmn.map.spawner.PokemonSpawner;
 import jpkmn.map.spawner.TrainerSpawner;
 
-import org.jpokemon.player.Player;
-import org.jpokemon.player.Trainer;
+import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.Trainer;
 import org.json.JSONArray;
 
 /**

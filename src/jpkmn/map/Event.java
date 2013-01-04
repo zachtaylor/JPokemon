@@ -6,8 +6,8 @@ import jpkmn.game.base.EventInfo;
 import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.item.ItemInfo;
 
-import org.jpokemon.player.Player;
-import org.jpokemon.player.Trainer;
+import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.Trainer;
 
 public class Event {
   private enum Type {

@@ -1,6 +1,6 @@
 package jpkmn.map;
 
-import org.jpokemon.player.Player;
+import org.jpokemon.trainer.Player;
 
 /**
  * A generalized rule, which can be used to test a Player

@@ -5,19 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.battle.turn.AttackTurn;
 import jpkmn.game.battle.turn.ItemTurn;
 import jpkmn.game.battle.turn.RunTurn;
 import jpkmn.game.battle.turn.SwapTurn;
+import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 
-import org.jpokemon.player.Player;
-import org.jpokemon.player.PokemonTrainer;
-import org.jpokemon.player.TrainerType;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.TrainerType;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -5,7 +5,7 @@ import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 import jpkmn.game.pokemon.Pokemon;
 
-import org.jpokemon.player.TrainerType;
+import org.jpokemon.trainer.TrainerType;
 
 public class ItemTurn extends Turn {
   public ItemTurn(Slot user, Item item, int targetID) {
