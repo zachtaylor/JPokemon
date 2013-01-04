@@ -3,10 +3,10 @@ package org.jpokemon.player;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
+import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.item.Bag;
 import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.service.GraphicsHandler;
 
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
@@ -22,8 +22,8 @@ public class Player implements PokemonTrainer {
     _bag = new Bag();
     _pokedex = new Pokedex();
     _progress = new Progress();
+    _gameWindow = new GameWindow(_id);
     _storage = new PokemonStorageBlock();
-    _graphics = new GraphicsHandler(this);
   }
 
   public int id() {
@@ -90,14 +90,14 @@ public class Player implements PokemonTrainer {
   }
 
   public void notify(String... message) {
-    _graphics.notify(message);
+    _gameWindow.inbox().addMessage(message);
   }
 
   public void setState(String state) {
     if (state.equalsIgnoreCase("world"))
-      _graphics.showWorld();
+      _gameWindow.showMain();
     else if (state.equalsIgnoreCase("battle"))
-      _graphics.showBattle();
+      _gameWindow.showBattle();
   }
 
   public Pokedex pokedex() {
@@ -172,7 +172,7 @@ public class Player implements PokemonTrainer {
   private String _name;
   private Pokedex _pokedex;
   private Progress _progress;
-  private GraphicsHandler _graphics;
+  private GameWindow _gameWindow;
   private PokemonStorageBlock _storage;
   private int _id, _area, _badge, _cash;
 

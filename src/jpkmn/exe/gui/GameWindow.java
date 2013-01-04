@@ -6,12 +6,10 @@ import jpkmn.exe.gui.battle.BattleView;
 import jpkmn.exe.gui.pokemonupgrade.PokemonUpgradeView;
 import jpkmn.exe.gui.start.StartView;
 import jpkmn.exe.gui.world.WorldView;
-import jpkmn.game.service.GraphicsHandler;
 import jpkmn.img.ImageFinder;
 
 public class GameWindow extends JFrame {
-  public GameWindow(GraphicsHandler graphics, int playerID) {
-    _graphics = graphics;
+  public GameWindow(int playerID) {
     _playerID = playerID;
     _inbox = new MessageView();
     _battle = new BattleView(playerID);
@@ -19,7 +17,7 @@ public class GameWindow extends JFrame {
     _start = new StartView(this);
     _upgrade = new PokemonUpgradeView(this);
 
-    //setResizable(false);
+    // setResizable(false);
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setIconImage(ImageFinder.find("main-icon").getImage());
 
@@ -28,10 +26,6 @@ public class GameWindow extends JFrame {
 
   public int playerID() {
     return _playerID;
-  }
-
-  public GraphicsHandler graphics() {
-    return _graphics;
   }
 
   public MessageView inbox() {
@@ -84,7 +78,6 @@ public class GameWindow extends JFrame {
   private BattleView _battle;
   private MessageView _inbox;
   private JPokemonView _active;
-  private GraphicsHandler _graphics;
   private PokemonUpgradeView _upgrade;
   private static final long serialVersionUID = 1L;
 }
