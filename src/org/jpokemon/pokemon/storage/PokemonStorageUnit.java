@@ -72,7 +72,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     int answer = 0;
 
     for (Pokemon pokemon : this) {
-      if (pokemon.condition.awake())
+      if (pokemon.awake())
         answer++;
     }
 

@@ -1,7 +1,7 @@
 package org.jpokemon.pokemon.stat;
 
 import jpkmn.game.base.PokemonBase;
-import jpkmn.game.pokemon.Condition;
+import jpkmn.game.pokemon.ConditionEffect;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,14 +93,14 @@ public class StatBlock {
    * 
    * @param i The issue which applies a stat penalty
    */
-  public void addIssue(Condition.Issue i) {
+  public void addIssue(ConditionEffect i) {
     // Also not polymorhpic, because condition issues don't map a stat
 
-    if (i == Condition.Issue.BURN) {
+    if (i == ConditionEffect.BURN) {
       _burn = true;
       _data[StatType.ATTACK.ordinal()].modify(1.0 / 2.0);
     }
-    else if (i == Condition.Issue.PARALYZE) {
+    else if (i == ConditionEffect.PARALYZE) {
       _paralyze = true;
       _data[StatType.SPEED.ordinal()].modify(1.0 / 4.0);
     }
@@ -111,12 +111,12 @@ public class StatBlock {
    * 
    * @param i The issue to reset the effects of
    */
-  public void removeIssue(Condition.Issue i) {
-    if (i == Condition.Issue.BURN && _burn) {
+  public void removeIssue(ConditionEffect i) {
+    if (i == ConditionEffect.BURN && _burn) {
       _burn = false;
       _data[StatType.ATTACK.ordinal()].modify(1);
     }
-    else if (i == Condition.Issue.PARALYZE && _paralyze) {
+    else if (i == ConditionEffect.PARALYZE && _paralyze) {
       _paralyze = false;
       _data[StatType.SPEED.ordinal()].modify(1);
     }

@@ -108,7 +108,7 @@ public class Slot {
   }
 
   public Turn attack() {
-    Move move = leader().moves.get(_index);
+    Move move = leader().move(_index);
 
     AttackTurn turn = new AttackTurn(this, move);
 
@@ -181,6 +181,8 @@ public class Slot {
     List<Pokemon> earnList = new ArrayList<Pokemon>();
     List<String> message = new ArrayList<String>();
 
+    message.add(p.name() + " fainted!");
+
     for (Pokemon cur : _trainer.party()) {
       List<Pokemon> rivalsList = _rivalsLists.get(cur);
 
@@ -194,7 +196,6 @@ public class Slot {
 
     int xpEach = Math.max(xpReward / earnList.size(), 1);
 
-    message.add(p.name() + " fainted!");
     for (Pokemon earner : earnList) {
       earner.xp(earner.xp() + xpEach);
       message.add(earner.name() + " received " + xpEach + " experience!");

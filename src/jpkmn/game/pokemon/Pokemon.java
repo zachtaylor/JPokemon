@@ -6,6 +6,7 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.PokemonBase;
 
 import org.jpokemon.pokemon.Type;
+import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Health;
 import org.jpokemon.pokemon.stat.Stat;
@@ -15,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Pokemon {
-  public final MoveBlock moves;
   public final Condition condition;
 
   public Pokemon(int num) {
@@ -28,7 +28,7 @@ public class Pokemon {
     type2 = Type.valueOf(base.getType2());
     evolutionlevel = base.getEvolutionlevel();
 
-    moves = new MoveBlock(_number);
+    _moves = new MoveBlock(_number);
     _stats = new StatBlock(base);
     condition = new Condition(this);
 
@@ -39,7 +39,7 @@ public class Pokemon {
     this(num);
     _level = lvl;
     _stats.level(lvl);
-    moves.randomize(lvl);
+    _moves.randomize(lvl);
   }
 
   public int number() {
@@ -128,6 +128,18 @@ public class Pokemon {
     return getStat(StatType.SPEED).cur();
   }
 
+  public Move move(int index) {
+    return _moves.get(index);
+  }
+
+  public void addMove(int number) {
+    _moves.add(number);
+  }
+
+  public int moveCount() {
+    return _moves.count();
+  }
+
   /**
    * XP this Pokemon needs to level
    * 
@@ -159,7 +171,7 @@ public class Pokemon {
 
     PokemonBase base = PokemonBase.get(_number);
 
-    moves.setPokemonNumber(_number);
+    _moves.setPokemonNumber(_number);
     _stats.rebase(base);
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
@@ -182,9 +194,6 @@ public class Pokemon {
    */
   public void takeDamage(int damage) {
     getStat(StatType.HEALTH).effect(-damage);
-
-    if (health() == 0)
-      condition.awake(false);
   }
 
   /**
@@ -194,20 +203,23 @@ public class Pokemon {
    * @param heal The amount healed by
    */
   public void healDamage(int heal) {
-    condition.awake(true);
     getStat(StatType.HEALTH).effect(heal);
   }
 
-  public void addIssue(Condition.Issue i) {
+  public boolean awake() {
+    return health() > 0;
+  }
+
+  public void addIssue(ConditionEffect i) {
     _stats.addIssue(i);
     condition.add(i);
   }
 
-  public boolean hasIssue(Condition.Issue i) {
+  public boolean hasIssue(ConditionEffect i) {
     return condition.contains(i);
   }
 
-  public boolean removeIssue(Condition.Issue i) {
+  public boolean removeIssue(ConditionEffect i) {
     _stats.removeIssue(i);
     return condition.remove(i);
   }
@@ -223,7 +235,7 @@ public class Pokemon {
       data.put("xp_needed", xpNeeded());
       data.put("condition", condition.toString());
       data.put("stats", _stats.toJSON());
-      data.put("moves", moves.toJSON());
+      data.put("moves", _moves.toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -266,9 +278,9 @@ public class Pokemon {
       if (!scan.next().equals("("))
         throw new LoadException("Formatting error");
 
-      p.moves.removeAll();
+      p._moves.removeAll();
       for (String next = scan.next(); !next.equals(")"); next = scan.next())
-        p.moves.add(Integer.parseInt(next));
+        p._moves.add(Integer.parseInt(next));
 
       p.name = scan.nextLine();
       p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
@@ -280,7 +292,7 @@ public class Pokemon {
   }
 
   private void checkNewMoves() {
-    if (!moves.newMoves(level()).isEmpty())
+    if (!_moves.newMoves(level()).isEmpty())
       ; // TODO : notify of new moves
   }
 
@@ -296,6 +308,7 @@ public class Pokemon {
     return _id;
   }
 
+  private MoveBlock _moves;
   private StatBlock _stats;
   private Type type1, type2;
   private String name, species;

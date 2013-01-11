@@ -177,7 +177,7 @@ public class Battle implements Iterable<Slot> {
         randomSlot = allSlots[(int) (Math.random() * allSlots.length)];
       } while (slot.equals(randomSlot));
 
-      int randomMove = (int) (Math.random()) * slot.leader().moves.count();
+      int randomMove = (int) (Math.random()) * slot.leader().moveCount();
 
       fight(slot.trainer().id(), randomSlot.trainer().id(), randomMove);
     }
@@ -249,8 +249,7 @@ public class Battle implements Iterable<Slot> {
   /**
    * Calculates the confused damage a Pokemon does to itself.
    * 
-   * @param p
-   *          Pokemon to calculate for
+   * @param p Pokemon to calculate for
    * @return Damage done
    */
   public static int confusedDamage(Pokemon p) {

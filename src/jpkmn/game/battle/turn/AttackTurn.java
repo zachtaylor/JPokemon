@@ -2,7 +2,7 @@ package jpkmn.game.battle.turn;
 
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.pokemon.Condition.Issue;
+import jpkmn.game.pokemon.ConditionEffect;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.move.Move;
@@ -26,7 +26,7 @@ public class AttackTurn extends Turn {
     Slot targetSlot = slot().target();
     Pokemon leader = slot().leader();
 
-    if (!leader.hasIssue(Issue.WAIT)) {
+    if (!leader.hasIssue(ConditionEffect.WAIT)) {
       if (!leader.condition.canAttack()) {
         addMessage(leader.condition.toString());
         return;
@@ -49,16 +49,16 @@ public class AttackTurn extends Turn {
     }
 
     if (_move.style() == MoveStyle.DELAYNEXT) {
-      if (leader.removeIssue(Issue.WAIT)) {
+      if (leader.removeIssue(ConditionEffect.WAIT)) {
         addMessage("Resting this turn");
         return;
       }
       else
-        leader.addIssue(Issue.WAIT);
+        leader.addIssue(ConditionEffect.WAIT);
     }
     else if (_move.style() == MoveStyle.DELAYBEFORE) {
-      if (!leader.removeIssue(Issue.WAIT)) {
-        leader.addIssue(Issue.WAIT);
+      if (!leader.removeIssue(ConditionEffect.WAIT)) {
+        leader.addIssue(ConditionEffect.WAIT);
         addMessage("Resting this turn");
         return;
       }

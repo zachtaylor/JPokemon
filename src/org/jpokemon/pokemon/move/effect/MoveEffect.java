@@ -4,7 +4,7 @@ import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.battle.slot.SlotEffect;
 import jpkmn.game.battle.slot.SlotEffectType;
 import jpkmn.game.battle.Target;
-import jpkmn.game.pokemon.Condition;
+import jpkmn.game.pokemon.ConditionEffect;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.stat.StatType;
@@ -22,7 +22,7 @@ public class MoveEffect {
     if (type.isStatModifier())
       pokemon.getStat(StatType.valueOf(type.toString())).effect(power);
     else if (type.isConditionModifier())
-      pokemon.addIssue(Condition.Issue.valueOf(type.toString()));
+      pokemon.addIssue(ConditionEffect.valueOf(type.toString()));
     else if (type.isFieldModifier())
       user.addEffect(new SlotEffect(SlotEffectType.valueOf(type.toString()), user, enemy));
     else if (type == MoveEffectType.HEALTH_MOD)

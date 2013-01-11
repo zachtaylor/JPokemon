@@ -6,7 +6,6 @@ import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 
-import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.exe.gui.JPokemonView;

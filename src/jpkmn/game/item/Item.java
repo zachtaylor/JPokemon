@@ -141,7 +141,7 @@ public class Item {
         return false;
 
       try {
-        p.moves.add(_info.getData());
+        p.addMove(_info.getData());
       } catch (IllegalStateException e) {
         ; // TODO : calculate position and ask
       }

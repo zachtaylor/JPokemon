@@ -6,10 +6,6 @@ import java.util.List;
 import jpkmn.game.battle.Battle;
 
 public class Condition {
-  public enum Issue {
-    BURN, PARALYZE, SLEEP, POISON, SEEDVIC, WRAP, SEEDUSR, FREEZE, CONFUSE, FLINCH, WAIT;
-  }
-
   /**
    * Creates a new Condition for the specified Pokemon
    * 
@@ -17,15 +13,6 @@ public class Condition {
    */
   public Condition(Pokemon p) {
     pkmn = p;
-    awake = true;
-  }
-
-  public boolean awake() {
-    return awake;
-  }
-
-  public void awake(boolean b) {
-    awake = b;
   }
 
   /**
@@ -37,10 +24,10 @@ public class Condition {
   public int getCatchBonus() {
     int best = 10;
 
-    for (Issue i : issues) {
-      if (i == Issue.FREEZE || i == Issue.SLEEP)
+    for (ConditionEffect i : issues) {
+      if (i == ConditionEffect.FREEZE || i == ConditionEffect.SLEEP)
         return 20;
-      else if (i == Issue.BURN || i == Issue.POISON || i == Issue.PARALYZE)
+      else if (i == ConditionEffect.BURN || i == ConditionEffect.POISON || i == ConditionEffect.PARALYZE)
         best = 15;
     }
 
@@ -54,8 +41,8 @@ public class Condition {
    * 
    * @param i The issue to be added
    */
-  public void add(Issue i) {
-    if (i != Issue.WAIT && contains(i))
+  public void add(ConditionEffect i) {
+    if (i != ConditionEffect.WAIT && contains(i))
       remove(i);
 
     issues.add(i);
@@ -68,12 +55,12 @@ public class Condition {
    * @return true if user can attack
    */
   public boolean canAttack() {
-    for (Issue i : issues) {
-      if (i == Issue.FREEZE || i == Issue.SLEEP || i == Issue.FLINCH)
+    for (ConditionEffect i : issues) {
+      if (i == ConditionEffect.FREEZE || i == ConditionEffect.SLEEP || i == ConditionEffect.FLINCH)
         return false;
-      else if (i == Issue.PARALYZE && Math.random() < .25)
+      else if (i == ConditionEffect.PARALYZE && Math.random() < .25)
         return false;
-      else if (i == Issue.CONFUSE) {
+      else if (i == ConditionEffect.CONFUSE) {
         attackself = true;
         return false;
       }
@@ -89,14 +76,14 @@ public class Condition {
   public String[] applyEffects() {
     List<String> messages = new ArrayList<String>();
 
-    for (Issue current : issues) {
-      if (current == Issue.BURN) {
+    for (ConditionEffect current : issues) {
+      if (current == ConditionEffect.BURN) {
         pkmn.takeDamage(pkmn.maxHealth() / 10);
         messages.add(pkmn.name() + " was injured by it's burn!");
       }
-      else if (current == Issue.WRAP) {
+      else if (current == ConditionEffect.WRAP) {
         if (Math.random() > .66666) {
-          remove(Issue.WRAP);
+          remove(ConditionEffect.WRAP);
           messages.add(pkmn.name() + " freed itself!");
         }
         else {
@@ -104,29 +91,29 @@ public class Condition {
           messages.add(pkmn.name() + " was injured by the binding!");
         }
       }
-      else if (current == Issue.CONFUSE) {
+      else if (current == ConditionEffect.CONFUSE) {
         if (attackself) {
           pkmn.takeDamage(Battle.confusedDamage(pkmn));
           attackself = false;
         }
         else if (Math.random() > .66666) {
-          remove(Issue.CONFUSE);
+          remove(ConditionEffect.CONFUSE);
           messages.add(pkmn.name() + " is no longer confused!");
         }
       }
-      else if (current == Issue.FLINCH) {
-        remove(Issue.FLINCH);
+      else if (current == ConditionEffect.FLINCH) {
+        remove(ConditionEffect.FLINCH);
       }
-      else if (current == Issue.FREEZE && Math.random() > .8) {
-        remove(Issue.FREEZE);
+      else if (current == ConditionEffect.FREEZE && Math.random() > .8) {
+        remove(ConditionEffect.FREEZE);
         messages.add(pkmn.name() + " broke out of the ice!");
       }
-      else if (current == Issue.POISON) {
+      else if (current == ConditionEffect.POISON) {
         pkmn.takeDamage(pkmn.maxHealth() / 10);
         messages.add(pkmn.name() + " was injured by the poison!");
       }
-      else if (current == Issue.SLEEP && Math.random() > .333333) {
-        remove(Issue.SLEEP);
+      else if (current == ConditionEffect.SLEEP && Math.random() > .333333) {
+        remove(ConditionEffect.SLEEP);
         messages.add(pkmn.name() + " woke up!");
       }
     }
@@ -138,10 +125,10 @@ public class Condition {
    * Cleans up all status ailments.
    */
   public void reset() {
-    issues = new ArrayList<Issue>();
+    issues = new ArrayList<ConditionEffect>();
   }
 
-  public boolean contains(Issue i) {
+  public boolean contains(ConditionEffect i) {
     return issues.contains(i);
   }
 
@@ -151,11 +138,11 @@ public class Condition {
     return issues.toString();
   }
 
-  public boolean remove(Issue i) {
+  public boolean remove(ConditionEffect i) {
     return issues.remove(i);
   }
 
-  private List<Issue> issues = new ArrayList<Issue>();
   private Pokemon pkmn;
-  private boolean awake, attackself;
+  private boolean attackself;
+  private List<ConditionEffect> issues = new ArrayList<ConditionEffect>();
 }

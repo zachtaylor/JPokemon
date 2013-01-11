@@ -3,7 +3,7 @@ package org.jpokemon.pokemon.stat;
 import org.jpokemon.JPokemonConstants;
 
 import jpkmn.game.base.PokemonBase;
-import jpkmn.game.pokemon.Condition;
+import jpkmn.game.pokemon.ConditionEffect;
 import junit.framework.TestCase;
 
 public class StatBlockTest extends TestCase {
@@ -47,7 +47,7 @@ public class StatBlockTest extends TestCase {
 
     int attack = attackStat.cur();
 
-    block.addIssue(Condition.Issue.BURN);
+    block.addIssue(ConditionEffect.BURN);
 
     assertEquals(Math.max(attack / 2, 1), attackStat.cur());
   }
@@ -57,11 +57,11 @@ public class StatBlockTest extends TestCase {
 
     int attack = attackStat.cur();
 
-    block.addIssue(Condition.Issue.BURN);
+    block.addIssue(ConditionEffect.BURN);
 
     assertEquals(Math.max(attack / 2, 1), attackStat.cur());
 
-    block.removeIssue(Condition.Issue.BURN);
+    block.removeIssue(ConditionEffect.BURN);
 
     assertEquals(attack, attackStat.cur());
   }
@@ -71,7 +71,7 @@ public class StatBlockTest extends TestCase {
 
     int speed = speedStat.cur();
 
-    block.addIssue(Condition.Issue.PARALYZE);
+    block.addIssue(ConditionEffect.PARALYZE);
 
     assertEquals(Math.max(speed / 4, 1), speedStat.cur());
   }
@@ -81,7 +81,7 @@ public class StatBlockTest extends TestCase {
 
     int attack = attackStat.cur();
 
-    block.removeIssue(Condition.Issue.BURN);
+    block.removeIssue(ConditionEffect.BURN);
 
     assertEquals(attack, attackStat.cur());
   }
@@ -91,11 +91,11 @@ public class StatBlockTest extends TestCase {
 
     int speed = speedStat.cur();
 
-    block.addIssue(Condition.Issue.PARALYZE);
+    block.addIssue(ConditionEffect.PARALYZE);
 
     assertEquals(Math.max(speed / 4, 1), speedStat.cur());
 
-    block.removeIssue(Condition.Issue.PARALYZE);
+    block.removeIssue(ConditionEffect.PARALYZE);
 
     assertEquals(speed, speedStat.cur());
   }

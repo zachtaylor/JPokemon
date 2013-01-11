@@ -5,7 +5,7 @@ import java.util.Queue;
 
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.pokemon.Condition;
+import jpkmn.game.pokemon.ConditionEffect;
 
 public class Round {
   public Round(Battle b) {
@@ -51,7 +51,7 @@ public class Round {
         _turns.remove(turn);
         _battle.remove(slot);
       }
-      else if (!slot.leader().condition.awake()) {
+      else if (!slot.leader().awake()) {
         for (Slot s : _battle)
           s.removeRival(slot);
 
@@ -79,7 +79,7 @@ public class Round {
 
     // Force next attacks
     for (Slot slot : _battle)
-      if (slot.leader().hasIssue(Condition.Issue.WAIT))
+      if (slot.leader().hasIssue(ConditionEffect.WAIT))
         _battle.add(slot.attack());
   }
 
