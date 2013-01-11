@@ -3,17 +3,23 @@ package jpkmn.game.battle.turn;
 import jpkmn.game.battle.slot.Slot;
 
 public class SwapTurn extends Turn {
-  public SwapTurn(Slot user, int slotIndex) {
-    super(user);
-    _swapIndex = slotIndex;
+  public SwapTurn(Slot user, Slot target, int swapIndex) {
+    super(user, target);
+    _swapIndex = swapIndex;
   }
 
+  @Override
   public void doExecute() {
     slot().party().swap(0, _swapIndex);
 
     String trainerName = slot().trainer().name();
     String leaderName = slot().leader().name();
     addMessage(trainerName + " sent out " + leaderName);
+  }
+  
+  @Override
+  public boolean reAdd() {
+    return false;
   }
 
   @Override
@@ -27,7 +33,7 @@ public class SwapTurn extends Turn {
   }
 
   @Override
-  public void changeToSwap() {
+  public void forceSwap() {
     // No need for _needSwap. Skipping call to super.changeToSwap
   }
 

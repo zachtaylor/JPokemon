@@ -128,12 +128,12 @@ public class BattleView extends JPokemonView {
 
   private void fight() {
     int moveIndex, enemySlotID;
+
     enableButtons(false);
 
     try {
       moveIndex = JPokemonDialog.getMoveIndex(this, _trainerData);
-      enemySlotID = JPokemonDialog.getMoveTarget(this, _data, _trainerData,
-          moveIndex);
+      enemySlotID = JPokemonDialog.getMoveTarget(this, _data, _trainerData, moveIndex);
     } catch (Exception e) {
       if (!(e instanceof DialogCancelException))
         e.printStackTrace();
@@ -142,16 +142,28 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    BattleService.attack(_playerID, enemySlotID, moveIndex);
+    JSONObject json = new JSONObject();
+    try {
+      json.put("turn", "ATTACK");
+      json.put("trainer", _playerID);
+      json.put("target", enemySlotID);
+      json.put("move", moveIndex);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      enableButtons(true);
+      return;
+    }
+
+    BattleService.turn(json);
     refresh();
   }
 
   private void swap() {
-    int slotIndex;
+    int swapIndex;
     enableButtons(false);
 
     try {
-      slotIndex = JPokemonDialog.getSwapIndex(this, _trainerData);
+      swapIndex = JPokemonDialog.getSwapIndex(this, _trainerData);
     } catch (Exception e) {
       if (!(e instanceof DialogCancelException))
         e.printStackTrace();
@@ -160,7 +172,19 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    BattleService.swap(_playerID, slotIndex);
+    JSONObject json = new JSONObject();
+    try {
+      json.put("turn", "SWAP");
+      json.put("trainer", _playerID);
+      json.put("target", _playerID);
+      json.put("swap", swapIndex);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      enableButtons(true);
+      return;
+    }
+
+    BattleService.turn(json);
     refresh();
   }
 
@@ -178,17 +202,40 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    int targetID = 0;
-    // TODO : target choice
+    int targetID = 0, targetIndex = 0; // TODO : target choice
 
-    BattleService.item(_playerID, targetID, itemID);
+    JSONObject json = new JSONObject();
+    try {
+      json.put("turn", "ITEM");
+      json.put("trainer", _playerID);
+      json.put("target", targetID);
+      json.put("target_index", targetIndex);
+      json.put("item", itemID);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      enableButtons(true);
+      return;
+    }
+
+    BattleService.turn(json);
     refresh();
   }
 
   private void run() {
     enableButtons(false);
 
-    BattleService.run(_playerID);
+    JSONObject json = new JSONObject();
+    try {
+      json.put("turn", "RUN");
+      json.put("trainer", _playerID);
+      json.put("target", _playerID);
+    } catch (JSONException e) {
+      e.printStackTrace();
+      enableButtons(true);
+      return;
+    }
+
+    BattleService.turn(json);
     refresh();
   }
 

@@ -6,8 +6,9 @@ import java.util.List;
 import jpkmn.game.battle.slot.Slot;
 
 public abstract class Turn implements Comparable<Turn> {
-  public Turn(Slot user) {
+  public Turn(Slot user, Slot target) {
     _user = user;
+    _target = target;
     _needSwap = false;
     _messages = new ArrayList<String>();
   }
@@ -19,6 +20,15 @@ public abstract class Turn implements Comparable<Turn> {
    */
   public Slot slot() {
     return _user;
+  }
+
+  /**
+   * Getter for the target Slot of this turn
+   * 
+   * @return Slot targeted by this Turn
+   */
+  public Slot target() {
+    return _target;
   }
 
   /**
@@ -36,10 +46,10 @@ public abstract class Turn implements Comparable<Turn> {
   }
 
   /**
-   * Forces this turn to do a swap on execute. Overrides subclass
-   * implementation.
+   * Forces this turn to do a swap on execute, instead of it's original
+   * intention.
    */
-  public void changeToSwap() {
+  public void forceSwap() {
     _needSwap = true;
   }
 
@@ -66,11 +76,19 @@ public abstract class Turn implements Comparable<Turn> {
    */
   protected abstract void doExecute();
 
+  /**
+   * Hook method provided for subclass implementation.
+   * 
+   * @return True if this Turn should be added to the queue for next Round after
+   *         it has been executed
+   */
+  public abstract boolean reAdd();
+
   private void doForcedSwap() {
     // TODO
   }
 
-  private Slot _user;
+  private Slot _user, _target;
   protected boolean _needSwap;
   private List<String> _messages;
 }

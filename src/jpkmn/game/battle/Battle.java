@@ -9,7 +9,6 @@ import java.util.Map;
 import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.battle.turn.Round;
 import jpkmn.game.battle.turn.Turn;
-import jpkmn.game.item.Item;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.move.Move;
@@ -27,7 +26,7 @@ public class Battle implements Iterable<Slot> {
     _haveSelectedTurn = new ArrayList<Slot>();
   }
 
-  public void add(PokemonTrainer trainer, int team) {
+  public void addTrainer(PokemonTrainer trainer, int team) {
     if (contains(trainer))
       throw new IllegalArgumentException("Duplicate trainer: " + trainer);
 
@@ -59,7 +58,7 @@ public class Battle implements Iterable<Slot> {
     return _slots.get(trainer.id()) != null;
   }
 
-  public void add(Turn turn) {
+  public void addTurn(Turn turn) {
     if (_haveSelectedTurn.contains(turn.slot()))
       return;
 
@@ -74,50 +73,21 @@ public class Battle implements Iterable<Slot> {
     doTrainerAttacks();
   }
 
-  public void fight(int trainerID, int enemyID, int moveIndex) {
-    Slot slot = _slots.get(trainerID);
-    Slot enemySlot = _slots.get(enemyID);
+  public void createTurn(JSONObject turn) {
+    int trainerID, targetID;
 
-    slot.target(enemySlot);
-    slot.moveIndex(moveIndex);
-
-    add(slot.attack());
-  }
-
-  public void item(int trainerID, int slotIndex, int itemID) {
-    Slot slot = _slots.get(trainerID);
-    Target itemTarget = new Item(itemID).target();
-
-    int itemTargetIndex;
-    Slot targetSlot;
-    if (itemTarget == Target.SELF) {
-      itemTargetIndex = slotIndex;
-      targetSlot = slot;
-    }
-    else {
-      itemTargetIndex = 0;
-      targetSlot = _slots.get(slotIndex);
+    try {
+      trainerID = turn.getInt("trainer");
+      targetID = turn.getInt("target");
+    } catch (JSONException e) {
+      e.printStackTrace();
+      return;
     }
 
-    slot.target(targetSlot);
-    slot.itemID(itemID);
-    slot.itemIndex(itemTargetIndex);
-
-    add(slot.item());
-  }
-
-  public void swap(int trainerID, int slotIndex) {
     Slot slot = _slots.get(trainerID);
+    Slot target = _slots.get(targetID);
 
-    slot.swapIndex(slotIndex);
-
-    add(slot.swap());
-  }
-
-  public void run(int trainerID) {
-    Slot slot = _slots.get(trainerID);
-
-    add(slot.run());
+    addTurn(slot.turn(turn, target));
   }
 
   public JSONObject toJSON(PokemonTrainer perspective) {
@@ -179,7 +149,7 @@ public class Battle implements Iterable<Slot> {
 
       int randomMove = (int) (Math.random()) * slot.leader().moveCount();
 
-      fight(slot.trainer().id(), randomSlot.trainer().id(), randomMove);
+      // TODO : make mock attacks
     }
   }
 

@@ -2,31 +2,27 @@ package jpkmn.game.battle.turn;
 
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.pokemon.ConditionEffect;
 import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
 public class AttackTurn extends Turn {
-  public AttackTurn(Slot user, Move move) {
-    super(user);
+  public AttackTurn(Slot user, Slot target, Move move) {
+    super(user, target);
     _move = move;
-    _absolute = false;
+    _executions = 0;
 
     addMessage(user.leader().name() + " used " + move.name() + "!");
   }
 
-  public void absoluteDamage(int d) {
-    _damage = d;
-    _absolute = true;
-  }
-
+  @Override
   protected void doExecute() {
-    Slot targetSlot = slot().target();
     Pokemon leader = slot().leader();
 
-    if (!leader.hasConditionEffect(ConditionEffect.WAIT)) {
+    _executions++;
+
+    if (_executions == 1) {
       if (!leader.canAttack()) {
         addMessage(leader.condition());
         return;
@@ -39,7 +35,7 @@ public class AttackTurn extends Turn {
         addMessage("It missed.");
 
         if (_move.hurtUserOnMiss()) {
-          int d = Battle.computeDamage(leader, _move, targetSlot.leader()) / 8;
+          int d = Battle.computeDamage(leader, _move, target().leader()) / 8;
           slot().takeDamage(d);
           addMessage(leader.name() + " took " + d + " recoil damage!");
         }
@@ -48,45 +44,39 @@ public class AttackTurn extends Turn {
       }
     }
 
-    if (_move.style() == MoveStyle.DELAYNEXT) {
-      if (leader.removeConditionEffect(ConditionEffect.WAIT)) {
-        addMessage("Resting this turn");
-        return;
-      }
-      else
-        leader.addConditionEffect(ConditionEffect.WAIT);
+    if (_move.style() == MoveStyle.DELAYNEXT && _executions != 1) {
+      addMessage("Resting this turn");
+      return;
     }
-    else if (_move.style() == MoveStyle.DELAYBEFORE) {
-      if (!leader.removeConditionEffect(ConditionEffect.WAIT)) {
-        leader.addConditionEffect(ConditionEffect.WAIT);
-        addMessage("Resting this turn");
-        return;
-      }
+    if (_move.style() == MoveStyle.DELAYBEFORE && _executions != _move.turns()) {
+      addMessage("Resting this turn");
+      return;
     }
-    else if (_move.style() == MoveStyle.OHKO) {
-      int levelDiff = leader.level() - targetSlot.leader().level();
+    if (_move.style() == MoveStyle.OHKO) {
+      int levelDiff = leader.level() - target().leader().level();
 
       if (levelDiff < 0 || (levelDiff + 30.0) / 100.0 <= Math.random()) {
         addMessage("It missed.");
         return;
       }
     }
-    else if (_move.style() == MoveStyle.MISC) { // Misc
+    if (_move.style() == MoveStyle.MISC) { // TODO MoveStyle.MISC execution
       addMessage("This doesn't work yet. Sorry about that!");
       return;
     }
 
-    if (!_absolute) {
-      _damage = Battle.computeDamage(leader, _move, targetSlot.leader());
-      _damage *= targetSlot.damageModifier(_move);
+    if (_move.doesDamage()) {
+      calculateDamage();
+      addMessage(target().leader().name() + " took " + _damage + " damage!");
+      target().takeDamage(_damage);
     }
 
-    if (_move.style() != MoveStyle.STATUS) {
-      addMessage(targetSlot.leader().name() + " took " + _damage + " damage!");
-      targetSlot.takeDamage(_damage);
-    }
+    _move.applyEffects(slot(), target(), _damage);
+  }
 
-    _move.applyEffects(slot(), slot().target(), _damage);
+  @Override
+  public boolean reAdd() {
+    return _executions < _move.turns();
   }
 
   @Override
@@ -104,7 +94,18 @@ public class AttackTurn extends Turn {
     return 1;
   }
 
+  private void calculateDamage() {
+    if (_move.damageIsAbsolute()) {
+      _damage = _move.power();
+    }
+    else {
+      _damage = Battle.computeDamage(slot().leader(), _move, target().leader());
+      _damage *= target().damageModifier(_move);
+    }
+
+    _damage = Math.min(Math.max(_damage, 1), target().leader().health());
+  }
+
   private Move _move;
-  private int _damage;
-  private boolean _absolute;
+  private int _damage, _executions;
 }

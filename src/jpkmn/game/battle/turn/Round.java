@@ -5,7 +5,6 @@ import java.util.Queue;
 
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.pokemon.ConditionEffect;
 
 public class Round {
   public Round(Battle b) {
@@ -36,6 +35,9 @@ public class Round {
       turn.execute();
       notifyAllTrainers(turn.getMessages());
       verifyTurnList();
+
+      if (turn.reAdd())
+        _battle.addTurn(turn);
     }
 
     applyEndOfRoundEffects();
@@ -55,10 +57,10 @@ public class Round {
         for (Slot s : _battle)
           s.removeRival(slot);
 
-        turn.changeToSwap();
+        turn.forceSwap();
       }
 
-      if (!_battle.contains(slot.target().trainer())) {
+      if (!_battle.contains(turn.target().trainer())) {
         // TODO shit bricks
       }
     }
@@ -73,14 +75,9 @@ public class Round {
 
     // Slot effects
     for (Slot slot : _battle) {
-      String[] messages = slot.applyEffects();
+      String[] messages = slot.applySlotEffects();
       notifyAllTrainers(messages);
     }
-
-    // Force next attacks
-    for (Slot slot : _battle)
-      if (slot.leader().hasConditionEffect(ConditionEffect.WAIT))
-        _battle.add(slot.attack());
   }
 
   private void notifyAllTrainers(String[] message) {

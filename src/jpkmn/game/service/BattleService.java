@@ -12,6 +12,7 @@ import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BattleService {
@@ -71,13 +72,13 @@ public class BattleService {
     return BattleRegistry.createEnrollable();
   }
 
-  public static void enroll(int bID, PokemonTrainer player, int team) throws ServiceException {
-    Battle battle = BattleRegistry.getEnrollable(bID);
+  public static void enroll(int battleID, PokemonTrainer player, int team) throws ServiceException {
+    Battle battle = BattleRegistry.getEnrollable(battleID);
 
     if (battle == null)
-      throw new ServiceException("Invalid enrollable battle: " + bID);
+      throw new ServiceException("Invalid enrollable battle: " + battleID);
 
-    battle.add(player, team);
+    battle.addTrainer(player, team);
   }
 
   public static void startEnrollable(int battleID) {
@@ -107,32 +108,20 @@ public class BattleService {
     player.setState("battle");
   }
 
-  public static void attack(int playerID, int enemySlotID, int moveIndex) {
-    Player player = PlayerFactory.get(playerID);
-    Battle battle = BattleRegistry.get(player);
+  public static void turn(JSONObject json) {
+    int trainerID;
 
-    battle.fight(player.id(), enemySlotID, moveIndex);
-  }
+    try {
+      trainerID = json.getInt("trainer");
+    } catch (JSONException e) {
+      e.printStackTrace();
+      return;
+    }
 
-  public static void item(int playerID, int targetID, int itemID) {
-    Player player = PlayerFactory.get(playerID);
-    Battle battle = BattleRegistry.get(player);
+    Player trainer = PlayerFactory.get(trainerID);
+    Battle battle = BattleRegistry.get(trainer);
 
-    battle.item(player.id(), targetID, itemID);
-  }
-
-  public static void swap(int playerID, int slotIndex) {
-    Player player = PlayerFactory.get(playerID);
-    Battle battle = BattleRegistry.get(player);
-
-    battle.swap(player.id(), slotIndex);
-  }
-
-  public static void run(int playerID) {
-    Player player = PlayerFactory.get(playerID);
-    Battle battle = BattleRegistry.get(player);
-
-    battle.run(player.id());
+    battle.createTurn(json);
   }
 
   public static JSONObject info(int playerID) throws ServiceException {

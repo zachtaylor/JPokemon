@@ -13,6 +13,8 @@ public class Condition {
    */
   public Condition(Pokemon p) {
     pkmn = p;
+    lastMessage = new ArrayList<String>();
+    effects = new ArrayList<ConditionEffect>();
   }
 
   /**
@@ -36,13 +38,13 @@ public class Condition {
   }
 
   /**
-   * Adds a new issue to the Pokemon. If already afflicted, the new one is not
-   * added, except for WAITs (they can stack).
+   * Adds a new issue to the Pokemon. If already afflicted, the effect is
+   * refreshed.
    * 
    * @param e The issue to be added
    */
   public void add(ConditionEffect e) {
-    if (e != ConditionEffect.WAIT && contains(e))
+    if (contains(e))
       remove(e);
 
     effects.add(e);
@@ -75,21 +77,21 @@ public class Condition {
    * chance to dispel.
    */
   public void applyEffects() {
-    List<String> messages = new ArrayList<String>();
+    resetMessage();
 
     for (ConditionEffect current : effects) {
       if (current == ConditionEffect.BURN) {
         pkmn.takeDamage(pkmn.maxHealth() / 10);
-        messages.add(pkmn.name() + " was injured by it's burn!");
+        pushMessage(pkmn.name() + " was injured by it's burn!");
       }
       else if (current == ConditionEffect.WRAP) {
         if (Math.random() > .66666) {
           remove(ConditionEffect.WRAP);
-          messages.add(pkmn.name() + " freed itself!");
+          pushMessage(pkmn.name() + " freed itself!");
         }
         else {
           pkmn.takeDamage(pkmn.maxHealth() / 10);
-          messages.add(pkmn.name() + " was injured by the binding!");
+          pushMessage(pkmn.name() + " was injured by the binding!");
         }
       }
       else if (current == ConditionEffect.CONFUSE) {
@@ -99,7 +101,7 @@ public class Condition {
         }
         else if (Math.random() > .66666) {
           remove(ConditionEffect.CONFUSE);
-          messages.add(pkmn.name() + " is no longer confused!");
+          pushMessage(pkmn.name() + " is no longer confused!");
         }
       }
       else if (current == ConditionEffect.FLINCH) {
@@ -107,23 +109,21 @@ public class Condition {
       }
       else if (current == ConditionEffect.FREEZE && Math.random() > .8) {
         remove(ConditionEffect.FREEZE);
-        messages.add(pkmn.name() + " broke out of the ice!");
+        pushMessage(pkmn.name() + " broke out of the ice!");
       }
       else if (current == ConditionEffect.POISON) {
         pkmn.takeDamage(pkmn.maxHealth() / 10);
-        messages.add(pkmn.name() + " was injured by the poison!");
+        pushMessage(pkmn.name() + " was injured by the poison!");
       }
       else if (current == ConditionEffect.SLEEP && Math.random() > .333333) {
         remove(ConditionEffect.SLEEP);
-        messages.add(pkmn.name() + " woke up!");
+        pushMessage(pkmn.name() + " woke up!");
       }
     }
-
-    lastMessage = messages.toArray(new String[messages.size()]);
   }
 
   public String[] lastMessage() {
-    return lastMessage;
+    return lastMessage.toArray(new String[lastMessage.size()]);
   }
 
   /**
@@ -147,8 +147,16 @@ public class Condition {
     return effects.remove(e);
   }
 
+  private void resetMessage() {
+    lastMessage = new ArrayList<String>();
+  }
+
+  private void pushMessage(String s) {
+    lastMessage.add(s);
+  }
+
   private Pokemon pkmn;
   private boolean attackself;
-  private String[] lastMessage;
-  private List<ConditionEffect> effects = new ArrayList<ConditionEffect>();
+  private List<String> lastMessage;
+  private List<ConditionEffect> effects;
 }

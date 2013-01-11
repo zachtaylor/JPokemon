@@ -78,6 +78,19 @@ public class Move {
   }
 
   /**
+   * Tells the number of Turns it takes to fully execute this Move
+   * 
+   * @return The number of times this move must be reAdded
+   */
+  public int turns() {
+    if (style() == MoveStyle.DELAYNEXT || style() == MoveStyle.DELAYBEFORE)
+      return 2;
+    // TODO : add bide
+
+    return 1;
+  }
+
+  /**
    * Tells whether this Move is enabled, and has sufficient PP to be used
    * 
    * @return If this move can be used
@@ -93,10 +106,6 @@ public class Move {
    */
   public void enable(boolean b) {
     _enabled = b;
-  }
-
-  public boolean hurtUserOnMiss() {
-    return (this.number() == 60 || this.number() == 69);
   }
 
   /**
@@ -214,6 +223,29 @@ public class Move {
   public void applyEffects(Slot user, Slot target, int damage) {
     for (MoveEffect effect : _info.getEffects())
       effect.effect(user, target, damage);
+  }
+
+  /**
+   * Tells whether the user of the move should be hurt if the move misses
+   * 
+   * @return True if this move penalizes the user for missing
+   */
+  public boolean hurtUserOnMiss() {
+    return (number() == 60 || number() == 69);
+  }
+
+  /**
+   * Tells whether this move will cause damage to a target
+   * 
+   * @return True if the target's health is lowered as a consequence of the Move
+   */
+  public boolean doesDamage() {
+    return style() != MoveStyle.STATUS;
+  }
+
+  public boolean damageIsAbsolute() {
+    // TODO : add dragon rage, bide
+    return false;
   }
 
   public JSONObject toJSON() {

@@ -5,10 +5,11 @@ import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.battle.slot.Slot;
 
 public class RunTurn extends Turn {
-  public RunTurn(Slot user) {
-    super(user);
+  public RunTurn(Slot user, Slot target) {
+    super(user, target);
   }
 
+  @Override
   protected void doExecute() {
     Battle battle = BattleRegistry.get(slot().trainer());
     double chance = 100;
@@ -26,6 +27,11 @@ public class RunTurn extends Turn {
     }
     else
       addMessage("Didn't get away!");
+  }
+
+  @Override
+  public boolean reAdd() {
+    return false;
   }
 
   @Override

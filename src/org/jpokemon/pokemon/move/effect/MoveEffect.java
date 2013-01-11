@@ -24,7 +24,7 @@ public class MoveEffect {
     else if (type.isConditionModifier())
       pokemon.addConditionEffect(ConditionEffect.valueOf(type.toString()));
     else if (type.isFieldModifier())
-      user.addEffect(new SlotEffect(SlotEffectType.valueOf(type.toString()), user, enemy));
+      user.addSlotEffect(new SlotEffect(SlotEffectType.valueOf(type.toString()), user, enemy));
     else if (type == MoveEffectType.HEALTH_MOD)
       pokemon.healDamage((int) (pokemon.maxHealth() * power / 1000.0));
   }
