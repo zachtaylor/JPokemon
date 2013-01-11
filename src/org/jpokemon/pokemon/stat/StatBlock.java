@@ -93,7 +93,7 @@ public class StatBlock {
    * 
    * @param i The issue which applies a stat penalty
    */
-  public void addIssue(ConditionEffect i) {
+  public void addConditionEffect(ConditionEffect i) {
     // Also not polymorhpic, because condition issues don't map a stat
 
     if (i == ConditionEffect.BURN) {
@@ -111,7 +111,7 @@ public class StatBlock {
    * 
    * @param i The issue to reset the effects of
    */
-  public void removeIssue(ConditionEffect i) {
+  public void removeConditionEffect(ConditionEffect i) {
     if (i == ConditionEffect.BURN && _burn) {
       _burn = false;
       _data[StatType.ATTACK.ordinal()].modify(1);

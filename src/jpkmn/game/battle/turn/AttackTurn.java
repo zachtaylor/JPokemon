@@ -26,9 +26,9 @@ public class AttackTurn extends Turn {
     Slot targetSlot = slot().target();
     Pokemon leader = slot().leader();
 
-    if (!leader.hasIssue(ConditionEffect.WAIT)) {
-      if (!leader.condition.canAttack()) {
-        addMessage(leader.condition.toString());
+    if (!leader.hasConditionEffect(ConditionEffect.WAIT)) {
+      if (!leader.canAttack()) {
+        addMessage(leader.condition());
         return;
       }
       else if (!_move.enabled()) {
@@ -49,16 +49,16 @@ public class AttackTurn extends Turn {
     }
 
     if (_move.style() == MoveStyle.DELAYNEXT) {
-      if (leader.removeIssue(ConditionEffect.WAIT)) {
+      if (leader.removeConditionEffect(ConditionEffect.WAIT)) {
         addMessage("Resting this turn");
         return;
       }
       else
-        leader.addIssue(ConditionEffect.WAIT);
+        leader.addConditionEffect(ConditionEffect.WAIT);
     }
     else if (_move.style() == MoveStyle.DELAYBEFORE) {
-      if (!leader.removeIssue(ConditionEffect.WAIT)) {
-        leader.addIssue(ConditionEffect.WAIT);
+      if (!leader.removeConditionEffect(ConditionEffect.WAIT)) {
+        leader.addConditionEffect(ConditionEffect.WAIT);
         addMessage("Resting this turn");
         return;
       }

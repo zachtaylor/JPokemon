@@ -67,8 +67,8 @@ public class Round {
   private void applyEndOfRoundEffects() {
     // Condition effects
     for (Slot slot : _battle) {
-      String[] messages = slot.leader().condition.applyEffects();
-      notifyAllTrainers(messages);
+      slot.leader().applyConditionEffects();
+      notifyAllTrainers(slot.leader().lastConditionMessage());
     }
 
     // Slot effects
@@ -79,7 +79,7 @@ public class Round {
 
     // Force next attacks
     for (Slot slot : _battle)
-      if (slot.leader().hasIssue(ConditionEffect.WAIT))
+      if (slot.leader().hasConditionEffect(ConditionEffect.WAIT))
         _battle.add(slot.attack());
   }
 

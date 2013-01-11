@@ -22,7 +22,7 @@ public class MoveEffect {
     if (type.isStatModifier())
       pokemon.getStat(StatType.valueOf(type.toString())).effect(power);
     else if (type.isConditionModifier())
-      pokemon.addIssue(ConditionEffect.valueOf(type.toString()));
+      pokemon.addConditionEffect(ConditionEffect.valueOf(type.toString()));
     else if (type.isFieldModifier())
       user.addEffect(new SlotEffect(SlotEffectType.valueOf(type.toString()), user, enemy));
     else if (type == MoveEffectType.HEALTH_MOD)

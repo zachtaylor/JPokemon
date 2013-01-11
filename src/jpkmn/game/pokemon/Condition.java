@@ -24,10 +24,11 @@ public class Condition {
   public int getCatchBonus() {
     int best = 10;
 
-    for (ConditionEffect i : issues) {
-      if (i == ConditionEffect.FREEZE || i == ConditionEffect.SLEEP)
+    for (ConditionEffect e : effects) {
+      if (e == ConditionEffect.FREEZE || e == ConditionEffect.SLEEP)
         return 20;
-      else if (i == ConditionEffect.BURN || i == ConditionEffect.POISON || i == ConditionEffect.PARALYZE)
+      else if (e == ConditionEffect.BURN || e == ConditionEffect.POISON
+          || e == ConditionEffect.PARALYZE)
         best = 15;
     }
 
@@ -36,16 +37,15 @@ public class Condition {
 
   /**
    * Adds a new issue to the Pokemon. If already afflicted, the new one is not
-   * added, except for WAITs (they can stack). If the Pokemon is BURNed or
-   * PARALYZEd, stats are adjusted accordingly.
+   * added, except for WAITs (they can stack).
    * 
-   * @param i The issue to be added
+   * @param e The issue to be added
    */
-  public void add(ConditionEffect i) {
-    if (i != ConditionEffect.WAIT && contains(i))
-      remove(i);
+  public void add(ConditionEffect e) {
+    if (e != ConditionEffect.WAIT && contains(e))
+      remove(e);
 
-    issues.add(i);
+    effects.add(e);
   }
 
   /**
@@ -55,8 +55,9 @@ public class Condition {
    * @return true if user can attack
    */
   public boolean canAttack() {
-    for (ConditionEffect i : issues) {
-      if (i == ConditionEffect.FREEZE || i == ConditionEffect.SLEEP || i == ConditionEffect.FLINCH)
+    for (ConditionEffect i : effects) {
+      if (i == ConditionEffect.FREEZE || i == ConditionEffect.SLEEP
+          || i == ConditionEffect.FLINCH)
         return false;
       else if (i == ConditionEffect.PARALYZE && Math.random() < .25)
         return false;
@@ -73,10 +74,10 @@ public class Condition {
    * Applies issues. DOTs hurt, Flinch is removed, volatile effects have a
    * chance to dispel.
    */
-  public String[] applyEffects() {
+  public void applyEffects() {
     List<String> messages = new ArrayList<String>();
 
-    for (ConditionEffect current : issues) {
+    for (ConditionEffect current : effects) {
       if (current == ConditionEffect.BURN) {
         pkmn.takeDamage(pkmn.maxHealth() / 10);
         messages.add(pkmn.name() + " was injured by it's burn!");
@@ -118,31 +119,36 @@ public class Condition {
       }
     }
 
-    return messages.toArray(new String[messages.size()]);
+    lastMessage = messages.toArray(new String[messages.size()]);
+  }
+
+  public String[] lastMessage() {
+    return lastMessage;
   }
 
   /**
    * Cleans up all status ailments.
    */
   public void reset() {
-    issues = new ArrayList<ConditionEffect>();
+    effects = new ArrayList<ConditionEffect>();
   }
 
-  public boolean contains(ConditionEffect i) {
-    return issues.contains(i);
+  public boolean contains(ConditionEffect e) {
+    return effects.contains(e);
   }
 
   public String toString() {
-    if (issues.isEmpty())
+    if (effects.isEmpty())
       return "";
-    return issues.toString();
+    return effects.toString();
   }
 
-  public boolean remove(ConditionEffect i) {
-    return issues.remove(i);
+  public boolean remove(ConditionEffect e) {
+    return effects.remove(e);
   }
 
   private Pokemon pkmn;
   private boolean attackself;
-  private List<ConditionEffect> issues = new ArrayList<ConditionEffect>();
+  private String[] lastMessage;
+  private List<ConditionEffect> effects = new ArrayList<ConditionEffect>();
 }

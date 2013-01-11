@@ -47,7 +47,7 @@ public class StatBlockTest extends TestCase {
 
     int attack = attackStat.cur();
 
-    block.addIssue(ConditionEffect.BURN);
+    block.addConditionEffect(ConditionEffect.BURN);
 
     assertEquals(Math.max(attack / 2, 1), attackStat.cur());
   }
@@ -57,11 +57,11 @@ public class StatBlockTest extends TestCase {
 
     int attack = attackStat.cur();
 
-    block.addIssue(ConditionEffect.BURN);
+    block.addConditionEffect(ConditionEffect.BURN);
 
     assertEquals(Math.max(attack / 2, 1), attackStat.cur());
 
-    block.removeIssue(ConditionEffect.BURN);
+    block.removeConditionEffect(ConditionEffect.BURN);
 
     assertEquals(attack, attackStat.cur());
   }
@@ -71,7 +71,7 @@ public class StatBlockTest extends TestCase {
 
     int speed = speedStat.cur();
 
-    block.addIssue(ConditionEffect.PARALYZE);
+    block.addConditionEffect(ConditionEffect.PARALYZE);
 
     assertEquals(Math.max(speed / 4, 1), speedStat.cur());
   }
@@ -81,7 +81,7 @@ public class StatBlockTest extends TestCase {
 
     int attack = attackStat.cur();
 
-    block.removeIssue(ConditionEffect.BURN);
+    block.removeConditionEffect(ConditionEffect.BURN);
 
     assertEquals(attack, attackStat.cur());
   }
@@ -91,11 +91,11 @@ public class StatBlockTest extends TestCase {
 
     int speed = speedStat.cur();
 
-    block.addIssue(ConditionEffect.PARALYZE);
+    block.addConditionEffect(ConditionEffect.PARALYZE);
 
     assertEquals(Math.max(speed / 4, 1), speedStat.cur());
 
-    block.removeIssue(ConditionEffect.PARALYZE);
+    block.removeConditionEffect(ConditionEffect.PARALYZE);
 
     assertEquals(speed, speedStat.cur());
   }

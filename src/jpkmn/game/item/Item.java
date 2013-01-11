@@ -82,7 +82,7 @@ public class Item {
       int HPmax = p.maxHealth(),
       HPcur = p.health(),
       BALL = _info.getData(),
-      STAT = p.condition.getCatchBonus(),
+      STAT = p.catchBonus(),
       q = BALL * 4 * STAT / HPmax * ((3 * HPmax) - (2 * HPcur));
 
       if (q >= 255)

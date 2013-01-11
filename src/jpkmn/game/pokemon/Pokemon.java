@@ -16,8 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Pokemon {
-  public final Condition condition;
-
   public Pokemon(int num) {
     _number = num;
 
@@ -30,7 +28,7 @@ public class Pokemon {
 
     _moves = new MoveBlock(_number);
     _stats = new StatBlock(base);
-    condition = new Condition(this);
+    _condition = new Condition(this);
 
     _id = CURRENT_ID++;
   }
@@ -64,7 +62,7 @@ public class Pokemon {
 
     checkNewMoves();
 
-    condition.reset();
+    _condition.reset();
   }
 
   public Type type1() {
@@ -93,6 +91,15 @@ public class Pokemon {
       _stats.points(_stats.points() + 1);
       level(level() + 1);
     }
+  }
+
+  /**
+   * XP this Pokemon needs to level
+   * 
+   * @return The amount of XP needed to gain a level
+   */
+  public int xpNeeded() {
+    return (int) (Math.log((double) _level) * _level * .35 * _level);
   }
 
   public Stat getStat(StatType s) {
@@ -141,12 +148,62 @@ public class Pokemon {
   }
 
   /**
-   * XP this Pokemon needs to level
+   * Takes a specified amount of damage. If damage is greater than available
+   * health, the Pokemon is knocked out.
    * 
-   * @return The amount of XP needed to gain a level
+   * @param damage The amount of damage to be taken
+   * @return the awake state of the Pokemon
    */
-  public int xpNeeded() {
-    return (int) (Math.log((double) _level) * _level * .35 * _level);
+  public void takeDamage(int damage) {
+    getStat(StatType.HEALTH).effect(-damage);
+  }
+
+  /**
+   * Heals specified damage. If healed amount is greater than missing health,
+   * Pokemon is brought to full health.
+   * 
+   * @param heal The amount healed by
+   */
+  public void healDamage(int heal) {
+    getStat(StatType.HEALTH).effect(heal);
+  }
+
+  public boolean awake() {
+    return health() > 0;
+  }
+
+  public String condition() {
+    return _condition.toString();
+  }
+
+  public void addConditionEffect(ConditionEffect e) {
+    _stats.addConditionEffect(e);
+    _condition.add(e);
+  }
+
+  public boolean hasConditionEffect(ConditionEffect e) {
+    return _condition.contains(e);
+  }
+
+  public boolean removeConditionEffect(ConditionEffect e) {
+    _stats.removeConditionEffect(e);
+    return _condition.remove(e);
+  }
+
+  public void applyConditionEffects() {
+    _condition.applyEffects();
+  }
+
+  public String[] lastConditionMessage() {
+    return _condition.lastMessage();
+  }
+
+  public boolean canAttack() {
+    return _condition.canAttack();
+  }
+
+  public int catchBonus() {
+    return _condition.getCatchBonus();
   }
 
   /**
@@ -185,45 +242,6 @@ public class Pokemon {
     checkNewMoves();
   }
 
-  /**
-   * Takes a specified amount of damage. If damage is greater than available
-   * health, the Pokemon is knocked out.
-   * 
-   * @param damage The amount of damage to be taken
-   * @return the awake state of the Pokemon
-   */
-  public void takeDamage(int damage) {
-    getStat(StatType.HEALTH).effect(-damage);
-  }
-
-  /**
-   * Heals specified damage. If healed amount is greater than missing health,
-   * Pokemon is brought to full health.
-   * 
-   * @param heal The amount healed by
-   */
-  public void healDamage(int heal) {
-    getStat(StatType.HEALTH).effect(heal);
-  }
-
-  public boolean awake() {
-    return health() > 0;
-  }
-
-  public void addIssue(ConditionEffect i) {
-    _stats.addIssue(i);
-    condition.add(i);
-  }
-
-  public boolean hasIssue(ConditionEffect i) {
-    return condition.contains(i);
-  }
-
-  public boolean removeIssue(ConditionEffect i) {
-    _stats.removeIssue(i);
-    return condition.remove(i);
-  }
-
   public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
@@ -233,7 +251,7 @@ public class Pokemon {
       data.put("level", _level);
       data.put("xp", _xp);
       data.put("xp_needed", xpNeeded());
-      data.put("condition", condition.toString());
+      data.put("condition", _condition.toString());
       data.put("stats", _stats.toJSON());
       data.put("moves", _moves.toJSON());
 
@@ -311,6 +329,7 @@ public class Pokemon {
   private MoveBlock _moves;
   private StatBlock _stats;
   private Type type1, type2;
+  private Condition _condition;
   private String name, species;
   private int _id, _number, _level, _xp, evolutionlevel;
 
