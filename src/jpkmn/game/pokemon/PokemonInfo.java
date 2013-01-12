@@ -1,4 +1,4 @@
-package jpkmn.game.base;
+package jpkmn.game.pokemon;
 
 import java.util.List;
 
@@ -9,33 +9,31 @@ import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
-public class PokemonBase implements JPokemonConstants {
+public class PokemonInfo implements JPokemonConstants {
   @PrimaryKey
   private int number;
+  private String name;
   private int type1, type2, attack, specattack, defense, specdefense, speed,
       health, evolutionlevel;
-  private String name;
 
-  private static PokemonBase[] initBases() {
-    return new PokemonBase[JPokemonConstants.POKEMONNUMBER];
-  }
+  private static PokemonInfo[] cache = new PokemonInfo[POKEMONNUMBER];
 
-  public static PokemonBase get(int num) {
-    if (bases[num - 1] != null)
-      return bases[num - 1];
-
+  public static PokemonInfo get(int num) {
     DataConnectionManager.init(DATABASE_PATH);
-    try {
-      List<PokemonBase> pokemonbase = SqlStatement.select(PokemonBase.class)
-          .where("number").eq(num).getList();
 
-      if (!pokemonbase.isEmpty())
-        return bases[num - 1] = pokemonbase.get(0);
+    if (cache[num - 1] == null) {
+      try {
+        List<PokemonInfo> pokemonbase = SqlStatement.select(PokemonInfo.class).where("number").eq(num).getList();
 
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
+        if (!pokemonbase.isEmpty())
+          cache[num - 1] = pokemonbase.get(0);
+
+      } catch (DataConnectionException e) {
+        e.printStackTrace();
+      }
     }
-    return null;
+
+    return cache[num - 1];
   }
 
   //@preformat
@@ -51,6 +49,4 @@ public class PokemonBase implements JPokemonConstants {
   public int getHealth()         { return health;         } public void setHealth(int val)         { health         = val; }
   public int getEvolutionlevel() { return evolutionlevel; } public void setEvolutionlevel(int val) { evolutionlevel = val; }
   //@format
-
-  private static PokemonBase[] bases = initBases();
 }

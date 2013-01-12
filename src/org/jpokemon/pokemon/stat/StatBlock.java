@@ -1,20 +1,20 @@
 package org.jpokemon.pokemon.stat;
 
-import jpkmn.game.base.PokemonBase;
 import jpkmn.game.pokemon.ConditionEffect;
+import jpkmn.game.pokemon.PokemonInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class StatBlock {
-  public StatBlock(PokemonBase base) {
+  public StatBlock(PokemonInfo info) {
     _data = new Stat[StatType.values().length];
 
     _data[0] = new Health();
     for (int i = 1; i < _data.length; i++)
       _data[i] = new Stat();
 
-    rebase(base);
+    rebase(info);
   }
 
   /**
@@ -75,17 +75,17 @@ public class StatBlock {
   /**
    * Sets up each stat to use the value from the PokemonBase specified
    * 
-   * @param base PokemonBase which has the new base values for each stat
+   * @param info PokemonBase which has the new base values for each stat
    */
-  public void rebase(PokemonBase base) {
+  public void rebase(PokemonInfo info) {
     // This is not polymorphic, because that would make the database ugly
 
-    _data[0].base(base.getHealth());
-    _data[StatType.ATTACK.ordinal()].base(base.getAttack());
-    _data[StatType.SPECATTACK.ordinal()].base(base.getSpecattack());
-    _data[StatType.DEFENSE.ordinal()].base(base.getDefense());
-    _data[StatType.SPECDEFENSE.ordinal()].base(base.getSpecdefense());
-    _data[StatType.SPEED.ordinal()].base(base.getSpeed());
+    _data[0].base(info.getHealth());
+    _data[StatType.ATTACK.ordinal()].base(info.getAttack());
+    _data[StatType.SPECATTACK.ordinal()].base(info.getSpecattack());
+    _data[StatType.DEFENSE.ordinal()].base(info.getDefense());
+    _data[StatType.SPECDEFENSE.ordinal()].base(info.getSpecdefense());
+    _data[StatType.SPEED.ordinal()].base(info.getSpeed());
   }
 
   /**

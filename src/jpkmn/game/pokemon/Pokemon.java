@@ -3,7 +3,6 @@ package jpkmn.game.pokemon;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.base.PokemonBase;
 
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
@@ -19,7 +18,7 @@ public class Pokemon {
   public Pokemon(int num) {
     _number = num;
 
-    PokemonBase base = PokemonBase.get(_number);
+    PokemonInfo base = PokemonInfo.get(_number);
 
     name = species = base.getName();
     type1 = Type.valueOf(base.getType1());
@@ -226,18 +225,18 @@ public class Pokemon {
     else
       _number++;
 
-    PokemonBase base = PokemonBase.get(_number);
+    PokemonInfo info = PokemonInfo.get(_number);
 
     _moves.setPokemonNumber(_number);
-    _stats.rebase(base);
-    type1 = Type.valueOf(base.getType1());
-    type2 = Type.valueOf(base.getType2());
-    evolutionlevel = base.getEvolutionlevel();
+    _stats.rebase(info);
+    type1 = Type.valueOf(info.getType1());
+    type2 = Type.valueOf(info.getType2());
+    evolutionlevel = info.getEvolutionlevel();
 
     if (name.equals(species))
-      name = species = base.getName();
+      name = species = info.getName();
     else
-      species = base.getName();
+      species = info.getName();
 
     checkNewMoves();
   }

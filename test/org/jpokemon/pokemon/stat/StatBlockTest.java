@@ -1,18 +1,18 @@
 package org.jpokemon.pokemon.stat;
 
-import org.jpokemon.JPokemonConstants;
-
-import jpkmn.game.base.PokemonBase;
 import jpkmn.game.pokemon.ConditionEffect;
+import jpkmn.game.pokemon.PokemonInfo;
 import junit.framework.TestCase;
+
+import org.jpokemon.JPokemonConstants;
 
 public class StatBlockTest extends TestCase {
   StatBlock block;
-  PokemonBase pokemon;
+  PokemonInfo pokemon;
 
   public void setUp() {
     int pokemonNumber = (int) (Math.random() * JPokemonConstants.POKEMONNUMBER);
-    pokemon = PokemonBase.get(pokemonNumber);
+    pokemon = PokemonInfo.get(pokemonNumber);
     block = new StatBlock(pokemon);
     block.level(100);
   }
