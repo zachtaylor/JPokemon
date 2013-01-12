@@ -47,8 +47,8 @@ public class Item {
     if (_quantity < 1)
       return false;
 
-    boolean result = false;
-    if (result = doEffect(p))
+    boolean result = doEffect(p);
+    if (result)
       --_quantity;
 
     return result;

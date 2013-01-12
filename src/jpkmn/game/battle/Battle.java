@@ -46,7 +46,10 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
         // TODO : Punish player
       }
       else if (slot.trainer().type() == TrainerType.GYM) {
-        // TODO : Reward from gym
+        for (Slot s : this) {
+          if (s.trainer().type() == TrainerType.PLAYER)
+            ((Player) s.trainer()).badge(trainer.id());
+        }
 
         // Also add this gym to the list of trainers defeated
         addTrainerToPlayerHistory(slot.trainer().id());

@@ -25,8 +25,7 @@ public class Event {
     _type = Event.Type.valueOf(info.getType());
 
     if (info.getRequirement() > -1)
-      _requirement = new Requirement(info.getRequirement(),
-          info.getRequirement_data());
+      _requirement = new Requirement(info.getRequirement(), info.getRequirement_data());
   }
 
   public int id() {
@@ -52,11 +51,11 @@ public class Event {
       return false;
 
     switch (_type) {
-    case BATTLE:
-    break; // never block battle
     case ITEM:
       if (_int2 < 0 && p.item(_int1).amount() < -_int2)
         return false;
+    break;
+    default:
     break;
     }
 
@@ -84,7 +83,6 @@ public class Event {
       p.events().put(_id);
     break;
     }
-    // TODO
   }
 
   private Event.Type _type;
