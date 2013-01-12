@@ -48,7 +48,7 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
     while (player.party().add(new Pokemon(i)))
       i++;
 
-    assertEquals(PARTYSIZE, player.party().size());
+    assertEquals(TRAINER_PARTY_SIZE, player.party().size());
     assertFalse(player.party().add(new Pokemon(i)));
     assertTrue(player.add(new Pokemon(i)));
   }

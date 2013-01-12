@@ -14,7 +14,7 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
     _id = 0;
     _name = "Mock Player";
     _type = TrainerType.WILD;
-    _party = new PokemonStorageUnit(PARTYSIZE);
+    _party = new PokemonStorageUnit(TRAINER_PARTY_SIZE);
   }
 
   public Trainer(int ai_number) throws LoadException {

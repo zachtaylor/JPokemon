@@ -20,15 +20,15 @@ import org.json.JSONObject;
  */
 public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokemonConstants {
   public PokemonStorageBlock() {
-    _data = new PokemonStorageUnit[BOXNUMBER + 1];
+    _data = new PokemonStorageUnit[PLAYER_STORAGE_UNIT_COUNT + 1];
 
-    _data[0] = new PokemonStorageUnit(PARTYSIZE);
-    for (int i = 1; i <= BOXNUMBER; i++)
-      _data[i] = new PokemonStorageUnit(BOXSIZE);
+    _data[0] = new PokemonStorageUnit(TRAINER_PARTY_SIZE);
+    for (int i = 1; i <= PLAYER_STORAGE_UNIT_COUNT; i++)
+      _data[i] = new PokemonStorageUnit(PLAYER_STORAGE_UNIT_SIZE);
   }
 
   public PokemonStorageUnit get(int box) {
-    if (box < 0 || box > BOXNUMBER)
+    if (box < 0 || box > PLAYER_STORAGE_UNIT_COUNT)
       throw new IllegalArgumentException("Invalid box number: " + box);
 
     return _data[box];
@@ -40,7 +40,7 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     try {
       data.put("party", _data[0].toJSON());
 
-      for (int i = 1; i <= BOXNUMBER; i++)
+      for (int i = 1; i <= PLAYER_STORAGE_UNIT_COUNT; i++)
         data.put("box" + i, _data[i].toJSON());
 
     } catch (JSONException e) {
@@ -85,7 +85,7 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
   private class PokemonStorageBlockIterator implements Iterator<PokemonStorageUnit> {
     @Override
     public boolean hasNext() {
-      return index <= BOXNUMBER;
+      return index <= PLAYER_STORAGE_UNIT_COUNT;
     }
 
     @Override

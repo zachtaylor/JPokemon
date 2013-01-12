@@ -1,5 +1,8 @@
 package org.jpokemon.trainer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
@@ -11,7 +14,7 @@ import org.json.JSONException;
  */
 public class Progress implements JPokemonConstants {
   public Progress() {
-    _events = new boolean[EVENTNUMBER];
+    _events = new ArrayList<Integer>();
   }
 
   /**
@@ -20,12 +23,12 @@ public class Progress implements JPokemonConstants {
    * @param id Event number to record
    */
   public void put(int id) {
-    if (id < 1 || id > EVENTNUMBER)
+    if (id < 1)
       throw new IllegalArgumentException("Out of bounds event: " + id);
-    if (_events[id - 1])
+    if (_events.contains(id))
       throw new IllegalArgumentException("Duplicate put for event: " + id);
 
-    _events[id - 1] = true;
+    _events.add(id);
   }
 
   /**
@@ -35,18 +38,17 @@ public class Progress implements JPokemonConstants {
    * @return True if the event has been completed
    */
   public boolean get(int id) {
-    if (id < 1 || id > EVENTNUMBER)
+    if (id < 1)
       throw new IllegalArgumentException("Out of bounds event: " + id);
 
-    return _events[id - 1];
+    return _events.contains(id);
   }
 
   public JSONArray toJSON() {
     JSONArray data = new JSONArray();
 
-    for (int i = 0; i < EVENTNUMBER; i++)
-      if (_events[i])
-        data.put(i);
+    for (Integer i : _events)
+      data.put(i.intValue());
 
     return data;
   }
@@ -54,7 +56,7 @@ public class Progress implements JPokemonConstants {
   public void loadJSON(JSONArray json) throws LoadException {
     try {
       for (int i = 0; i < json.length(); i++)
-        put(json.getInt(i) + 1);
+        put(json.getInt(i));
     } catch (Exception e) {
       if (e instanceof JSONException)
         e.printStackTrace();
@@ -63,5 +65,5 @@ public class Progress implements JPokemonConstants {
     }
   }
 
-  private boolean[] _events;
+  private List<Integer> _events;
 }
