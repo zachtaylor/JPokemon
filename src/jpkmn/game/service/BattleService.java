@@ -8,6 +8,7 @@ import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.PokemonTrainer;
@@ -15,7 +16,7 @@ import org.jpokemon.trainer.Trainer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BattleService {
+public class BattleService implements JPokemonConstants {
   public static void startWild(int playerID) throws ServiceException {
     Player player = PlayerFactory.get(playerID);
 
@@ -101,8 +102,8 @@ public class BattleService {
     if (trainer == null)
       throw new ServiceException("Trainer " + tID + " is not in this area");
 
-    // if (player has fought this trainer)
-    // throw new ServiceException(player.name() + " has already fought " +)
+    if (!ALLOW_REPEAT_TRAINER_BATTLES && player.trainers().get(tID))
+      throw new ServiceException(player.name() + " has already fought" + trainer.name());
 
     BattleRegistry.start(player, trainer);
     player.setState("battle");

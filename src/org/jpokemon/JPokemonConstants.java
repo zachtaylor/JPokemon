@@ -29,4 +29,6 @@ public interface JPokemonConstants {
 
   public static final double GYM_EXPERIENCE_MODIFIER = 1.7;
   public static final double TRAINER_EXPERIENCE_MODIFIER = 1.3;
+  
+  public static final boolean ALLOW_REPEAT_TRAINER_BATTLES = false;
 }
