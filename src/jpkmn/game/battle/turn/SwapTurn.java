@@ -16,7 +16,7 @@ public class SwapTurn extends Turn {
     String leaderName = slot().leader().name();
     addMessage(trainerName + " sent out " + leaderName);
   }
-  
+
   @Override
   public boolean reAdd() {
     return false;

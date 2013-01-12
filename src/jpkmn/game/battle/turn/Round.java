@@ -67,14 +67,12 @@ public class Round {
   }
 
   private void applyEndOfRoundEffects() {
-    // Condition effects
     for (Slot slot : _battle) {
+      // Condition effects
       slot.leader().applyConditionEffects();
       notifyAllTrainers(slot.leader().lastConditionMessage());
-    }
 
-    // Slot effects
-    for (Slot slot : _battle) {
+      // Slot effects
       String[] messages = slot.applySlotEffects();
       notifyAllTrainers(messages);
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jpkmn.game.battle.slot.Slot;
+import jpkmn.game.pokemon.Pokemon;
 
 public abstract class Turn implements Comparable<Turn> {
   public Turn(Slot user, Slot target) {
@@ -85,7 +86,20 @@ public abstract class Turn implements Comparable<Turn> {
   public abstract boolean reAdd();
 
   private void doForcedSwap() {
-    // TODO
+    int swapIndex = 0;
+
+    for (Pokemon p : _user.party()) {
+      if (p.awake())
+        break;
+      else
+        swapIndex++;
+    }
+
+    _user.party().swap(0, swapIndex);
+
+    String trainerName = slot().trainer().name();
+    String leaderName = slot().leader().name();
+    addMessage(trainerName + " sent out " + leaderName);
   }
 
   private Slot _user, _target;
