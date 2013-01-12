@@ -6,7 +6,6 @@ import java.util.List;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
 
-import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +37,7 @@ public class TrainerSpawner {
     return array;
   }
 
-  public Trainer spawn(int trainerID, Player p) {
+  public Trainer spawn(int trainerID) {
     Spawn target = null;
 
     for (Spawn cur : _data)
@@ -46,7 +45,7 @@ public class TrainerSpawner {
         target = cur;
 
     try {
-      if (target != null && !target.test(p))
+      if (target != null)
         return new Trainer(target.id());
     } catch (LoadException e) {
       e.printStackTrace();
@@ -67,11 +66,6 @@ public class TrainerSpawner {
 
     public String name() {
       return _name;
-    }
-
-    public boolean test(Player p) {
-      // TODO : check if the player has fought this trainer before
-      return true;
     }
 
     private int _id;

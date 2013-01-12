@@ -13,7 +13,6 @@ import jpkmn.map.spawner.EventSpawner;
 import jpkmn.map.spawner.PokemonSpawner;
 import jpkmn.map.spawner.TrainerSpawner;
 
-import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
 import org.json.JSONArray;
 
@@ -109,8 +108,8 @@ public class Area {
    * @param trainerID ID of the trainer
    * @return A new instance of the specified Trainer
    */
-  public Trainer trainer(int trainerID, Player p) {
-    return _trainers.spawn(trainerID, p);
+  public Trainer trainer(int trainerID) {
+    return _trainers.spawn(trainerID);
   }
 
   /**

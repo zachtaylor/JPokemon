@@ -97,7 +97,7 @@ public class BattleService implements JPokemonConstants {
     if (area == null)
       throw new ServiceException(player.name() + " has no area");
 
-    Trainer trainer = area.trainer(tID, player);
+    Trainer trainer = area.trainer(tID);
 
     if (trainer == null)
       throw new ServiceException("Trainer " + tID + " is not in this area");
