@@ -11,6 +11,7 @@ import jpkmn.game.battle.turn.Round;
 import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;
@@ -20,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Battle implements Iterable<Slot> {
+public class Battle implements JPokemonConstants, Iterable<Slot> {
   public Battle() {
     _round = new Round(this);
     _slots = new HashMap<Integer, Slot>();
@@ -182,7 +183,12 @@ public class Battle implements Iterable<Slot> {
   private void addTrainerToPlayerHistory(int id) {
     for (Slot s : this) {
       if (s.trainer().type() == TrainerType.PLAYER) {
-        ((Player) s.trainer()).trainers().put(id);
+        try {
+          ((Player) s.trainer()).trainers().put(id);
+        } catch (IllegalArgumentException e) {
+          if (!ALLOW_REPEAT_TRAINER_BATTLES)
+            throw e;
+        }
       }
     }
   }
