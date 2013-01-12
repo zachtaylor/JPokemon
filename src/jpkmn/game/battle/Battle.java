@@ -13,6 +13,7 @@ import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
+import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.TrainerType;
 import org.json.JSONArray;
@@ -45,9 +46,12 @@ public class Battle implements Iterable<Slot> {
       }
       else if (slot.trainer().type() == TrainerType.GYM) {
         // TODO : Reward from gym
+
+        // Also add this gym to the list of trainers defeated
+        addTrainerToPlayerHistory(slot.trainer().id());
       }
       else if (slot.trainer().type() == TrainerType.TRAINER) {
-        // TODO : Prevent players from fighting this trainer again
+        addTrainerToPlayerHistory(slot.trainer().id());
       }
     }
 
@@ -158,9 +162,8 @@ public class Battle implements Iterable<Slot> {
     boolean onlyOneTeamLeft = true;
 
     for (Slot s : this) {
-      if (curTeam == -1) {
+      if (curTeam == -1)
         curTeam = s.team();
-      }
       else if (curTeam != s.team()) {
         onlyOneTeamLeft = false;
         break;
@@ -172,6 +175,14 @@ public class Battle implements Iterable<Slot> {
         PokemonTrainer trainer = slot.trainer();
         BattleRegistry.remove(trainer);
         trainer.setState("world");
+      }
+    }
+  }
+
+  private void addTrainerToPlayerHistory(int id) {
+    for (Slot s : this) {
+      if (s.trainer().type() == TrainerType.PLAYER) {
+        ((Player) s.trainer()).trainers().put(id);
       }
     }
   }

@@ -22,6 +22,7 @@ public class Player implements PokemonTrainer {
     _bag = new Bag();
     _pokedex = new Pokedex();
     _progress = new Progress();
+    _trainers = new Progress();
     _gameWindow = new GameWindow(_id);
     _storage = new PokemonStorageBlock();
   }
@@ -108,6 +109,10 @@ public class Player implements PokemonTrainer {
     return _progress;
   }
 
+  public Progress trainers() {
+    return _trainers;
+  }
+
   public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
@@ -171,9 +176,9 @@ public class Player implements PokemonTrainer {
   private Bag _bag;
   private String _name;
   private Pokedex _pokedex;
-  private Progress _progress;
   private GameWindow _gameWindow;
   private PokemonStorageBlock _storage;
+  private Progress _progress, _trainers;
   private int _id, _area, _badge, _cash;
 
   private static int PLAYER_COUNT = 1;
