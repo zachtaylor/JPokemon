@@ -43,6 +43,10 @@ public class Item {
     amount(quantity + amount());
   }
 
+  public boolean visible() {
+    return amount() > 0;
+  }
+  
   public boolean effect(Pokemon p) {
     if (_quantity < 1)
       return false;

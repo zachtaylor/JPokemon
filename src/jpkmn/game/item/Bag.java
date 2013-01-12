@@ -41,7 +41,8 @@ public class Bag {
     JSONArray data = new JSONArray();
 
     for (Item item : _allItems)
-      data.put(item.toJSON());
+      if (item.visible())
+        data.put(item.toJSON());
 
     return data;
   }
