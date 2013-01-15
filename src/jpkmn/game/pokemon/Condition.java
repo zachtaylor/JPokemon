@@ -3,8 +3,6 @@ package jpkmn.game.pokemon;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.game.battle.Battle;
-
 public class Condition {
   /**
    * Creates a new Condition for the specified Pokemon
@@ -24,17 +22,12 @@ public class Condition {
    * @return the Catch Bonus
    */
   public int getCatchBonus() {
-    int best = 10;
+    double best = 10;
 
-    for (ConditionEffect e : effects) {
-      if (e == ConditionEffect.FREEZE || e == ConditionEffect.SLEEP)
-        return 20;
-      else if (e == ConditionEffect.BURN || e == ConditionEffect.POISON
-          || e == ConditionEffect.PARALYZE)
-        best = 15;
-    }
+    for (ConditionEffect e : effects)
+      best *= e.catchBonus();
 
-    return best;
+    return (int) best;
   }
 
   /**
@@ -58,15 +51,8 @@ public class Condition {
    */
   public boolean canAttack() {
     for (ConditionEffect i : effects) {
-      if (i == ConditionEffect.FREEZE || i == ConditionEffect.SLEEP
-          || i == ConditionEffect.FLINCH)
+      if (i.blocksAttack())
         return false;
-      else if (i == ConditionEffect.PARALYZE && Math.random() < .25)
-        return false;
-      else if (i == ConditionEffect.CONFUSE) {
-        attackself = true;
-        return false;
-      }
     }
 
     return true;
@@ -80,45 +66,16 @@ public class Condition {
     resetMessage();
 
     for (ConditionEffect current : effects) {
-      if (current == ConditionEffect.BURN) {
-        pkmn.takeDamage(pkmn.maxHealth() / 10);
-        pushMessage(pkmn.name() + " was injured by it's burn!");
-      }
-      else if (current == ConditionEffect.WRAP) {
-        if (Math.random() > .66666) {
-          remove(ConditionEffect.WRAP);
-          pushMessage(pkmn.name() + " freed itself!");
-        }
-        else {
-          pkmn.takeDamage(pkmn.maxHealth() / 10);
-          pushMessage(pkmn.name() + " was injured by the binding!");
-        }
-      }
-      else if (current == ConditionEffect.CONFUSE) {
-        if (attackself) {
-          pkmn.takeDamage(Battle.confusedDamage(pkmn));
-          attackself = false;
-        }
-        else if (Math.random() > .66666) {
-          remove(ConditionEffect.CONFUSE);
-          pushMessage(pkmn.name() + " is no longer confused!");
-        }
-      }
-      else if (current == ConditionEffect.FLINCH) {
-        remove(ConditionEffect.FLINCH);
-      }
-      else if (current == ConditionEffect.FREEZE && Math.random() > .8) {
-        remove(ConditionEffect.FREEZE);
-        pushMessage(pkmn.name() + " broke out of the ice!");
-      }
-      else if (current == ConditionEffect.POISON) {
-        pkmn.takeDamage(pkmn.maxHealth() / 10);
-        pushMessage(pkmn.name() + " was injured by the poison!");
-      }
-      else if (current == ConditionEffect.SLEEP && Math.random() > .333333) {
-        remove(ConditionEffect.SLEEP);
-        pushMessage(pkmn.name() + " woke up!");
-      }
+      boolean persist = Math.random() <= current.persistanceChance();
+      String message = current.persistanceMessage(persist);
+
+      if (persist)
+        pkmn.takeDamage((int) (pkmn.maxHealth() * current.damagePercentage()));
+      else
+        remove(current);
+
+      if (message != null)
+        pushMessage(pkmn.name() + message);
     }
   }
 
@@ -156,7 +113,6 @@ public class Condition {
   }
 
   private Pokemon pkmn;
-  private boolean attackself;
   private List<String> lastMessage;
   private List<ConditionEffect> effects;
 }

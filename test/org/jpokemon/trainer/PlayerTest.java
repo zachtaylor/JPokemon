@@ -23,7 +23,7 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
   }
 
   public void testArea() {
-    int area = (int) (Math.random() * AREANUMBER + 1);
+    int area = 80;
     player.area(area);
 
     assertEquals(area, player.area());

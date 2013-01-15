@@ -1,6 +1,7 @@
 package jpkmn.map;
 
-import org.jpokemon.JPokemonConstants;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Properly initializes and maintains a list of areas.
@@ -16,12 +17,11 @@ public class AreaRegistry {
    * @return The Area
    */
   public static Area get(int id) {
-    if (_areas[id - 1] == null) {
-      _areas[id - 1] = new Area(id);
-    }
+    if (_areas.get(id) == null)
+      _areas.put(id, new Area(id));
 
-    return _areas[id - 1];
+    return _areas.get(id);
   }
 
-  private static Area[] _areas = new Area[JPokemonConstants.AREANUMBER];
+  private static Map<Integer, Area> _areas = new HashMap<Integer, Area>();
 }

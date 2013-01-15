@@ -9,6 +9,7 @@ import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.battle.turn.TurnFactory;
 import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
@@ -17,7 +18,7 @@ import org.jpokemon.trainer.TrainerType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Slot {
+public class Slot implements JPokemonConstants {
   public Slot(PokemonTrainer trainer, int team) {
     _trainer = trainer;
     _team = team;
@@ -110,7 +111,7 @@ public class Slot {
 
   public void removeRival(Slot s) {
     Pokemon p = s.leader();
-    int xpReward = (int) (s.trainer().xpFactor() * (p.level() + 6));
+    int xpReward = (int) (s.trainer().xpFactor() * (p.level() + 6) * UNIVERSAL_EXPERIENCE_MODIFIER);
 
     List<Pokemon> earnList = new ArrayList<Pokemon>();
     List<String> message = new ArrayList<String>();

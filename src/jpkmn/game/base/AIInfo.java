@@ -1,7 +1,9 @@
 package jpkmn.game.base;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
@@ -22,41 +24,39 @@ public class AIInfo implements JPokemonConstants {
   @OneToMany("ai_number")
   private List<String> pokemon = new ArrayList<String>();
 
-  private static AIInfo[] cache = new AIInfo[JPokemonConstants.AINUMBER];
+  // private static AIInfo[] cache = new AIInfo[JPokemonConstants.AINUMBER];
+  private static Map<Integer, AIInfo> cache = new HashMap<Integer, AIInfo>();
 
   public static AIInfo get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (number < 1 || number > AINUMBER)
-      throw new ConfigurationException(number + " is outside move range.");
-
-    if (cache[number - 1] == null) {
+    if (cache.get(number) == null) {
       try {
-        List<AIInfo> info = SqlStatement.select(AIInfo.class).where("number")
-            .eq(number).getList();
-        List<AIPokemon> pokemon = SqlStatement.select(AIPokemon.class)
-            .where("ai_number").eq(number).getList();
+        List<AIInfo> info = SqlStatement.select(AIInfo.class).where("number").eq(number).getList();
+        List<AIPokemon> pokemon = SqlStatement.select(AIPokemon.class).where("ai_number").eq(number).getList();
 
-        if (!info.isEmpty()) {
-          for (AIPokemon p : pokemon)
-            info.get(0).getPokemon().add(p.getEntry());
+        if (info.isEmpty() || pokemon.isEmpty())
+          throw new ConfigurationException("Error retrieving #" + number);
 
-          cache[number - 1] = info.get(0);
-        }
+        for (AIPokemon p : pokemon)
+          info.get(0).getPokemon().add(p.getEntry());
+
+        cache.put(number, info.get(0));
+
       } catch (DataConnectionException e) {
         e.printStackTrace();
+        throw new ConfigurationException(e);
       }
     }
 
-    return cache[number - 1];
+    return cache.get(number);
   }
 
   public static List<AIInfo> getAIForArea(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      List<AIInfo> info = SqlStatement.select(AIInfo.class).where("area")
-          .eq(number).getList();
+      List<AIInfo> info = SqlStatement.select(AIInfo.class).where("area").eq(number).getList();
 
       return info;
     } catch (DataConnectionException e) {
