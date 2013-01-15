@@ -69,7 +69,7 @@ public abstract class Turn implements Comparable<Turn> {
    * @return Messages to alert players of
    */
   public String[] getMessages() {
-    return (String[]) _messages.toArray();
+    return _messages.toArray(new String[_messages.size()]);
   }
 
   /**

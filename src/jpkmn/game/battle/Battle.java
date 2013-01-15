@@ -10,6 +10,7 @@ import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.battle.turn.Round;
 import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.pokemon.Pokemon;
+import jpkmn.game.service.BattleService;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
@@ -157,7 +158,18 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
 
       int randomMove = (int) (Math.random()) * slot.leader().moveCount();
 
-      // TODO : make mock attacks
+      JSONObject json = new JSONObject();
+      try {
+        json.put("turn", "ATTACK");
+        json.put("trainer", slot.trainer().id());
+        json.put("target", randomSlot.trainer().id());
+        json.put("move", randomMove);
+      } catch (JSONException e) {
+        e.printStackTrace();
+        return;
+      }
+
+      addTurn(slot.turn(json, randomSlot));
     }
   }
 
