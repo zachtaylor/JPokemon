@@ -39,6 +39,7 @@ public class Player implements PokemonTrainer {
     _name = name;
   }
 
+  @Override
   public int area() {
     return _area;
   }
@@ -82,10 +83,11 @@ public class Player implements PokemonTrainer {
   public boolean add(Pokemon p) {
     _pokedex.own(p.number());
 
-    for (PokemonStorageUnit unit : _storage) {
-      if (unit.add(p))
-        return true;
-    }
+    for (PokemonStorageUnit unit : _storage)
+      if (unit.add(p)) {
+    	p.caughtByAt(name(), area());
+    	return true;
+      }
 
     return false;
   }
@@ -97,8 +99,7 @@ public class Player implements PokemonTrainer {
   public void setState(String state) {
     if (state.equalsIgnoreCase("world"))
       _gameWindow.showMain();
-    else if (state.equalsIgnoreCase("battle"))
-      _gameWindow.showBattle();
+    else if (state.equalsIgnoreCase("battle")) _gameWindow.showBattle();
   }
 
   public Pokedex pokedex() {
@@ -163,8 +164,7 @@ public class Player implements PokemonTrainer {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Player))
-      return false;
+    if (!(o instanceof Player)) return false;
     return ((Player) o)._id == _id;
   }
 

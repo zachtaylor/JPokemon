@@ -1,56 +1,39 @@
 package jpkmn.game.item;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 
-import org.jpokemon.exception.ConfigurationException;
 import org.json.JSONArray;
 
 public class Bag {
   public Bag() {
-    _allItems = new ArrayList<Item>();
-    _pockets = new HashMap<ItemType, BagPocket>();
-
-    for (ItemType type : ItemType.values())
-      _pockets.put(type, new BagPocket());
-
-    Item newItem;
-    try {
-      for (int id = 1; (newItem = new Item(id)) != null; id++) {
-        _allItems.add(newItem);
-        _pockets.get(newItem.type()).add(newItem);
-      }
-    } catch (ConfigurationException c) { // End items
-    }
+    _items = new HashMap<Integer, Item>();
   }
 
   public Item get(int itemID) {
-    return _allItems.get(itemID);
-  }
+    Item item = _items.get(itemID);
 
-  public Iterable<Item> pocket(ItemType type) {
-    return _pockets.get(type);
+    if (item == null)
+      _items.put(itemID, item = new Item(itemID));
+
+    return item;
   }
 
   public JSONArray toJSON() {
     JSONArray data = new JSONArray();
 
-    for (Item item : _allItems)
-      if (item.visible())
-        data.put(item.toJSON());
+    for (Item item : _items.values())
+      if (item.visible()) data.put(item.toJSON());
 
     return data;
   }
 
   public void load(String s) throws LoadException {
     try {
-      if (!s.startsWith("BAG: "))
-        throw new Exception();
+      if (!s.startsWith("BAG: ")) throw new Exception();
 
       Scanner scan = new Scanner(s);
       scan.next(); // Throw away "BAG: "
@@ -66,6 +49,5 @@ public class Bag {
     }
   }
 
-  private List<Item> _allItems;
-  private Map<ItemType, BagPocket> _pockets;
+  private Map<Integer, Item> _items;
 }

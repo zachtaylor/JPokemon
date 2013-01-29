@@ -50,6 +50,10 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
     _cash = cash;
   }
 
+  public int area() {
+	return -1;
+  }
+
   public TrainerType type() {
     return _type;
   }

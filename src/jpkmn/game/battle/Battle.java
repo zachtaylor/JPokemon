@@ -10,7 +10,6 @@ import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.battle.turn.Round;
 import jpkmn.game.battle.turn.Turn;
 import jpkmn.game.pokemon.Pokemon;
-import jpkmn.game.service.BattleService;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;

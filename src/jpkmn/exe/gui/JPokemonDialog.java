@@ -17,8 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JPokemonDialog {
-  public static int getMoveIndex(Component parent, JSONObject trainer)
-      throws DialogCancelException, JSONException {
+
+  public static int getMoveIndex(Component parent, JSONObject trainer) throws DialogCancelException, JSONException {
 
     JSONObject leader = trainer.getJSONObject("leader");
     JSONArray moves = leader.getJSONArray("moves");
@@ -41,9 +41,7 @@ public class JPokemonDialog {
     return answer;
   }
 
-  public static int getMoveTarget(Component parent, JSONObject battle,
-      JSONObject trainer, int moveIndex) throws DialogCancelException,
-      JSONException {
+  public static int getMoveTarget(Component parent, JSONObject battle, JSONObject trainer, int moveIndex) throws DialogCancelException, JSONException {
 
     JSONArray allTeams = battle.getJSONArray("teams");
     JSONObject leader = trainer.getJSONObject("leader");
@@ -77,8 +75,7 @@ public class JPokemonDialog {
     return trainerID_key.get(answer);
   }
 
-  public static int getItemChoice(Component parent, JSONObject trainer)
-      throws DialogCancelException, JSONException {
+  public static int getItemChoice(Component parent, JSONObject trainer) throws DialogCancelException, JSONException {
 
     JSONArray items = trainer.getJSONArray("bag");
 

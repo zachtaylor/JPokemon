@@ -21,6 +21,7 @@ public class Pokemon {
     PokemonInfo base = PokemonInfo.get(_number);
 
     name = species = base.getName();
+    _caughtLocation = -1;
     type1 = Type.valueOf(base.getType1());
     type2 = Type.valueOf(base.getType2());
     evolutionlevel = base.getEvolutionlevel();
@@ -70,6 +71,22 @@ public class Pokemon {
 
   public Type type2() {
     return type2;
+  }
+
+  public int caughtLocation() {
+    return _caughtLocation;
+  }
+
+  public String originalTrainer() {
+    return _originalTrainer;
+  }
+
+  public void caughtByAt(String name, int location) {
+    if (_caughtLocation != -1)
+      throw new IllegalStateException("Origin already accounted for");
+
+    _caughtLocation = location;
+    _originalTrainer = name;
   }
 
   public int xp() {
@@ -329,8 +346,8 @@ public class Pokemon {
   private StatBlock _stats;
   private Type type1, type2;
   private Condition _condition;
-  private String name, species;
-  private int _id, _number, _level, _xp, evolutionlevel;
+  private int _id, _number, _level, _xp, evolutionlevel, _caughtLocation;
+  private String name, species, _originalTrainer;
 
   private static int CURRENT_ID;
 }

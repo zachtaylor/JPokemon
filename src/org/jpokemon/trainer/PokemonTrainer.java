@@ -16,6 +16,8 @@ public interface PokemonTrainer {
 
   public void cash(int c);
 
+  public int area();
+  
   public TrainerType type();
   
   public double xpFactor();

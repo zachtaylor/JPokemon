@@ -73,4 +73,15 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
       fail();
     }
   }
+
+  public void testPlayerAddAppliesOriginalTrainer() {
+	Pokemon p = new Pokemon(1);
+	
+	assertEquals(null, p.originalTrainer());
+	
+	player.name("zach");
+	player.add(p);
+	
+	assertEquals(player.name(), p.originalTrainer());
+  }
 }

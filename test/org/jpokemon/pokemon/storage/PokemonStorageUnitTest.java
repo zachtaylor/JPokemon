@@ -47,9 +47,8 @@ public class PokemonStorageUnitTest extends TestCase {
   }
 
   public void testAddLimit() throws LoadException {
-    for (int i = 0; i < size + 1; i++) {
+    for (int i = 0; i < size + 1; i++)
       unit.add(new Pokemon(i + 1));
-    }
 
     assertEquals(size, unit.size());
   }
