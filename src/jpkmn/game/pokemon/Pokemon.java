@@ -29,8 +29,6 @@ public class Pokemon {
     _moves = new MoveBlock(_number);
     _stats = new StatBlock(base);
     _condition = new Condition(this);
-
-    _id = CURRENT_ID++;
   }
 
   public Pokemon(int num, int lvl) {
@@ -97,7 +95,8 @@ public class Pokemon {
    * Adds the xp specified to the Pokemon. If the Pokemon has enough, level is
    * increased
    * 
-   * @param amount Amount of xp to add
+   * @param amount
+   *          Amount of xp to add
    */
   public void xp(int amount) {
     _xp += amount;
@@ -167,7 +166,8 @@ public class Pokemon {
    * Takes a specified amount of damage. If damage is greater than available
    * health, the Pokemon is knocked out.
    * 
-   * @param damage The amount of damage to be taken
+   * @param damage
+   *          The amount of damage to be taken
    * @return the awake state of the Pokemon
    */
   public void takeDamage(int damage) {
@@ -178,7 +178,8 @@ public class Pokemon {
    * Heals specified damage. If healed amount is greater than missing health,
    * Pokemon is brought to full health.
    * 
-   * @param heal The amount healed by
+   * @param heal
+   *          The amount healed by
    */
   public void healDamage(int heal) {
     getStat(StatType.HEALTH).effect(heal);
@@ -282,9 +283,11 @@ public class Pokemon {
   /**
    * Properly initializes a Pokemon from a file.
    * 
-   * @param s String save representation of the pokemon.
+   * @param s
+   *          String save representation of the pokemon.
    * @return A new Pokemon as described by the string
-   * @throws LoadException if loaded with invalid string
+   * @throws LoadException
+   *           if loaded with invalid string
    */
   public static Pokemon load(String s) throws LoadException {
     if (s != null && !s.equals(" ")) {
@@ -334,20 +337,31 @@ public class Pokemon {
   public boolean equals(Object o) {
     if (!(o instanceof Pokemon))
       return false;
-    else
-      return ((Pokemon) o)._id == this._id;
+
+    Pokemon p = (Pokemon) o;
+
+    if (number() != p.number())
+      return false;
+    if (level() != p.level())
+      return false;
+    if (xp() != p.xp())
+      return false;
+    if (!name().equals(p.name()))
+      return false;
+    // Probably good enough...
+
+    return true;
   }
 
+  @Override
   public int hashCode() {
-    return _id;
+    return (name.hashCode() & 255) + _number + _level;
   }
 
   private MoveBlock _moves;
   private StatBlock _stats;
   private Type type1, type2;
   private Condition _condition;
-  private int _id, _number, _level, _xp, evolutionlevel, _caughtLocation;
+  private int _number, _level, _xp, evolutionlevel, _caughtLocation;
   private String name, species, _originalTrainer;
-
-  private static int CURRENT_ID;
 }
