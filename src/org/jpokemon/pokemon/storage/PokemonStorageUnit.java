@@ -3,8 +3,7 @@ package org.jpokemon.pokemon.storage;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
-import jpkmn.game.pokemon.Pokemon;
-
+import org.jpokemon.pokemon.Pokemon;
 import org.json.JSONArray;
 
 /**

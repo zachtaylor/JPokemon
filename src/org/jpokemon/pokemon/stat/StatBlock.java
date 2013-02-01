@@ -1,8 +1,7 @@
 package org.jpokemon.pokemon.stat;
 
-import jpkmn.game.pokemon.ConditionEffect;
-import jpkmn.game.pokemon.PokemonInfo;
-
+import org.jpokemon.pokemon.ConditionEffect;
+import org.jpokemon.pokemon.PokemonInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 

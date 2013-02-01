@@ -1,10 +1,9 @@
-package jpkmn.game.pokemon;
+package org.jpokemon.pokemon;
 
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 
-import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Health;
@@ -17,18 +16,11 @@ import org.json.JSONObject;
 public class Pokemon {
   public Pokemon(int num) {
     _number = num;
-
-    PokemonInfo base = PokemonInfo.get(_number);
-
-    name = species = base.getName();
     _caughtLocation = -1;
-    type1 = Type.valueOf(base.getType1());
-    type2 = Type.valueOf(base.getType2());
-    evolutionlevel = base.getEvolutionlevel();
-
+    _condition = new Condition();
     _moves = new MoveBlock(_number);
-    _stats = new StatBlock(base);
-    _condition = new Condition(this);
+    _species = PokemonInfo.get(_number);
+    _stats = new StatBlock(_species);
   }
 
   public Pokemon(int num, int lvl) {
@@ -43,6 +35,9 @@ public class Pokemon {
   }
 
   public String name() {
+    if (name == null)
+      return species();
+
     return name;
   }
 
@@ -50,8 +45,16 @@ public class Pokemon {
     name = s;
   }
 
+  public String species() {
+    return _species.getName();
+  }
+
   public int level() {
     return _level;
+  }
+
+  public int evolutionLevel() {
+    return _species.getEvolutionlevel();
   }
 
   public void level(int l) {
@@ -64,11 +67,11 @@ public class Pokemon {
   }
 
   public Type type1() {
-    return type1;
+    return Type.valueOf(_species.getType1());
   }
 
   public Type type2() {
-    return type2;
+    return Type.valueOf(_species.getType2());
   }
 
   public int caughtLocation() {
@@ -208,7 +211,7 @@ public class Pokemon {
   }
 
   public void applyConditionEffects() {
-    _condition.applyEffects();
+    _condition.applyEffects(this);
   }
 
   public String[] lastConditionMessage() {
@@ -219,7 +222,7 @@ public class Pokemon {
     return _condition.canAttack();
   }
 
-  public int catchBonus() {
+  public double catchBonus() {
     return _condition.getCatchBonus();
   }
 
@@ -227,9 +230,6 @@ public class Pokemon {
    * Changes a Pokemon into another one. This can be regular evolution
    * (Charmander to Charmeleon) or other complicated changes (fire stone changes
    * Eevee into Flareon).
-   * 
-   * Evolve will fail if the Pokemon is not high enough level, and no arguments
-   * are passed
    */
   public void evolve(int... num) {
     // No points for Vaporeon/Jolteon/Flareon
@@ -238,23 +238,13 @@ public class Pokemon {
 
     if (num.length != 0)
       _number = num[0]; // special value
-    else if (_level < evolutionlevel)
-      throw new IllegalStateException(name() + " is not ready to evolve");
     else
       _number++;
 
-    PokemonInfo info = PokemonInfo.get(_number);
-
     _moves.setPokemonNumber(_number);
-    _stats.rebase(info);
-    type1 = Type.valueOf(info.getType1());
-    type2 = Type.valueOf(info.getType2());
-    evolutionlevel = info.getEvolutionlevel();
 
-    if (name.equals(species))
-      name = species = info.getName();
-    else
-      species = info.getName();
+    _species = PokemonInfo.get(_number);
+    _stats.rebase(_species);
 
     checkNewMoves();
   }
@@ -360,8 +350,8 @@ public class Pokemon {
 
   private MoveBlock _moves;
   private StatBlock _stats;
-  private Type type1, type2;
+  private PokemonInfo _species;
   private Condition _condition;
-  private int _number, _level, _xp, evolutionlevel, _caughtLocation;
-  private String name, species, _originalTrainer;
+  private int _number, _level, _xp, _caughtLocation;
+  private String name, _originalTrainer;
 }

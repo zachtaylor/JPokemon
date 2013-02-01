@@ -2,8 +2,8 @@ package jpkmn.game.battle.turn;
 
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 

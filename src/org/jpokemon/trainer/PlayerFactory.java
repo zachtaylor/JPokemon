@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.Pokemon;
 
 public class PlayerFactory implements JPokemonConstants {
   public static Player get(int id) {

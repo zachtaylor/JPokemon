@@ -1,4 +1,4 @@
-package jpkmn.game.pokemon;
+package org.jpokemon.pokemon;
 
 import java.util.List;
 

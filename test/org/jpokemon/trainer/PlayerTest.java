@@ -1,12 +1,11 @@
 package org.jpokemon.trainer;
 
-import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.AreaRegistry;
 import junit.framework.TestCase;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokedex.PokedexStatus;
-import org.jpokemon.trainer.Player;
+import org.jpokemon.pokemon.Pokemon;
 
 public class PlayerTest extends TestCase implements JPokemonConstants {
   private static Player player;

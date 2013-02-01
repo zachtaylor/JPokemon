@@ -4,11 +4,11 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.game.battle.Battle;
 import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.pokemon.Pokemon;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.PokemonTrainer;

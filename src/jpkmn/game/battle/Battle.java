@@ -9,9 +9,9 @@ import java.util.Map;
 import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.battle.turn.Round;
 import jpkmn.game.battle.turn.Turn;
-import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;

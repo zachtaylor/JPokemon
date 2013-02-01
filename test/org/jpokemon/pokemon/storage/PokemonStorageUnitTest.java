@@ -1,8 +1,9 @@
 package org.jpokemon.pokemon.storage;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.pokemon.Pokemon;
 import junit.framework.TestCase;
+
+import org.jpokemon.pokemon.Pokemon;
 
 public class PokemonStorageUnitTest extends TestCase {
   private static int size = 6;

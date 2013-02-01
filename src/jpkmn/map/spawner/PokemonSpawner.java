@@ -7,7 +7,8 @@ import java.util.Map;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.SpawnInfo;
-import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.pokemon.Pokemon;
 
 public class PokemonSpawner {
   public PokemonSpawner(List<SpawnInfo> info) {

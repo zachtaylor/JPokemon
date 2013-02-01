@@ -1,8 +1,8 @@
 package jpkmn.game.item;
 
 import jpkmn.game.battle.Target;
-import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.pokemon.Pokemon;
 import org.json.JSONException;
 import org.json.JSONObject;
 

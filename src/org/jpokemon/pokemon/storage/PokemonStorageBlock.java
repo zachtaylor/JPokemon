@@ -6,9 +6,9 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.Pokemon;
 import org.json.JSONException;
 import org.json.JSONObject;
 

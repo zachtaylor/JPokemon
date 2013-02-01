@@ -6,9 +6,9 @@ import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.game.item.Bag;
 import jpkmn.game.item.Item;
-import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.pokedex.Pokedex;
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;

@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 

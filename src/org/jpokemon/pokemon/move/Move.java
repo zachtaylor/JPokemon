@@ -1,8 +1,8 @@
 package org.jpokemon.pokemon.move;
 
-import jpkmn.game.pokemon.Pokemon;
-
 import jpkmn.game.battle.slot.Slot;
+
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
 import org.json.JSONException;

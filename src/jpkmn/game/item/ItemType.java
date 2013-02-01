@@ -1,8 +1,8 @@
 package jpkmn.game.item;
 
 import jpkmn.game.battle.Target;
-import jpkmn.game.pokemon.Pokemon;
 
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.stat.StatType;
@@ -32,18 +32,19 @@ public enum ItemType {
   public boolean effect(Pokemon p, ItemInfo info) {
     switch (this) {
     case BALL:
+      double STAT = p.catchBonus();
       int HPmax = p.maxHealth(),
       HPcur = p.health(),
       BALL = info.getData(),
-      STAT = p.catchBonus(),
-      q = BALL * 4 * STAT / HPmax * ((3 * HPmax) - (2 * HPcur));
+      q = (int) (BALL * 40 * STAT / HPmax * ((3 * HPmax) - (2 * HPcur)));
 
       if (q >= 255)
         return true;
       else {
         double r = Math.sqrt(Math.sqrt(((double) q) / (255.0)));
         for (int i = 0; i < 4; i++)
-          if (r < Math.random()) return false;
+          if (r < Math.random())
+            return false;
 
         return true;
       }
@@ -61,30 +62,36 @@ public enum ItemType {
       case FIRE:
         if (n == 37 || n == 58)
           p.evolve();
-        else if (n == 133) p.evolve(136);
+        else if (n == 133)
+          p.evolve(136);
         break;
       case WATER:
         if (n == 60 || n == 90 || n == 120)
           p.evolve();
-        else if (n == 133) p.evolve(134);
+        else if (n == 133)
+          p.evolve(134);
         break;
       case ELECTRIC:
         if (p.number() == 25)
           p.evolve();
-        else if (n == 133) p.evolve(135);
+        else if (n == 133)
+          p.evolve(135);
         break;
       case GRASS:
-        if (n == 44 || n == 70 || n == 102) p.evolve();
+        if (n == 44 || n == 70 || n == 102)
+          p.evolve();
         break;
       case NORMAL:
-        if (n == 30 || n == 33 || n == 35 || n == 39) p.evolve();
+        if (n == 30 || n == 33 || n == 35 || n == 39)
+          p.evolve();
         break;
       default:
         break;
       }
       return p.number() != n;
     case MACHINE:
-      if (new Move(info.getData()).STAB(p) == 1) return false;
+      if (new Move(info.getData()).STAB(p) == 1)
+        return false;
 
       try {
         p.addMove(info.getData());

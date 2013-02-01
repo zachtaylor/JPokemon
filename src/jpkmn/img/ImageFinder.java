@@ -6,7 +6,8 @@ import javax.swing.ImageIcon;
 
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
-import jpkmn.game.pokemon.Pokemon;
+
+import org.jpokemon.pokemon.Pokemon;
 
 public class ImageFinder {
   public static ImageIcon find(Object o) {

@@ -1,7 +1,6 @@
 package org.jpokemon.trainer;
 
-import jpkmn.game.pokemon.Pokemon;
-
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONObject;
 

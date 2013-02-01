@@ -2,9 +2,9 @@ package org.jpokemon.trainer;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
-import jpkmn.game.pokemon.Pokemon;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
 import org.json.JSONObject;

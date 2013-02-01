@@ -1,10 +1,10 @@
 package org.jpokemon.pokemon.stat;
 
-import jpkmn.game.pokemon.ConditionEffect;
-import jpkmn.game.pokemon.PokemonInfo;
 import junit.framework.TestCase;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.ConditionEffect;
+import org.jpokemon.pokemon.PokemonInfo;
 
 public class StatBlockTest extends TestCase {
   StatBlock block;

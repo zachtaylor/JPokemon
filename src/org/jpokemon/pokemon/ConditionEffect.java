@@ -1,4 +1,4 @@
-package jpkmn.game.pokemon;
+package org.jpokemon.pokemon;
 
 public enum ConditionEffect {
   BURN, PARALYZE, SLEEP, POISON, FREEZE, CONFUSE, WRAP, FLINCH;

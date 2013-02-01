@@ -1,4 +1,4 @@
-package jpkmn.game.pokemon;
+package org.jpokemon.pokemon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,7 @@ public class Condition {
    * 
    * @param p The Pokemon whom this status effects
    */
-  public Condition(Pokemon p) {
-    pkmn = p;
+  public Condition() {
     lastMessage = new ArrayList<String>();
     effects = new ArrayList<ConditionEffect>();
   }
@@ -21,13 +20,13 @@ public class Condition {
    * 
    * @return the Catch Bonus
    */
-  public int getCatchBonus() {
-    double best = 10;
+  public double getCatchBonus() {
+    double best = 1;
 
     for (ConditionEffect e : effects)
       best *= e.catchBonus();
 
-    return (int) best;
+    return Math.min(best, 2.0);
   }
 
   /**
@@ -62,7 +61,7 @@ public class Condition {
    * Applies issues. DOTs hurt, Flinch is removed, volatile effects have a
    * chance to dispel.
    */
-  public void applyEffects() {
+  public void applyEffects(Pokemon p) {
     resetMessage();
 
     for (ConditionEffect current : effects) {
@@ -70,12 +69,12 @@ public class Condition {
       String message = current.persistanceMessage(persist);
 
       if (persist)
-        pkmn.takeDamage((int) (pkmn.maxHealth() * current.damagePercentage()));
+        p.takeDamage((int) (p.maxHealth() * current.damagePercentage()));
       else
         remove(current);
 
       if (message != null)
-        pushMessage(pkmn.name() + message);
+        pushMessage(p.name() + message);
     }
   }
 
@@ -112,7 +111,6 @@ public class Condition {
     lastMessage.add(s);
   }
 
-  private Pokemon pkmn;
   private List<String> lastMessage;
   private List<ConditionEffect> effects;
 }
