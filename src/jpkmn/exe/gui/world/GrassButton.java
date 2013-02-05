@@ -24,7 +24,7 @@ public class GrassButton extends JButton implements ActionListener {
     int playerID = _window.playerID();
 
     try {
-      BattleService.startWild(playerID);
+      BattleService.grass(playerID);
     } catch (ServiceException s) {
       _window.inbox().addMessage(s.getMessage());
     }

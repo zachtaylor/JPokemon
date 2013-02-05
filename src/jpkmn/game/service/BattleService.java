@@ -11,13 +11,12 @@ import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
-import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BattleService implements JPokemonConstants {
-  public static void startWild(int playerID) throws ServiceException {
+  public static void grass(int playerID) throws ServiceException {
     Player player = PlayerFactory.get(playerID);
 
     if (player == null)
@@ -42,8 +41,7 @@ public class BattleService implements JPokemonConstants {
     player.setState("battle");
   }
 
-  public static void startWater(int playerID, String rodName)
-      throws ServiceException {
+  public static void fish(int playerID, String rodName) throws ServiceException {
     Player player = PlayerFactory.get(playerID);
 
     if (player == null)
@@ -67,23 +65,6 @@ public class BattleService implements JPokemonConstants {
 
     BattleRegistry.start(player, mock);
     player.setState("battle");
-  }
-
-  public static int createEnrollable() {
-    return BattleRegistry.createEnrollable();
-  }
-
-  public static void enroll(int battleID, PokemonTrainer player, int team) throws ServiceException {
-    Battle battle = BattleRegistry.getEnrollable(battleID);
-
-    if (battle == null)
-      throw new ServiceException("Invalid enrollable battle: " + battleID);
-
-    battle.addTrainer(player, team);
-  }
-
-  public static void startEnrollable(int battleID) {
-    BattleRegistry.startEnrollable(battleID);
   }
 
   public static void startBattle(int pID, int tID) throws ServiceException {
@@ -127,22 +108,15 @@ public class BattleService implements JPokemonConstants {
 
   public static JSONObject info(int playerID) throws ServiceException {
     Player player = PlayerFactory.get(playerID);
+
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
 
     Battle battle = BattleRegistry.get(player);
+
     if (battle == null)
       throw new ServiceException(player.name() + " is not in a battle");
 
     return battle.toJSON(player);
-  }
-
-  public static JSONObject enrollableInfo(int battleID) throws ServiceException {
-    Battle b = BattleRegistry.getEnrollable(battleID);
-
-    if (b == null)
-      throw new ServiceException("Invalid enrollable battle: " + battleID);
-
-    return b.toJSON(null);
   }
 }
