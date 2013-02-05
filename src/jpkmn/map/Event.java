@@ -3,9 +3,9 @@ package jpkmn.map;
 import jpkmn.exceptions.LoadException;
 import jpkmn.game.base.AIInfo;
 import jpkmn.game.base.EventInfo;
-import jpkmn.game.battle.BattleRegistry;
 import jpkmn.game.item.ItemInfo;
 
+import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
 

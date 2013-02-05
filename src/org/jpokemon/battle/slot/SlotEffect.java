@@ -1,4 +1,4 @@
-package jpkmn.game.battle.slot;
+package org.jpokemon.battle.slot;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;

@@ -1,10 +1,10 @@
-package jpkmn.game.battle.turn;
+package org.jpokemon.battle.turn;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import jpkmn.game.battle.Battle;
-import jpkmn.game.battle.slot.Slot;
+import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.slot.Slot;
 
 public class Round {
   public Round(Battle b) {

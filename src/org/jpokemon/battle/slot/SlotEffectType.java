@@ -1,4 +1,4 @@
-package jpkmn.game.battle.slot;
+package org.jpokemon.battle.slot;
 
 public enum SlotEffectType {
   SEED, PHYSICAL_SHIELD, SPECIAL_SHIELD, INVULERNABLE;

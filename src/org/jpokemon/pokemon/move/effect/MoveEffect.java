@@ -1,10 +1,9 @@
 package org.jpokemon.pokemon.move.effect;
 
-import jpkmn.game.battle.Target;
-import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.battle.slot.SlotEffect;
-import jpkmn.game.battle.slot.SlotEffectType;
-
+import org.jpokemon.battle.Target;
+import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.battle.slot.SlotEffect;
+import org.jpokemon.battle.slot.SlotEffectType;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;

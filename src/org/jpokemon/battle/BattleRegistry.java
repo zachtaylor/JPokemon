@@ -1,10 +1,9 @@
-package jpkmn.game.battle;
+package org.jpokemon.battle;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.game.battle.slot.Slot;
-
+import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.trainer.PokemonTrainer;
 
 public class BattleRegistry {

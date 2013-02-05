@@ -1,9 +1,9 @@
-package jpkmn.game.battle.turn;
+package org.jpokemon.battle.turn;
 
-import jpkmn.game.battle.slot.Slot;
 import jpkmn.game.item.Item;
 import jpkmn.game.item.ItemType;
 
+import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.TrainerType;
 

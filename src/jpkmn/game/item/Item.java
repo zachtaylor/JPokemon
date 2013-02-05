@@ -1,7 +1,6 @@
 package jpkmn.game.item;
 
-import jpkmn.game.battle.Target;
-
+import org.jpokemon.battle.Target;
 import org.jpokemon.pokemon.Pokemon;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +42,7 @@ public class Item {
   public boolean visible() {
     return amount() > 0;
   }
-  
+
   public boolean effect(Pokemon p) {
     if (_quantity < 1)
       return false;

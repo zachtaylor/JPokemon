@@ -1,8 +1,8 @@
-package jpkmn.game.battle.turn;
+package org.jpokemon.battle.turn;
 
-import jpkmn.game.battle.Battle;
-import jpkmn.game.battle.BattleRegistry;
-import jpkmn.game.battle.slot.Slot;
+import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.BattleRegistry;
+import org.jpokemon.battle.slot.Slot;
 
 public class RunTurn extends Turn {
   public RunTurn(Slot user, Slot target) {

@@ -1,4 +1,4 @@
-package jpkmn.game.battle;
+package org.jpokemon.battle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,11 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import jpkmn.game.battle.slot.Slot;
-import jpkmn.game.battle.turn.Round;
-import jpkmn.game.battle.turn.Turn;
-
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.battle.turn.Round;
+import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;

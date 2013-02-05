@@ -1,4 +1,4 @@
-package jpkmn.game.battle;
+package org.jpokemon.battle;
 
 public enum Target {
   SELF, ENEMY;

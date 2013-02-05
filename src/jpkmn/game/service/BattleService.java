@@ -2,12 +2,12 @@ package jpkmn.game.service;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.exceptions.ServiceException;
-import jpkmn.game.battle.Battle;
-import jpkmn.game.battle.BattleRegistry;
 import jpkmn.map.Area;
 import jpkmn.map.AreaRegistry;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;

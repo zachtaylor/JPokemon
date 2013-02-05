@@ -1,6 +1,6 @@
-package jpkmn.game.battle.turn;
+package org.jpokemon.battle.turn;
 
-import jpkmn.game.battle.slot.Slot;
+import org.jpokemon.battle.slot.Slot;
 
 public class SwapTurn extends Turn {
   public SwapTurn(Slot user, Slot target, int swapIndex) {

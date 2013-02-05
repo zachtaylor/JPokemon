@@ -1,10 +1,9 @@
-package jpkmn.game.battle.turn;
+package org.jpokemon.battle.turn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.game.battle.slot.Slot;
-
+import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.Pokemon;
 
 public abstract class Turn implements Comparable<Turn> {

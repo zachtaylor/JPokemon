@@ -1,7 +1,6 @@
 package jpkmn.game.item;
 
-import jpkmn.game.battle.Target;
-
+import org.jpokemon.battle.Target;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
