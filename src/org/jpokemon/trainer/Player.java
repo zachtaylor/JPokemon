@@ -4,9 +4,9 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.game.item.Bag;
-import jpkmn.game.item.Item;
 
+import org.jpokemon.item.Bag;
+import org.jpokemon.item.Item;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;

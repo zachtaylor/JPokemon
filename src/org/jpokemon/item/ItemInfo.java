@@ -1,4 +1,4 @@
-package jpkmn.game.item;
+package org.jpokemon.item;
 
 import java.util.HashMap;
 import java.util.List;

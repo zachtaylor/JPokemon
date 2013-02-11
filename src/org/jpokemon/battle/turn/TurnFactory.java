@@ -1,8 +1,7 @@
 package org.jpokemon.battle.turn;
 
-import jpkmn.game.item.Item;
-
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.item.Item;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;

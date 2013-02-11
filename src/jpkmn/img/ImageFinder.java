@@ -4,9 +4,8 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import jpkmn.game.item.Item;
-import jpkmn.game.item.ItemType;
-
+import org.jpokemon.item.Item;
+import org.jpokemon.item.ItemType;
 import org.jpokemon.pokemon.Pokemon;
 
 public class ImageFinder {
