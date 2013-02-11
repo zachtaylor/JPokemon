@@ -2,16 +2,17 @@ package org.jpokemon.pokemon.stat;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.PokemonInfo;
 
 public class StatBlockTest extends TestCase {
+  static int range = 25;
+  
   StatBlock block;
   PokemonInfo pokemon;
 
   public void setUp() {
-    int pokemonNumber = (int) (Math.random() * JPokemonConstants.POKEMONNUMBER);
+    int pokemonNumber = (int) (Math.random() * range);
     pokemon = PokemonInfo.get(pokemonNumber);
     block = new StatBlock(pokemon);
     block.level(100);

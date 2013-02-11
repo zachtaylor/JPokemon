@@ -13,8 +13,7 @@ import com.kremerk.Sqlite.SqlStatement;
 public class MoveMap implements JPokemonConstants {
   private int pokemon_number, pokemon_level, move_number;
 
-  private static Map<Integer, Map<Integer, List<MoveMap>>> cache = new HashMap<Integer, Map<Integer, List<MoveMap>>>(
-      POKEMONNUMBER);
+  private static Map<Integer, Map<Integer, List<MoveMap>>> cache = new HashMap<Integer, Map<Integer, List<MoveMap>>>();
 
   public static List<MoveMap> get(int number, int level) {
     DataConnectionManager.init(DATABASE_PATH);

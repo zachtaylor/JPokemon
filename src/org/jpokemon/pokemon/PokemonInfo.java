@@ -1,6 +1,8 @@
 package org.jpokemon.pokemon;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
 
@@ -16,24 +18,24 @@ public class PokemonInfo implements JPokemonConstants {
   private int type1, type2, attack, specattack, defense, specdefense, speed,
       health, evolutionlevel;
 
-  private static PokemonInfo[] cache = new PokemonInfo[POKEMONNUMBER];
+  private static Map<Integer, PokemonInfo> cache = new HashMap<Integer, PokemonInfo>();
 
   public static PokemonInfo get(int num) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (cache[num - 1] == null) {
+    if (cache.get(num) == null) {
       try {
         List<PokemonInfo> pokemonbase = SqlStatement.select(PokemonInfo.class).where("number").eq(num).getList();
 
         if (!pokemonbase.isEmpty())
-          cache[num - 1] = pokemonbase.get(0);
+          cache.put(num, pokemonbase.get(0));
 
       } catch (DataConnectionException e) {
         e.printStackTrace();
       }
     }
 
-    return cache[num - 1];
+    return cache.get(num);
   }
 
   //@preformat

@@ -1,5 +1,7 @@
 package org.jpokemon.pokedex;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
@@ -14,23 +16,15 @@ import org.json.JSONObject;
  * the world. Pokedex maintains a status on each Pokemon it tracks.
  */
 public class Pokedex implements JPokemonConstants {
-  public Pokedex() {
-    _data = new PokedexStatus[POKEMONNUMBER];
-
-    for (int i = 0; i < POKEMONNUMBER; i++)
-      _data[i] = PokedexStatus.NONE;
-  }
-
   /**
    * Update the Pokedex with having seen a new Pokemon
    * 
    * @param num Pokemon number
    */
   public void saw(int num) {
-    if (num < 1 || num > POKEMONNUMBER || _data[num - 1] == PokedexStatus.OWN)
-      return;
+    if (num < 1 || _data.get(num) == PokedexStatus.OWN) return;
 
-    _data[num - 1] = PokedexStatus.SAW;
+    _data.put(num, PokedexStatus.SAW);
   }
 
   /**
@@ -39,10 +33,9 @@ public class Pokedex implements JPokemonConstants {
    * @param num Pokemon number
    */
   public void own(int num) {
-    if (num < 1 || num > POKEMONNUMBER)
-      return;
+    if (num < 1) return;
 
-    _data[num - 1] = PokedexStatus.OWN;
+    _data.put(num, PokedexStatus.OWN);
   }
 
   /**
@@ -52,10 +45,10 @@ public class Pokedex implements JPokemonConstants {
    * @return PokedexStatus which describes the Pokemon number in question
    */
   public PokedexStatus status(int num) {
-    if (num < 1 || num > POKEMONNUMBER)
+    if (num < 1)
       throw new IllegalArgumentException("#" + num + " out of range");
 
-    return _data[num - 1];
+    return _data.get(num);
   }
 
   public JSONObject toJSON() {
@@ -63,11 +56,15 @@ public class Pokedex implements JPokemonConstants {
     JSONArray own = new JSONArray();
     JSONArray saw = new JSONArray();
 
-    for (int i = 0; i < POKEMONNUMBER; i++) {
-      if (_data[i] == PokedexStatus.SAW)
-        saw.put(i);
-      else if (_data[i] == PokedexStatus.OWN)
-        own.put(i);
+    for (Map.Entry<Integer, PokedexStatus> entry : _data.entrySet()) {
+      switch (entry.getValue()) {
+      case SAW:
+        saw.put(entry.getKey());
+        break;
+      case OWN:
+        own.put(entry.getKey());
+        break;
+      }
     }
 
     try {
@@ -100,10 +97,10 @@ public class Pokedex implements JPokemonConstants {
 
       while (scan.hasNext()) {
         parts = scan.next().split("-");
-        number = Integer.parseInt(parts[0]);
+        number = 1 + Integer.parseInt(parts[0]);
         status = PokedexStatus.valueOf(Integer.parseInt(parts[1]));
 
-        _data[number] = status;
+        _data.put(number, status);
       }
     } catch (NumberFormatException e) {
       throw new LoadException("Numbers inparsable");
@@ -112,5 +109,5 @@ public class Pokedex implements JPokemonConstants {
     }
   }
 
-  private PokedexStatus[] _data;
+  private Map<Integer, PokedexStatus> _data = new HashMap<Integer, PokedexStatus>();
 }

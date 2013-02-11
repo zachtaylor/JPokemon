@@ -5,23 +5,22 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.JPokemonConstants;
-import org.jpokemon.pokemon.move.Move;
-import org.jpokemon.pokemon.move.MoveBlock;
 import org.junit.Test;
 
-public class MoveBlockTest extends TestCase implements JPokemonConstants {
+public class MoveBlockTest extends TestCase {
+  static int moveRange = 40, pokemonRange = 25;
+
+  MoveBlock block;
   int pokemonNumber;
-  private MoveBlock block;
 
   public void setUp() {
-    pokemonNumber = 1 + (int) (Math.random() * POKEMONNUMBER);
+    pokemonNumber = 1 + (int) (Math.random() * pokemonRange);
     block = new MoveBlock(pokemonNumber);
   }
 
   @Test
   public void testDefaultMoves() {
-    for (int i = 1; i <= POKEMONNUMBER; i++) {
+    for (int i = 1; i <= pokemonRange; i++) {
       pokemonNumber = i;
       block = new MoveBlock(pokemonNumber);
 
@@ -30,7 +29,7 @@ public class MoveBlockTest extends TestCase implements JPokemonConstants {
   }
 
   public void testAddOverwrite() {
-    int moveNumber = (int) (Math.random() * MOVENUMBER);
+    int moveNumber = (int) (Math.random() * moveRange);
 
     block.add(moveNumber, 0);
 
@@ -77,7 +76,7 @@ public class MoveBlockTest extends TestCase implements JPokemonConstants {
   }
 
   public void testPreventDuplicateMoves() {
-    int moveNumber = (int) (Math.random() * MOVENUMBER);
+    int moveNumber = (int) (Math.random() * moveRange);
 
     block.removeAll();
     block.add(moveNumber);
@@ -100,7 +99,7 @@ public class MoveBlockTest extends TestCase implements JPokemonConstants {
     level--;
     assertEquals(newMoves, block.newMoves(level));
 
-    int otherNumber = (pokemonNumber + 15) % POKEMONNUMBER;
+    int otherNumber = (pokemonNumber + 15) % pokemonRange;
     block.setPokemonNumber(otherNumber);
     List<String> otherMoves = block.newMoves(level);
 

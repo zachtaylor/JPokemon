@@ -1,7 +1,9 @@
 package org.jpokemon.pokemon.move;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
@@ -24,15 +26,15 @@ public class MoveInfo implements JPokemonConstants {
   @OneToMany("move_number")
   private List<MoveEffect> effects = new ArrayList<MoveEffect>();
 
-  private static MoveInfo[] cache = new MoveInfo[MOVENUMBER];
+  private static Map<Integer, MoveInfo> cache = new HashMap<Integer, MoveInfo>();
 
   public static MoveInfo get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (number < 1 || number > MOVENUMBER)
+    if (number < 1)
       throw new ConfigurationException(number + " is outside move range.");
 
-    if (cache[number - 1] == null) {
+    if (cache.get(number) == null) {
       try {
         List<MoveInfo> moves = SqlStatement.select(MoveInfo.class)
             .where("number").eq(number).getList();
@@ -41,14 +43,14 @@ public class MoveInfo implements JPokemonConstants {
 
         if (!moves.isEmpty()) {
           moves.get(0).setEffects(effects);
-          cache[number - 1] = moves.get(0);
+          cache.put(number, moves.get(0));
         }
       } catch (DataConnectionException e) {
         e.printStackTrace();
       }
     }
 
-    return cache[number - 1];
+    return cache.get(number);
   }
 
   //@preformat

@@ -11,9 +11,9 @@ import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokedex.PokedexStatus;
 
 public class PokedexTest extends TestCase implements JPokemonConstants {
-  public static int power = 25, defaultSize = POKEMONNUMBER;
+  public static int power = 5, range = 20;
 
-  public static Pokedex dex;
+  Pokedex dex;
 
   protected void setUp() {
     dex = new Pokedex();
@@ -23,7 +23,7 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     int cur;
 
     for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * defaultSize + 1);
+      cur = (int) (Math.random() * range) + 1;
 
       dex.saw(cur);
 
@@ -35,7 +35,7 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     int cur;
 
     for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * defaultSize + 1);
+      cur = (int) (Math.random() * range + 1);
 
       dex.own(cur);
 
@@ -47,7 +47,7 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     int cur;
 
     for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * defaultSize + 1);
+      cur = (int) (Math.random() * range + 1);
 
       dex.saw(cur);
       dex.own(cur);
@@ -60,7 +60,7 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     int cur;
 
     for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * defaultSize + 1);
+      cur = (int) (Math.random() * range + 1);
 
       dex.own(cur);
       dex.saw(cur);
@@ -69,18 +69,9 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     }
   }
 
-  public void testBoundsLower() {
+  public void testMinimumValue() {
     try {
       dex.status(0);
-      fail();
-    } catch (Exception e) {
-      assertTrue(e instanceof IllegalArgumentException);
-    }
-  }
-
-  public void testBoundsUpper() {
-    try {
-      dex.status(defaultSize + 1);
       fail();
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
@@ -90,15 +81,14 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
   public void testLoad() {
     Map<Integer, PokedexStatus> data = new HashMap<Integer, PokedexStatus>();
 
-    for (int i = 0; i < power; i++)
-      data.put((int) (Math.random() * defaultSize), PokedexStatus.SAW);
-
-    for (int i = 0; i < power; i++)
-      data.put((int) (Math.random() * defaultSize), PokedexStatus.OWN);
+    for (int i = 0; i < power; i++) {
+      data.put((int) (Math.random() * range), PokedexStatus.SAW);
+      data.put((int) (Math.random() * range), PokedexStatus.OWN);
+    }
 
     String loadData = "DEX: ";
 
-    for (int i = 0; i < defaultSize; i++) {
+    for (int i = 0; i < range; i++) {
       if (data.get(i) != null)
         loadData += i + "-" + data.get(i).ordinal() + " ";
     }
@@ -112,23 +102,13 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
       e.printStackTrace();
     }
 
-    for (int i = 0; i < defaultSize; i++)
-      if (data.get(i) != null)
-        assertEquals(data.get(i), dex.status(i + 1));
+    for (int i = 0; i < range; i++)
+      if (data.get(i) != null) assertEquals(data.get(i), dex.status(i + 1));
   }
 
   public void testLoadNonsense() {
     try {
       dex.load("foo bar baz\n");
-      assertTrue("Load nonsense was allowed", false);
-    } catch (Exception e) {
-      assertTrue(e instanceof LoadException);
-    }
-  }
-
-  public void testLoadRangeError() {
-    try {
-      dex.load("DEX: 151-1 \n");
       assertTrue("Load nonsense was allowed", false);
     } catch (Exception e) {
       assertTrue(e instanceof LoadException);

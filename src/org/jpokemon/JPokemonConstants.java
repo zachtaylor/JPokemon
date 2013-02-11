@@ -26,10 +26,4 @@ public interface JPokemonConstants {
   public static final double TRAINER_EXPERIENCE_MODIFIER = 1.3;
   public static final double UNIVERSAL_EXPERIENCE_MODIFIER = 1.0;
   public static final boolean ALLOW_REPEAT_TRAINER_BATTLES = false;
-
-  // Useless stuff I am going to get rid of
-  public static final int ITEMNUMBER = 19;
-  public static final int POKEMONNUMBER = 151;
-  public static final int MOVENUMBER = 164;
-
 }

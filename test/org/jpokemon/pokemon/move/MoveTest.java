@@ -5,33 +5,24 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 import org.jpokemon.pokemon.Type;
-import org.jpokemon.pokemon.move.Move;
-import org.jpokemon.pokemon.move.MoveInfo;
-import org.jpokemon.pokemon.move.MoveStyle;
 import org.junit.Test;
 
-public class MoveTest extends TestCase implements JPokemonConstants {
-  private int number;
-  private Move move;
-  private MoveInfo answers;
+public class MoveTest extends TestCase {
+  static int moveRange = 40;
+  
+  Move move;
+  int number;
+  MoveInfo answers;
 
   public void setUp() {
-    number = 1 + (int) (Math.random() * MOVENUMBER);
+    number = 1 + (int) (Math.random() * moveRange);
     move = new Move(number);
     answers = MoveInfo.get(number);
   }
 
   public void testMoveRange() {
-    try {
-      move = new Move(10000);
-      fail("Move out of range should throw IllegalArgumentException");
-    } catch (Exception e) {
-      assertTrue(e instanceof ConfigurationException);
-    }
-
     try {
       move = new Move(0);
       fail("Move out of range should throw IllegalArgumentException");
@@ -114,7 +105,7 @@ public class MoveTest extends TestCase implements JPokemonConstants {
     MoveStyle style = MoveStyle.valueOf(answers.getStyle());
 
     while (style != MoveStyle.REPEAT) {
-      number = 1 + (int) (Math.random() * MOVENUMBER);
+      number = 1 + (int) (Math.random() * moveRange);
       move = new Move(number);
       answers = MoveInfo.get(number);
       style = MoveStyle.valueOf(answers.getStyle());
@@ -123,7 +114,7 @@ public class MoveTest extends TestCase implements JPokemonConstants {
     assertTrue(move.reps() != 1);
 
     while (style == MoveStyle.REPEAT) {
-      number = 1 + (int) (Math.random() * MOVENUMBER);
+      number = 1 + (int) (Math.random() * moveRange);
       move = new Move(number);
       answers = MoveInfo.get(number);
       style = MoveStyle.valueOf(answers.getStyle());
@@ -154,7 +145,7 @@ public class MoveTest extends TestCase implements JPokemonConstants {
     MoveStyle style = MoveStyle.valueOf(answers.getStyle());
 
     while (style != MoveStyle.REPEAT) {
-      number = 1 + (int) (Math.random() * MOVENUMBER);
+      number = 1 + (int) (Math.random() * moveRange);
       move = new Move(number);
       answers = MoveInfo.get(number);
       style = MoveStyle.valueOf(answers.getStyle());

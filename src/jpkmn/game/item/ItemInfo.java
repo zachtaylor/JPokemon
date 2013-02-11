@@ -1,6 +1,8 @@
 package jpkmn.game.item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
@@ -17,27 +19,27 @@ public class ItemInfo implements JPokemonConstants {
   private String name;
   private int type, data, value;
 
-  private static ItemInfo[] cache = new ItemInfo[ITEMNUMBER];
+  private static Map<Integer, ItemInfo> cache = new HashMap<Integer, ItemInfo>();
 
   public static ItemInfo getInfo(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (number < 1 || number > ITEMNUMBER)
+    if (number < 1)
       throw new ConfigurationException(number + " is outside item range");
 
-    if (cache[number - 1] == null) {
+    if (cache.get(number) == null) {
       try {
         List<ItemInfo> info = SqlStatement.select(ItemInfo.class)
             .where("number").eq(number).getList();
 
         if (!info.isEmpty())
-          cache[number - 1] = info.get(0);
+          cache.put(number, info.get(0));
       } catch (DataConnectionException e) {
         e.printStackTrace();
       }
     }
 
-    return cache[number - 1];
+    return cache.get(number);
   }
 
   //@preformat

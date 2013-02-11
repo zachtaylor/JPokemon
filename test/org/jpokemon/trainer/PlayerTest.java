@@ -8,7 +8,9 @@ import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.Pokemon;
 
 public class PlayerTest extends TestCase implements JPokemonConstants {
-  private static Player player;
+  static int range = 25;
+
+  Player player;
 
   public void setUp() {
     player = new Player();
@@ -53,7 +55,7 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
   }
 
   public void testAddPokemonUpdatesPokedex() {
-    int number = (int) (Math.random() * POKEMONNUMBER + 1);
+    int number = (int) (Math.random() * range) + 1;
     Pokemon p = new Pokemon(number);
 
     assertEquals(PokedexStatus.NONE, player.pokedex().status(number));
@@ -74,13 +76,13 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
   }
 
   public void testPlayerAddAppliesOriginalTrainer() {
-	Pokemon p = new Pokemon(1);
-	
-	assertEquals(null, p.originalTrainer());
-	
-	player.name("zach");
-	player.add(p);
-	
-	assertEquals(player.name(), p.originalTrainer());
+    Pokemon p = new Pokemon(1);
+
+    assertEquals(null, p.originalTrainer());
+
+    player.name("zach");
+    player.add(p);
+
+    assertEquals(player.name(), p.originalTrainer());
   }
 }
