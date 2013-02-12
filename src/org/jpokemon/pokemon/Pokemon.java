@@ -253,10 +253,10 @@ public class Pokemon {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("name", name);
-      data.put("number", _number);
-      data.put("level", _level);
-      data.put("xp", _xp);
+      data.put("name", name());
+      data.put("number", number());
+      data.put("level", level());
+      data.put("xp", xp());
       data.put("xp_needed", xpNeeded());
       data.put("condition", _condition.toString());
       data.put("stats", _stats.toJSON());
