@@ -4,28 +4,34 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.item.Item;
 import org.jpokemon.item.ItemType;
 import org.jpokemon.pokemon.Pokemon;
 
-public class ImageFinder {
+public class ImageFinder implements JPokemonConstants {
   public static ImageIcon find(Object o) {
-    if (o instanceof Pokemon)
-      return getImage((Pokemon) o);
-    else if (o instanceof Item)
+    if (o instanceof Item)
       return getImage((Item) o);
     else
       return getImage(o.toString());
   }
 
-  private static ImageIcon getImage(String path) {
-    URL url = ImageFinder.class.getResource(path + ".png");
-    if (url == null) url = ImageFinder.class.getResource("err.png");
-    return new ImageIcon(url);
+  public static ImageIcon pokemon(String number) {
+    String path = IMAGE_PATH + number + ".png";
+
+    ImageIcon icon = new ImageIcon(path);
+
+    return icon;
   }
 
-  private static ImageIcon getImage(Pokemon p) {
-    return getImage("pkmn/" + p.number());
+  private static ImageIcon getImage(String path) {
+    URL url = ImageFinder.class.getResource(path + ".png");
+
+    if (url == null)
+      url = ImageFinder.class.getResource("err.png");
+
+    return new ImageIcon(url);
   }
 
   private static ImageIcon getImage(Item i) {

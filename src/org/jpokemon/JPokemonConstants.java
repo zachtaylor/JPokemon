@@ -7,6 +7,7 @@ public interface JPokemonConstants {
 
   // Environment config
   public static final String SAVE_PATH = "data/save/";
+  public static final String IMAGE_PATH = "data/image/";
   public static final String DATABASE_PATH = "data/Pokemon.db";
 
   // Player config

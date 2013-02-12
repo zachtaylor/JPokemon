@@ -62,7 +62,7 @@ public class PokemonUpgradeView extends JPokemonView {
       JSONObject pInfo = PlayerService.pokemonInfo(_playerID, _partyIndex);
 
       _name.setText(pInfo.getInt("number") + " " + pInfo.getString("name"));
-      _icon.setIcon(ImageFinder.find("pkmn/" + pInfo.getInt("number")));
+      _icon.setIcon(ImageFinder.pokemon(pInfo.getInt("number") + ""));
 
       JSONArray allStats = pInfo.getJSONArray("stats");
       for (int index = 0; index < allStats.length(); index++) {

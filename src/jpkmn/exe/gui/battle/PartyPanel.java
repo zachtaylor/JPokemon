@@ -19,8 +19,8 @@ import org.json.JSONObject;
 
 public class PartyPanel extends JPanel {
   public PartyPanel(JSONObject data, int playerID) {
-    int hp, hp_max, level, xp, xp_needed, team_id, trainer_id;
-    String condition, name, image_path;
+    int hp, hp_max, level, number, xp, xp_needed, team_id, trainer_id;
+    String condition, name;
     List<String> partyIcons = new ArrayList<String>();
 
     try {
@@ -30,9 +30,9 @@ public class PartyPanel extends JPanel {
 
       name = leader.getString("name");
       level = leader.getInt("level");
+      number = leader.getInt("number");
       hp = stats.getJSONObject("HEALTH").getInt("cur");
       hp_max = stats.getJSONObject("HEALTH").getInt("max");
-      image_path = "pkmn/" + leader.getInt("number");
       condition = leader.getString("condition");
       xp = leader.getInt("xp");
       xp_needed = leader.getInt("xp_needed");
@@ -61,7 +61,7 @@ public class PartyPanel extends JPanel {
     add(partyStatus);
     partyStatus.setPreferredSize(new Dimension(40, 50));
 
-    add(new JLabel(ImageFinder.find(image_path)));
+    add(new JLabel(ImageFinder.pokemon(number + "")));
 
     add(info = new JPanel());
 
