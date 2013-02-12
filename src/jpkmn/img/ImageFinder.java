@@ -14,7 +14,7 @@ public class ImageFinder implements JPokemonConstants {
   }
 
   public static ImageIcon pokemon(String number) {
-    String path = IMAGE_PATH + number + ".png";
+    String path = IMAGE_PATH + "pokemon/" + number + ".png";
 
     ImageIcon icon = new ImageIcon(path);
 
