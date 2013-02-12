@@ -151,7 +151,7 @@ public class Player implements PokemonTrainer {
       _pokedex.load(scan.nextLine());
 
       // Load progress
-      _progress.loadJSON(null); // BROKEN
+      // _progress.loadJSON(null); // BROKEN
       scan.nextLine(); // BROKEN
 
       // load pcstorage

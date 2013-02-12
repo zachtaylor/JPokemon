@@ -6,7 +6,7 @@ import jpkmn.exe.gui.battle.BattleView;
 import jpkmn.exe.gui.pokemonupgrade.PokemonUpgradeView;
 import jpkmn.exe.gui.start.StartView;
 import jpkmn.exe.gui.world.WorldView;
-import jpkmn.img.ImageFinder;
+import jpkmn.game.service.ImageFinder;
 
 public class GameWindow extends JFrame {
   public GameWindow(int playerID) {

@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.exe.gui.JPokemonView;
+import jpkmn.game.service.ImageFinder;
 import jpkmn.game.service.PlayerService;
-import jpkmn.img.ImageFinder;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import jpkmn.exceptions.DialogCancelException;
-import jpkmn.img.ImageFinder;
+import jpkmn.game.service.ImageFinder;
 
 import org.json.JSONArray;
 import org.json.JSONException;

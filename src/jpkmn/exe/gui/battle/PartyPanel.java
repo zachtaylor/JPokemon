@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import jpkmn.img.ImageFinder;
+import jpkmn.game.service.ImageFinder;
 
 import org.json.JSONArray;
 import org.json.JSONException;

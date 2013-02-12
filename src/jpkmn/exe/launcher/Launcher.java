@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
-import jpkmn.img.ImageFinder;
+import jpkmn.game.service.ImageFinder;
 
 public class Launcher extends JFrame {
   public Launcher() {

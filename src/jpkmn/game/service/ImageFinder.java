@@ -1,4 +1,4 @@
-package jpkmn.img;
+package jpkmn.game.service;
 
 import javax.swing.ImageIcon;
 

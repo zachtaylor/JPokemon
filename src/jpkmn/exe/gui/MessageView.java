@@ -16,7 +16,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-import jpkmn.img.ImageFinder;
+import jpkmn.game.service.ImageFinder;
 
 public class MessageView extends JPanel {
   public MessageView() {
