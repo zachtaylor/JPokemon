@@ -9,6 +9,7 @@ import org.jpokemon.JPokemonConstants;
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
+import com.kremerk.Sqlite.Annotations.OneToMany;
 import com.kremerk.Sqlite.Annotations.PrimaryKey;
 
 public class PokemonInfo implements JPokemonConstants {
@@ -17,6 +18,9 @@ public class PokemonInfo implements JPokemonConstants {
   private String name;
   private int type1, type2, attack, specattack, defense, specdefense, speed,
       health, evolutionlevel;
+  
+  @OneToMany("pokemon")
+  private List<EffortValue> effortValues;
 
   private static Map<Integer, PokemonInfo> cache = new HashMap<Integer, PokemonInfo>();
 
@@ -26,9 +30,12 @@ public class PokemonInfo implements JPokemonConstants {
     if (cache.get(num) == null) {
       try {
         List<PokemonInfo> pokemonbase = SqlStatement.select(PokemonInfo.class).where("number").eq(num).getList();
+        List<EffortValue> evbase = SqlStatement.select(EffortValue.class).where("pokemon").eq(num).getList();
 
-        if (!pokemonbase.isEmpty())
+        if (!pokemonbase.isEmpty()) {
+          pokemonbase.get(0).setEffortValues(evbase);
           cache.put(num, pokemonbase.get(0));
+        }
 
       } catch (DataConnectionException e) {
         e.printStackTrace();
@@ -50,5 +57,6 @@ public class PokemonInfo implements JPokemonConstants {
   public int getSpeed()          { return speed;          } public void setSpeed(int val)          { speed          = val; }
   public int getHealth()         { return health;         } public void setHealth(int val)         { health         = val; }
   public int getEvolutionlevel() { return evolutionlevel; } public void setEvolutionlevel(int val) { evolutionlevel = val; }
+  public List<EffortValue> getEffortValues() { return effortValues; } public void setEffortValues(List<EffortValue> val) { effortValues = val; }
   //@format
 }

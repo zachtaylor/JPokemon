@@ -99,8 +99,7 @@ public class Pokemon {
    * Adds the xp specified to the Pokemon. If the Pokemon has enough, level is
    * increased
    * 
-   * @param amount
-   *          Amount of xp to add
+   * @param amount Amount of xp to add
    */
   public void xp(int amount) {
     _xp += amount;
@@ -154,10 +153,14 @@ public class Pokemon {
     return getStat(StatType.SPEED).cur();
   }
 
+  public List<EffortValue> getEV() {
+    return _species.getEffortValues();
+  }
+
   public void addEV(List<EffortValue> evs) {
     _stats.addEV(evs);
   }
-  
+
   public Move move(int index) {
     return _moves.get(index);
   }
@@ -174,8 +177,7 @@ public class Pokemon {
    * Takes a specified amount of damage. If damage is greater than available
    * health, the Pokemon is knocked out.
    * 
-   * @param damage
-   *          The amount of damage to be taken
+   * @param damage The amount of damage to be taken
    * @return the awake state of the Pokemon
    */
   public void takeDamage(int damage) {
@@ -186,8 +188,7 @@ public class Pokemon {
    * Heals specified damage. If healed amount is greater than missing health,
    * Pokemon is brought to full health.
    * 
-   * @param heal
-   *          The amount healed by
+   * @param heal The amount healed by
    */
   public void healDamage(int heal) {
     getStat(StatType.HEALTH).effect(heal);
@@ -278,11 +279,9 @@ public class Pokemon {
   /**
    * Properly initializes a Pokemon from a file.
    * 
-   * @param s
-   *          String save representation of the pokemon.
+   * @param s String save representation of the pokemon.
    * @return A new Pokemon as described by the string
-   * @throws LoadException
-   *           if loaded with invalid string
+   * @throws LoadException if loaded with invalid string
    */
   public static Pokemon load(String s) throws LoadException {
     if (s != null && !s.equals(" ")) {
@@ -355,8 +354,8 @@ public class Pokemon {
 
   private MoveBlock _moves;
   private StatBlock _stats;
-  private PokemonInfo _species;
   private Condition _condition;
-  private int _number, _level, _xp, _caughtLocation;
+  private PokemonInfo _species;
   private String name, _originalTrainer;
+  private int _number, _level, _xp, _caughtLocation;
 }
