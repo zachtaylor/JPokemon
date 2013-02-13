@@ -1,6 +1,9 @@
 package org.jpokemon.pokemon.stat;
 
+import java.util.List;
+
 import org.jpokemon.pokemon.ConditionEffect;
+import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.PokemonInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +88,13 @@ public class StatBlock {
     _data[StatType.DEFENSE.ordinal()].base(info.getDefense());
     _data[StatType.SPECDEFENSE.ordinal()].base(info.getSpecdefense());
     _data[StatType.SPEED.ordinal()].base(info.getSpeed());
+  }
+
+  public void addEV(List<EffortValue> evs) {
+    for (EffortValue ev : evs) {
+      StatType st = StatType.valueOf(ev.getStat());
+      get(st).addEV(ev.getAmount());
+    }
   }
 
   /**

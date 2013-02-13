@@ -1,5 +1,6 @@
 package org.jpokemon.pokemon;
 
+import java.util.List;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
@@ -153,6 +154,10 @@ public class Pokemon {
     return getStat(StatType.SPEED).cur();
   }
 
+  public void addEV(List<EffortValue> evs) {
+    _stats.addEV(evs);
+  }
+  
   public Move move(int index) {
     return _moves.get(index);
   }

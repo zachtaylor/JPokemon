@@ -14,6 +14,16 @@ public class Stat implements JPokemonConstants {
     return _cur;
   }
 
+  public int ev() {
+    return _ev;
+  }
+
+  public void addEV(int val) {
+    _ev += val;
+
+    doCalculation();
+  }
+
   public int points() {
     return _pts;
   }
@@ -44,7 +54,6 @@ public class Stat implements JPokemonConstants {
 
     if (Math.abs(_delta) > STAT_CHANGE_MAX_DELTA)
       _delta = (int) Math.copySign(STAT_CHANGE_MAX_DELTA, _delta);
-    
 
     doCalculation();
   }
@@ -84,5 +93,5 @@ public class Stat implements JPokemonConstants {
   }
 
   protected double _modifier;
-  protected int _delta, _cur, _max, _base, _pts, _level;
+  protected int _delta, _cur, _max, _base, _pts, _level, _ev;
 }
