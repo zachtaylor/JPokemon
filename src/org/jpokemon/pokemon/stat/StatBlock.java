@@ -70,8 +70,11 @@ public class StatBlock implements JPokemonConstants {
     if (points() == 0)
       throw new IllegalStateException("No points available");
 
-    points(points() - 1);
     Stat stat = get(st);
+    if (stat.points() == STAT_POINTS_INDIVIDUAL_MAX)
+      return;
+
+    points(points() - 1);
     stat.points(stat.points() + 1);
   }
 

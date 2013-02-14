@@ -21,7 +21,8 @@ public class Stat implements JPokemonConstants {
   public void addEV(int val) {
     _ev += val;
 
-    doCalculation();
+    computeMax();
+    computeCur();
   }
 
   public int points() {
@@ -46,7 +47,7 @@ public class Stat implements JPokemonConstants {
   public void modify(double m) {
     _modifier = m;
 
-    doCalculation();
+    computeCur();
   }
 
   public void effect(int power) {
@@ -55,14 +56,14 @@ public class Stat implements JPokemonConstants {
     if (Math.abs(_delta) > STAT_CHANGE_MAX_DELTA)
       _delta = (int) Math.copySign(STAT_CHANGE_MAX_DELTA, _delta);
 
-    doCalculation();
+    computeCur();
   }
 
   public void reset() {
-    _max = (int) (((2.0 * _base + _pts) * _level) / 100.0 + 5.0);
     _delta = 0;
 
-    doCalculation();
+    computeMax();
+    computeCur();
   }
 
   public JSONObject toJSON() {
@@ -81,7 +82,19 @@ public class Stat implements JPokemonConstants {
     return data;
   }
 
-  private void doCalculation() {
+  private void computeMax() {
+    double val = (STAT_MAX_VALUE_WEIGHT_BASE * _base);
+    val += (STAT_MAX_VALUE_WEIGHT_EV * _ev);
+    val += (STAT_MAX_VALUE_WEIGHT_POINTS * _pts);
+    val += 100;
+    val /= 100;
+    val *= _level;
+    val += 10;
+
+    _max = (int) val;
+  }
+
+  private void computeCur() {
     if (_delta > 0)
       _cur = (int) ((_max * ((2.0 + _delta) / 2)));
     else if (_delta < 0)

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Health;
@@ -14,7 +15,7 @@ import org.jpokemon.pokemon.stat.StatType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Pokemon {
+public class Pokemon implements JPokemonConstants {
   public Pokemon(int num) {
     _number = num;
     _caughtLocation = -1;
@@ -59,6 +60,9 @@ public class Pokemon {
   }
 
   public void level(int l) {
+    if (_level + 1 == l)
+      _stats.points(_stats.points() + STAT_POINTS_PER_LEVEL);
+
     _level = l;
     _stats.level(l);
 
@@ -106,7 +110,6 @@ public class Pokemon {
 
     if (_xp >= xpNeeded()) {
       _xp -= xpNeeded();
-      _stats.points(_stats.points() + 1);
       level(level() + 1);
     }
   }
@@ -238,9 +241,7 @@ public class Pokemon {
    * Eevee into Flareon).
    */
   public void evolve(int... num) {
-    // No points for Vaporeon/Jolteon/Flareon
-    if (_number < 134 || _number > 136)
-      _stats.points(_stats.points() + 1);
+    _stats.points(_stats.points() + STAT_POINTS_PER_EVOLUTION);
 
     if (num.length != 0)
       _number = num[0]; // special value

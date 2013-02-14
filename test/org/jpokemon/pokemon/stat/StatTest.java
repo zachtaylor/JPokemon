@@ -16,14 +16,14 @@ public class StatTest extends TestCase {
   public void testBase() {
     stat.base(100);
 
-    assertEquals(7, stat.cur());
+    assertEquals(13, stat.cur());
   }
 
   public void testLevel() {
     stat.base(100);
     stat.level(100);
 
-    assertEquals(205, stat.cur());
+    assertEquals(310, stat.cur());
   }
 
   public void testPoints() {
@@ -31,7 +31,7 @@ public class StatTest extends TestCase {
     stat.level(100);
     stat.points(100);
 
-    assertEquals(305, stat.cur());
+    assertEquals(360, stat.cur());
   }
 
   public void testModify() {
@@ -39,7 +39,7 @@ public class StatTest extends TestCase {
     stat.level(100);
     stat.modify(1 / 2.0);
 
-    assertEquals(102, stat.cur());
+    assertEquals(155, stat.cur());
   }
 
   public void testEffectUpOne() {
@@ -47,7 +47,7 @@ public class StatTest extends TestCase {
     stat.level(100);
     stat.effect(1);
 
-    assertEquals(307, stat.cur());
+    assertEquals(465, stat.cur());
   }
 
   public void testEffectDownOne() {
@@ -55,34 +55,34 @@ public class StatTest extends TestCase {
     stat.level(100);
     stat.effect(-1);
 
-    assertEquals(136, stat.cur());
+    assertEquals(206, stat.cur());
   }
 
   public void testReset() {
     stat.base(100);
     stat.level(100);
-    assertEquals(205, stat.cur());
+    assertEquals(310, stat.cur());
 
     stat.effect(-6);
-    assertEquals(51, stat.cur());
+    assertEquals(77, stat.cur());
 
     stat.reset();
-    assertEquals(205, stat.cur());
+    assertEquals(310, stat.cur());
   }
 
   public void testResetDoesNotOverrideModify() {
     stat.base(100);
     stat.level(100);
-    assertEquals(205, stat.cur());
+    assertEquals(310, stat.cur());
 
     stat.effect(-6);
-    assertEquals(51, stat.cur());
+    assertEquals(77, stat.cur());
 
     stat.modify(1.0 / 2);
-    assertEquals(25, stat.cur());
+    assertEquals(38, stat.cur());
 
     stat.reset();
-    assertEquals(102, stat.cur());
+    assertEquals(155, stat.cur());
   }
 
   public void testModifyDoesNotOverrideEffect() {
@@ -91,11 +91,11 @@ public class StatTest extends TestCase {
     stat.effect(-6);
     stat.modify(1.0 / 2);
 
-    assertEquals(25, stat.cur());
+    assertEquals(38, stat.cur());
 
     stat.modify(1);
 
-    assertEquals(51, stat.cur());
+    assertEquals(77, stat.cur());
   }
 
   public void testEffectMaximum() {
@@ -103,7 +103,7 @@ public class StatTest extends TestCase {
     stat.level(100);
     stat.effect(6);
 
-    assertEquals(820, stat.cur());
+    assertEquals(1240, stat.cur());
   }
 
   public void testEffectMinimum() {
@@ -111,7 +111,7 @@ public class StatTest extends TestCase {
     stat.level(100);
     stat.effect(-8);
 
-    assertEquals(51, stat.cur());
+    assertEquals(77, stat.cur());
   }
 
   public void testMinimumValue() {
@@ -128,6 +128,6 @@ public class StatTest extends TestCase {
     stat.modify(1.0 / 2);
     stat.effect(2);
 
-    assertEquals(205, stat.cur());
+    assertEquals(310, stat.cur());
   }
 }
