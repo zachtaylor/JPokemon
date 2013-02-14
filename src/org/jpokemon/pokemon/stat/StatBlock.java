@@ -86,7 +86,7 @@ public class StatBlock implements JPokemonConstants {
   public void rebase(PokemonInfo info) {
     // This is not polymorphic, because that would make the database ugly
 
-    _data[0].base(info.getHealth());
+    _data[StatType.HEALTH.ordinal()].base(info.getHealth());
     _data[StatType.ATTACK.ordinal()].base(info.getAttack());
     _data[StatType.SPECATTACK.ordinal()].base(info.getSpecattack());
     _data[StatType.DEFENSE.ordinal()].base(info.getDefense());

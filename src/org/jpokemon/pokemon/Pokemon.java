@@ -8,7 +8,6 @@ import jpkmn.exceptions.LoadException;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
-import org.jpokemon.pokemon.stat.Health;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
@@ -133,7 +132,7 @@ public class Pokemon implements JPokemonConstants {
   }
 
   public int maxHealth() {
-    return ((Health) getStat(StatType.HEALTH)).max();
+    return getStat(StatType.HEALTH).max();
   }
 
   public int attack() {
