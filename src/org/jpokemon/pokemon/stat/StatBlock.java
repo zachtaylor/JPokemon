@@ -107,7 +107,7 @@ public class StatBlock implements JPokemonConstants {
       }
 
       _evTotal += consumable;
-      stat.addEV(consumable);
+      stat.ev(consumable);
     }
   }
 

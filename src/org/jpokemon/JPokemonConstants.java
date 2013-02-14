@@ -21,8 +21,10 @@ public interface JPokemonConstants {
   public static final int STAT_POINTS_PER_LEVEL = 1;
   public static final int STAT_POINTS_PER_EVOLUTION = 0;
   public static final int STAT_POINTS_INDIVIDUAL_MAX = 100;
+  public static final int INDIVIDUAL_VALUE_RANGE_CAP = 32;
   public static final int EFFORT_VALUE_UNIVERSAL_MAX = 510;
   public static final int EFFORT_VALUE_INDIVIDUAL_MAX = 255;
+  public static final double STAT_MAX_VALUE_WEIGHT_IV = 1.0;
   public static final double STAT_MAX_VALUE_WEIGHT_EV = 0.25;
   public static final double STAT_MAX_VALUE_WEIGHT_BASE = 2.0;
   public static final double STAT_MAX_VALUE_WEIGHT_POINTS = 0.5;

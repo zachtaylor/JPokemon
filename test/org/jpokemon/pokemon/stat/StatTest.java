@@ -10,6 +10,7 @@ public class StatTest extends TestCase {
 
   public void setUp() {
     stat = new Stat();
+    stat.iv(0);
   }
 
   @Test

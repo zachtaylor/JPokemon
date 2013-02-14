@@ -8,6 +8,7 @@ public class Stat implements JPokemonConstants {
   public Stat() {
     _level = 1;
     _modifier = 1;
+    _iv = (int) (Math.random() * INDIVIDUAL_VALUE_RANGE_CAP);
   }
 
   public int cur() {
@@ -18,9 +19,20 @@ public class Stat implements JPokemonConstants {
     return _ev;
   }
 
-  public void addEV(int val) {
+  public void ev(int val) {
     _ev += val;
 
+    computeMax();
+    computeCur();
+  }
+  
+  public int iv() {
+    return _iv;
+  }
+  
+  public void iv(int val) {
+    _iv = val;
+    
     computeMax();
     computeCur();
   }
@@ -84,6 +96,7 @@ public class Stat implements JPokemonConstants {
 
   private void computeMax() {
     double val = (STAT_MAX_VALUE_WEIGHT_BASE * _base);
+    val += (STAT_MAX_VALUE_WEIGHT_IV * _iv);
     val += (STAT_MAX_VALUE_WEIGHT_EV * _ev);
     val += (STAT_MAX_VALUE_WEIGHT_POINTS * _pts);
     val += 100;
@@ -106,5 +119,5 @@ public class Stat implements JPokemonConstants {
   }
 
   protected double _modifier;
-  protected int _delta, _cur, _max, _base, _pts, _level, _ev;
+  protected int _delta, _cur, _max, _base, _pts, _level, _ev, _iv;
 }
