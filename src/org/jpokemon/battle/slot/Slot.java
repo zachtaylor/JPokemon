@@ -108,34 +108,27 @@ public class Slot implements JPokemonConstants {
       ((Player) _trainer).pokedex().saw(s.leader().number());
   }
 
-  public void removeRival(Slot s) {
-    Pokemon p = s.leader();
-    int xpReward = (int) (s.trainer().xpFactor() * (p.level() + 6) * UNIVERSAL_EXPERIENCE_MODIFIER);
-
-    List<Pokemon> earnList = new ArrayList<Pokemon>();
-    List<String> message = new ArrayList<String>();
-
-    message.add(p.name() + " fainted!");
+  /**
+   * Removes a rival Pokemon from being tracked as an opponent by the Slot.
+   * 
+   * @param p Pokemon to remove
+   * @return The List of Pokemon whom consider p to be a rival
+   */
+  public List<Pokemon> removeRival(Pokemon p) {
+    List<Pokemon> hitList = new ArrayList<Pokemon>();
 
     for (Pokemon cur : _trainer.party()) {
-      List<Pokemon> rivalsList = _rivalsLists.get(cur);
+      List<Pokemon> rivalsList = rivalsList(cur);
 
-      // TODO : If cur holding xp share, add to earners
+      // TODO : If cur holding xp share etc., add to hitList
 
       if (rivalsList != null && rivalsList.contains(p)) {
-        earnList.add(cur);
+        hitList.add(cur);
         rivalsList.remove(p);
       }
     }
 
-    int xpEach = Math.max(xpReward / earnList.size(), 1);
-
-    for (Pokemon earner : earnList) {
-      earner.xp(earner.xp() + xpEach);
-      message.add(earner.name() + " received " + xpEach + " experience!");
-    }
-
-    _trainer.notify((String[]) message.toArray());
+    return hitList;
   }
 
   public JSONObject toJSON() {
@@ -154,10 +147,10 @@ public class Slot implements JPokemonConstants {
   }
 
   private List<Pokemon> rivalsList(Pokemon p) {
-    if (_rivalsLists.get(leader()) == null)
-      _rivalsLists.put(leader(), new ArrayList<Pokemon>());
+    if (_rivalsLists.get(p) == null)
+      _rivalsLists.put(p, new ArrayList<Pokemon>());
 
-    return _rivalsLists.get(leader());
+    return _rivalsLists.get(p);
   }
 
   private int _team;

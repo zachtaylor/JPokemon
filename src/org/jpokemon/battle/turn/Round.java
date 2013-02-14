@@ -54,9 +54,7 @@ public class Round {
         _battle.remove(slot);
       }
       else if (!slot.leader().awake()) {
-        for (Slot s : _battle)
-          s.removeRival(slot);
-
+        _battle.rewardFrom(slot);
         turn.forceSwap();
       }
 

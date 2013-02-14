@@ -40,7 +40,9 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
     BattleRegistry.remove(trainer);
     trainer.setState("world");
 
-    if (slot.party().size() != 0 && slot.party().awake() == 0) {
+    if (slot.party().awake() == 0) {
+      rewardFrom(slot);
+
       if (slot.trainer().type() == TrainerType.PLAYER) {
         // TODO : Punish player
       }
@@ -59,6 +61,17 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
     }
 
     verifyTeamCount();
+  }
+
+  public void rewardFrom(Slot s) {
+    Reward reward = new Reward(s);
+
+    for (Slot slot : this) {
+      if (slot == s)
+        continue;
+
+      reward.apply(slot);
+    }
   }
 
   public boolean contains(PokemonTrainer trainer) {
@@ -208,11 +221,11 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
 
   public static int computeDamage(Pokemon user, Move move, Pokemon victim) {
     //@preformat
-    double damage = 1.0, 
-           L = user.level(), 
-           A = 1.0, 
-           P = move.power(), 
-           D = 0, 
+    double damage = 1.0,
+           L = user.level(),
+           A = 1.0,
+           P = move.power(),
+           D = 0,
            STAB = move.STAB(user),
            E = move.effectiveness(victim), 
            R = Math.random() * .15 + .85,
@@ -231,14 +244,12 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
       A = 10000000;
       D = 1;
     }
-    else if (move.style() == MoveStyle.DELAYNEXT
-        || move.style() == MoveStyle.DELAYBEFORE) {
+    else if (move.style() == MoveStyle.DELAYNEXT || move.style() == MoveStyle.DELAYBEFORE) {
       A = Math.max(user.attack(), user.specattack());
       D = Math.max(victim.defense(), victim.specdefense());
     }
 
-    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R
-        * reps;
+    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R * reps;
 
     if (damage < 1 && E != 0)
       damage = 1;
@@ -255,12 +266,12 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
   public static int confusedDamage(Pokemon p) {
     // For more info, see computeDamage
     //@preformat
-    double L = p.level(), 
-           A = p.attack(), 
-           P = 40, 
-           D = p.defense(), 
-           STAB = 1, 
-           E = 1, 
+    double L = p.level(),
+           A = p.attack(),
+           P = 40,
+           D = p.defense(),
+           STAB = 1,
+           E = 1,
            R = 1.00;
     //@format
 

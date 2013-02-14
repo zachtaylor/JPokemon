@@ -156,7 +156,7 @@ public class Pokemon implements JPokemonConstants {
     return getStat(StatType.SPEED).cur();
   }
 
-  public List<EffortValue> getEV() {
+  public List<EffortValue> effortValues() {
     return _species.getEffortValues();
   }
 
@@ -350,7 +350,7 @@ public class Pokemon implements JPokemonConstants {
 
   @Override
   public int hashCode() {
-    return (name.hashCode() & 255) + _number + _level;
+    return (name().hashCode() & 255) + _number + _level;
   }
 
   private MoveBlock _moves;
