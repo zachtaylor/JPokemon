@@ -20,19 +20,23 @@ public class Stat implements JPokemonConstants {
   }
 
   public void ev(int val) {
-    _ev += val;
-
-    computeMax();
-    computeCur();
+    if (!MEASURE_EFFORT_VALUE_REALTIME) {
+      _evPending += val;
+    }
+    else {
+      _ev += val;
+      computeMax();
+      computeCur();
+    }
   }
-  
+
   public int iv() {
     return _iv;
   }
-  
+
   public void iv(int val) {
     _iv = val;
-    
+
     computeMax();
     computeCur();
   }
@@ -48,6 +52,12 @@ public class Stat implements JPokemonConstants {
 
   public void level(int l) {
     _level = l;
+
+    if (!MEASURE_EFFORT_VALUE_REALTIME) {
+      _ev += _evPending;
+      _evPending = 0;
+    }
+
     reset();
   }
 
@@ -119,5 +129,5 @@ public class Stat implements JPokemonConstants {
   }
 
   protected double _modifier;
-  protected int _delta, _cur, _max, _base, _pts, _level, _ev, _iv;
+  protected int _delta, _cur, _max, _base, _pts, _level, _ev, _evPending, _iv;
 }

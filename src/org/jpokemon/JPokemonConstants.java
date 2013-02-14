@@ -28,6 +28,7 @@ public interface JPokemonConstants {
   public static final double STAT_MAX_VALUE_WEIGHT_EV = 0.25;
   public static final double STAT_MAX_VALUE_WEIGHT_BASE = 2.0;
   public static final double STAT_MAX_VALUE_WEIGHT_POINTS = 0.5;
+  public static final boolean MEASURE_EFFORT_VALUE_REALTIME = false;
 
   // Battle config
   public static final int STAT_CHANGE_MAX_DELTA = 6;
