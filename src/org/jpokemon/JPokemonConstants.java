@@ -12,10 +12,14 @@ public interface JPokemonConstants {
 
   // Player config
   public static final int STARTER_POKEMON_LEVEL = 5;
-  public static final int KNOWN_MOVE_COUNT = 4;
   public static final int TRAINER_PARTY_SIZE = 6;
   public static final int PLAYER_STORAGE_UNIT_COUNT = 8;
   public static final int PLAYER_STORAGE_UNIT_SIZE = 20;
+  
+  // Pokemon config
+  public static final int KNOWN_MOVE_COUNT = 4;
+  public static final int EFFORT_VALUE_UNIVERSAL_MAX = 510;
+  public static final int EFFORT_VALUE_INDIVIDUAL_MAX = 255;
 
   // Battle config
   public static final int STAT_CHANGE_MAX_DELTA = 6;

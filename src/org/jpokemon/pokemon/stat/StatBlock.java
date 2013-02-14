@@ -2,13 +2,14 @@ package org.jpokemon.pokemon.stat;
 
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.PokemonInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class StatBlock {
+public class StatBlock implements JPokemonConstants {
   public StatBlock(PokemonInfo info) {
     _data = new Stat[StatType.values().length];
 
@@ -92,8 +93,18 @@ public class StatBlock {
 
   public void addEV(List<EffortValue> evs) {
     for (EffortValue ev : evs) {
-      StatType st = StatType.valueOf(ev.getStat());
-      get(st).addEV(ev.getAmount());
+      Stat stat = get(StatType.valueOf(ev.getStat()));
+      int consumable = ev.getAmount();
+
+      if (_evTotal + ev.getAmount() > EFFORT_VALUE_UNIVERSAL_MAX) {
+        consumable = EFFORT_VALUE_UNIVERSAL_MAX - _evTotal;
+      }
+      else if (stat.ev() + ev.getAmount() > EFFORT_VALUE_INDIVIDUAL_MAX) {
+        consumable = EFFORT_VALUE_INDIVIDUAL_MAX - stat.ev();
+      }
+
+      _evTotal += consumable;
+      stat.addEV(consumable);
     }
   }
 
@@ -148,7 +159,7 @@ public class StatBlock {
     return data;
   }
 
-  private int _points;
   private Stat[] _data;
+  private int _points, _evTotal;
   private boolean _burn, _paralyze;
 }
