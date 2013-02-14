@@ -16,7 +16,7 @@ public class Stat implements JPokemonConstants {
   }
 
   public int ev() {
-    return _ev;
+    return _ev + _evPending;
   }
 
   public void ev(int val) {
