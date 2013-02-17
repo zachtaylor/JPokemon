@@ -122,6 +122,10 @@ public class Pokemon implements JPokemonConstants {
     return (int) (Math.log((double) _level) * _level * .35 * _level);
   }
 
+  public int xpYield() {
+    return 1;
+  }
+
   public Stat getStat(StatType s) {
     return _stats.get(s);
   }

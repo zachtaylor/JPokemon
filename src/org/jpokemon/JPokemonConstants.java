@@ -36,7 +36,7 @@ public interface JPokemonConstants {
   public static final double TYPE_ADVANTAGE_MODIFIER = 2.0;
   public static final double SHIELD_REDUCTION_MODIFIER = 1.0;
   public static final double TYPE_DISADVANTAGE_MODIFIER = 0.5;
-  public static final double GYM_EXPERIENCE_MODIFIER = 1.7;
+  public static final double GYM_EXPERIENCE_MODIFIER = 1.5;
   public static final double TRAINER_EXPERIENCE_MODIFIER = 1.3;
   public static final double UNIVERSAL_EXPERIENCE_MODIFIER = 1.0;
   public static final boolean ALLOW_REPEAT_TRAINER_BATTLES = false;

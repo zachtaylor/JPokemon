@@ -11,12 +11,16 @@ import org.jpokemon.trainer.TrainerType;
 
 public class Reward implements JPokemonConstants {
   public Reward(Slot s) {
-    double xp = s.trainer().xpFactor() * (s.leader().level() + 6) * UNIVERSAL_EXPERIENCE_MODIFIER;
-
-    _xp = (int) xp;
     _pokemon = s.leader();
     _message = _pokemon.name() + " fainted!";
-    
+
+    double xp = s.trainer().xpFactor();
+    xp *= _pokemon.xpYield();
+    xp *= _pokemon.level();
+    xp /= 7;
+    xp *= UNIVERSAL_EXPERIENCE_MODIFIER;
+    _xp = (int) xp;
+
     if (s.trainer().type() == TrainerType.PLAYER)
       _evs = new ArrayList<EffortValue>();
     else
@@ -30,11 +34,11 @@ public class Reward implements JPokemonConstants {
   public int xp() {
     return _xp;
   }
-  
+
   public void effortValues(List<EffortValue> list) {
     _evs = list;
   }
-  
+
   public List<EffortValue> effortValues() {
     return _evs;
   }
@@ -62,6 +66,13 @@ public class Reward implements JPokemonConstants {
     messages.add(message());
 
     int xpEach = Math.max(xp() / hitList.size(), 1);
+
+    /* TODO s is the number of Pokemon that participated in the battle and have
+     * not fainted. If any Pokemon in the party is holding an Exp. Share, s is
+     * equal to 2, and for the rest of the Pokemon, s is equal to twice the
+     * number of Pokemon that participated instead. If more than one Pokemon is
+     * holding an Exp. Share, s is equal to twice the number of Pokemon holding
+     * the Exp. Share for each Pokemon holding one. */
 
     for (Pokemon earner : hitList) {
       earner.xp(earner.xp() + xpEach);
