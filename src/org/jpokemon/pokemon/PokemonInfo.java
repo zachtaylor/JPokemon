@@ -17,8 +17,8 @@ public class PokemonInfo implements JPokemonConstants {
   private int number;
   private String name;
   private int type1, type2, attack, specattack, defense, specdefense, speed,
-      health, evolutionlevel;
-  
+      health, evolutionlevel /* , xp_yield, growth_rate */;
+
   @OneToMany("pokemon")
   private List<EffortValue> effortValues;
 
@@ -57,6 +57,8 @@ public class PokemonInfo implements JPokemonConstants {
   public int getSpeed()          { return speed;          } public void setSpeed(int val)          { speed          = val; }
   public int getHealth()         { return health;         } public void setHealth(int val)         { health         = val; }
   public int getEvolutionlevel() { return evolutionlevel; } public void setEvolutionlevel(int val) { evolutionlevel = val; }
+//  public int getXp_yield()       { return xp_yield;       } public void setXp_yield(int val)       { xp_yield       = val; }
+//  public int getGrowth_rate()    { return growth_rate;    } public void setGrowth_rate(int val)    { growth_rate     = val; }
   public List<EffortValue> getEffortValues() { return effortValues; } public void setEffortValues(List<EffortValue> val) { effortValues = val; }
   //@format
 }
