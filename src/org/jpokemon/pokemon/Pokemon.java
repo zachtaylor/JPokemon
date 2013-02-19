@@ -105,10 +105,11 @@ public class Pokemon implements JPokemonConstants {
    * @param amount Amount of xp to add
    */
   public void xp(int amount) {
-    _xp += amount;
+    int xpNeeded = xpNeeded();
 
-    if (_xp >= xpNeeded()) {
-      _xp -= xpNeeded();
+    _xp += amount;
+    if (_xp >= xpNeeded) {
+      _xp -= xpNeeded;
       level(level() + 1);
     }
   }
@@ -119,11 +120,13 @@ public class Pokemon implements JPokemonConstants {
    * @return The amount of XP needed to gain a level
    */
   public int xpNeeded() {
-    return (int) (Math.log((double) _level) * _level * .35 * _level);
+    GrowthRate rate = GrowthRate.valueOf(_species.getGrowthrate());
+
+    return rate.xp(level());
   }
 
   public int xpYield() {
-    return 1;
+    return _species.getXpyield();
   }
 
   public Stat getStat(StatType s) {

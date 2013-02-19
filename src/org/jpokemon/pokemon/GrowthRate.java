@@ -3,6 +3,10 @@ package org.jpokemon.pokemon;
 public enum GrowthRate {
   SLOW, MED_SLOW, MED_FAST, FAST;
 
+  public static GrowthRate valueOf(int index) {
+    return GrowthRate.values()[index];
+  }
+
   public int xp(int n) {
     double xp = 0;
 
