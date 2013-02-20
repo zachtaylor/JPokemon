@@ -64,6 +64,15 @@ public class Player implements PokemonTrainer {
     _cash = cash;
   }
 
+  public void state(TrainerState state) {
+    _state = state;
+    _gameWindow.refresh();
+  }
+
+  public TrainerState state() {
+    return _state;
+  }
+
   public Item item(int itemID) {
     return _bag.get(itemID);
   }
@@ -96,13 +105,6 @@ public class Player implements PokemonTrainer {
     _gameWindow.inbox().addMessage(message);
   }
 
-  public void setState(String state) {
-    if (state.equalsIgnoreCase("world"))
-      _gameWindow.showMain();
-    else if (state.equalsIgnoreCase("battle"))
-      _gameWindow.showBattle();
-  }
-
   public Pokedex pokedex() {
     return _pokedex;
   }
@@ -115,20 +117,18 @@ public class Player implements PokemonTrainer {
     return _trainers;
   }
 
-  public JSONObject toJSON() {
+  public JSONObject toJSON(TrainerState state) {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("id", id());
-      data.put("name", name());
-      data.put("cash", cash());
-      data.put("badges", badge());
-      data.put("area", area());
-      data.put("bag", _bag.toJSON());
-      data.put("pokedex", _pokedex.toJSON());
-      data.put("progress", _progress.toJSON());
-      data.put("pokemon", _storage.toJSON());
-
+      if (state == TrainerState.BATTLE) {
+        data.put("id", id());
+        data.put("leader", party().get(0).toJSON(state));
+        data.put("party", party().toJSON(state));
+      }
+      else if (state == TrainerState.UPGRADE) {
+        data.put("party", party().toJSON(state));
+      }
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;
@@ -178,6 +178,7 @@ public class Player implements PokemonTrainer {
   private Bag _bag;
   private String _name;
   private Pokedex _pokedex;
+  private TrainerState _state;
   private GameWindow _gameWindow;
   private PokemonStorageBlock _storage;
   private Progress _progress, _trainers;

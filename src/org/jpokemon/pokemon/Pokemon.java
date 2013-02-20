@@ -11,6 +11,7 @@ import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
+import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -262,18 +263,29 @@ public class Pokemon implements JPokemonConstants {
     checkNewMoves();
   }
 
-  public JSONObject toJSON() {
+  public JSONObject toJSON(TrainerState state) {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("name", name());
-      data.put("number", number());
-      data.put("level", level());
-      data.put("xp", xp());
-      data.put("xp_needed", xpNeeded());
-      data.put("condition", _condition.toString());
-      data.put("stats", _stats.toJSON());
-      data.put("moves", _moves.toJSON());
+
+      if (state == TrainerState.BATTLE) {
+        data.put("name", name());
+        data.put("number", number());
+        data.put("level", level());
+        data.put("xp", xp());
+        data.put("xp_needed", xpNeeded());
+        data.put("hp", health());
+        data.put("hp_max", maxHealth());
+        data.put("condition", _condition.toString());
+      }
+      else if (state == TrainerState.UPGRADE) {
+        data.put("name", name());
+        data.put("number", number());
+        data.put("level", level());
+        data.put("xp", xp());
+        data.put("points", _stats.points());
+        data.put("stats", _stats.toJSON(state));
+      }
 
     } catch (JSONException e) {
       e.printStackTrace();

@@ -16,9 +16,9 @@ public interface PokemonTrainer {
   public void cash(int c);
 
   public int area();
-  
+
   public TrainerType type();
-  
+
   public double xpFactor();
 
   public PokemonStorageUnit party();
@@ -27,7 +27,7 @@ public interface PokemonTrainer {
 
   public void notify(String... message);
 
-  public void setState(String state);
+  public void state(TrainerState state);
 
-  public JSONObject toJSON();
+  public JSONObject toJSON(TrainerState state);
 }

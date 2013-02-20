@@ -59,7 +59,7 @@ public class PlayerFactory implements JPokemonConstants {
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(PlayerFactory.get(playerID).toJSON().toString());
+      // writer.write(PlayerFactory.get(playerID).toJSON().toString());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();

@@ -5,14 +5,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import jpkmn.exe.gui.GameWindow;
-
 public class MartButton extends JButton implements ActionListener {
   public MartButton(WorldView view, int areaID) {
     super("Pokemon Mart");
-
-    _window = view.window;
-    _areaID = areaID;
 
     setFocusable(false);
     addActionListener(this);
@@ -24,7 +19,5 @@ public class MartButton extends JButton implements ActionListener {
     // TODO : Generate battle
   }
 
-  private int _areaID;
-  private GameWindow _window;
   private static final long serialVersionUID = 1L;
 }

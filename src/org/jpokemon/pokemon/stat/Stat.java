@@ -1,6 +1,7 @@
 package org.jpokemon.pokemon.stat;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +15,7 @@ public class Stat implements JPokemonConstants {
   public int cur() {
     return _cur;
   }
-  
+
   public int max() {
     return _max;
   }
@@ -92,13 +93,16 @@ public class Stat implements JPokemonConstants {
     computeCur();
   }
 
-  public JSONObject toJSON() {
+  public JSONObject toJSON(TrainerState state) {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("cur", _cur);
-      data.put("max", _max);
-      data.put("points", _pts);
+      if (state == TrainerState.UPGRADE) {
+        data.put("max", max());
+        data.put("ev", ev());
+        data.put("points", points());
+        data.put("iv", iv());
+      }
 
     } catch (JSONException e) {
       e.printStackTrace();

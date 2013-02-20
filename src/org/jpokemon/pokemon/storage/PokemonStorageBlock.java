@@ -9,6 +9,7 @@ import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,14 +35,14 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     return _data[box];
   }
 
-  public JSONObject toJSON() {
+  public JSONObject toJSON(TrainerState state) {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("party", _data[0].toJSON());
+      data.put("party", _data[0].toJSON(state));
 
       for (int i = 1; i <= PLAYER_STORAGE_UNIT_COUNT; i++)
-        data.put("box" + i, _data[i].toJSON());
+        data.put("box" + i, _data[i].toJSON(state));
 
     } catch (JSONException e) {
       e.printStackTrace();

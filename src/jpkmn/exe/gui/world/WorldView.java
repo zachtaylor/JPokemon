@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 public class WorldView extends JPokemonView implements KeyListener {
   public WorldView(GameWindow g) {
-    window = g;
+    super(g);
 
     _title = new JLabel();
 
@@ -65,9 +65,9 @@ public class WorldView extends JPokemonView implements KeyListener {
     addKeyListener(this);
   }
 
-  public void refresh() {
+  public void update(JSONObject data) {
     try {
-      JSONObject areaInfo = PlayerService.areaInfo(window.playerID());
+      JSONObject areaInfo = PlayerService.areaInfo(parent().playerID());
 
       _title.setText(areaInfo.getString("name"));
 
@@ -131,7 +131,7 @@ public class WorldView extends JPokemonView implements KeyListener {
     int keyCode = event.getKeyCode();
 
     if (keyCode == 10)
-      window.showStart();
+      System.out.println("You hit enter!"); //parent().showStart();
     else if (keyCode > 36 || keyCode < 41) {
       AreaConnectionButton button = null;
 
@@ -157,7 +157,6 @@ public class WorldView extends JPokemonView implements KeyListener {
   public void keyTyped(KeyEvent arg0) {
   }
 
-  GameWindow window;
   private JLabel _title;
   private JPanel _buttons;
   private FishButton _fish;

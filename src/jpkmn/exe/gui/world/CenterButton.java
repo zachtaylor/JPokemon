@@ -15,7 +15,7 @@ public class CenterButton extends JButton implements ActionListener {
   public CenterButton(WorldView view) {
     super("Pokemon Center");
 
-    _window = view.window;
+    _window = view.parent();
 
     setFocusable(false);
     addActionListener(this);

@@ -13,7 +13,8 @@ import jpkmn.game.service.PlayerService;
 
 public class StartView extends JPokemonView implements KeyListener {
   public StartView(GameWindow g) {
-    _gameWindow = g;
+    super(g);
+
     _select = 0;
     _entries = new EntryPanel[StartEntryValue.values().length];
     _dimension = new Dimension(100, 35 * _entries.length);
@@ -55,8 +56,8 @@ public class StartView extends JPokemonView implements KeyListener {
 
   public void onSave() {
     try {
-      PlayerService.savePlayer(_gameWindow.playerID());
-      _gameWindow.showMain();
+      PlayerService.savePlayer(parent().playerID());
+      refresh();
     } catch (ServiceException e) {
       e.printStackTrace();
       return;
@@ -64,11 +65,11 @@ public class StartView extends JPokemonView implements KeyListener {
   }
 
   public void onExit() {
-    _gameWindow.showMain();
+    refresh();
   }
 
   public void onQuit() {
-    _gameWindow.dispose();
+    parent().dispose();
   }
 
   public void select(int s) {
@@ -82,10 +83,6 @@ public class StartView extends JPokemonView implements KeyListener {
       _select %= _entries.length;
 
     _entries[_select].active(true);
-  }
-
-  @Override
-  public void refresh() {
   }
 
   @Override
@@ -116,6 +113,5 @@ public class StartView extends JPokemonView implements KeyListener {
   private int _select;
   private EntryPanel[] _entries;
   private Dimension _dimension;
-  private GameWindow _gameWindow;
   private static final long serialVersionUID = 1L;
 }

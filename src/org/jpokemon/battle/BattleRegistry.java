@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.TrainerState;
 
 public class BattleRegistry {
   public static int createEnrollable() {
@@ -22,7 +23,7 @@ public class BattleRegistry {
 
     for (Slot slot : b) {
       _battles.put(slot.trainer(), b);
-      slot.trainer().setState("battle");
+      slot.trainer().state(TrainerState.BATTLE);
     }
 
     b.start();

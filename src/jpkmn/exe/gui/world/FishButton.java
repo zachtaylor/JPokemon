@@ -13,7 +13,7 @@ public class FishButton extends JButton implements ActionListener {
   public FishButton(WorldView view) {
     super("Fish");
 
-    _window = view.window;
+    _window = view.parent();
 
     setFocusable(false);
     addActionListener(this);

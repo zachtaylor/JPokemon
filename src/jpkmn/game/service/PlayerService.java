@@ -10,11 +10,32 @@ import jpkmn.map.Event;
 
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
+import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PlayerService {
+  public static JSONObject pull(int playerID) {
+    Player p = PlayerFactory.get(playerID);
+
+    JSONObject response = new JSONObject();
+    try {
+      response.put("state", p.state().toString());
+      response.put("player", p.toJSON(TrainerState.OVERWORLD));
+
+      if (p.state() == TrainerState.BATTLE)
+        response.put("battle", BattleService.info(playerID));
+      else if (p.state() == TrainerState.UPGRADE)
+        response.put("upgrade", p.toJSON(p.state()));
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return response;
+  }
+
   public static JSONObject loadPlayer(String name) throws ServiceException {
     Player p;
 
@@ -27,7 +48,7 @@ public class PlayerService {
 
     try {
       JSONObject data = JSONMaker.make(p);
-      p.setState("world");
+      p.state(TrainerState.UPGRADE);
       return data;
     } catch (JSONException jsone) {
       jsone.printStackTrace();
@@ -50,8 +71,7 @@ public class PlayerService {
     }
   }
 
-  public static JSONObject newPlayer(String name, String starter)
-      throws ServiceException {
+  public static JSONObject newPlayer(String name, String starter) throws ServiceException {
     int pokemon = 0;
     if (starter.equals("Bulbasaur"))
       pokemon = 1;
@@ -159,8 +179,7 @@ public class PlayerService {
     if (event == null)
       throw new ServiceException(area.name() + " has no event " + eID);
     if (!event.test(player))
-      throw new ServiceException("You are not qualified to  "
-          + event.description());
+      throw new ServiceException("You are not qualified to  " + event.description());
 
     try {
       event.trigger(player);

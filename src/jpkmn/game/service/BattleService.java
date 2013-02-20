@@ -12,6 +12,7 @@ import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.Trainer;
+import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,7 +39,7 @@ public class BattleService implements JPokemonConstants {
     mock.add(wild);
 
     BattleRegistry.start(player, mock);
-    player.setState("battle");
+    player.state(TrainerState.BATTLE);
   }
 
   public static void fish(int playerID, String rodName) throws ServiceException {
@@ -64,7 +65,7 @@ public class BattleService implements JPokemonConstants {
     mock.add(wild);
 
     BattleRegistry.start(player, mock);
-    player.setState("battle");
+    player.state(TrainerState.BATTLE);
   }
 
   public static void startBattle(int pID, int tID) throws ServiceException {
@@ -87,7 +88,7 @@ public class BattleService implements JPokemonConstants {
       throw new ServiceException(player.name() + " has already fought" + trainer.name());
 
     BattleRegistry.start(player, trainer);
-    player.setState("battle");
+    player.state(TrainerState.BATTLE);
   }
 
   public static void turn(JSONObject json) {

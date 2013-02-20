@@ -13,7 +13,7 @@ public class GrassButton extends JButton implements ActionListener {
   public GrassButton(WorldView view) {
     super("Tall Grass");
 
-    _window = view.window;
+    _window = view.parent();
 
     setFocusable(false);
     addActionListener(this);

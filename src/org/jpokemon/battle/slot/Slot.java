@@ -13,8 +13,8 @@ import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.TrainerState;
 import org.jpokemon.trainer.TrainerType;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Slot implements JPokemonConstants {
@@ -132,18 +132,7 @@ public class Slot implements JPokemonConstants {
   }
 
   public JSONObject toJSON() {
-    JSONObject data = null;
-
-    try {
-      data = _trainer.toJSON();
-      data.put("team", team());
-      data.put("leader", _trainer.party().get(0).toJSON());
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
+    return _trainer.toJSON(TrainerState.BATTLE);
   }
 
   private List<Pokemon> rivalsList(Pokemon p) {

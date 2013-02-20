@@ -14,7 +14,7 @@ public class TrainerButton extends JButton implements ActionListener {
     super(text);
 
     _trainerID = trainerID;
-    _window = view.window;
+    _window = view.parent();
 
     setFocusable(false);
     addActionListener(this);

@@ -1,14 +1,26 @@
 package jpkmn.exe.gui.pokemonupgrade;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class StatPanel extends JPanel {
   public StatPanel(PokemonUpgradeView view) {
     _view = view;
 
-    _point = new PointButton(this);
+    _point = new JButton("+");
+    _point.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        addPoint();
+      }
+    });
 
     _name = new JLabel("");
     _value = new JLabel("");
@@ -27,21 +39,32 @@ public class StatPanel extends JPanel {
     //@format
   }
 
-  public void refresh(String name, int value, int points) {
-    _stat = name;
+  public void update(JSONObject data) {
+    try {
+      _stat = data.getString("name");
 
-    _name.setText(name);
-    _value.setText(value + " (" + points + ")");
+      _point.setText("+");
+      _name.setText(_stat + " : " + data.getInt("max"));
+      _value.setText("EV(" + data.getInt("ev") + ") IV(" + data.getInt("iv") + ") POINTS:" + data.getInt("points"));
+    } catch (JSONException e) {
+    }
   }
 
   public void addPoint() {
-    // TODO
-    System.out.println("You chose to spend a point on " + _stat);
-    _view.refresh();
+    _view.addPoint(_stat);
+
+    if (_point.getText().equals("+"))
+      _point.setText("+1");
+    else
+      _point.setText("+" + (Integer.parseInt(_point.getText().substring(1)) + 1));
+  }
+
+  public void enableButton(boolean enable) {
+    _point.setEnabled(enable);
   }
 
   private String _stat;
-  private PointButton _point;
+  private JButton _point;
   private JLabel _name, _value;
   private PokemonUpgradeView _view;
   private static final long serialVersionUID = 1L;

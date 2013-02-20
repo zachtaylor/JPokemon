@@ -4,6 +4,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 
 /**
@@ -78,11 +79,25 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     return answer;
   }
 
-  public JSONArray toJSON() {
+  public JSONArray toJSON(TrainerState state) {
     JSONArray data = new JSONArray();
 
-    for (Pokemon p : this)
-      data.put(p.toJSON());
+    if (state == TrainerState.BATTLE)
+      for (int i = 0; i < _size; i++) {
+        if (i < size()) {
+          if (!get(i).awake())
+            data.put("unconscious");
+          else if (!get(i).condition().isEmpty())
+            data.put("sick");
+          else
+            data.put("ok");
+        }
+        else
+          data.put("unconscious");
+      }
+    else if (state == TrainerState.UPGRADE)
+      for (Pokemon p : this)
+        data.put(p.toJSON(state));
 
     return data;
   }

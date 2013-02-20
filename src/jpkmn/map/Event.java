@@ -8,6 +8,7 @@ import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.item.ItemInfo;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
+import org.jpokemon.trainer.TrainerState;
 
 public class Event {
   private enum Type {
@@ -76,7 +77,7 @@ public class Event {
       mock = new Trainer(_int1);
 
       BattleRegistry.start(p, mock);
-      p.setState("battle");
+      p.state(TrainerState.BATTLE);
     break;
     case ITEM:
       p.item(_int1).add(_int2);

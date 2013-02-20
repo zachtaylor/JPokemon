@@ -9,8 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import jpkmn.exceptions.DialogCancelException;
-import jpkmn.exceptions.ServiceException;
-import jpkmn.exe.gui.JPokemonDialog;
+import jpkmn.exe.gui.GameWindow;
 import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.service.BattleService;
 
@@ -19,8 +18,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BattleView extends JPokemonView {
-  public BattleView(int playerID) {
-    _playerID = playerID;
+  public BattleView(GameWindow parent) {
+    super(parent);
+
     _user = new JPanel();
     _enemies = new JPanel();
     JPanel userAndButtons = new JPanel();
@@ -75,41 +75,25 @@ public class BattleView extends JPokemonView {
     add(_enemies);
   }
 
-  public void refresh() {
-    try {
-      _data = BattleService.info(_playerID);
-    } catch (ServiceException e) {
-      // Usually means that Player is no longer in a battle
-      e.printStackTrace();
-      return;
-    }
+  public void update(JSONObject data) {
+    _data = data;
 
     _user.removeAll();
     _enemies.removeAll();
 
     try {
-      JSONArray allTeams = _data.getJSONArray("teams");
-      JSONArray teamData;
-      JSONObject trainerData;
-      JPanel teamPanel;
+      _trainerData = _data.getJSONObject("player");
+      _user.add(new PartyPanel(_trainerData, true));
 
-      for (int i = 0; i < allTeams.length(); i++) {
-        teamPanel = new JPanel();
+      _enemyTeams = _data.getJSONArray("enemies");
+      for (int i = 0; i < _enemyTeams.length(); i++) {
+        JPanel teamPanel = new JPanel();
         teamPanel.setLayout(new BoxLayout(teamPanel, BoxLayout.Y_AXIS));
 
-        teamData = allTeams.getJSONArray(i);
+        JSONArray teamData = _enemyTeams.getJSONArray(i);
+        for (int j = 0; j < teamData.length(); j++)
+          teamPanel.add(new PartyPanel(teamData.getJSONObject(j), false));
 
-        for (int j = 0; j < teamData.length(); j++) {
-          trainerData = teamData.getJSONObject(j);
-          if (trainerData.getInt("team") == _data.getInt("user_team")) {
-            if (trainerData.getInt("id") == _playerID)
-              _trainerData = trainerData;
-
-            _user.add(new PartyPanel(trainerData, _playerID));
-          }
-          else
-            teamPanel.add(new PartyPanel(trainerData, _playerID));
-        }
         _enemies.add(teamPanel);
       }
 
@@ -132,8 +116,8 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      moveIndex = JPokemonDialog.getMoveIndex(this, _trainerData);
-      enemySlotID = JPokemonDialog.getMoveTarget(this, _data, _trainerData, moveIndex);
+      moveIndex = parent().dialogs().getMoveIndex();
+      enemySlotID = parent().dialogs().getMoveTarget(_enemyTeams, moveIndex);
     } catch (Exception e) {
       if (!(e instanceof DialogCancelException))
         e.printStackTrace();
@@ -145,7 +129,7 @@ public class BattleView extends JPokemonView {
     JSONObject json = new JSONObject();
     try {
       json.put("turn", "ATTACK");
-      json.put("trainer", _playerID);
+      json.put("trainer", parent().playerID());
       json.put("target", enemySlotID);
       json.put("move", moveIndex);
     } catch (JSONException e) {
@@ -163,7 +147,7 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      swapIndex = JPokemonDialog.getSwapIndex(this, _trainerData);
+      swapIndex = parent().dialogs().getSwapIndex();
     } catch (Exception e) {
       if (!(e instanceof DialogCancelException))
         e.printStackTrace();
@@ -175,8 +159,8 @@ public class BattleView extends JPokemonView {
     JSONObject json = new JSONObject();
     try {
       json.put("turn", "SWAP");
-      json.put("trainer", _playerID);
-      json.put("target", _playerID);
+      json.put("trainer", parent().playerID());
+      json.put("target", parent().playerID());
       json.put("swap", swapIndex);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -193,7 +177,7 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      itemID = JPokemonDialog.getItemChoice(this, _trainerData);
+      itemID = parent().dialogs().getItemChoice();
     } catch (Exception e) {
       if (!(e instanceof DialogCancelException))
         e.printStackTrace();
@@ -207,7 +191,7 @@ public class BattleView extends JPokemonView {
     JSONObject json = new JSONObject();
     try {
       json.put("turn", "ITEM");
-      json.put("trainer", _playerID);
+      json.put("trainer", parent().playerID());
       json.put("target", targetID);
       json.put("target_index", targetIndex);
       json.put("item", itemID);
@@ -227,8 +211,8 @@ public class BattleView extends JPokemonView {
     JSONObject json = new JSONObject();
     try {
       json.put("turn", "RUN");
-      json.put("trainer", _playerID);
-      json.put("target", _playerID);
+      json.put("trainer", parent().playerID());
+      json.put("target", parent().playerID());
     } catch (JSONException e) {
       e.printStackTrace();
       enableButtons(true);
@@ -246,8 +230,8 @@ public class BattleView extends JPokemonView {
     _runButton.setEnabled(enable);
   }
 
-  private int _playerID;
   private JPanel _enemies, _user;
+  private JSONArray _enemyTeams;
   private JSONObject _data, _trainerData;
   private JButton _fightButton, _itemButton, _swapButton, _runButton;
   private static final long serialVersionUID = 1L;

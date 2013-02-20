@@ -15,6 +15,7 @@ import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.TrainerState;
 import org.jpokemon.trainer.TrainerType;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
     PokemonTrainer trainer = slot.trainer();
     _slots.remove(trainer.id());
     BattleRegistry.remove(trainer);
-    trainer.setState("world");
+    trainer.state(TrainerState.OVERWORLD);
 
     if (slot.party().awake() == 0) {
       rewardFrom(slot);
@@ -114,24 +115,28 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
     Slot slot = _slots.get(perspective.id());
 
     JSONObject data = new JSONObject();
-    JSONArray teams = new JSONArray();
+    Map<Integer, JSONArray> teams = new HashMap<Integer, JSONArray>();
 
     try {
-      if (slot != null)
-        data.put("user_team", slot.team());
+      data.put("player", slot.toJSON());
 
       for (Slot cur : this) {
-        try {
-          if (teams.get(cur.team()) == JSONObject.NULL)
-            teams.put(cur.team(), new JSONArray());
-        } catch (JSONException e) {
+        if (cur == slot)
+          continue;
+        if (teams.get(cur.team()) == null)
           teams.put(cur.team(), new JSONArray());
-        }
 
-        ((JSONArray) teams.get(cur.team())).put(cur.toJSON());
+        teams.get(cur.team()).put(cur.toJSON());
       }
 
-      data.put("teams", teams);
+      JSONArray enemies = new JSONArray();
+      for (Map.Entry<Integer, JSONArray> team : teams.entrySet()) {
+        if (team.getKey() == slot.team())
+          data.put("allies", team.getValue());
+        else
+          enemies.put(team.getValue());
+      }
+      data.put("enemies", enemies);
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -201,7 +206,7 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
       for (Slot slot : this) {
         PokemonTrainer trainer = slot.trainer();
         BattleRegistry.remove(trainer);
-        trainer.setState("world");
+        trainer.state(TrainerState.OVERWORLD);
       }
     }
   }

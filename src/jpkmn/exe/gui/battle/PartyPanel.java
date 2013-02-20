@@ -18,37 +18,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PartyPanel extends JPanel {
-  public PartyPanel(JSONObject data, int playerID) {
-    int hp, hp_max, level, number, xp, xp_needed, team_id, trainer_id;
+  public PartyPanel(JSONObject data, boolean isPlayer) {
     String condition, name;
+    int hp, hp_max, level, number, xp, xp_needed;
     List<String> partyIcons = new ArrayList<String>();
 
     try {
-      JSONArray party = data.getJSONObject("pokemon").getJSONArray("party");
-      JSONObject leader = party.getJSONObject(0);
-      JSONObject stats = leader.getJSONObject("stats");
+      JSONObject leader = data.getJSONObject("leader");
+      JSONArray party = data.getJSONArray("party");
 
       name = leader.getString("name");
       level = leader.getInt("level");
       number = leader.getInt("number");
-      hp = stats.getJSONObject("HEALTH").getInt("cur");
-      hp_max = stats.getJSONObject("HEALTH").getInt("max");
+      hp = leader.getInt("hp");
+      hp_max = leader.getInt("hp_max");
       condition = leader.getString("condition");
       xp = leader.getInt("xp");
       xp_needed = leader.getInt("xp_needed");
-      team_id = data.getInt("team");
-      trainer_id = data.getInt("id");
 
-      JSONObject cur;
-      for (int i = 0; i < party.length(); i++) {
-        cur = party.getJSONObject(i);
-        if (cur.getJSONObject("stats").getJSONObject("HEALTH").getInt("cur") == 0)
-          partyIcons.add("battle/slot_empty");
-        else if (cur.getString("condition").equals(""))
-          partyIcons.add("battle/slot_ok");
-        else
-          partyIcons.add("battle/slot_sick");
-      }
+      for (int i = 0; i < party.length(); i++)
+        partyIcons.add(party.getString(i));
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -77,7 +66,7 @@ public class PartyPanel extends JPanel {
     hpBar.setStringPainted(true);
     hpBar.setBorderPainted(false);
 
-    if (trainer_id == playerID) {
+    if (isPlayer) {
       JProgressBar xpBar = new JProgressBar();
       info.add(xpBar);
       xpBar.setMinimum(0);
@@ -90,15 +79,11 @@ public class PartyPanel extends JPanel {
     }
     info.add(new JLabel(condition));
 
-    setBackground(teamColors[team_id]);
     setLayout(new FlowLayout());
     info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
 
     setPreferredSize(new Dimension(340, 80));
   }
-
-  private Color[] teamColors = { Color.red, Color.yellow, Color.orange,
-      Color.blue };
 
   private JPanel info;
   private static final long serialVersionUID = 1L;

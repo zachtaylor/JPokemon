@@ -82,23 +82,19 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
     return;
   }
 
-  public void setState(String state) { // Do nothing
+  public void state(TrainerState state) { // Do nothing
   }
 
-  public JSONObject toJSON() {
+  public JSONObject toJSON(TrainerState state) {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("id", id());
-      data.put("name", name());
-      data.put("cash", cash());
-      data.put("badges", JSONObject.NULL);
-      data.put("area", JSONObject.NULL);
-      data.put("bag", JSONObject.NULL);
-      data.put("pokedex", JSONObject.NULL);
-      data.put("progress", JSONObject.NULL);
-      data.put("pokemon", new JSONObject().put("party", party().toJSON()));
-
+      if (state == TrainerState.BATTLE) {
+        data.put("id", id());
+        data.put("leader", party().get(0).toJSON(state));
+        data.put("party", party().toJSON(state));
+      }
+      
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;
