@@ -1,4 +1,4 @@
-package jpkmn.exe.gui.pokemonupgrade;
+package jpkmn.exe.gui.pokemon;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class StatPanel extends JPanel {
-  public StatPanel(PokemonUpgradeView view) {
+  public StatPanel(PokemonView view) {
     _view = view;
 
     _point = new JPokemonButton("+");
@@ -67,7 +67,7 @@ public class StatPanel extends JPanel {
 
   private String _stat;
   private JButton _point;
+  private PokemonView _view;
   private JLabel _name, _value;
-  private PokemonUpgradeView _view;
   private static final long serialVersionUID = 1L;
 }

@@ -1,6 +1,5 @@
 package jpkmn.exe.gui.inbox;
 
-import java.awt.Component;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
@@ -8,6 +7,7 @@ import javax.swing.JPanel;
 
 import jpkmn.exe.gui.GameWindow;
 import jpkmn.exe.gui.JPokemonMenu;
+import jpkmn.exe.gui.JPokemonMenuEntry;
 
 public class InboxMenu extends JPokemonMenu {
   public InboxMenu(GameWindow parent) {
@@ -24,17 +24,15 @@ public class InboxMenu extends JPokemonMenu {
 
     add(_spacer);
 
-    parent().showInbox();
-  }
-
-  @Override
-  public void remove(Component c) {
-    super.remove(c);
-    parent().validate();
+    parent().doLayout();
   }
 
   public int width() {
     return 200;
+  }
+
+  public JPokemonMenuEntry[] entries() {
+    return null;
   }
 
   @Override

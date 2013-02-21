@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 
 import jpkmn.exe.gui.battle.BattleView;
 import jpkmn.exe.gui.inbox.InboxMenu;
-import jpkmn.exe.gui.pokemonupgrade.PokemonUpgradeView;
+import jpkmn.exe.gui.pokemon.PokemonView;
 import jpkmn.exe.gui.start.StartMenu;
 import jpkmn.exe.gui.world.WorldView;
 import jpkmn.game.service.ImageFinder;
@@ -21,12 +21,12 @@ import org.json.JSONObject;
 public class GameWindow extends JFrame implements KeyListener {
   public GameWindow(int playerID) {
     _playerID = playerID;
-    _inbox = new InboxMenu(this);
-    _battle = new BattleView(this);
     _main = new WorldView(this);
+    _inbox = new InboxMenu(this);
     _start = new StartMenu(this);
+    _battle = new BattleView(this);
     _dialogs = new JPokemonDialog(this);
-    _upgrade = new PokemonUpgradeView(this);
+    _upgrade = new PokemonView(this);
 
     // setResizable(false);
     setLayout(new BorderLayout());
@@ -59,8 +59,11 @@ public class GameWindow extends JFrame implements KeyListener {
     show(_start);
   }
 
-  public void showInbox() {
-    show(_inbox);
+  public void closeStart() {
+    if (_active.hasDependentMenu())
+      show(_active.dependentMenu());
+    else
+      show(_inbox);
   }
 
   public void refresh() {
@@ -99,8 +102,11 @@ public class GameWindow extends JFrame implements KeyListener {
     if (_active.key(arg0))
       return;
 
-    else if (arg0.getKeyCode() == 10)
-      showStart();
+    else if (arg0.getKeyCode() == 27)
+      if (_menu != _start)
+        showStart();
+      else
+        closeStart();
   }
 
   @Override
@@ -112,12 +118,15 @@ public class GameWindow extends JFrame implements KeyListener {
   }
 
   private void show(JPokemonView view) {
-    if (view != _active) {
+    if (view != _active || _active == null) {
       if (_active != null)
         remove(_active);
 
       _active = view;
       add(_active, BorderLayout.CENTER);
+
+      if (_active.hasDependentMenu())
+        show(_active.dependentMenu());
 
       align();
     }
@@ -131,7 +140,6 @@ public class GameWindow extends JFrame implements KeyListener {
     add(_menu, BorderLayout.EAST);
 
     align();
-
   }
 
   private int _playerID;
@@ -140,5 +148,4 @@ public class GameWindow extends JFrame implements KeyListener {
   private JPokemonView _active, _battle, _upgrade, _main;
 
   private static final long serialVersionUID = 1L;
-
 }

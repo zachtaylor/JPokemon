@@ -1,21 +1,19 @@
-package jpkmn.exe.gui.pokemonupgrade;
+package jpkmn.exe.gui.pokemon;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.exe.gui.JPokemonButton;
+import jpkmn.exe.gui.JPokemonMenu;
 import jpkmn.exe.gui.JPokemonView;
+import jpkmn.exe.gui.party.PartyMenu;
 import jpkmn.game.service.ImageFinder;
 import jpkmn.game.service.PlayerService;
 
@@ -23,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PokemonUpgradeView extends JPokemonView {
+public class PokemonView extends JPokemonView {
   public static void main(String[] args) {
     try {
       PlayerService.load("Zach.jpkmn");
@@ -33,8 +31,10 @@ public class PokemonUpgradeView extends JPokemonView {
     }
   }
 
-  public PokemonUpgradeView(GameWindow g) {
+  public PokemonView(GameWindow g) {
     super(g);
+
+    _menu = new PartyMenu(g, this);
 
     _stats = new StatPanel[6];
 
@@ -45,37 +45,16 @@ public class PokemonUpgradeView extends JPokemonView {
     JPanel pokemon = new JPanel();
     JPanel allStats = new JPanel();
 
-    JPanel navPanel = new JPanel();
-
-    JButton left = new JPokemonButton("<");
-    left.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        PokemonUpgradeView.this.navPokemon(PokemonUpgradeView.this._partyIndex - 1);
-      }
-    });
-    navPanel.add(left);
-
-    navPanel.add(_icon);
-
-    JButton right = new JPokemonButton(">");
-    right.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        PokemonUpgradeView.this.navPokemon(PokemonUpgradeView.this._partyIndex + 1);
-      }
-    });
-    navPanel.add(right);
-
     for (int panelIndex = 0; panelIndex < _stats.length; panelIndex++)
       _stats[panelIndex] = new StatPanel(this);
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-    navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.X_AXIS));
     pokemon.setLayout(new BoxLayout(pokemon, BoxLayout.Y_AXIS));
     allStats.setLayout(new BoxLayout(allStats, BoxLayout.Y_AXIS));
 
     //@preformat
     add(pokemon);
-      pokemon.add(navPanel);
+      pokemon.add(_icon);
       pokemon.add(_name);
       pokemon.add(_points);
       pokemon.add(spacer());
@@ -105,9 +84,22 @@ public class PokemonUpgradeView extends JPokemonView {
 
     try {
       _data = data.getJSONArray("party");
+      _menu.update(_data);
     } catch (JSONException e) {
     }
 
+    doUpdate();
+  }
+
+  public void navPokemon(int index) {
+    if (index < 0)
+      return;
+    else if (index >= _data.length())
+      return;
+
+    _partyIndex = index;
+    _spentPoints = 0;
+    spending = new HashMap<String, Integer>();
     doUpdate();
   }
 
@@ -130,8 +122,16 @@ public class PokemonUpgradeView extends JPokemonView {
     checkSpending();
   }
 
+  public boolean hasDependentMenu() {
+    return true;
+  }
+
+  public JPokemonMenu dependentMenu() {
+    return _menu;
+  }
+
   public Dimension dimension() {
-    return new Dimension(400, 300);
+    return new Dimension(500, 300);
   }
 
   public boolean key(KeyEvent arg0) {
@@ -149,23 +149,12 @@ public class PokemonUpgradeView extends JPokemonView {
     }
   }
 
-  private void navPokemon(int index) {
-    if (index < 0)
-      return;
-    else if (index >= _data.length())
-      return;
-
-    _partyIndex = index;
-    _spentPoints = 0;
-    spending = new HashMap<String, Integer>();
-    doUpdate();
-  }
-
-  private int _partyIndex, _spentPoints;
+  private PartyMenu _menu;
   private JSONArray _data;
   private StatPanel[] _stats;
   private JSONObject _pokemon;
   private JLabel _icon, _name, _points;
+  private int _partyIndex, _spentPoints;
   private Map<String, Integer> spending = new HashMap<String, Integer>();
   private static final long serialVersionUID = 1L;
 }

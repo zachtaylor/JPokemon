@@ -25,6 +25,14 @@ public abstract class JPokemonView extends JPanel {
     return new JPanel();
   }
 
+  public boolean hasDependentMenu() {
+    return false;
+  }
+
+  public JPokemonMenu dependentMenu() {
+    return null;
+  }
+
   public abstract Dimension dimension();
 
   public abstract void update(JSONObject data);
