@@ -3,6 +3,7 @@ package jpkmn.exe.gui.pokemonupgrade;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.swing.JPanel;
 
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.exe.gui.JPokemonButton;
 import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.service.ImageFinder;
 import jpkmn.game.service.PlayerService;
@@ -24,9 +26,8 @@ import org.json.JSONObject;
 public class PokemonUpgradeView extends JPokemonView {
   public static void main(String[] args) {
     try {
-      JSONObject zach = PlayerService.loadPlayer("Zach.jpkmn");
+      PlayerService.load("Zach.jpkmn");
 
-      System.out.println(zach);
     } catch (ServiceException e) {
       e.printStackTrace();
     }
@@ -38,15 +39,15 @@ public class PokemonUpgradeView extends JPokemonView {
     _stats = new StatPanel[6];
 
     _icon = new JLabel();
-    _name = new JLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-    _points = new JLabel("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    _name = new JLabel();
+    _points = new JLabel();
 
     JPanel pokemon = new JPanel();
     JPanel allStats = new JPanel();
 
     JPanel navPanel = new JPanel();
 
-    JButton left = new JButton("<");
+    JButton left = new JPokemonButton("<");
     left.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         PokemonUpgradeView.this.navPokemon(PokemonUpgradeView.this._partyIndex - 1);
@@ -56,7 +57,7 @@ public class PokemonUpgradeView extends JPokemonView {
 
     navPanel.add(_icon);
 
-    JButton right = new JButton(">");
+    JButton right = new JPokemonButton(">");
     right.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         PokemonUpgradeView.this.navPokemon(PokemonUpgradeView.this._partyIndex + 1);
@@ -131,6 +132,10 @@ public class PokemonUpgradeView extends JPokemonView {
 
   public Dimension dimension() {
     return new Dimension(400, 300);
+  }
+
+  public boolean key(KeyEvent arg0) {
+    return false;
   }
 
   private void checkSpending() {

@@ -6,8 +6,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class EntryPanel extends JPanel {
-  public EntryPanel(StartView s, StartEntryValue v) {
-    _startView = s;
+  public EntryPanel(StartMenu s, StartEntryValue v) {
+    _parent = s;
     _value = v;
 
     add(new JLabel(v.toString()));
@@ -22,20 +22,20 @@ public class EntryPanel extends JPanel {
   public void action() {
     switch (_value) {
     case UPGRADE:
-      _startView.onUpgrade();
+      _parent.onUpgrade();
       break;
     case SAVE:
-      _startView.onSave();
+      _parent.onSave();
       break;
     case EXIT:
-      _startView.onExit();
+      _parent.onExit();
       break;
     case QUIT:
-      _startView.onQuit();
+      _parent.onQuit();
     }
   }
 
-  protected StartView _startView;
+  protected StartMenu _parent;
 
   private StartEntryValue _value;
   private static final Color ON = Color.cyan, OFF = Color.gray;

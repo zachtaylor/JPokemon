@@ -2,7 +2,6 @@ package jpkmn.exe.gui.world;
 
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -17,7 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WorldView extends JPokemonView implements KeyListener {
+public class WorldView extends JPokemonView {
   public WorldView(GameWindow g) {
     super(g);
 
@@ -62,7 +61,6 @@ public class WorldView extends JPokemonView implements KeyListener {
 
     setFocusable(true);
     setFocusTraversalKeysEnabled(false);
-    addKeyListener(this);
   }
 
   public void update(JSONObject data) {
@@ -83,8 +81,7 @@ public class WorldView extends JPokemonView implements KeyListener {
       for (int index = 0; index < trainers.length(); index++) {
         JSONObject trainer = trainers.getJSONObject(index);
 
-        TrainerButton button = new TrainerButton(this, trainer.getInt("id"),
-            trainer.getString("name"));
+        TrainerButton button = new TrainerButton(this, trainer.getInt("id"), trainer.getString("name"));
 
         _buttons.add(button);
       }
@@ -93,8 +90,7 @@ public class WorldView extends JPokemonView implements KeyListener {
       for (int index = 0; index < events.length(); index++) {
         JSONObject event = events.getJSONObject(index);
 
-        EventButton button = new EventButton(this, event.getInt("id"),
-            event.getString("description"));
+        EventButton button = new EventButton(this, event.getInt("id"), event.getString("description"));
 
         _buttons.add(button);
       }
@@ -127,11 +123,11 @@ public class WorldView extends JPokemonView implements KeyListener {
   }
 
   @Override
-  public void keyPressed(KeyEvent event) {
+  public boolean key(KeyEvent event) {
     int keyCode = event.getKeyCode();
 
     if (keyCode == 10)
-      System.out.println("You hit enter!"); //parent().showStart();
+      System.out.println("You hit enter!"); // parent().showStart();
     else if (keyCode > 36 || keyCode < 41) {
       AreaConnectionButton button = null;
 
@@ -143,18 +139,16 @@ public class WorldView extends JPokemonView implements KeyListener {
         button = _east;
       else if (keyCode == 40)
         button = _south;
+      else
+        return false;
 
       if (button != null)
         button.actionPerformed(null);
     }
-  }
+    else
+      return false;
 
-  @Override
-  public void keyReleased(KeyEvent arg0) {
-  }
-
-  @Override
-  public void keyTyped(KeyEvent arg0) {
+    return true;
   }
 
   private JLabel _title;

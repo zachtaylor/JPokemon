@@ -22,7 +22,7 @@ public class PlayerService {
     JSONObject response = new JSONObject();
     try {
       response.put("state", p.state().toString());
-      response.put("player", p.toJSON(TrainerState.OVERWORLD));
+      response.put("player", p.toJSON(null));
 
       if (p.state() == TrainerState.BATTLE)
         response.put("battle", BattleService.info(playerID));
@@ -31,47 +31,34 @@ public class PlayerService {
 
     } catch (Exception e) {
       e.printStackTrace();
+      // throw new ServiceException(e.getMessage());
     }
 
     return response;
   }
 
-  public static JSONObject loadPlayer(String name) throws ServiceException {
-    Player p;
-
+  public static void load(String name) throws ServiceException {
     try {
-      p = PlayerFactory.load(name);
+      Player p = PlayerFactory.load(name);
+
+      p.state(TrainerState.UPGRADE);
+      p.notify("Foo", "Bar");
+      p.notify("Hello world");
     } catch (LoadException e) {
       e.printStackTrace();
       throw new ServiceException(e.getMessage());
     }
-
-    try {
-      JSONObject data = JSONMaker.make(p);
-      p.state(TrainerState.UPGRADE);
-      return data;
-    } catch (JSONException jsone) {
-      jsone.printStackTrace();
-      throw new ServiceException("There was an error. It's not your fault.");
-    }
   }
 
-  public static JSONObject savePlayer(int playerID) throws ServiceException {
+  public static void save(int playerID) throws ServiceException {
     try {
       PlayerFactory.save(playerID);
     } catch (LoadException e) {
       throw new ServiceException(e.getMessage());
     }
-
-    try {
-      return JSONMaker.make(PlayerFactory.get(playerID));
-    } catch (JSONException e) {
-      e.printStackTrace();
-      throw new ServiceException("There was an error. It's not your fault.");
-    }
   }
 
-  public static JSONObject newPlayer(String name, String starter) throws ServiceException {
+  public static void create(String name, String starter) throws ServiceException, JSONException {
     int pokemon = 0;
     if (starter.equals("Bulbasaur"))
       pokemon = 1;
@@ -83,11 +70,7 @@ public class PlayerService {
       throw new ServiceException("Starter not supported: " + starter);
 
     try {
-      Player player = PlayerFactory.create(name, pokemon);
-      return JSONMaker.make(player);
-    } catch (JSONException e) {
-      e.printStackTrace();
-      throw new ServiceException("There was an error. It's not your fault.");
+      PlayerFactory.create(name, pokemon);
     } catch (Exception e) {
       e.printStackTrace();
       throw new ServiceException(e.getMessage());

@@ -3,6 +3,7 @@ package jpkmn.exe.gui.battle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -10,6 +11,7 @@ import javax.swing.JPanel;
 
 import jpkmn.exceptions.DialogCancelException;
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.exe.gui.JPokemonButton;
 import jpkmn.exe.gui.JPokemonView;
 import jpkmn.game.service.BattleService;
 
@@ -26,7 +28,7 @@ public class BattleView extends JPokemonView {
     JPanel userAndButtons = new JPanel();
     JPanel buttonPanel = new JPanel();
 
-    _fightButton = new JButton("FIGHT");
+    _fightButton = new JPokemonButton("FIGHT");
     buttonPanel.add(_fightButton);
     _fightButton.addActionListener(new ActionListener() {
       @Override
@@ -35,7 +37,7 @@ public class BattleView extends JPokemonView {
       }
     });
 
-    _itemButton = new JButton("ITEM");
+    _itemButton = new JPokemonButton("ITEM");
     buttonPanel.add(_itemButton);
     _itemButton.addActionListener(new ActionListener() {
       @Override
@@ -44,7 +46,7 @@ public class BattleView extends JPokemonView {
       }
     });
 
-    _swapButton = new JButton("SWAP");
+    _swapButton = new JPokemonButton("SWAP");
     buttonPanel.add(_swapButton);
     _swapButton.addActionListener(new ActionListener() {
       @Override
@@ -53,7 +55,7 @@ public class BattleView extends JPokemonView {
       }
     });
 
-    _runButton = new JButton("RUN");
+    _runButton = new JPokemonButton("RUN");
     buttonPanel.add(_runButton);
     _runButton.addActionListener(new ActionListener() {
       @Override
@@ -108,6 +110,10 @@ public class BattleView extends JPokemonView {
 
   public Dimension dimension() {
     return new Dimension(625, 200);
+  }
+
+  public boolean key(KeyEvent arg0) {
+    return false;
   }
 
   private void fight() {

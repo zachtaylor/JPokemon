@@ -1,6 +1,7 @@
 package jpkmn.exe.gui;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 public abstract class JPokemonView extends JPanel {
   public JPokemonView(GameWindow parent) {
     _parent = parent;
+    setFocusable(true);
   }
 
   public GameWindow parent() {
@@ -26,6 +28,8 @@ public abstract class JPokemonView extends JPanel {
   public abstract Dimension dimension();
 
   public abstract void update(JSONObject data);
+
+  public abstract boolean key(KeyEvent arg0);
 
   private GameWindow _parent;
 

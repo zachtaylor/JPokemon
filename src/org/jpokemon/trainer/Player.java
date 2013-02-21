@@ -121,7 +121,11 @@ public class Player implements PokemonTrainer {
     JSONObject data = new JSONObject();
 
     try {
-      if (state == TrainerState.BATTLE) {
+      if (state == null) {
+        data.put("id", id());
+        data.put("name", name());
+      }
+      else if (state == TrainerState.BATTLE) {
         data.put("id", id());
         data.put("leader", party().get(0).toJSON(state));
         data.put("party", party().toJSON(state));

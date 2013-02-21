@@ -8,6 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import jpkmn.exe.gui.JPokemonButton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +17,7 @@ public class StatPanel extends JPanel {
   public StatPanel(PokemonUpgradeView view) {
     _view = view;
 
-    _point = new JButton("+");
+    _point = new JPokemonButton("+");
     _point.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         addPoint();

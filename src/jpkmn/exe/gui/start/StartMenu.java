@@ -1,23 +1,20 @@
 package jpkmn.exe.gui.start;
 
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.BoxLayout;
 
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
-import jpkmn.exe.gui.JPokemonView;
+import jpkmn.exe.gui.JPokemonMenu;
 import jpkmn.game.service.PlayerService;
 
-public class StartView extends JPokemonView implements KeyListener {
-  public StartView(GameWindow g) {
+public class StartMenu extends JPokemonMenu {
+  public StartMenu(GameWindow g) {
     super(g);
 
     _select = 0;
     _entries = new EntryPanel[StartEntryValue.values().length];
-    _dimension = new Dimension(100, 35 * _entries.length);
 
     for (int i = 0; i < StartEntryValue.values().length; ++i)
       _entries[i] = new EntryPanel(this, StartEntryValue.valueOf(i));
@@ -31,19 +28,6 @@ public class StartView extends JPokemonView implements KeyListener {
 
     setFocusable(true);
     setFocusTraversalKeysEnabled(false);
-    addKeyListener(this);
-  }
-
-  public void onUp() {
-    select(_select - 1);
-  }
-
-  public void onDown() {
-    select(_select + 1);
-  }
-
-  public void onEnter() {
-    _entries[_select].action();
   }
 
   public void onUpgrade() {
@@ -56,7 +40,7 @@ public class StartView extends JPokemonView implements KeyListener {
 
   public void onSave() {
     try {
-      PlayerService.savePlayer(parent().playerID());
+      PlayerService.save(parent().playerID());
       refresh();
     } catch (ServiceException e) {
       e.printStackTrace();
@@ -65,7 +49,7 @@ public class StartView extends JPokemonView implements KeyListener {
   }
 
   public void onExit() {
-    refresh();
+    parent().showInbox();
   }
 
   public void onQuit() {
@@ -85,33 +69,27 @@ public class StartView extends JPokemonView implements KeyListener {
     _entries[_select].active(true);
   }
 
-  @Override
-  public Dimension dimension() {
-    return _dimension;
+  public int width() {
+    return 100;
   }
 
   @Override
-  public void keyPressed(KeyEvent arg0) {
+  public boolean key(KeyEvent arg0) {
     int keyCode = arg0.getKeyCode();
 
-    if (keyCode == 38)
-      onUp();
+    if (keyCode == 10)
+      _entries[_select].action();
     else if (keyCode == 40)
-      onDown();
-    else if (keyCode == 10)
-      onEnter();
-  }
+      select(_select + 1);
+    else if (keyCode == 38)
+      select(_select - 1);
+    else
+      return false;
 
-  @Override
-  public void keyReleased(KeyEvent arg0) {
-  }
-
-  @Override
-  public void keyTyped(KeyEvent arg0) {
+    return true;
   }
 
   private int _select;
   private EntryPanel[] _entries;
-  private Dimension _dimension;
   private static final long serialVersionUID = 1L;
 }
