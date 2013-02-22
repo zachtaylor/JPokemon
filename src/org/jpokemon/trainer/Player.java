@@ -3,7 +3,6 @@ package org.jpokemon.trainer;
 import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
-import jpkmn.exe.gui.GameWindow;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
@@ -13,6 +12,8 @@ import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.jpokemon.GameWindow;
 
 public class Player implements PokemonTrainer {
   public Player() {
