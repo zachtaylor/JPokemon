@@ -67,16 +67,17 @@ public class StatBlock implements JPokemonConstants {
     _points = p;
   }
 
-  public void usePoint(StatType st) {
-    if (points() == 0)
+  public void usePoints(StatType st, int amount) {
+    if (points() < amount)
       throw new IllegalStateException("No points available");
 
     Stat stat = get(st);
-    if (stat.points() == STAT_POINTS_INDIVIDUAL_MAX)
+    int consumable = Math.min(STAT_POINTS_INDIVIDUAL_MAX - stat.points(), amount);
+    if (consumable <= 0)
       return;
 
-    points(points() - 1);
-    stat.points(stat.points() + 1);
+    points(points() - amount);
+    stat.points(stat.points() + amount);
   }
 
   /**

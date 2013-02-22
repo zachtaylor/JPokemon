@@ -134,6 +134,10 @@ public class Pokemon implements JPokemonConstants {
     return _stats.get(s);
   }
 
+  public void statPoints(StatType s, int amount) {
+    _stats.usePoints(s, amount);
+  }
+
   public int health() {
     int val = getStat(StatType.HEALTH).cur();
     return val;

@@ -8,6 +8,8 @@ import jpkmn.map.AreaRegistry;
 import jpkmn.map.Direction;
 import jpkmn.map.Event;
 
+import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.TrainerState;
@@ -58,49 +60,37 @@ public class PlayerService {
     }
   }
 
-  public static void create(String name, String starter) throws ServiceException, JSONException {
-    int pokemon = 0;
-    if (starter.equals("Bulbasaur"))
-      pokemon = 1;
-    else if (starter.equals("Charmander"))
-      pokemon = 4;
-    else if (starter.equals("Squirtle"))
-      pokemon = 7;
-    else
-      throw new ServiceException("Starter not supported: " + starter);
-
+  public static void party(JSONObject request) {
     try {
-      PlayerFactory.create(name, pokemon);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new ServiceException(e.getMessage());
-    }
-  }
+      Player player = PlayerFactory.get(request.getInt("id"));
 
-  public static JSONArray starterPokemon() {
-    JSONArray json = new JSONArray();
+      if (player.state() == TrainerState.OVERWORLD) {
+        player.state(TrainerState.UPGRADE);
+      }
+      else if (player.state() == TrainerState.UPGRADE) {
+        if (request.get("stats") == JSONObject.NULL) {
+          player.state(TrainerState.OVERWORLD);
+          return;
+        }
 
-    json.put("Bulbasaur");
-    json.put("Charmander");
-    json.put("Squirtle");
+        Pokemon pokemon = player.party().get(request.getInt("index"));
 
-    return json;
-  }
+        JSONArray stats = request.getJSONArray("stats");
+        for (int i = 0; i < stats.length(); i++) {
+          StatType s = StatType.valueOf(stats.getJSONObject(i).getString("stat"));
+          pokemon.statPoints(s, stats.getJSONObject(i).getInt("amount"));
+        }
+      }
+      else
+        ; // TODO throw error
 
-  public static JSONObject pokemonInfo(int pID, int i) throws ServiceException {
-    Player player = PlayerFactory.get(pID);
-
-    if (player == null)
-      throw new ServiceException("PlayerID " + pID + " not found");
-
-    try {
-      return JSONMaker.make(player.party().get(i));
-    } catch (IllegalArgumentException e) {
-      throw new ServiceException(player.name() + " has no " + i + " Pokemon");
     } catch (JSONException e) {
-      throw new ServiceException("There was an error. It's not your fault.");
     }
   }
+
+  // ------------------------------------------------------------
+  // THE ONES BELOW THIS LINE SUCK AND WILL DISSAPPEAR EVENTUALLY
+  // ------------------------------------------------------------
 
   public static JSONObject areaInfo(int playerID) throws ServiceException {
     Player player = PlayerFactory.get(playerID);

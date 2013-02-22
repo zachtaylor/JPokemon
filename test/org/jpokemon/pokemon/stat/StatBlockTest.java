@@ -107,7 +107,7 @@ public class StatBlockTest extends TestCase {
     assertEquals(0, defenseStat.points());
 
     block.points(1);
-    block.usePoint(StatType.DEFENSE);
+    block.usePoints(StatType.DEFENSE, 1);
 
     assertEquals(1, defenseStat.points());
   }
@@ -120,7 +120,7 @@ public class StatBlockTest extends TestCase {
     block.points(0);
 
     try {
-      block.usePoint(StatType.DEFENSE);
+      block.usePoints(StatType.DEFENSE, 1);
       fail("No points to spend");
     } catch (Exception e) {
       assertTrue(e instanceof IllegalStateException);

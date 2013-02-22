@@ -1,16 +1,20 @@
 package jpkmn.exe.gui.pokemon;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jpkmn.exceptions.ServiceException;
 import jpkmn.exe.gui.GameWindow;
+import jpkmn.exe.gui.JPokemonButton;
 import jpkmn.exe.gui.JPokemonMenu;
 import jpkmn.exe.gui.JPokemonView;
 import jpkmn.exe.gui.party.PartyMenu;
@@ -36,33 +40,42 @@ public class PokemonView extends JPokemonView {
 
     _menu = new PartyMenu(g, this);
 
+    JPanel buttons = new JPanel();
+    JButton accept = new JPokemonButton("Accept");
+    accept.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        applyChanges();
+      }
+    });
+    buttons.add(accept);
+    JButton discard = new JPokemonButton("Discard");
+    discard.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        discardChanges();
+      }
+    });
+    buttons.add(discard);
+
+    JPanel left = new JPanel();
+    left.add(_icon = new JLabel());
+    left.add(_name = new JLabel());
+    left.add(_points = new JLabel());
+    left.add(spacer());
+    left.add(buttons);
+
+    JPanel right = new JPanel();
     _stats = new StatPanel[6];
-
-    _icon = new JLabel();
-    _name = new JLabel();
-    _points = new JLabel();
-
-    JPanel pokemon = new JPanel();
-    JPanel allStats = new JPanel();
-
     for (int panelIndex = 0; panelIndex < _stats.length; panelIndex++)
-      _stats[panelIndex] = new StatPanel(this);
+      right.add(_stats[panelIndex] = new StatPanel(this));
+    right.add(spacer());
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-    pokemon.setLayout(new BoxLayout(pokemon, BoxLayout.Y_AXIS));
-    allStats.setLayout(new BoxLayout(allStats, BoxLayout.Y_AXIS));
+    left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+    right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 
-    //@preformat
-    add(pokemon);
-      pokemon.add(_icon);
-      pokemon.add(_name);
-      pokemon.add(_points);
-      pokemon.add(spacer());
+    add(left);
     add(spacer());
-    add(allStats);
-      for (StatPanel sp : _stats) allStats.add(sp);
-      allStats.add(spacer());
-    //@format
+    add(right);
   }
 
   public void addPoint(String stat) {
@@ -76,7 +89,6 @@ public class PokemonView extends JPokemonView {
       spending.put(stat, oldVal + 1);
 
     checkSpending();
-    System.out.println(spending.get(stat) + " points spent on " + stat);
   }
 
   public void update(JSONObject data) {
@@ -98,9 +110,38 @@ public class PokemonView extends JPokemonView {
       return;
 
     _partyIndex = index;
-    _spentPoints = 0;
-    spending = new HashMap<String, Integer>();
-    doUpdate();
+    clearSpending();
+  }
+
+  public void applyChanges() {
+    if (spending.isEmpty())
+      return;
+
+    try {
+      JSONObject request = new JSONObject();
+      request.put("id", parent().playerID());
+
+      request.put("index", _partyIndex);
+
+      JSONArray stats = new JSONArray();
+      for (Map.Entry<String, Integer> entry : spending.entrySet()) {
+        JSONObject stat = new JSONObject();
+        stat.put("stat", entry.getKey());
+        stat.put("amount", entry.getValue());
+        stats.put(stat);
+      }
+      request.put("stats", stats);
+
+      PlayerService.party(request);
+    } catch (JSONException e) {
+    }
+
+    clearSpending();
+    refresh();
+  }
+
+  public void discardChanges() {
+    clearSpending();
   }
 
   private void doUpdate() {
@@ -136,6 +177,12 @@ public class PokemonView extends JPokemonView {
 
   public boolean key(KeyEvent arg0) {
     return false;
+  }
+
+  private void clearSpending() {
+    _spentPoints = 0;
+    spending = new HashMap<String, Integer>();
+    doUpdate();
   }
 
   private void checkSpending() {
