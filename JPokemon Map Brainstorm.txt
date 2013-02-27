@@ -1,0 +1,26 @@
+JPokemon Map Brainstorm
+
+NPC
+- Start battle
+  - add reward to battle
+- Affect items
+- Affect pokemon
+- Different behavior for different event history
+- Requirement
+
+NPCBehavior
+area > npcid > eventselector > list<
+
+Border
+- Requirement
+- Go to next area
+
+Area
+- Have many NPC
+- Have many Border
+- Start battle
+
+Requirement
+- Pokedex count
+- Pokemon move
+- Event in history
