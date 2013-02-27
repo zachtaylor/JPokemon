@@ -14,7 +14,7 @@ public class Stat implements JPokemonConstants {
   public int cur() {
     return _cur;
   }
-  
+
   public int max() {
     return _max;
   }
