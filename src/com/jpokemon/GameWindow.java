@@ -17,12 +17,10 @@ import com.jpokemon.battle.BattleView;
 import com.jpokemon.inbox.InboxMenu;
 import com.jpokemon.pokemon.PokemonView;
 import com.jpokemon.start.StartMenu;
-import com.jpokemon.world.WorldView;
 
 public class GameWindow extends JFrame implements KeyListener {
   public GameWindow(int playerID) {
     _playerID = playerID;
-    _main = new WorldView(this);
     _inbox = new InboxMenu(this);
     _start = new StartMenu(this);
     _battle = new BattleView(this);
@@ -35,7 +33,7 @@ public class GameWindow extends JFrame implements KeyListener {
     setIconImage(ImageFinder.find("main-icon").getImage());
 
     _menu = _inbox;
-    _active = _main;
+    _active = _upgrade;
 
     addKeyListener(this);
     setFocusable(true);
@@ -146,7 +144,7 @@ public class GameWindow extends JFrame implements KeyListener {
   private int _playerID;
   private JPokemonDialog _dialogs;
   private JPokemonMenu _menu, _start, _inbox;
-  private JPokemonView _active, _battle, _upgrade, _main;
+  private JPokemonView _active, _battle, _upgrade;
 
   private static final long serialVersionUID = 1L;
 }

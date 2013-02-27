@@ -55,4 +55,6 @@ public abstract class JPokemonMenu extends JPanel {
 
   private int _select;
   private GameWindow _parent;
+
+  private static final long serialVersionUID = 1L;
 }

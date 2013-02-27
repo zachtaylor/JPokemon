@@ -38,5 +38,6 @@ public class MessagePanel extends JPanel {
   }
 
   private InboxMenu _parent;
+
   private static final long serialVersionUID = 1L;
 }

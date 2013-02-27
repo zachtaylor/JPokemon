@@ -28,4 +28,6 @@ public class PartyEntry extends JPokemonMenuEntry {
   }
 
   private JLabel _icon, _name;
+
+  private static final long serialVersionUID = 1L;
 }

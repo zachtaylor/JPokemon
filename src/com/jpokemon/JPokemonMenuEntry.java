@@ -24,4 +24,6 @@ public abstract class JPokemonMenuEntry extends JPanel {
   public abstract void action();
 
   private JPokemonMenu _parent;
+
+  private static final long serialVersionUID = 1L;
 }

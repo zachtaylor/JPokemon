@@ -47,4 +47,6 @@ public class PartyMenu extends JPokemonMenu {
 
   private PokemonView _view;
   private PartyEntry[] _entries;
+
+  private static final long serialVersionUID = 1L;
 }

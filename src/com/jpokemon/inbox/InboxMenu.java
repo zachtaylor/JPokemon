@@ -41,4 +41,6 @@ public class InboxMenu extends JPokemonMenu {
   }
 
   private JPanel _spacer = new JPanel();
+
+  private static final long serialVersionUID = 1L;
 }

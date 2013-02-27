@@ -50,4 +50,6 @@ public class StartMenuEntry extends JPokemonMenuEntry {
 
   private StartEntryValue _value;
   private JSONObject _showPokemonPlz;
+
+  private static final long serialVersionUID = 1L;
 }

@@ -64,6 +64,7 @@ public class Pokedex implements JPokemonConstants {
       case OWN:
         own.put(entry.getKey());
         break;
+      default:
       }
     }
 
