@@ -22,7 +22,10 @@ public class Pokedex implements JPokemonConstants {
    * @param num Pokemon number
    */
   public void saw(int num) {
-    if (num < 1 || _data.get(num) == PokedexStatus.OWN) return;
+    if (num < 1)
+      throw new IllegalArgumentException("#" + num + " out of range");
+    if (_data.get(num) == PokedexStatus.OWN)
+      return;
 
     _data.put(num, PokedexStatus.SAW);
   }
@@ -33,7 +36,8 @@ public class Pokedex implements JPokemonConstants {
    * @param num Pokemon number
    */
   public void own(int num) {
-    if (num < 1) return;
+    if (num < 1)
+      throw new IllegalArgumentException("#" + num + " out of range");
 
     _data.put(num, PokedexStatus.OWN);
   }
@@ -48,7 +52,21 @@ public class Pokedex implements JPokemonConstants {
     if (num < 1)
       throw new IllegalArgumentException("#" + num + " out of range");
 
-    return _data.get(num);
+    PokedexStatus status = _data.get(num);
+
+    if (status == null)
+      status = PokedexStatus.NONE;
+
+    return status;
+  }
+
+  /**
+   * Count the number of Pokemon with in the Pokedex
+   * 
+   * @return The number of Pokemon with non-NONE PokedexStatus
+   */
+  public int count() {
+    return _data.size();
   }
 
   public JSONObject toJSON() {
@@ -86,10 +104,11 @@ public class Pokedex implements JPokemonConstants {
    * @throws LoadException If an error occurs with the data being loaded
    */
   public void load(String s) throws LoadException {
-    Scanner scan = new Scanner(s);
-
-    if (!scan.hasNext() || !scan.next().equals("DEX:"))
+    if (!s.startsWith("DEX:"))
       throw new LoadException("Improper format: " + s);
+
+    Scanner scan = new Scanner(s);
+    scan.next();
 
     try {
       int number;
@@ -104,10 +123,13 @@ public class Pokedex implements JPokemonConstants {
         _data.put(number, status);
       }
     } catch (NumberFormatException e) {
+      scan.close();
       throw new LoadException("Numbers inparsable");
     } catch (ArrayIndexOutOfBoundsException e) {
+      scan.close();
       throw new LoadException("Entry loaded above indicated size");
     }
+    scan.close();
   }
 
   private Map<Integer, PokedexStatus> _data = new HashMap<Integer, PokedexStatus>();

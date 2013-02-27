@@ -43,35 +43,57 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     }
   }
 
+  public void testNoValue() {
+    int n = (int) (Math.random() * range + 1);
+
+    assertEquals(PokedexStatus.NONE, dex.status(n));
+  }
+
+  public void testCount() {
+    assertEquals(0, dex.count());
+
+    int n = (int) (Math.random() * range + 1);
+
+    dex.saw(n);
+
+    assertEquals(1, dex.count());
+  }
+
   public void testOwnOverridesSaw() {
-    int cur;
+    int n = (int) (Math.random() * range + 1);
 
-    for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * range + 1);
+    dex.saw(n);
+    dex.own(n);
 
-      dex.saw(cur);
-      dex.own(cur);
-
-      assertTrue(PokedexStatus.OWN == dex.status(cur));
-    }
+    assertTrue(PokedexStatus.OWN == dex.status(n));
   }
 
   public void testSawDoesNotOverrideOwn() {
-    int cur;
+    int n = (int) (Math.random() * range + 1);
 
-    for (int i = 0; i < power; i++) {
-      cur = (int) (Math.random() * range + 1);
+    dex.own(n);
+    dex.saw(n);
 
-      dex.own(cur);
-      dex.saw(cur);
-
-      assertTrue(PokedexStatus.OWN == dex.status(cur));
-    }
+    assertTrue(PokedexStatus.OWN == dex.status(n));
   }
 
   public void testMinimumValue() {
     try {
       dex.status(0);
+      fail();
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
+
+    try {
+      dex.saw(0);
+      fail();
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
+
+    try {
+      dex.own(0);
       fail();
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
@@ -93,8 +115,6 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
         loadData += i + "-" + data.get(i).ordinal() + " ";
     }
 
-    loadData += "\n";
-
     try {
       dex.load(loadData);
     } catch (LoadException e) {
@@ -103,12 +123,35 @@ public class PokedexTest extends TestCase implements JPokemonConstants {
     }
 
     for (int i = 0; i < range; i++)
-      if (data.get(i) != null) assertEquals(data.get(i), dex.status(i + 1));
+      if (data.get(i) != null)
+        assertEquals(data.get(i), dex.status(i + 1));
+
+    dex = new Pokedex();
+    try {
+      dex.load("DEX: \n");
+      assertEquals(0, dex.count());
+    } catch (LoadException e) {
+      fail("Empty dex should be allowed");
+    }
   }
 
   public void testLoadNonsense() {
     try {
       dex.load("foo bar baz\n");
+      assertTrue("Load nonsense was allowed", false);
+    } catch (Exception e) {
+      assertTrue(e instanceof LoadException);
+    }
+
+    try {
+      dex.load("DEX: DRTRAN!\n");
+      assertTrue("Load nonsense was allowed", false);
+    } catch (Exception e) {
+      assertTrue(e instanceof LoadException);
+    }
+
+    try {
+      dex.load("DEX: 3-\n");
       assertTrue("Load nonsense was allowed", false);
     } catch (Exception e) {
       assertTrue(e instanceof LoadException);
