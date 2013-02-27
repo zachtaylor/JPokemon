@@ -20,10 +20,16 @@ public class Area {
   }
 
   public void addBorder(Border b) {
+    if (b == null || _borders.contains(b))
+      return;
+
     _borders.add(b);
   }
 
   public void removeBorder(Border b) {
+    if (b == null || !_borders.contains(b))
+      return;
+
     _borders.remove(b);
   }
 
