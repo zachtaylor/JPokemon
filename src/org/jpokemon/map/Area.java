@@ -26,10 +26,8 @@ public class Area {
     totalFlex = (int) (totalFlex * Math.random());
 
     for (WildPokemon p : _pokemon) {
-      if (totalFlex < p.getFlex()) {
-        int level = p.getLevelmin() + (int) (Math.random() * (p.getLevelmax() - p.getLevelmin() + 1));
-        return new Pokemon(p.getNumber(), level);
-      }
+      if (totalFlex < p.getFlex())
+        return p.instantiate();
       else
         totalFlex -= p.getFlex();
     }

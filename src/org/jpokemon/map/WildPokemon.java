@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.Pokemon;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
@@ -12,9 +13,15 @@ import com.kremerk.Sqlite.SqlStatement;
 
 public class WildPokemon implements JPokemonConstants {
   private int area, number, levelmin, levelmax, flex;
-  
+
   private static Map<Integer, List<WildPokemon>> cache = new HashMap<Integer, List<WildPokemon>>();
-  
+
+  public Pokemon instantiate() {
+    int level = (int) ((levelmax - levelmin + 1) * Math.random()) + levelmin;
+
+    return new Pokemon(number, level);
+  }
+
   public static List<WildPokemon> get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
@@ -32,7 +39,7 @@ public class WildPokemon implements JPokemonConstants {
 
     return cache.get(number);
   }
-  
+
   //@preformat
   public int getArea() {return area; } public void setArea(int a) {area = a; }
   public int getNumber() {return number; } public void setNumber(int n) {number = n; }
