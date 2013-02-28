@@ -291,20 +291,21 @@ public class Pokemon implements JPokemonConstants {
    * @throws LoadException if loaded with invalid string
    */
   public static Pokemon load(String s) throws LoadException {
-    if (s != null && !s.equals(" ")) {
+    if (s != null && s.startsWith("|( ")) {
 
       Scanner scan = new Scanner(s);
 
-      if (!(scan.next().equals("|(")))
-        throw new LoadException("Formatting error");
+      scan.next(); // Throw away "|( "
 
       Pokemon p = new Pokemon(scan.nextInt());
       p.level(scan.nextInt());
       p._stats.points(scan.nextInt());
       p._xp = scan.nextInt();
 
-      if (!scan.next().equals(")"))
+      if (!scan.next().equals(")")) {
+        scan.close();
         throw new LoadException("Formatting error");
+      }
 
       p.getStat(StatType.ATTACK).points(scan.nextInt());
       p.getStat(StatType.SPECATTACK).points(scan.nextInt());
@@ -313,8 +314,10 @@ public class Pokemon implements JPokemonConstants {
       p.getStat(StatType.SPEED).points(scan.nextInt());
       p._stats.reset();
 
-      if (!scan.next().equals("("))
+      if (!scan.next().equals("(")) {
+        scan.close();
         throw new LoadException("Formatting error");
+      }
 
       p._moves.removeAll();
       for (String next = scan.next(); !next.equals(")"); next = scan.next())
@@ -323,6 +326,7 @@ public class Pokemon implements JPokemonConstants {
       p.name = scan.nextLine();
       p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
 
+      scan.close();
       return p;
     }
 
