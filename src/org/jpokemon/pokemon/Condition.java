@@ -96,6 +96,8 @@ public class Condition {
   public String toString() {
     if (effects.isEmpty())
       return "";
+    if (effects.size() == 1)
+      return effects.get(0).toString();
     return effects.toString();
   }
 
