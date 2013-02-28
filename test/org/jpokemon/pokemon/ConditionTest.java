@@ -37,4 +37,28 @@ public class ConditionTest extends TestCase {
 
     assertTrue(!condition.contains(ConditionEffect.SLEEP));
   }
+
+  public void testCanAttack() {
+    assertTrue("No condition effects", condition.canAttack());
+
+    condition.add(ConditionEffect.POISON);
+
+    assertTrue("Poison doesn't interfere", condition.canAttack());
+
+    condition.add(ConditionEffect.FREEZE);
+    
+    assertTrue("Freeze guarantees no moving", !condition.canAttack());
+  }
+
+  public void testToString() {
+    assertEquals("", condition.toString());
+
+    condition.add(ConditionEffect.BURN);
+
+    assertEquals("BURN", condition.toString());
+
+    condition.add(ConditionEffect.SLEEP);
+
+    assertEquals("[BURN, SLEEP]", condition.toString());
+  }
 }
