@@ -12,10 +12,6 @@ public class Requirement {
     return _type;
   }
 
-  public void type(RequirementType t) {
-    _type = t;
-  }
-
   public boolean isOkay(Player p) {
     switch (_type) {
     case POKEDEX_COUNT:
@@ -23,7 +19,7 @@ public class Requirement {
     case POKEMON_MOVE:
       return false; // TODO check party for move
     case EVENT:
-      return false; // TODO check player for event history
+      return p.events().get(Math.abs(_data)) ^ (_data < 0); // XOR
     default:
       break;
     }

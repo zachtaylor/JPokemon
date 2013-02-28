@@ -3,16 +3,38 @@ package org.jpokemon.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpokemon.pokemon.Pokemon;
+
 public class Area {
   public Area(int id) {
     _id = id;
 
-    AreaInfo info = AreaInfo.get(id);
-    _name = info.getName();
+    _info = AreaInfo.get(id);
+    _pokemon = WildPokemon.get(id);
   }
 
   public String name() {
-    return _name;
+    return _info.getName();
+  }
+
+  public Pokemon pokemon() {
+    int totalFlex = 0;
+
+    for (WildPokemon p : _pokemon)
+      totalFlex += p.getFlex();
+
+    totalFlex = (int) (totalFlex * Math.random());
+
+    for (WildPokemon p : _pokemon) {
+      if (totalFlex < p.getFlex()) {
+        int level = p.getLevelmin() + (int) (Math.random() * (p.getLevelmax() - p.getLevelmin() + 1));
+        return new Pokemon(p.getNumber(), level);
+      }
+      else
+        totalFlex -= p.getFlex();
+    }
+
+    return null;
   }
 
   public List<Border> borders() {
@@ -41,6 +63,7 @@ public class Area {
   }
 
   private int _id;
-  private String _name;
+  private AreaInfo _info;
+  private List<WildPokemon> _pokemon;
   private List<Border> _borders = new ArrayList<Border>();
 }

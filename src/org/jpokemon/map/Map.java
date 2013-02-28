@@ -14,10 +14,6 @@ public class Map implements JPokemonConstants {
   private static HashMap<Integer, List<Map>> cache = new HashMap<Integer, List<Map>>();
   private static HashMap<Integer, Area> map = new HashMap<Integer, Area>();
 
-  protected Map() {
-    // Prevent instantiation by anyone other than SQLiteORM project
-  }
-
   public static Area area(int id) {
     if (map.get(id) == null)
       load(id);
