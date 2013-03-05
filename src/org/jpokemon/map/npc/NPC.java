@@ -1,13 +1,22 @@
 package org.jpokemon.map.npc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.trainer.Player;
 
 public class NPC {
-  public void addActionSet(ActionSet as) {
-    _actions.add(as);
+  public NPC(NPCInfo info) {
+    _info = info;
+
+    _type = NPCType.get(info.getType());
+  }
+
+  public NPCType type() {
+    return _type;
+  }
+
+  public void actions(List<ActionSet> actions) {
+    _actions = actions;
   }
 
   public ActionSet action(Player p) {
@@ -25,14 +34,7 @@ public class NPC {
     return actions;
   }
 
-  public NPCType type() {
-    return _type;
-  }
-
-  public void type(NPCType type) {
-    _type = type;
-  }
-
   private NPCType _type;
-  private List<ActionSet> _actions = new ArrayList<ActionSet>();
+  private NPCInfo _info;
+  private List<ActionSet> _actions;
 }

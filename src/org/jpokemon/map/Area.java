@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.map.npc.NPC;
+import org.jpokemon.map.npc.NPCFactory;
 import org.jpokemon.pokemon.Pokemon;
 
 public class Area {
@@ -11,6 +12,7 @@ public class Area {
     _id = id;
 
     _info = AreaInfo.get(id);
+    _npcs = NPCFactory.build(id);
     _pokemon = WildPokemon.get(id);
   }
 
@@ -38,14 +40,6 @@ public class Area {
 
   public List<NPC> npcs() {
     return _npcs;
-  }
-
-  public void addNPC(NPC npc) {
-    _npcs.add(npc);
-  }
-
-  public void removeNPC(NPC npc) {
-    _npcs.remove(npc);
   }
 
   public List<Border> borders() {

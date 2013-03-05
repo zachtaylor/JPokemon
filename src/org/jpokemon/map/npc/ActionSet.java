@@ -20,12 +20,12 @@ public class ActionSet {
       action.execute(p);
   }
 
-  public List<List<Requirement>> requirements() {
-    return _requirements;
+  public void requirements(List<List<Requirement>> requirements) {
+    _requirements = requirements;
   }
 
-  public void addRequirementList(List<Requirement> r) {
-    _requirements.add(r);
+  public List<List<Requirement>> requirements() {
+    return _requirements;
   }
 
   public boolean isOkay(Player p) {

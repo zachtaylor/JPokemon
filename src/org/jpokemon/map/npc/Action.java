@@ -3,6 +3,11 @@ package org.jpokemon.map.npc;
 import org.jpokemon.trainer.Player;
 
 public class Action {
+  public Action(int type, int data) {
+    _type = ActionType.valueOf(type);
+    _data = data;
+  }
+
   public void execute(Player p) {
     // TODO execute an action on player
   }
@@ -11,16 +16,8 @@ public class Action {
     return _data;
   }
 
-  public void data(int d) {
-    _data = d;
-  }
-
   public ActionType type() {
     return _type;
-  }
-
-  public void type(ActionType t) {
-    _type = t;
   }
 
   private int _data;
