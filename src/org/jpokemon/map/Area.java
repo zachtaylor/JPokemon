@@ -3,6 +3,7 @@ package org.jpokemon.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 
 public class Area {

@@ -1,21 +1,22 @@
-package org.jpokemon.map;
+package org.jpokemon.map.npc;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpokemon.map.Requirement;
 import org.jpokemon.trainer.Player;
 
-public class NPCActionSet {
-  public List<NPCAction> actions() {
+public class ActionSet {
+  public List<Action> actions() {
     return _actions;
   }
 
-  public void addAction(NPCAction a) {
+  public void addAction(Action a) {
     _actions.add(a);
   }
 
   public void execute(Player p) {
-    for (NPCAction action : _actions)
+    for (Action action : _actions)
       action.execute(p);
   }
 
@@ -47,6 +48,6 @@ public class NPCActionSet {
     return result;
   }
 
-  private List<NPCAction> _actions = new ArrayList<NPCAction>();
+  private List<Action> _actions = new ArrayList<Action>();
   private List<List<Requirement>> _requirements = new ArrayList<List<Requirement>>();
 }

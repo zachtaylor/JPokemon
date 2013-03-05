@@ -1,10 +1,10 @@
-package org.jpokemon.map;
+package org.jpokemon.map.npc;
 
 import org.jpokemon.trainer.Player;
 
-public class NPCAction {
+public class Action {
   public void execute(Player p) {
-    // TODO execute a npcaction on player
+    // TODO execute an action on player
   }
 
   public int data() {
@@ -15,14 +15,14 @@ public class NPCAction {
     _data = d;
   }
 
-  public NPCActionType type() {
+  public ActionType type() {
     return _type;
   }
 
-  public void type(NPCActionType t) {
+  public void type(ActionType t) {
     _type = t;
   }
 
   private int _data;
-  private NPCActionType _type;
+  private ActionType _type;
 }

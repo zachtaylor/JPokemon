@@ -33,7 +33,6 @@ public class Map implements JPokemonConstants {
       a.addBorder(b);
     }
 
-    
   }
 
   private static List<Map> get(int number) {
@@ -41,10 +40,7 @@ public class Map implements JPokemonConstants {
 
     if (cache.get(number) == null) {
       try {
-        List<Map> info = SqlStatement.select(Map.class).where("area").eq(number).getList();
-
-        if (info.size() > 0)
-          cache.put(number, info);
+        cache.put(number, SqlStatement.select(Map.class).where("area").eq(number).getList());
 
       } catch (DataConnectionException e) {
         e.printStackTrace();
