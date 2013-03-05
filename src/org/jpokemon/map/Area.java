@@ -35,6 +35,18 @@ public class Area {
     return null;
   }
 
+  public List<NPC> npcs() {
+    return _npcs;
+  }
+
+  public void addNPC(NPC npc) {
+    _npcs.add(npc);
+  }
+
+  public void removeNPC(NPC npc) {
+    _npcs.remove(npc);
+  }
+
   public List<Border> borders() {
     return _borders;
   }
@@ -60,8 +72,13 @@ public class Area {
     return false;
   }
 
+  public int hashCode() {
+    return _id;
+  }
+
   private int _id;
   private AreaInfo _info;
+  private List<NPC> _npcs;
   private List<WildPokemon> _pokemon;
   private List<Border> _borders = new ArrayList<Border>();
 }

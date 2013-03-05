@@ -22,11 +22,9 @@ public class Map implements JPokemonConstants {
   }
 
   private static void load(int id) {
-    List<Map> maps = get(id);
-
     Area a = new Area(id);
 
-    for (Map map : maps) {
+    for (Map map : get(id)) {
       Border b = new Border(map.getNext());
 
       for (MapRequirement mr : MapRequirement.get(id, map.getNext()))
@@ -34,6 +32,8 @@ public class Map implements JPokemonConstants {
 
       a.addBorder(b);
     }
+
+    
   }
 
   private static List<Map> get(int number) {
