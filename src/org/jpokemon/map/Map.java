@@ -1,17 +1,18 @@
 package org.jpokemon.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.map.npc.NPC;
+import org.jpokemon.map.npc.NPCFactory;
 
 import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
 public class Map implements JPokemonConstants {
-  private int area, next;
-  private static HashMap<Integer, List<Map>> cache = new HashMap<Integer, List<Map>>();
   private static HashMap<Integer, Area> map = new HashMap<Integer, Area>();
 
   public static Area area(int id) {
@@ -22,36 +23,50 @@ public class Map implements JPokemonConstants {
   }
 
   private static void load(int id) {
-    Area a = new Area(id);
+    Area a = loadArea(id);
 
-    for (Map map : get(id)) {
-      Border b = new Border(map.getNext());
-
-      for (MapRequirement mr : MapRequirement.get(id, map.getNext()))
-        b.addRequirement(new Requirement(mr.getType(), mr.getData()));
+    for (Border b : loadMap(id)) {
+      for (BorderRequirement br : BorderRequirement.get(id, b.getNext()))
+        b.addRequirement(br);
 
       a.addBorder(b);
     }
 
+    for (WildPokemon wp : WildPokemon.get(id))
+      a.addPokemon(wp);
+
+    for (NPC npc : NPCFactory.build(id))
+      a.addNPC(npc);
+
+    map.put(id, a);
   }
 
-  private static List<Map> get(int number) {
+  private static List<Border> loadMap(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (cache.get(number) == null) {
-      try {
-        cache.put(number, SqlStatement.select(Map.class).where("area").eq(number).getList());
+    try {
+      return SqlStatement.select(Border.class).where("area").eq(number).getList();
 
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
     }
 
-    return cache.get(number);
+    return new ArrayList<Border>();
   }
 
-  //@preformat
-  public int getArea() {return area; } public void setArea(int a) {area = a; }
-  public int getNext() {return next; } public void setNext(int n) {next = n; }
-  //@format
+  private static Area loadArea(int number) {
+    DataConnectionManager.init(DATABASE_PATH);
+
+    try {
+      List<Area> info = SqlStatement.select(Area.class).where("area").eq(number).getList();
+
+      if (info.size() > 0)
+        return info.get(0);
+
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
 }

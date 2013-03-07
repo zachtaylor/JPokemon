@@ -4,20 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.map.npc.NPC;
-import org.jpokemon.map.npc.NPCFactory;
 import org.jpokemon.pokemon.Pokemon;
 
 public class Area {
-  public Area(int id) {
-    _id = id;
-
-    _info = AreaInfo.get(id);
-    _npcs = NPCFactory.build(id);
-    _pokemon = WildPokemon.get(id);
+  public int getArea() {
+    return area;
   }
 
-  public String name() {
-    return _info.getName();
+  public void setArea(int a) {
+    area = a;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String n) {
+    name = n;
   }
 
   public Pokemon pokemon() {
@@ -38,8 +41,20 @@ public class Area {
     return null;
   }
 
+  public void addPokemon(WildPokemon wp) {
+    _pokemon.add(wp);
+  }
+
   public List<NPC> npcs() {
     return _npcs;
+  }
+
+  public void addNPC(NPC npc) {
+    _npcs.add(npc);
+  }
+
+  public void removeNPC(int index) {
+    _npcs.remove(index);
   }
 
   public List<Border> borders() {
@@ -53,27 +68,24 @@ public class Area {
     _borders.add(b);
   }
 
-  public void removeBorder(Border b) {
-    if (b == null || !_borders.contains(b))
-      return;
-
-    _borders.remove(b);
+  public void removeBorder(int index) {
+    _borders.remove(index);
   }
 
   public boolean equals(Object o) {
     if (o instanceof Area)
-      return ((Area) o)._id == _id;
+      return ((Area) o).area == area;
 
     return false;
   }
 
   public int hashCode() {
-    return _id;
+    return area;
   }
 
-  private int _id;
-  private AreaInfo _info;
-  private List<NPC> _npcs;
-  private List<WildPokemon> _pokemon;
+  private int area;
+  private String name;
+  private List<NPC> _npcs = new ArrayList<NPC>();
   private List<Border> _borders = new ArrayList<Border>();
+  private List<WildPokemon> _pokemon = new ArrayList<WildPokemon>();
 }

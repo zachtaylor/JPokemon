@@ -1,7 +1,5 @@
 package org.jpokemon.map.npc;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
@@ -14,21 +12,17 @@ public class NPCInfo implements JPokemonConstants {
   private int area, number, type;
   private String name;
 
-  private static Map<Integer, List<NPCInfo>> cache = new HashMap<Integer, List<NPCInfo>>();
-
   public static List<NPCInfo> get(int area) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (cache.get(area) == null) {
-      try {
-        cache.put(area, SqlStatement.select(NPCInfo.class).where("area").eq(area).getList());
+    try {
+      return SqlStatement.select(NPCInfo.class).where("area").eq(area).getList();
 
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
     }
 
-    return cache.get(area);
+    return null;
   }
 
   //@preformat

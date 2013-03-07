@@ -1,8 +1,6 @@
 package org.jpokemon.map;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
@@ -14,8 +12,6 @@ import com.kremerk.Sqlite.SqlStatement;
 public class WildPokemon implements JPokemonConstants {
   private int area, number, levelmin, levelmax, flex;
 
-  private static Map<Integer, List<WildPokemon>> cache = new HashMap<Integer, List<WildPokemon>>();
-
   public Pokemon instantiate() {
     int level = (int) ((levelmax - levelmin + 1) * Math.random()) + levelmin;
 
@@ -25,19 +21,17 @@ public class WildPokemon implements JPokemonConstants {
   public static List<WildPokemon> get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
-    if (cache.get(number) == null) {
-      try {
-        List<WildPokemon> info = SqlStatement.select(WildPokemon.class).where("area").eq(number).getList();
+    try {
+      List<WildPokemon> info = SqlStatement.select(WildPokemon.class).where("area").eq(number).getList();
 
-        if (info.size() > 0)
-          cache.put(number, info);
+      if (info.size() > 0)
+        return info;
 
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
     }
 
-    return cache.get(number);
+    return null;
   }
 
   //@preformat

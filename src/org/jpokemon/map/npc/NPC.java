@@ -11,6 +11,18 @@ public class NPC {
     _type = NPCType.get(info.getType());
   }
 
+  public String shortName() {
+    return _info.getName();
+  }
+
+  public String longName() {
+    return _type.getName() + " " + shortName();
+  }
+
+  public String icon() {
+    return _type.getIcon();
+  }
+
   public NPCType type() {
     return _type;
   }

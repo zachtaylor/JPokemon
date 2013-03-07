@@ -6,17 +6,25 @@ import java.util.List;
 import org.jpokemon.trainer.Player;
 
 public class Border {
-  public Border(int na) {
-    _nextArea = na;
+
+  public int getArea() {
+    return area;
   }
 
-  public int nextArea() {
-    return _nextArea;
+  public void setArea(int a) {
+    area = a;
   }
 
-  public void addRequirement(Requirement r) {
-    if (_requirements == null)
-      _requirements = new ArrayList<Requirement>();
+  public int getNext() {
+    return next;
+  }
+
+  public void setNext(int n) {
+    next = n;
+  }
+
+  public void addRequirement(BorderRequirement br) {
+    Requirement r = new Requirement(br.getType(), br.getData());
 
     _requirements.add(r);
   }
@@ -32,6 +40,6 @@ public class Border {
     return true;
   }
 
-  private int _nextArea;
-  private List<Requirement> _requirements;
+  private int area, next;
+  private List<Requirement> _requirements = new ArrayList<Requirement>();
 }
