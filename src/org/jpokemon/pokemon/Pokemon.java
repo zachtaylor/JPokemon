@@ -307,7 +307,7 @@ public class Pokemon implements JPokemonConstants {
    * @throws LoadException if loaded with invalid string
    */
   public static Pokemon load(String s) throws LoadException {
-    if (s != null && s.startsWith("|( ")) {
+    if (s != null) {
 
       Scanner scan = new Scanner(s);
 
