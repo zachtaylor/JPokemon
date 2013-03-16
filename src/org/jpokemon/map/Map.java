@@ -25,7 +25,7 @@ public class Map implements JPokemonConstants {
   private static void load(int id) {
     Area a = loadArea(id);
 
-    for (Border b : loadMap(id)) {
+    for (Border b : loadBorder(id)) {
       for (BorderRequirement br : BorderRequirement.get(id, b.getNext()))
         b.addRequirement(br);
 
@@ -41,7 +41,7 @@ public class Map implements JPokemonConstants {
     map.put(id, a);
   }
 
-  private static List<Border> loadMap(int number) {
+  private static List<Border> loadBorder(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
