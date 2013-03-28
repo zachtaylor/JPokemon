@@ -8,7 +8,11 @@ import jpkmn.exceptions.LoadException;
 
 import org.json.JSONArray;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class Bag {
+  public static final String XML_NODE_NAME = "bag";
+
   public Bag() {
     _items = new HashMap<Integer, Item>();
   }
@@ -26,14 +30,29 @@ public class Bag {
     JSONArray data = new JSONArray();
 
     for (Item item : _items.values())
-      if (item.visible()) data.put(item.toJSON());
+      if (item.visible())
+        data.put(item.toJSON());
 
     return data;
   }
 
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    for (Map.Entry<Integer, Item> itemEntry : _items.entrySet()) {
+      if (itemEntry.getValue().amount() == 0)
+        continue;
+
+      node.addChild(itemEntry.getValue().toXML());
+    }
+
+    return node;
+  }
+
   public void load(String s) throws LoadException {
     try {
-      if (!s.startsWith("BAG: ")) throw new Exception();
+      if (!s.startsWith("BAG: "))
+        throw new Exception();
 
       Scanner scan = new Scanner(s);
       scan.next(); // Throw away "BAG: "

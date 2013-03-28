@@ -5,7 +5,11 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class Stat implements JPokemonConstants {
+  public static final String XML_NODE_NAME = "stat";
+
   public Stat() {
     _level = 1;
     _modifier = 1;
@@ -110,6 +114,20 @@ public class Stat implements JPokemonConstants {
     }
 
     return data;
+  }
+
+  public XMLNode toXML() {
+    XMLNode myNode = new XMLNode(XML_NODE_NAME);
+
+    myNode.setAttribute("cur", _cur + "");
+    myNode.setAttribute("max", _max + "");
+    myNode.setAttribute("points", _pts + "");
+    myNode.setAttribute("ev", _ev + "");
+    myNode.setAttribute("iv", _iv + "");
+    myNode.setAttribute("ev_pending", _evPending + "");
+    myNode.setSelfClosing(true);
+
+    return myNode;
   }
 
   private void computeMax() {

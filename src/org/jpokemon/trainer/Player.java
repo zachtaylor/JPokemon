@@ -14,8 +14,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jpokemon.GameWindow;
+import com.zachtaylor.jnodalxml.XMLNode;
 
 public class Player implements PokemonTrainer {
+  public static final String XML_NODE_NAME = "player";
+
+  public static void main(String[] args) {
+    try {
+      System.out.println(PlayerFactory.load("Zach.jpkmn").toXML().toString());
+    } catch (LoadException e) {
+      e.printStackTrace();
+    }
+  }
+
   public Player() {
     _id = PLAYER_COUNT++;
     _area = 1;
@@ -93,11 +104,11 @@ public class Player implements PokemonTrainer {
   public boolean add(Pokemon p) {
     _pokedex.own(p.number());
 
-    for (PokemonStorageUnit unit : _storage)
+    for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p)) {
-        p.caughtByAt(name(), area());
         return true;
       }
+    }
 
     return false;
   }
@@ -140,6 +151,21 @@ public class Player implements PokemonTrainer {
     }
 
     return data;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    node.setAttribute("name", _name);
+    node.setAttribute("cash", _cash + "");
+    node.setAttribute("badge", _badge + "");
+    node.setAttribute("area", _area + "");
+
+    node.addChild(_bag.toXML());
+    node.addChild(_pokedex.toXML());
+    node.addChild(_storage.toXML());
+
+    return node;
   }
 
   public void load(Scanner scan) throws LoadException {

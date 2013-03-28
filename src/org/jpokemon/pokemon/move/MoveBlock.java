@@ -8,7 +8,11 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 import org.json.JSONArray;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class MoveBlock implements Iterable<Move>, JPokemonConstants {
+  public static final String XML_NODE_NAME = "moves";
+
   public MoveBlock(int pokemonNumber) throws ConfigurationException {
     _pokemon = pokemonNumber;
     _data = new Move[KNOWN_MOVE_COUNT];
@@ -105,6 +109,16 @@ public class MoveBlock implements Iterable<Move>, JPokemonConstants {
       data.put(m.toJSON());
 
     return data;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    for (Move m : this) {
+      node.addChild(m.toXML());
+    }
+
+    return node;
   }
 
   @Override

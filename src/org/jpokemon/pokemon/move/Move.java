@@ -7,7 +7,11 @@ import org.jpokemon.pokemon.move.effect.MoveEffect;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class Move {
+  public static final String XML_NODE_NAME = "move";
+
   public Move(int number) {
     setNumber(number);
   }
@@ -264,6 +268,18 @@ public class Move {
     return data;
   }
 
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    node.setAttribute("number", number() + "");
+    node.setAttribute("pp", _pp + "");
+    node.setAttribute("ppmax", _ppMax + "");
+    node.setAttribute("enabled", _enabled + "");
+    node.setSelfClosing(true);
+
+    return node;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Move))
@@ -279,9 +295,8 @@ public class Move {
   }
 
   private Type _type;
+  private MoveInfo _info;
+  private int _pp, _ppMax;
   private boolean _enabled;
   private MoveStyle _style;
-  private int _pp, _ppMax;
-
-  private MoveInfo _info;
 }

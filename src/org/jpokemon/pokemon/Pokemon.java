@@ -15,10 +15,13 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class Pokemon implements JPokemonConstants {
+  public static final String XML_NODE_NAME = "pokemon";
+
   public Pokemon(int num) {
     _number = num;
-    _caughtLocation = -1;
     _condition = new Condition();
     _moves = new MoveBlock(_number);
     _species = PokemonInfo.get(_number);
@@ -77,22 +80,6 @@ public class Pokemon implements JPokemonConstants {
 
   public Type type2() {
     return Type.valueOf(_species.getType2());
-  }
-
-  public int caughtLocation() {
-    return _caughtLocation;
-  }
-
-  public String originalTrainer() {
-    return _originalTrainer;
-  }
-
-  public void caughtByAt(String name, int location) {
-    if (_caughtLocation != -1)
-      throw new IllegalStateException("Origin already accounted for");
-
-    _caughtLocation = location;
-    _originalTrainer = name;
   }
 
   public int xp() {
@@ -299,6 +286,24 @@ public class Pokemon implements JPokemonConstants {
     return data;
   }
 
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    if (name != null) {
+      node.setAttribute("name", name);
+    }
+
+    node.setAttribute("number", _number + "");
+    node.setAttribute("level", _level + "");
+    node.setAttribute("xp", _xp + "");
+
+    node.addChild(_condition.toXML());
+    node.addChild(_stats.toXML());
+    node.addChild(_moves.toXML());
+
+    return node;
+  }
+
   /**
    * Properly initializes a Pokemon from a file.
    * 
@@ -379,10 +384,10 @@ public class Pokemon implements JPokemonConstants {
     return (name().hashCode() & 255) + _number + _level;
   }
 
+  private String name;
   private MoveBlock _moves;
   private StatBlock _stats;
   private Condition _condition;
   private PokemonInfo _species;
-  private String name, _originalTrainer;
-  private int _number, _level, _xp, _caughtLocation;
+  private int _number, _level, _xp;
 }

@@ -1,6 +1,8 @@
 package org.jpokemon.pokedex;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -11,11 +13,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 /**
  * A gadget which helps keep track of which Pokemon have been seen or caught in
  * the world. Pokedex maintains a status on each Pokemon it tracks.
  */
 public class Pokedex implements JPokemonConstants {
+  public static final String XML_NODE_NAME = "pokedex";
+
   /**
    * Update the Pokedex with having seen a new Pokemon
    * 
@@ -78,10 +84,10 @@ public class Pokedex implements JPokemonConstants {
       switch (entry.getValue()) {
       case SAW:
         saw.put(entry.getKey());
-        break;
+      break;
       case OWN:
         own.put(entry.getKey());
-        break;
+      break;
       default:
       }
     }
@@ -95,6 +101,29 @@ public class Pokedex implements JPokemonConstants {
     }
 
     return data;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    List<Integer> seen = new ArrayList<Integer>(), owned = new ArrayList<Integer>();
+
+    for (Map.Entry<Integer, PokedexStatus> pokedexEntry : _data.entrySet()) {
+      if (pokedexEntry.getValue() == PokedexStatus.OWN)
+        owned.add(pokedexEntry.getKey());
+      else
+        seen.add(pokedexEntry.getKey());
+    }
+
+    XMLNode seenNode = new XMLNode("seen");
+    seenNode.setValue(seen.toString());
+    node.addChild(seenNode);
+
+    XMLNode ownedNode = new XMLNode("owned");
+    ownedNode.setValue(owned.toString());
+    node.addChild(ownedNode);
+
+    return node;
   }
 
   /**

@@ -7,10 +7,14 @@ import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 /**
  * A unit of storage for Pokemon.
  */
 public class PokemonStorageUnit implements Iterable<Pokemon> {
+  public static final String XML_NODE_NAME = "pokemonbox";
+  
   public PokemonStorageUnit(int size) {
     _size = size;
     _amount = 0;
@@ -102,6 +106,16 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     return data;
   }
 
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+    
+    for (Pokemon p : this) {
+      node.addChild(p.toXML());
+    }
+    
+    return node;
+  }
+  
   public Iterator<Pokemon> iterator() {
     return new PokemonStorageUnitIterator();
   }

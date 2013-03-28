@@ -29,19 +29,6 @@ public class PokemonTest extends TestCase {
     assertEquals(pokemon.species(), pokemon.name());
   }
 
-  public void testCaughtByAt() {
-    String trainerName = "foo";
-    int location = 5;
-
-    assertEquals(null, pokemon.originalTrainer());
-    assertEquals(-1, pokemon.caughtLocation());
-
-    pokemon.caughtByAt(trainerName, location);
-
-    assertEquals(trainerName, pokemon.originalTrainer());
-    assertEquals(location, pokemon.caughtLocation());
-  }
-
   public void testXpTriggersLevel() {
     int xp = pokemon.xpNeeded();
 

@@ -3,30 +3,14 @@ package org.jpokemon.pokemon;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class Condition {
-  /**
-   * Creates a new Condition for the specified Pokemon
-   * 
-   * @param p The Pokemon whom this status effects
-   */
+  public static final String XML_NODE_NAME = "condition";
+
   public Condition() {
-    lastMessage = new ArrayList<String>();
-    effects = new ArrayList<ConditionEffect>();
-  }
-
-  /**
-   * Computes the catch bonus for effects on the Pokemon. 20 if FRZ or SLP, 15
-   * if BRN, PSN, or PAR. 10 normally.
-   * 
-   * @return the Catch Bonus
-   */
-  public double getCatchBonus() {
-    double best = 1;
-
-    for (ConditionEffect e : effects)
-      best *= e.catchBonus();
-
-    return Math.min(best, 2.0);
+    _lastMessage = new ArrayList<String>();
+    _effects = new ArrayList<ConditionEffect>();
   }
 
   /**
@@ -39,7 +23,37 @@ public class Condition {
     if (contains(e))
       remove(e);
 
-    effects.add(e);
+    _effects.add(e);
+  }
+
+  public boolean contains(ConditionEffect e) {
+    return _effects.contains(e);
+  }
+
+  public boolean remove(ConditionEffect e) {
+    return _effects.remove(e);
+  }
+
+  /**
+   * Cleans up all status ailments.
+   */
+  public void reset() {
+    _effects = new ArrayList<ConditionEffect>();
+  }
+
+  /**
+   * Computes the catch bonus for effects on the Pokemon. 20 if FRZ or SLP, 15
+   * if BRN, PSN, or PAR. 10 normally.
+   * 
+   * @return the Catch Bonus
+   */
+  public double getCatchBonus() {
+    double best = 1;
+
+    for (ConditionEffect e : _effects)
+      best *= e.catchBonus();
+
+    return Math.min(best, 2.0);
   }
 
   /**
@@ -49,7 +63,7 @@ public class Condition {
    * @return true if user can attack
    */
   public boolean canAttack() {
-    for (ConditionEffect i : effects) {
+    for (ConditionEffect i : _effects) {
       if (i.blocksAttack())
         return false;
     }
@@ -64,7 +78,7 @@ public class Condition {
   public void applyEffects(Pokemon p) {
     resetMessage();
 
-    for (ConditionEffect current : effects) {
+    for (ConditionEffect current : _effects) {
       boolean persist = Math.random() <= current.persistanceChance();
       String message = current.persistanceMessage(persist);
 
@@ -79,40 +93,33 @@ public class Condition {
   }
 
   public String[] lastMessage() {
-    return lastMessage.toArray(new String[lastMessage.size()]);
+    return _lastMessage.toArray(new String[_lastMessage.size()]);
   }
 
-  /**
-   * Cleans up all status ailments.
-   */
-  public void reset() {
-    effects = new ArrayList<ConditionEffect>();
-  }
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
 
-  public boolean contains(ConditionEffect e) {
-    return effects.contains(e);
+    node.setValue(toString());
+
+    return node;
   }
 
   public String toString() {
-    if (effects.isEmpty())
+    if (_effects.isEmpty())
       return "";
-    if (effects.size() == 1)
-      return effects.get(0).toString();
-    return effects.toString();
-  }
-
-  public boolean remove(ConditionEffect e) {
-    return effects.remove(e);
+    if (_effects.size() == 1)
+      return _effects.get(0).toString();
+    return _effects.toString();
   }
 
   private void resetMessage() {
-    lastMessage = new ArrayList<String>();
+    _lastMessage = new ArrayList<String>();
   }
 
   private void pushMessage(String s) {
-    lastMessage.add(s);
+    _lastMessage.add(s);
   }
 
-  private List<String> lastMessage;
-  private List<ConditionEffect> effects;
+  private List<String> _lastMessage;
+  private List<ConditionEffect> _effects;
 }

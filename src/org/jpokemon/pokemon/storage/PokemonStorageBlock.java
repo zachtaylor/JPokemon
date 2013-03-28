@@ -13,13 +13,18 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
  * <br>
  * PokemonStorageBlock supports 1 unit of unique size, to be used for the party.
  * Other units have common size.
  */
-public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokemonConstants {
+public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>,
+    JPokemonConstants {
+  public static final String XML_NODE_NAME = "pokemonstorage";
+
   public PokemonStorageBlock() {
     _data = new PokemonStorageUnit[PLAYER_STORAGE_UNIT_COUNT + 1];
 
@@ -50,6 +55,16 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     }
 
     return data;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    for (PokemonStorageUnit psu : _data) {
+      node.addChild(psu.toXML());
+    }
+
+    return node;
   }
 
   public void load(Scanner scan) throws LoadException {
@@ -83,7 +98,8 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     return new PokemonStorageBlockIterator();
   }
 
-  private class PokemonStorageBlockIterator implements Iterator<PokemonStorageUnit> {
+  private class PokemonStorageBlockIterator implements
+      Iterator<PokemonStorageUnit> {
     @Override
     public boolean hasNext() {
       return index <= PLAYER_STORAGE_UNIT_COUNT;

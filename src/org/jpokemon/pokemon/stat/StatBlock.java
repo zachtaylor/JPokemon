@@ -10,7 +10,11 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.zachtaylor.jnodalxml.XMLNode;
+
 public class StatBlock implements JPokemonConstants {
+  public static final String XML_NODE_NAME = "stats";
+
   public StatBlock(PokemonInfo info) {
     _data = new Stat[StatType.values().length];
 
@@ -163,6 +167,21 @@ public class StatBlock implements JPokemonConstants {
     }
 
     return data;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    node.setAttribute("points", _points + "");
+    node.setAttribute("evtotal", _evTotal + "");
+
+    for (StatType st : StatType.values()) {
+      XMLNode child = get(st).toXML();
+      child.setAttribute("type", st.toString());
+      node.addChild(child);
+    }
+
+    return node;
   }
 
   private Stat[] _data;
