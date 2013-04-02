@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 /**
@@ -84,10 +85,10 @@ public class Pokedex implements JPokemonConstants {
       switch (entry.getValue()) {
       case SAW:
         saw.put(entry.getKey());
-      break;
+        break;
       case OWN:
         own.put(entry.getKey());
-      break;
+        break;
       default:
       }
     }
@@ -124,6 +125,21 @@ public class Pokedex implements JPokemonConstants {
     node.addChild(ownedNode);
 
     return node;
+  }
+
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+
+    XMLNode cur = node.getChildren("seen").get(0);
+    String[] data = cur.getValue().replace('[', ' ').replace(']', ' ').split(",");
+    for (String item : data)
+      _data.put(Integer.parseInt(item.trim()), PokedexStatus.SAW);
+
+    cur = node.getChildren("owned").get(0);
+    data = cur.getValue().replace('[', ' ').replace(']', ' ').split(",");
+    for (String item : data)
+      _data.put(Integer.parseInt(item.trim()), PokedexStatus.OWN);
   }
 
   /**

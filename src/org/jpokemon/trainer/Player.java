@@ -21,7 +21,14 @@ public class Player implements PokemonTrainer {
 
   public static void main(String[] args) {
     try {
-      System.out.println(PlayerFactory.load("Zach.jpkmn").toXML().toString());
+      Player player = PlayerFactory.load("Zach.jpkmn");
+      XMLNode playerNode = player.toXML();
+      System.out.println(playerNode.toString());
+      
+      player.loadXML(playerNode);
+      playerNode = player.toXML();
+      System.out.println(playerNode.toString());
+      
     } catch (LoadException e) {
       e.printStackTrace();
     }
@@ -165,7 +172,28 @@ public class Player implements PokemonTrainer {
     node.addChild(_pokedex.toXML());
     node.addChild(_storage.toXML());
 
+    node.addChild(_progress.toXML().setAttribute("group", "events"));
+    node.addChild(_trainers.toXML().setAttribute("group", "trainers"));
+
     return node;
+  }
+
+  public void loadXML(XMLNode node) {
+    _name = node.getAttribute("name");
+    _cash = Integer.parseInt(node.getAttribute("cash"));
+    _badge = Integer.parseInt(node.getAttribute("badge"));
+    _area = Integer.parseInt(node.getAttribute("area"));
+
+    _bag.loadXML(node.getChildren(Bag.XML_NODE_NAME).get(0));
+    _pokedex.loadXML(node.getChildren(Pokedex.XML_NODE_NAME).get(0));
+    _storage.loadXML(node.getChildren(PokemonStorageBlock.XML_NODE_NAME).get(0));
+
+    for (XMLNode progressNode : node.getChildren(Progress.XML_NODE_NAME)) {
+      if (progressNode.getAttribute("group").equals("events"))
+        _progress.loadXML(progressNode);
+      else if (progressNode.getAttribute("group").equals("trainers"))
+        _trainers.loadXML(progressNode);
+    }
   }
 
   public void load(Scanner scan) throws LoadException {

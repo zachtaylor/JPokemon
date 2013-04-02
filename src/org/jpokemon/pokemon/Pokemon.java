@@ -15,6 +15,7 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 public class Pokemon implements JPokemonConstants {
@@ -302,6 +303,34 @@ public class Pokemon implements JPokemonConstants {
     node.addChild(_moves.toXML());
 
     return node;
+  }
+
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+
+    if (node.getAttribute("name") != null)
+      name = node.getAttribute("name");
+
+    _number = Integer.parseInt(node.getAttribute("number"));
+    _moves.setPokemonNumber(_number);
+    _species = PokemonInfo.get(_number);
+    _stats.rebase(_species);
+
+    _level = Integer.parseInt(node.getAttribute("level"));
+    _stats.level(_level);
+
+    _xp = Integer.parseInt(node.getAttribute("xp"));
+
+    _moves.loadXML(node.getChildren(MoveBlock.XML_NODE_NAME).get(0));
+    _stats.loadXML(node.getChildren(StatBlock.XML_NODE_NAME).get(0));
+
+    _condition.reset();
+    for (String ce : node.getChildren(Condition.XML_NODE_NAME).get(0).getValue().replace('[', ' ').replace(']', ' ')
+        .trim().split(",")) {
+      if (ce.isEmpty()) continue;
+      addConditionEffect(ConditionEffect.valueOf(ce));
+    }
   }
 
   /**

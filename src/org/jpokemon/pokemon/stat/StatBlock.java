@@ -10,6 +10,7 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 public class StatBlock implements JPokemonConstants {
@@ -182,6 +183,19 @@ public class StatBlock implements JPokemonConstants {
     }
 
     return node;
+  }
+  
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+    
+    _points = Integer.parseInt(node.getAttribute("points"));
+    _evTotal = Integer.parseInt(node.getAttribute("evtotal"));
+    
+    for (XMLNode childNode : node.getChildren(Stat.XML_NODE_NAME)) {
+      Stat s = get(StatType.valueOf(childNode.getAttribute("type")));
+      s.loadXML(childNode);
+    }
   }
 
   private Stat[] _data;

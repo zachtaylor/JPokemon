@@ -8,6 +8,7 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 import org.json.JSONArray;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 public class MoveBlock implements Iterable<Move>, JPokemonConstants {
@@ -119,6 +120,18 @@ public class MoveBlock implements Iterable<Move>, JPokemonConstants {
     }
 
     return node;
+  }
+  
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+    
+    removeAll();
+    
+    for (XMLNode childNode : node.getChildren(Move.XML_NODE_NAME)) {
+      _data[_count].loadXML(childNode);
+      _count++;
+    }
   }
 
   @Override

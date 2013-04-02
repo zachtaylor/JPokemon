@@ -5,6 +5,7 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 public class Stat implements JPokemonConstants {
@@ -120,7 +121,7 @@ public class Stat implements JPokemonConstants {
     XMLNode myNode = new XMLNode(XML_NODE_NAME);
 
     myNode.setAttribute("cur", _cur + "");
-    myNode.setAttribute("max", _max + "");
+    myNode.setAttribute("max", _max+"");
     myNode.setAttribute("points", _pts + "");
     myNode.setAttribute("ev", _ev + "");
     myNode.setAttribute("iv", _iv + "");
@@ -128,6 +129,18 @@ public class Stat implements JPokemonConstants {
     myNode.setSelfClosing(true);
 
     return myNode;
+  }
+  
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+    
+    _cur = Integer.parseInt(node.getAttribute("cur"));
+    _max = Integer.parseInt(node.getAttribute("max"));
+    _pts = Integer.parseInt(node.getAttribute("points"));
+    _ev = Integer.parseInt(node.getAttribute("ev"));
+    _iv = Integer.parseInt(node.getAttribute("iv"));
+    _evPending = Integer.parseInt(node.getAttribute("ev_pending"));
   }
 
   private void computeMax() {

@@ -13,6 +13,7 @@ import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 /**
@@ -65,6 +66,16 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>,
     }
 
     return node;
+  }
+  
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+    
+    int i=0;
+    for (XMLNode child : node.getChildren(PokemonStorageUnit.XML_NODE_NAME)) {
+      get(i++).loadXML(child);
+    }
   }
 
   public void load(Scanner scan) throws LoadException {

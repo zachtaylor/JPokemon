@@ -7,6 +7,7 @@ import org.jpokemon.pokemon.move.effect.MoveEffect;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 public class Move {
@@ -278,6 +279,15 @@ public class Move {
     node.setSelfClosing(true);
 
     return node;
+  }
+
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+
+    setNumber(Integer.parseInt(node.getAttribute("number")));
+    _ppMax = Integer.parseInt(node.getAttribute("ppmax"));
+    _pp = Integer.parseInt(node.getAttribute("pp"));
   }
 
   @Override

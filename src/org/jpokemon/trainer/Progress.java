@@ -9,10 +9,15 @@ import org.jpokemon.JPokemonConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.zachtaylor.jnodalxml.XMLException;
+import com.zachtaylor.jnodalxml.XMLNode;
+
 /**
  * A representation of the progress a Player has made
  */
 public class Progress implements JPokemonConstants {
+  public static final String XML_NODE_NAME = "progress";
+
   public Progress() {
     _events = new ArrayList<Integer>();
   }
@@ -62,6 +67,26 @@ public class Progress implements JPokemonConstants {
         e.printStackTrace();
 
       throw new LoadException("Progress could not load: " + json);
+    }
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    node.setValue(_events.toString());
+
+    return node;
+  }
+
+  public void loadXML(XMLNode node) {
+    if (!XML_NODE_NAME.equals(node.getName()))
+      throw new XMLException("Cannot read node");
+
+    for (String value : node.getValue().replace('[', ' ').replace(']', ' ').trim().split(",")) {
+      if (value.isEmpty())
+        continue;
+
+      put(Integer.parseInt(value));
     }
   }
 
