@@ -8,12 +8,13 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
+
+import com.zachtaylor.jnodalxml.XMLParser;
 
 public class PlayerFactory implements JPokemonConstants {
   public static Player get(int id) {
@@ -26,40 +27,49 @@ public class PlayerFactory implements JPokemonConstants {
   public static Player create(String name, int pokemonNumber) {
     Player player = newPlayer();
 
+    if (fileMapping.values().contains(name)) {
+      int n = 0;
+      for (n = 0; fileMapping.values().contains(name + n); n++)
+        ;
+      name = name + n;
+    }
+    fileMapping.put(player.id(), name);
+
     player.name(name);
     player.add(new Pokemon(pokemonNumber, STARTER_POKEMON_LEVEL));
-
-    String filePath = name;
-
-    for (int n = 0; fileMapping.values().contains(filePath); n++)
-      filePath = name + n;
-    fileMapping.put(player.id(), filePath);
 
     return player;
   }
 
-  public static Player load(String filepath) throws LoadException {
+  public static Player load(String playername) throws LoadException {
+    if (playername.endsWith(".jpkmn"))
+      playername.substring(0, playername.length() - ".jpkmn".length());
+
     Player player = newPlayer();
 
-    if (fileMapping.values().contains(filepath))
-      throw new LoadException("File already in use: " + filepath);
+    if (fileMapping.values().contains(playername))
+      throw new LoadException("File already loaded: " + playername);
+
+    File file = new File(SAVE_PATH + playername + ".jpkmn");
+
+    if (!file.exists())
+      throw new LoadException("Save file not found: " + playername);
 
     try {
-      fileMapping.put(player.id(), filepath);
-      player.load(new Scanner(new File(SAVE_PATH + filepath)));
-    } catch (FileNotFoundException f) {
-      throw new LoadException(f.getMessage());
+      player.loadXML(XMLParser.parse(file).get(0));
+    } catch (FileNotFoundException e) { // The file exists, but FNFE...
+      e.printStackTrace();
     }
 
     return player;
   }
 
   public static void save(int playerID) throws LoadException {
-    String path = SAVE_PATH + fileMapping.get(playerID);
+    String path = SAVE_PATH + fileMapping.get(playerID) + ".jpkmn";
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      // writer.write(PlayerFactory.get(playerID).toJSON().toString());
+      writer.write(PlayerFactory.get(playerID).toXML().toString());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();

@@ -326,10 +326,13 @@ public class Pokemon implements JPokemonConstants {
     _stats.loadXML(node.getChildren(StatBlock.XML_NODE_NAME).get(0));
 
     _condition.reset();
-    for (String ce : node.getChildren(Condition.XML_NODE_NAME).get(0).getValue().replace('[', ' ').replace(']', ' ')
-        .trim().split(",")) {
-      if (ce.isEmpty()) continue;
-      addConditionEffect(ConditionEffect.valueOf(ce));
+    String conditionString = node.getChildren(Condition.XML_NODE_NAME).get(0).getValue();
+    if (conditionString != null) {
+      for (String ce : conditionString.replace('[', ' ').replace(']', ' ').trim().split(",")) {
+        if (ce.isEmpty())
+          continue;
+        addConditionEffect(ConditionEffect.valueOf(ce));
+      }
     }
   }
 

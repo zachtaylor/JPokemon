@@ -19,21 +19,6 @@ import com.zachtaylor.jnodalxml.XMLNode;
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
 
-  public static void main(String[] args) {
-    try {
-      Player player = PlayerFactory.load("Zach.jpkmn");
-      XMLNode playerNode = player.toXML();
-      System.out.println(playerNode.toString());
-      
-      player.loadXML(playerNode);
-      playerNode = player.toXML();
-      System.out.println(playerNode.toString());
-      
-    } catch (LoadException e) {
-      e.printStackTrace();
-    }
-  }
-
   public Player() {
     _id = PLAYER_COUNT++;
     _area = 1;
