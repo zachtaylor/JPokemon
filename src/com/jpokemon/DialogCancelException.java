@@ -1,4 +1,4 @@
-package jpkmn.exceptions;
+package com.jpokemon;
 
 /**
  * Usage of this class is prototyping TimeoutException also

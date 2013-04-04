@@ -1,9 +1,6 @@
 package org.jpokemon.trainer;
 
-import jpkmn.exceptions.LoadException;
 import junit.framework.TestCase;
-
-import org.jpokemon.trainer.Progress;
 
 public class ProgressTest extends TestCase {
   private Progress progress;
@@ -38,24 +35,5 @@ public class ProgressTest extends TestCase {
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
     }
-  }
-
-  public void testSaveAndLoad() {
-    Progress other = new Progress();
-
-    progress.put(3);
-    progress.put(6);
-    progress.put(7);
-
-    try {
-      other.loadJSON(progress.toJSON());
-    } catch (LoadException e) {
-      e.printStackTrace();
-      fail("Should not cause LoadException");
-    }
-
-    assertTrue(other.get(3));
-    assertTrue(other.get(6));
-    assertTrue(other.get(7));
   }
 }

@@ -2,9 +2,6 @@ package org.jpokemon.item;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
-
-import jpkmn.exceptions.LoadException;
 
 import org.json.JSONArray;
 
@@ -55,25 +52,6 @@ public class Bag {
     for (XMLNode itemNode : node.getChildren(Item.XML_NODE_NAME)) {
       Item i = get(Integer.parseInt(itemNode.getAttribute("number")));
       i.amount(Integer.parseInt(itemNode.getAttribute("quantity")));
-    }
-  }
-
-  public void load(String s) throws LoadException {
-    try {
-      if (!s.startsWith("BAG: "))
-        throw new Exception();
-
-      Scanner scan = new Scanner(s);
-      scan.next(); // Throw away "BAG: "
-
-      String[] parts;
-      while (scan.hasNext()) {
-        parts = scan.next().split("-");
-        get(Integer.parseInt(parts[0])).amount(Integer.parseInt(parts[1]));
-      }
-      scan.close();
-    } catch (Exception e) {
-      throw new LoadException("Bag could not load: " + s);
     }
   }
 

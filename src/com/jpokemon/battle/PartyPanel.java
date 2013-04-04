@@ -11,8 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import jpkmn.game.service.ImageFinder;
-
+import org.jpokemon.service.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,11 +45,11 @@ public class PartyPanel extends JPanel {
 
     JPanel partyStatus = new JPanel();
     for (String icon : partyIcons)
-      partyStatus.add(new JLabel(ImageFinder.find(icon)));
+      partyStatus.add(new JLabel(ImageService.find(icon)));
     add(partyStatus);
     partyStatus.setPreferredSize(new Dimension(40, 50));
 
-    add(new JLabel(ImageFinder.pokemon(number + "")));
+    add(new JLabel(ImageService.pokemon(number + "")));
 
     add(info = new JPanel());
 

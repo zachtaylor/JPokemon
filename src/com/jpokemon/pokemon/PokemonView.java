@@ -12,10 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import jpkmn.exceptions.ServiceException;
-import jpkmn.game.service.ImageFinder;
-import jpkmn.game.service.PlayerService;
-
+import org.jpokemon.service.ImageService;
+import org.jpokemon.service.PlayerService;
+import org.jpokemon.service.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,7 +148,7 @@ public class PokemonView extends JPokemonView {
     try {
       _pokemon = _data.getJSONObject(_partyIndex);
 
-      _icon.setIcon(ImageFinder.pokemon(_pokemon.getInt("number") + ""));
+      _icon.setIcon(ImageService.pokemon(_pokemon.getInt("number") + ""));
 
       _name.setText(_pokemon.getString("name"));
       _points.setText("Available points: " + _pokemon.getInt("points"));

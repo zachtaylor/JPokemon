@@ -1,9 +1,6 @@
 package org.jpokemon.pokemon;
 
 import java.util.List;
-import java.util.Scanner;
-
-import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
@@ -334,56 +331,6 @@ public class Pokemon implements JPokemonConstants {
         addConditionEffect(ConditionEffect.valueOf(ce));
       }
     }
-  }
-
-  /**
-   * Properly initializes a Pokemon from a file.
-   * 
-   * @param s String save representation of the pokemon.
-   * @return A new Pokemon as described by the string
-   * @throws LoadException if loaded with invalid string
-   */
-  public static Pokemon load(String s) throws LoadException {
-    if (s != null) {
-
-      Scanner scan = new Scanner(s);
-
-      scan.next(); // Throw away "|( "
-
-      Pokemon p = new Pokemon(scan.nextInt());
-      p.level(scan.nextInt());
-      p._stats.points(scan.nextInt());
-      p._xp = scan.nextInt();
-
-      if (!scan.next().equals(")")) {
-        scan.close();
-        throw new LoadException("Formatting error");
-      }
-
-      p.getStat(StatType.ATTACK).points(scan.nextInt());
-      p.getStat(StatType.SPECATTACK).points(scan.nextInt());
-      p.getStat(StatType.DEFENSE).points(scan.nextInt());
-      p.getStat(StatType.SPECDEFENSE).points(scan.nextInt());
-      p.getStat(StatType.SPEED).points(scan.nextInt());
-      p._stats.reset();
-
-      if (!scan.next().equals("(")) {
-        scan.close();
-        throw new LoadException("Formatting error");
-      }
-
-      p._moves.removeAll();
-      for (String next = scan.next(); !next.equals(")"); next = scan.next())
-        p._moves.add(Integer.parseInt(next));
-
-      p.name = scan.nextLine();
-      p.name = p.name.substring(1, p.name.lastIndexOf("|") - 1);
-
-      scan.close();
-      return p;
-    }
-
-    return null;
   }
 
   private void checkNewMoves() {

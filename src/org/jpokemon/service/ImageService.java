@@ -1,10 +1,10 @@
-package jpkmn.game.service;
+package org.jpokemon.service;
 
 import javax.swing.ImageIcon;
 
 import org.jpokemon.JPokemonConstants;
 
-public class ImageFinder implements JPokemonConstants {
+public class ImageService implements JPokemonConstants {
   public static ImageIcon find(String name) {
     String path = IMAGE_PATH + name + ".png";
 

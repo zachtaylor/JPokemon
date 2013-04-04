@@ -9,13 +9,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import jpkmn.exceptions.DialogCancelException;
-import jpkmn.game.service.BattleService;
-
+import org.jpokemon.service.BattleService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.jpokemon.DialogCancelException;
 import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonView;

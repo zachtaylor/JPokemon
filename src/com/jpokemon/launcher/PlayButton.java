@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import jpkmn.game.service.PlayerService;
+import org.jpokemon.service.PlayerService;
 
 public class PlayButton extends JButton implements ActionListener {
   public PlayButton(Launcher l) {

@@ -1,4 +1,4 @@
-package jpkmn.exceptions;
+package org.jpokemon.service;
 
 public class LoadException extends Exception {
 

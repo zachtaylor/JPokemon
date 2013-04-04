@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-
-import jpkmn.exceptions.LoadException;
 
 import org.jpokemon.JPokemonConstants;
 import org.json.JSONArray;
@@ -140,41 +137,6 @@ public class Pokedex implements JPokemonConstants {
     data = cur.getValue().replace('[', ' ').replace(']', ' ').split(",");
     for (String item : data)
       _data.put(Integer.parseInt(item.trim()), PokedexStatus.OWN);
-  }
-
-  /**
-   * Loads this Pokedex with data.
-   * 
-   * @param s String representation of the Pokedex data
-   * @throws LoadException If an error occurs with the data being loaded
-   */
-  public void load(String s) throws LoadException {
-    if (!s.startsWith("DEX:"))
-      throw new LoadException("Improper format: " + s);
-
-    Scanner scan = new Scanner(s);
-    scan.next();
-
-    try {
-      int number;
-      PokedexStatus status;
-      String[] parts;
-
-      while (scan.hasNext()) {
-        parts = scan.next().split("-");
-        number = 1 + Integer.parseInt(parts[0]);
-        status = PokedexStatus.valueOf(Integer.parseInt(parts[1]));
-
-        _data.put(number, status);
-      }
-    } catch (NumberFormatException e) {
-      scan.close();
-      throw new LoadException("Numbers inparsable");
-    } catch (ArrayIndexOutOfBoundsException e) {
-      scan.close();
-      throw new LoadException("Entry loaded above indicated size");
-    }
-    scan.close();
   }
 
   private Map<Integer, PokedexStatus> _data = new HashMap<Integer, PokedexStatus>();

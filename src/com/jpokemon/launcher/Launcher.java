@@ -4,19 +4,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
-import jpkmn.game.service.ImageFinder;
+import org.jpokemon.service.ImageService;
 
 public class Launcher extends JFrame {
   public Launcher() {
     setTitle("JPokemon (dev build)");
-    setIconImage(ImageFinder.find("main-icon").getImage());
+    setIconImage(ImageService.find("main-icon").getImage());
     setSize(720, 457); // WIDTH, HEIGHT
     setUndecorated(true);
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
     pane = new JLayeredPane();
 
-    JLabel img = new JLabel(ImageFinder.find("splash"));
+    JLabel img = new JLabel(ImageService.find("splash"));
     img.setBounds(10, 10, 700, 437);
     pane.add(img, -1);
     pane.add(new PlayButton(this), 0);

@@ -8,9 +8,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import jpkmn.exceptions.DialogCancelException;
-import jpkmn.game.service.ImageFinder;
-
+import org.jpokemon.service.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +28,7 @@ public class JPokemonDialog {
     JSONArray moves = leader.getJSONArray("moves");
 
     String prompt = "Select a move for " + leader.getString("name");
-    ImageIcon image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+    ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
 
     List<String> move_names = new ArrayList<String>();
     for (int i = 0; i < moves.length(); i++) {
@@ -50,7 +48,7 @@ public class JPokemonDialog {
     JSONObject leader = _data.getJSONArray("pokemon").getJSONObject(0);
 
     String move = leader.getJSONArray("moves").getJSONObject(moveIndex).getString("name");
-    ImageIcon image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+    ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
 
     List<String> slot_names = new ArrayList<String>();
     List<Integer> trainerID_key = new ArrayList<Integer>();
@@ -119,7 +117,7 @@ public class JPokemonDialog {
     JSONArray party = _data.getJSONArray("pokemon");
     JSONObject leader = party.getJSONObject(0);
 
-    ImageIcon image = ImageFinder.find("pkmn/" + leader.getInt("number"));
+    ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
 
     List<String> names = new ArrayList<String>();
     for (int i = 1; i < party.length(); i++) {

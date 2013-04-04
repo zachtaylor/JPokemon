@@ -1,8 +1,5 @@
 package org.jpokemon.trainer;
 
-import jpkmn.exceptions.LoadException;
-import jpkmn.game.base.AIInfo;
-
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
@@ -15,19 +12,6 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
     _name = "Mock Player";
     _type = TrainerType.WILD;
     _party = new PokemonStorageUnit(TRAINER_PARTY_SIZE);
-  }
-
-  public Trainer(int ai_number) throws LoadException {
-    this();
-    AIInfo info = AIInfo.get(ai_number);
-
-    _id = -ai_number;
-    _name = info.getName();
-    _cash = info.getCash();
-    _type = TrainerType.valueOf(info.getType());
-
-    for (String entry : info.getPokemon())
-      add(Pokemon.load(entry));
   }
 
   public int id() {

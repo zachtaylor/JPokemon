@@ -2,9 +2,8 @@ package com.jpokemon.start;
 
 import javax.swing.JLabel;
 
-import jpkmn.exceptions.ServiceException;
-import jpkmn.game.service.PlayerService;
-
+import org.jpokemon.service.PlayerService;
+import org.jpokemon.service.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 

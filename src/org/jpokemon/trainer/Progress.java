@@ -3,11 +3,8 @@ package org.jpokemon.trainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import jpkmn.exceptions.LoadException;
-
 import org.jpokemon.JPokemonConstants;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
@@ -56,18 +53,6 @@ public class Progress implements JPokemonConstants {
       data.put(i.intValue());
 
     return data;
-  }
-
-  public void loadJSON(JSONArray json) throws LoadException {
-    try {
-      for (int i = 0; i < json.length(); i++)
-        put(json.getInt(i));
-    } catch (Exception e) {
-      if (e instanceof JSONException)
-        e.printStackTrace();
-
-      throw new LoadException("Progress could not load: " + json);
-    }
   }
 
   public XMLNode toXML() {

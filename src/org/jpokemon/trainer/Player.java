@@ -1,9 +1,5 @@
 package org.jpokemon.trainer;
 
-import java.util.Scanner;
-
-import jpkmn.exceptions.LoadException;
-
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
 import org.jpokemon.pokedex.Pokedex;
@@ -178,32 +174,6 @@ public class Player implements PokemonTrainer {
         _progress.loadXML(progressNode);
       else if (progressNode.getAttribute("group").equals("trainers"))
         _trainers.loadXML(progressNode);
-    }
-  }
-
-  public void load(Scanner scan) throws LoadException {
-    try {
-      name(scan.nextLine());
-      cash(scan.nextInt());
-      badge(scan.nextInt());
-      area(Integer.parseInt(scan.nextLine().trim()));
-
-      // Load bag
-      _bag.load(scan.nextLine());
-
-      // Load pokedex
-      _pokedex.load(scan.nextLine());
-
-      // Load progress
-      // _progress.loadJSON(null); // BROKEN
-      scan.nextLine(); // BROKEN
-
-      // load pcstorage
-      _storage.load(scan);
-    } catch (LoadException le) {
-      throw le;
-    } catch (Exception e) {
-      throw new LoadException("Player could not load ");
     }
   }
 

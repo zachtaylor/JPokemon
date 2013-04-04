@@ -3,8 +3,7 @@ package com.jpokemon.party;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
-import jpkmn.game.service.ImageFinder;
-
+import org.jpokemon.service.ImageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +13,7 @@ public class PartyEntry extends JPokemonMenuEntry {
   public PartyEntry(PartyMenu parent, JSONObject data) throws JSONException {
     super(parent);
 
-    _icon = new JLabel(ImageFinder.pokemon(data.getInt("number") + ""));
+    _icon = new JLabel(ImageService.pokemon(data.getInt("number") + ""));
     _name = new JLabel(data.getString("name"));
 
     add(_icon);

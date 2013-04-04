@@ -9,10 +9,9 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import jpkmn.exceptions.LoadException;
-
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.service.LoadException;
 
 import com.zachtaylor.jnodalxml.XMLParser;
 
@@ -64,7 +63,7 @@ public class PlayerFactory implements JPokemonConstants {
     return player;
   }
 
-  public static void save(int playerID) throws LoadException {
+  public static void save(int playerID) {
     String path = SAVE_PATH + fileMapping.get(playerID) + ".jpkmn";
 
     try {

@@ -7,9 +7,8 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-import jpkmn.game.service.ImageFinder;
-import jpkmn.game.service.PlayerService;
-
+import org.jpokemon.service.ImageService;
+import org.jpokemon.service.PlayerService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +29,7 @@ public class GameWindow extends JFrame implements KeyListener {
     // setResizable(false);
     setLayout(new BorderLayout());
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-    setIconImage(ImageFinder.find("main-icon").getImage());
+    setIconImage(ImageService.find("main-icon").getImage());
 
     _menu = _inbox;
     _active = _upgrade;

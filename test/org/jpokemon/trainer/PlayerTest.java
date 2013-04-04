@@ -1,6 +1,5 @@
 package org.jpokemon.trainer;
 
-import jpkmn.map.AreaRegistry;
 import junit.framework.TestCase;
 
 import org.jpokemon.JPokemonConstants;
@@ -63,15 +62,5 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
     player.add(p);
 
     assertEquals(PokedexStatus.OWN, player.pokedex().status(number));
-  }
-
-  public void testNewPlayerHasValidArea() {
-    int area = player.area();
-
-    try {
-      AreaRegistry.get(area);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      fail();
-    }
   }
 }

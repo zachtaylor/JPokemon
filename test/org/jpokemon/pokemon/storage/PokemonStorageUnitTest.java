@@ -1,6 +1,5 @@
 package org.jpokemon.pokemon.storage;
 
-import jpkmn.exceptions.LoadException;
 import junit.framework.TestCase;
 
 import org.jpokemon.pokemon.Pokemon;
@@ -14,13 +13,13 @@ public class PokemonStorageUnitTest extends TestCase {
     unit = new PokemonStorageUnit(size);
   }
 
-  public void testAdd() throws LoadException {
+  public void testAdd() {
     unit.add(new Pokemon(1));
 
     assertEquals(1, unit.size());
   }
 
-  public void testRemove() throws LoadException {
+  public void testRemove() {
     Pokemon p = new Pokemon(1);
     unit.add(p);
     unit.remove(p);
@@ -28,14 +27,14 @@ public class PokemonStorageUnitTest extends TestCase {
     assertEquals(0, unit.size());
   }
 
-  public void testGet() throws LoadException {
+  public void testGet() {
     Pokemon p = new Pokemon(1);
     unit.add(p);
 
     assertEquals(p, unit.get(0));
   }
 
-  public void testSwap() throws LoadException {
+  public void testSwap() {
     Pokemon p1 = new Pokemon(1);
     Pokemon p2 = new Pokemon(2);
     unit.add(p1);
@@ -47,7 +46,7 @@ public class PokemonStorageUnitTest extends TestCase {
     assertEquals(p2, unit.get(0));
   }
 
-  public void testAddLimit() throws LoadException {
+  public void testAddLimit() {
     for (int i = 0; i < size + 1; i++)
       unit.add(new Pokemon(i + 1));
 
@@ -63,7 +62,7 @@ public class PokemonStorageUnitTest extends TestCase {
     }
   }
 
-  public void testSwapMany() throws LoadException {
+  public void testSwapMany() {
     Pokemon p1 = new Pokemon(1);
     Pokemon p2 = new Pokemon(2);
     Pokemon p3 = new Pokemon(3);
@@ -90,7 +89,7 @@ public class PokemonStorageUnitTest extends TestCase {
     }
   }
 
-  public void testSwapSame() throws LoadException {
+  public void testSwapSame() {
     Pokemon p1 = new Pokemon(1);
     unit.add(p1);
 
@@ -102,12 +101,12 @@ public class PokemonStorageUnitTest extends TestCase {
     }
   }
 
-  public void testRemoveNotInPartyException() throws LoadException {
+  public void testRemoveNotInPartyException() {
     PokemonStorageUnit unit1 = new PokemonStorageUnit(6);
-    
+
     Pokemon p1 = new Pokemon(1);
     Pokemon p2 = new Pokemon(2);
-    
+
     unit1.add(p1);
     unit.add(p2);
 
