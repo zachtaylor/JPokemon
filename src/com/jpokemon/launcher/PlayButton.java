@@ -30,8 +30,6 @@ public class PlayButton extends JButton implements ActionListener {
 
     if (name == null)
       return;
-    if (!name.endsWith(".jpkmn"))
-      name += ".jpkmn";
 
     try {
       PlayerService.load(name);

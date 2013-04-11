@@ -22,6 +22,8 @@ public class PlayerService {
         response.put("battle", BattleService.info(playerID));
       else if (p.state() == TrainerState.UPGRADE)
         response.put("upgrade", p.toJSON(p.state()));
+      else if (p.state() == TrainerState.OVERWORLD)
+        response.put("overworld", MapService.info(playerID));
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -34,10 +36,7 @@ public class PlayerService {
   public static void load(String name) throws ServiceException {
     try {
       Player p = PlayerFactory.load(name);
-
-      p.state(TrainerState.UPGRADE);
-      p.notify("Foo", "Bar");
-      p.notify("Hello world");
+      p.state(TrainerState.OVERWORLD);
     } catch (LoadException e) {
       e.printStackTrace();
       throw new ServiceException(e.getMessage());

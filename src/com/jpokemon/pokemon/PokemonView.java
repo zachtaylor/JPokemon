@@ -120,7 +120,6 @@ public class PokemonView extends JPokemonView {
     try {
       JSONObject request = new JSONObject();
       request.put("id", parent().playerID());
-
       request.put("index", _partyIndex);
 
       JSONArray stats = new JSONArray();
@@ -163,22 +162,6 @@ public class PokemonView extends JPokemonView {
     checkSpending();
   }
 
-  public boolean hasDependentMenu() {
-    return true;
-  }
-
-  public JPokemonMenu dependentMenu() {
-    return _menu;
-  }
-
-  public Dimension dimension() {
-    return new Dimension(500, 300);
-  }
-
-  public boolean key(KeyEvent arg0) {
-    return false;
-  }
-
   private void clearSpending() {
     _spentPoints = 0;
     spending = new HashMap<String, Integer>();
@@ -194,6 +177,22 @@ public class PokemonView extends JPokemonView {
 
     } catch (JSONException e) {
     }
+  }
+
+  public boolean hasDependentMenu() {
+    return true;
+  }
+
+  public JPokemonMenu dependentMenu() {
+    return _menu;
+  }
+
+  public Dimension dimension() {
+    return new Dimension(500, 300);
+  }
+
+  public boolean key(KeyEvent arg0) {
+    return false;
   }
 
   private PartyMenu _menu;
