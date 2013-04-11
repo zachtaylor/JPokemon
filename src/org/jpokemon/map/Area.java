@@ -5,14 +5,18 @@ import java.util.List;
 
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.trainer.Player;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Area {
-  public int getArea() {
-    return area;
+  public int getNumber() {
+    return number;
   }
 
-  public void setArea(int a) {
-    area = a;
+  public void setNumber(int n) {
+    number = n;
   }
 
   public String getName() {
@@ -72,18 +76,43 @@ public class Area {
     _borders.remove(index);
   }
 
+  public JSONObject toJSON(Player p) {
+    JSONObject json = new JSONObject();
+
+    try {
+      json.put("name", getName());
+
+      JSONArray npcs = new JSONArray();
+      for (NPC npc : npcs()) {
+        npcs.put(npc.toJSON(p));
+      }
+      json.put("npcs", npcs);
+
+      JSONArray borders = new JSONArray();
+      for (Border b : borders()) {
+        borders.put(b.toJSON(p));
+      }
+      json.put("borders", borders);
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    return json;
+  }
+
   public boolean equals(Object o) {
     if (o instanceof Area)
-      return ((Area) o).area == area;
+      return ((Area) o).number == number;
 
     return false;
   }
 
   public int hashCode() {
-    return area;
+    return number;
   }
 
-  private int area;
+  private int number;
   private String name;
   private List<NPC> _npcs = new ArrayList<NPC>();
   private List<Border> _borders = new ArrayList<Border>();

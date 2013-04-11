@@ -23,10 +23,10 @@ public class NPCFactory {
     Map<Integer, ActionSet> actionsMap = new HashMap<Integer, ActionSet>();
 
     for (NPCActionInfo actset : NPCActionInfo.get(area, number)) {
-      if (actionsMap.get(actset.getSet()) == null)
-        actionsMap.put(actset.getSet(), new ActionSet());
+      if (actionsMap.get(actset.getActionset()) == null)
+        actionsMap.put(actset.getActionset(), new ActionSet());
 
-      actionsMap.get(actset.getSet()).addAction(new Action(actset.getType(), actset.getData()));
+      actionsMap.get(actset.getActionset()).addAction(new Action(actset.getType(), actset.getData()));
     }
 
     List<ActionSet> actions = new ArrayList<ActionSet>();
@@ -42,10 +42,10 @@ public class NPCFactory {
     Map<Integer, List<Requirement>> requirementMaps = new HashMap<Integer, List<Requirement>>();
 
     for (NPCActionRequirement req : NPCActionRequirement.get(area, number, set)) {
-      if (requirementMaps.get(req.getReqset()) == null)
-        requirementMaps.put(req.getReqset(), new ArrayList<Requirement>());
+      if (requirementMaps.get(req.getRequirementset()) == null)
+        requirementMaps.put(req.getRequirementset(), new ArrayList<Requirement>());
 
-      requirementMaps.get(req.getReqset()).add(new Requirement(req.getType(), req.getData()));
+      requirementMaps.get(req.getRequirementset()).add(new Requirement(req.getType(), req.getData()));
     }
 
     List<List<Requirement>> requirements = new ArrayList<List<Requirement>>();

@@ -58,7 +58,7 @@ public class Map implements JPokemonConstants {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      List<Area> info = SqlStatement.select(Area.class).where("area").eq(number).getList();
+      List<Area> info = SqlStatement.select(Area.class).where("number").eq(number).getList();
 
       if (info.size() > 0)
         return info.get(0);

@@ -26,6 +26,19 @@ public class Requirement {
     return false;
   }
 
+  public String denialReason() {
+    switch (_type) {
+    case POKEDEX_COUNT:
+      return "You have not seen enough pokemon!";
+    case POKEMON_MOVE:
+      return "Something is in the way";
+    case EVENT:
+      return "You are not ready yet";
+    }
+
+    return "foo bar?";
+  }
+
   private int _data;
   private RequirementType _type;
 }

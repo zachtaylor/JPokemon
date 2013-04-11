@@ -2,9 +2,12 @@ package org.jpokemon.map.npc;
 
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.Player;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class NPC {
+public class NPC implements JPokemonConstants {
   public NPC(NPCInfo info) {
     _info = info;
 
@@ -36,14 +39,25 @@ public class NPC {
 
     for (ActionSet as : _actions) {
       if (as.isOkay(p)) {
-        if (actions != null)
-          ; // TODO : this is an error
-
+        // Pick the last one such that isOkay(p)
         actions = as;
       }
     }
 
     return actions;
+  }
+
+  public JSONObject toJSON(Player p) {
+    JSONObject json = new JSONObject();
+
+    try {
+      json.put("name", longName());
+      json.put("icon", _type.getIcon());
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    return json;
   }
 
   private NPCType _type;
