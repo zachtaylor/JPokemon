@@ -9,7 +9,8 @@ import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
 public class NPCActionInfo implements JPokemonConstants {
-  private int number, actionset, type, data;
+  private int number, actionset, type;
+  private String data;
 
   public static List<NPCActionInfo> get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
@@ -28,6 +29,6 @@ public class NPCActionInfo implements JPokemonConstants {
   public int getNumber() {return number;} public void setNumber(int n) {number = n;}
   public int getActionset() {return actionset;} public void setActionset(int s) {actionset = s;}
   public int getType() {return type;} public void setType(int t) {type = t;}
-  public int getData() {return data;} public void setData(int d) {data = d;}
+  public String getData() {return data;} public void setData(String d) {data = d;}
   //@format
 }

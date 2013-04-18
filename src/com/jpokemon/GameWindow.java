@@ -71,6 +71,8 @@ public class GameWindow extends JFrame implements KeyListener {
   public void refresh() {
     JSONObject data = PlayerService.pull(_playerID);
 
+    // TODO : Notify of new messages
+
     try {
       _dialogs.setData(data.getJSONObject("player"));
 

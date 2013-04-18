@@ -1,18 +1,23 @@
 package org.jpokemon.map.npc;
 
+import org.jpokemon.service.PlayerService;
 import org.jpokemon.trainer.Player;
 
 public class Action {
-  public Action(int type, int data) {
+  public Action(int type, String data) {
     _type = ActionType.valueOf(type);
     _data = data;
   }
 
   public void execute(Player p) {
-    // TODO execute an action on player
+    switch (_type) {
+    case SPEECH:
+      PlayerService.addToMessageQueue(p, _data);
+      break;
+    }
   }
 
-  public int data() {
+  public String data() {
     return _data;
   }
 
@@ -20,6 +25,6 @@ public class Action {
     return _type;
   }
 
-  private int _data;
+  private String _data;
   private ActionType _type;
 }

@@ -1,5 +1,10 @@
 package org.jpokemon.service;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.Player;
@@ -17,6 +22,12 @@ public class PlayerService {
     try {
       response.put("state", p.state().toString());
       response.put("player", p.toJSON(null));
+
+      JSONArray messages = new JSONArray();
+      while (!_messageQueues.get(p).isEmpty()) {
+        messages.put(_messageQueues.get(p).remove());
+      }
+      response.put("messages", messages);
 
       if (p.state() == TrainerState.BATTLE)
         response.put("battle", BattleService.info(playerID));
@@ -36,6 +47,9 @@ public class PlayerService {
   public static void load(String name) throws ServiceException {
     try {
       Player p = PlayerFactory.load(name);
+
+      _messageQueues.put(p, new LinkedList<String>());
+
       p.state(TrainerState.OVERWORLD);
     } catch (LoadException e) {
       e.printStackTrace();
@@ -75,4 +89,10 @@ public class PlayerService {
     }
   }
 
+  public static void addToMessageQueue(Player p, String message) {
+    Queue<String> q = _messageQueues.get(p);
+    q.add(message);
+  }
+
+  private static Map<Player, Queue<String>> _messageQueues = new HashMap<Player, Queue<String>>();
 }

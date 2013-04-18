@@ -1,7 +1,7 @@
 package org.jpokemon.map.npc;
 
 public enum ActionType {
-  STUB;
+  SPEECH;
 
   public static ActionType valueOf(int t) {
     return values()[t];
