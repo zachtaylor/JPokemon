@@ -11,9 +11,11 @@ public class NPCFactory {
   public static List<NPC> build(int area) {
     List<NPC> npcs = new ArrayList<NPC>();
 
-    for (NPCInfo info : NPCInfo.get(area)) {
+    for (NPCMap npcMapping : NPCMap.get(area)) {
+      NPCInfo info = NPCInfo.get(npcMapping.getNpc());
       NPC npc = new NPC(info);
       npc.actions(buildActionSets(area, info.getNumber()));
+      npcs.add(npc);
     }
 
     return npcs;

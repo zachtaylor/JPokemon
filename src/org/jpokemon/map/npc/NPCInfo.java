@@ -9,15 +9,17 @@ import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
 public class NPCInfo implements JPokemonConstants {
-  private int area, number, type;
+  private int number, type, avoidprefix;
   private String name;
 
-  public static List<NPCInfo> get(int area) {
+  public static NPCInfo get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCInfo.class).where("area").eq(area).getList();
+      List<NPCInfo> query = SqlStatement.select(NPCInfo.class).where("number").eq(number).getList();
 
+      if (query.size() > 0)
+        return query.get(0);
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
@@ -25,10 +27,14 @@ public class NPCInfo implements JPokemonConstants {
     return null;
   }
 
+  public boolean usePrefix() {
+    return avoidprefix == 0;
+  }
+
   //@preformat
-  public int getArea() {return area;} public void setArea(int a) {area = a;}
   public int getNumber() {return number;} public void setNumber(int n) {number = n;}
   public int getType() {return type;} public void setType(int t) {type = t;}
+  public int getAvoidprefix() {return avoidprefix;} public void setAvoidprefix(int a) {avoidprefix=a;}
   public String getName() {return name;} public void setName(String n) {name = n;}
   //@format
 }

@@ -32,4 +32,12 @@ public class ImageService implements JPokemonConstants {
 
     return icon;
   }
+
+  public static ImageIcon npc(String type) {
+    String path = IMAGE_PATH + "npc/" + type.toLowerCase() + ".png";
+
+    ImageIcon icon = new ImageIcon(path);
+
+    return icon;
+  }
 }

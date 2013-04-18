@@ -19,7 +19,9 @@ public class NPC implements JPokemonConstants {
   }
 
   public String longName() {
-    return _type.getName() + " " + shortName();
+    if (_info.usePrefix())
+      return _type.getName() + " " + shortName();
+    return shortName();
   }
 
   public String icon() {
@@ -52,12 +54,17 @@ public class NPC implements JPokemonConstants {
 
     try {
       json.put("name", longName());
+      json.put("id", _info.getNumber());
       json.put("icon", _type.getIcon());
     } catch (JSONException e) {
       e.printStackTrace();
     }
 
     return json;
+  }
+
+  public String toString() {
+    return "NPC#"+ _info.getNumber() + ": " + longName();
   }
 
   private NPCType _type;
