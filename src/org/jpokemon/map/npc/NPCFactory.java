@@ -13,18 +13,19 @@ public class NPCFactory {
 
     for (NPCMap npcMapping : NPCMap.get(area)) {
       NPCInfo info = NPCInfo.get(npcMapping.getNpc());
+      List<ActionSet> actions = buildActionSets(npcMapping.getNpc());
       NPC npc = new NPC(info);
-      npc.actions(buildActionSets(area, info.getNumber()));
+      npc.actions(actions);
       npcs.add(npc);
     }
 
     return npcs;
   }
 
-  private static List<ActionSet> buildActionSets(int area, int number) {
+  private static List<ActionSet> buildActionSets(int number) {
     Map<Integer, ActionSet> actionsMap = new HashMap<Integer, ActionSet>();
 
-    for (NPCActionInfo actset : NPCActionInfo.get(area, number)) {
+    for (NPCActionInfo actset : NPCActionInfo.get(number)) {
       if (actionsMap.get(actset.getActionset()) == null)
         actionsMap.put(actset.getActionset(), new ActionSet());
 
@@ -33,17 +34,17 @@ public class NPCFactory {
 
     List<ActionSet> actions = new ArrayList<ActionSet>();
     for (Map.Entry<Integer, ActionSet> actset : actionsMap.entrySet()) {
-      actset.getValue().requirements(buildActionSetRequirements(area, number, actset.getKey()));
+      actset.getValue().requirements(buildActionSetRequirements(number, actset.getKey()));
       actions.add(actset.getValue());
     }
 
     return actions;
   }
 
-  private static List<List<Requirement>> buildActionSetRequirements(int area, int number, int set) {
+  private static List<List<Requirement>> buildActionSetRequirements(int number, int set) {
     Map<Integer, List<Requirement>> requirementMaps = new HashMap<Integer, List<Requirement>>();
 
-    for (NPCActionRequirement req : NPCActionRequirement.get(area, number, set)) {
+    for (NPCActionRequirement req : NPCActionRequirement.get(number, set)) {
       if (requirementMaps.get(req.getRequirementset()) == null)
         requirementMaps.put(req.getRequirementset(), new ArrayList<Requirement>());
 
