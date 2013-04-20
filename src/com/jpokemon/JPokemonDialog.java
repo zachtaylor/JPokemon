@@ -22,6 +22,16 @@ public class JPokemonDialog {
     _data = data;
   }
 
+  public void showMessages(JSONArray data) {
+    try {
+      for (int i = 0; i < data.length(); i++) {
+        String message = data.getString(i);
+        JOptionPane.showConfirmDialog(_parent, message, "Title", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
+      }
+    } catch (JSONException e) {
+    }
+  }
+
   public int getMoveIndex() throws DialogCancelException, JSONException {
 
     JSONObject leader = _data.getJSONArray("pokemon").getJSONObject(0);
@@ -64,8 +74,7 @@ public class JPokemonDialog {
       }
     }
 
-    int answer = JOptionPane.showOptionDialog(_parent, "Select a target for " + move, "MOVE CHOICE", 0, 0, image,
-        slot_names.toArray(), null);
+    int answer = JOptionPane.showOptionDialog(_parent, "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slot_names.toArray(), null);
 
     if (answer == -1)
       throw new DialogCancelException();
@@ -94,8 +103,7 @@ public class JPokemonDialog {
       itemsByType.get(itemType).add(itemName);
     }
 
-    int itemTypeChoice = JOptionPane.showOptionDialog(_parent, "Select an item to use", "ITEM CHOICE", 0, 0, null,
-        itemTypeNames.toArray(), null);
+    int itemTypeChoice = JOptionPane.showOptionDialog(_parent, "Select an item to use", "ITEM CHOICE", 0, 0, null, itemTypeNames.toArray(), null);
 
     if (itemTypeChoice == -1)
       throw new DialogCancelException();
@@ -103,8 +111,7 @@ public class JPokemonDialog {
     String itemType = itemTypeNames.get(itemTypeChoice);
     List<String> itemsInType = itemsByType.get(itemType);
 
-    int itemChoice = JOptionPane.showOptionDialog(_parent, "Select an item to use", "ITEM CHOICE", 0, 0, null,
-        itemsInType.toArray(), null);
+    int itemChoice = JOptionPane.showOptionDialog(_parent, "Select an item to use", "ITEM CHOICE", 0, 0, null, itemsInType.toArray(), null);
 
     if (itemChoice == -1)
       throw new DialogCancelException();
@@ -125,8 +132,7 @@ public class JPokemonDialog {
       names.add(pokemon.getString("name"));
     }
 
-    int answer = JOptionPane.showOptionDialog(_parent, "Select a Pokemon", "SWAP CHOICE", 0, 0, image, names.toArray(),
-        null);
+    int answer = JOptionPane.showOptionDialog(_parent, "Select a Pokemon", "SWAP CHOICE", 0, 0, image, names.toArray(), null);
 
     if (answer <= 0)
       throw new DialogCancelException();

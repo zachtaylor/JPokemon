@@ -53,6 +53,15 @@ public class Area {
     return _npcs;
   }
 
+  public NPC getNpc(int number) {
+    for (NPC npc : npcs()) {
+      if (npc.getNumber() == number)
+        return npc;
+    }
+
+    return null;
+  }
+
   public void addNPC(NPC npc) {
     _npcs.add(npc);
   }

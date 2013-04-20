@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.jpokemon.service.ImageService;
+import org.jpokemon.service.MapService;
+import org.jpokemon.service.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,8 +56,21 @@ public class OverworldView extends JPokemonView {
     }
   }
 
-  public void onClickNPCButton(int id) {
-    System.out.println("Select NPC#" + id);
+  public void onClickNPCButton(int number) {
+    try {
+      JSONObject request = new JSONObject();
+
+      request.put("id", parent().playerID());
+      request.put("number", number);
+
+      MapService.npc(request);
+      refresh();
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    } catch (ServiceException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -69,7 +84,7 @@ public class OverworldView extends JPokemonView {
     public NPCButton(JSONObject obj) throws JSONException {
       super(ImageService.npc(obj.getString("icon")));
       addActionListener(this);
-      _id = obj.getInt("id");
+      _id = obj.getInt("number");
     }
 
     @Override
