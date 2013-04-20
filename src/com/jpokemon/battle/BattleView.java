@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import org.jpokemon.service.BattleService;
+import org.jpokemon.service.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,20 +133,19 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    JSONObject json = new JSONObject();
+    JSONObject request = new JSONObject();
     try {
-      json.put("turn", "ATTACK");
-      json.put("trainer", parent().playerID());
-      json.put("target", enemySlotID);
-      json.put("move", moveIndex);
+      request.put("turn", "ATTACK");
+      request.put("id", parent().playerID());
+      request.put("target", enemySlotID);
+      request.put("move", moveIndex);
     } catch (JSONException e) {
       e.printStackTrace();
       enableButtons(true);
       return;
     }
 
-    BattleService.turn(json);
-    refresh();
+    submitTurn(request);
   }
 
   private void swap() {
@@ -162,20 +162,19 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    JSONObject json = new JSONObject();
+    JSONObject request = new JSONObject();
     try {
-      json.put("turn", "SWAP");
-      json.put("trainer", parent().playerID());
-      json.put("target", parent().playerID());
-      json.put("swap", swapIndex);
+      request.put("turn", "SWAP");
+      request.put("id", parent().playerID());
+      request.put("target", parent().playerID());
+      request.put("swap", swapIndex);
     } catch (JSONException e) {
       e.printStackTrace();
       enableButtons(true);
       return;
     }
 
-    BattleService.turn(json);
-    refresh();
+    submitTurn(request);
   }
 
   private void item() {
@@ -194,41 +193,48 @@ public class BattleView extends JPokemonView {
 
     int targetID = 0, targetIndex = 0; // TODO : target choice
 
-    JSONObject json = new JSONObject();
+    JSONObject request = new JSONObject();
     try {
-      json.put("turn", "ITEM");
-      json.put("trainer", parent().playerID());
-      json.put("target", targetID);
-      json.put("target_index", targetIndex);
-      json.put("item", itemID);
+      request.put("turn", "ITEM");
+      request.put("id", parent().playerID());
+      request.put("target", targetID);
+      request.put("target_index", targetIndex);
+      request.put("item", itemID);
     } catch (JSONException e) {
       e.printStackTrace();
       enableButtons(true);
       return;
     }
 
-    BattleService.turn(json);
-    refresh();
+    submitTurn(request);
   }
 
   private void run() {
     enableButtons(false);
 
-    JSONObject json = new JSONObject();
+    JSONObject request = new JSONObject();
     try {
-      json.put("turn", "RUN");
-      json.put("trainer", parent().playerID());
-      json.put("target", parent().playerID());
+      request.put("turn", "RUN");
+      request.put("id", parent().playerID());
+      request.put("target", parent().playerID());
     } catch (JSONException e) {
       e.printStackTrace();
       enableButtons(true);
       return;
     }
 
-    BattleService.turn(json);
-    refresh();
+    submitTurn(request);
   }
 
+  private void submitTurn(JSONObject request) {
+    try {
+      BattleService.turn(request);
+      refresh();
+    } catch (ServiceException e) {
+      
+    }
+  }
+  
   private void enableButtons(boolean enable) {
     _fightButton.setEnabled(enable);
     _itemButton.setEnabled(enable);

@@ -25,6 +25,8 @@ public class PlayerFactory implements JPokemonConstants {
 
   public static Player create(String name, int pokemonNumber) {
     Player player = newPlayer();
+    player.name(name);
+    player.add(new Pokemon(pokemonNumber, STARTER_POKEMON_LEVEL));
 
     if (fileMapping.values().contains(name)) {
       int n = 0;
@@ -32,43 +34,34 @@ public class PlayerFactory implements JPokemonConstants {
         ;
       name = name + n;
     }
-    fileMapping.put(player.id(), name);
-
-    player.name(name);
-    player.add(new Pokemon(pokemonNumber, STARTER_POKEMON_LEVEL));
+    fileMapping.put(player, name);
 
     return player;
   }
 
-  public static Player load(String playername) throws LoadException {
-    if (playername.endsWith(".jpkmn"))
-      playername.substring(0, playername.length() - ".jpkmn".length());
-
+  public static Player load(String filename) throws LoadException {
     Player player = newPlayer();
 
-    if (fileMapping.values().contains(playername))
-      throw new LoadException("File already loaded: " + playername);
+    if (fileMapping.values().contains(filename))
+      throw new LoadException("File already loaded: " + filename);
 
-    File file = new File(SAVE_PATH + playername + ".jpkmn");
-
-    if (!file.exists())
-      throw new LoadException("Save file not found: " + playername);
+    File file = new File(SAVE_PATH + filename + ".jpkmn");
 
     try {
       player.loadXML(XMLParser.parse(file).get(0));
     } catch (FileNotFoundException e) { // The file exists, but FNFE...
-      e.printStackTrace();
+      throw new LoadException("Save file not found: " + filename);
     }
 
     return player;
   }
 
-  public static void save(int playerID) {
-    String path = SAVE_PATH + fileMapping.get(playerID) + ".jpkmn";
+  public static void save(Player player) {
+    String path = SAVE_PATH + fileMapping.get(player) + ".jpkmn";
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(PlayerFactory.get(playerID).toXML().toString());
+      writer.write(player.toXML().toString());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -83,5 +76,5 @@ public class PlayerFactory implements JPokemonConstants {
   }
 
   private static Map<Integer, Player> players = new HashMap<Integer, Player>();
-  private static Map<Integer, String> fileMapping = new HashMap<Integer, String>();
+  private static Map<Player, String> fileMapping = new HashMap<Player, String>();
 }

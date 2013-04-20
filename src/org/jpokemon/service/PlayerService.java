@@ -14,7 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PlayerService {
+public class PlayerService extends JPokemonService {
   public static JSONObject pull(int playerID) {
     Player p = PlayerFactory.get(playerID);
 
@@ -57,34 +57,36 @@ public class PlayerService {
     }
   }
 
-  public static void save(int playerID) throws ServiceException {
-    PlayerFactory.save(playerID);
+  public static void save(JSONObject request) throws ServiceException {
+    Player player = getPlayer(request);
+
+    PlayerFactory.save(player);
   }
 
-  public static void party(JSONObject request) {
+  public static void party(JSONObject request) throws ServiceException {
+    Player player = getPlayer(request);
+    Pokemon pokemon = getPokemon(request);
+
+    if (player.state() == TrainerState.OVERWORLD) {
+      player.state(TrainerState.UPGRADE);
+      return;
+    }
+    if (player.state() != TrainerState.UPGRADE) {
+      ; // TODO : throw error
+      return;
+    }
+
     try {
-      Player player = PlayerFactory.get(request.getInt("id"));
-
-      if (player.state() == TrainerState.OVERWORLD) {
-        player.state(TrainerState.UPGRADE);
+      if (request.get("stats") == JSONObject.NULL) {
+        player.state(TrainerState.OVERWORLD);
+        return;
       }
-      else if (player.state() == TrainerState.UPGRADE) {
-        if (request.get("stats") == JSONObject.NULL) {
-          player.state(TrainerState.OVERWORLD);
-          return;
-        }
 
-        Pokemon pokemon = player.party().get(request.getInt("index"));
-
-        JSONArray stats = request.getJSONArray("stats");
-        for (int i = 0; i < stats.length(); i++) {
-          StatType s = StatType.valueOf(stats.getJSONObject(i).getString("stat"));
-          pokemon.statPoints(s, stats.getJSONObject(i).getInt("amount"));
-        }
+      JSONArray stats = request.getJSONArray("stats");
+      for (int i = 0; i < stats.length(); i++) {
+        StatType s = StatType.valueOf(stats.getJSONObject(i).getString("stat"));
+        pokemon.statPoints(s, stats.getJSONObject(i).getInt("amount"));
       }
-      else
-        ; // TODO throw error
-
     } catch (JSONException e) {
     }
   }

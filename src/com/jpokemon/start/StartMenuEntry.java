@@ -18,6 +18,9 @@ public class StartMenuEntry extends JPokemonMenuEntry {
       _showPokemonPlz = new JSONObject();
       _showPokemonPlz.put("id", parent().parent().playerID());
       _showPokemonPlz.put("stats", JSONObject.NULL);
+
+      _savePlz = new JSONObject();
+      _savePlz.put("id", parent().parent().playerID());
     } catch (JSONException e) {
     }
 
@@ -27,28 +30,31 @@ public class StartMenuEntry extends JPokemonMenuEntry {
   public void action() {
     switch (_value) {
     case POKEMON:
-      PlayerService.party(_showPokemonPlz);
-      parent().refresh();
-      break;
-    case SAVE:
       try {
-        PlayerService.save(parent().parent().playerID());
+        PlayerService.party(_showPokemonPlz);
         parent().refresh();
       } catch (ServiceException e) {
         e.printStackTrace();
-        return;
       }
-      break;
+    break;
+    case SAVE:
+      try {
+        PlayerService.save(_savePlz);
+        parent().refresh();
+      } catch (ServiceException e) {
+        e.printStackTrace();
+      }
+    break;
     case EXIT:
       parent().parent().closeStart();
-      break;
+    break;
     case QUIT:
       parent().parent().dispose();
     }
   }
 
   private StartEntryValue _value;
-  private JSONObject _showPokemonPlz;
+  private JSONObject _showPokemonPlz, _savePlz;
 
   private static final long serialVersionUID = 1L;
 }

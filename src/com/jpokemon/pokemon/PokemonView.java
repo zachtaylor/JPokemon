@@ -120,7 +120,7 @@ public class PokemonView extends JPokemonView {
     try {
       JSONObject request = new JSONObject();
       request.put("id", parent().playerID());
-      request.put("index", _partyIndex);
+      request.put("pokemon_index", _partyIndex);
 
       JSONArray stats = new JSONArray();
       for (Map.Entry<String, Integer> entry : spending.entrySet()) {
@@ -133,6 +133,7 @@ public class PokemonView extends JPokemonView {
 
       PlayerService.party(request);
     } catch (JSONException e) {
+    } catch (ServiceException e) {
     }
 
     clearSpending();

@@ -1,28 +1,16 @@
 package org.jpokemon.service;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BattleService implements JPokemonConstants {
-  public static void turn(JSONObject json) {
-    int trainerID;
+public class BattleService extends JPokemonService {
+  public static void turn(JSONObject request) throws ServiceException {
+    Battle battle = getBattle(request);
 
-    try {
-      trainerID = json.getInt("trainer");
-    } catch (JSONException e) {
-      e.printStackTrace();
-      return;
-    }
-
-    Player trainer = PlayerFactory.get(trainerID);
-    Battle battle = BattleRegistry.get(trainer);
-
-    battle.createTurn(json);
+    battle.createTurn(request);
   }
 
   public static JSONObject info(int playerID) throws ServiceException {
