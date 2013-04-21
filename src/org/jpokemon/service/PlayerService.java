@@ -15,30 +15,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PlayerService extends JPokemonService {
-  public static JSONObject pull(int playerID) {
-    Player p = PlayerFactory.get(playerID);
+  public static JSONObject pull(JSONObject request) throws ServiceException {
+    Player p = getPlayer(request);
 
     JSONObject response = new JSONObject();
+
     try {
       response.put("state", p.state().toString());
       response.put("player", p.toJSON(null));
+      response.put("messages", loadMessagesForPlayer(p));
+      response.put(p.state().root(), p.state().relatedData(request, p));
 
-      JSONArray messages = new JSONArray();
-      while (!_messageQueues.get(p).isEmpty()) {
-        messages.put(_messageQueues.get(p).remove());
-      }
-      response.put("messages", messages);
-
-      if (p.state() == TrainerState.BATTLE)
-        response.put("battle", BattleService.info(playerID));
-      else if (p.state() == TrainerState.UPGRADE)
-        response.put("upgrade", p.toJSON(p.state()));
-      else if (p.state() == TrainerState.OVERWORLD)
-        response.put("overworld", MapService.info(playerID));
-
-    } catch (Exception e) {
+    } catch (JSONException e) {
       e.printStackTrace();
-      // throw new ServiceException(e.getMessage());
     }
 
     return response;
@@ -94,6 +83,13 @@ public class PlayerService extends JPokemonService {
   public static void addToMessageQueue(Player p, String message) {
     Queue<String> q = _messageQueues.get(p);
     q.add(message);
+  }
+
+  public static JSONArray loadMessagesForPlayer(Player p) {
+    JSONArray array = new JSONArray();
+    while (!_messageQueues.get(p).isEmpty())
+      array.put(_messageQueues.get(p).remove());
+    return array;
   }
 
   private static Map<Player, Queue<String>> _messageQueues = new HashMap<Player, Queue<String>>();

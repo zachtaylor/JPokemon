@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import org.jpokemon.service.ImageService;
 import org.jpokemon.service.PlayerService;
+import org.jpokemon.service.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +38,12 @@ public class GameWindow extends JFrame implements KeyListener {
 
     _menu = _inbox;
     _active = _upgrade;
+
+    _newDataRequest = new JSONObject();
+    try {
+      _newDataRequest.put("id", _playerID);
+    } catch (JSONException e) {
+    }
 
     addKeyListener(this);
     setFocusable(true);
@@ -69,9 +76,8 @@ public class GameWindow extends JFrame implements KeyListener {
   }
 
   public void refresh() {
-    JSONObject data = PlayerService.pull(_playerID);
-
     try {
+      JSONObject data = PlayerService.pull(_newDataRequest);
       _dialogs.setData(data.getJSONObject("player"));
       _dialogs.showMessages(data.getJSONArray("messages"));
 
@@ -88,6 +94,8 @@ public class GameWindow extends JFrame implements KeyListener {
         show(_world);
       }
 
+    } catch (ServiceException e) {
+      e.printStackTrace();
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -151,6 +159,7 @@ public class GameWindow extends JFrame implements KeyListener {
 
   private int _playerID;
   private JPokemonDialog _dialogs;
+  private JSONObject _newDataRequest;
   private JPokemonMenu _menu, _start, _inbox;
   private JPokemonView _active, _battle, _upgrade, _world;
 
