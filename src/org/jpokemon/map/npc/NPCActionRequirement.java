@@ -16,7 +16,7 @@ public class NPCActionRequirement implements JPokemonConstants {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCActionRequirement.class).where("number").eq(number).and("set").eq(set).getList();
+      return SqlStatement.select(NPCActionRequirement.class).where("number").eq(number).and("actionset").eq(set).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();
