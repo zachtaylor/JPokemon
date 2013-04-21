@@ -22,10 +22,7 @@ public class WildPokemon implements JPokemonConstants {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      List<WildPokemon> info = SqlStatement.select(WildPokemon.class).where("area").eq(number).getList();
-
-      if (info.size() > 0)
-        return info;
+      return SqlStatement.select(WildPokemon.class).where("area").eq(number).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();
