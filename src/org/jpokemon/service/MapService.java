@@ -16,7 +16,8 @@ public class MapService extends JPokemonService {
   public static void npc(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
     NPC npc = getNpc(request);
+    String option = getOption(request);
 
-    npc.action(player).execute(player);
+    npc.actionset(option).execute(player);
   }
 }

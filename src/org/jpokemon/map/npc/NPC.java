@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.Player;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,17 +37,17 @@ public class NPC implements JPokemonConstants {
     return _type;
   }
 
-  public void actions(List<ActionSet> actions) {
+  public void actionsets(List<ActionSet> actions) {
     _actions = actions;
   }
 
-  public ActionSet action(Player p) {
+  public ActionSet actionset(String action) {
     ActionSet actions = null;
 
     for (ActionSet as : _actions) {
-      if (as.isOkay(p)) {
-        // Pick the last one such that isOkay(p)
+      if (action.equals(as.getOption())) {
         actions = as;
+        break;
       }
     }
 
@@ -60,6 +61,15 @@ public class NPC implements JPokemonConstants {
       json.put("name", longName());
       json.put("number", _info.getNumber());
       json.put("icon", _type.getIcon());
+
+      JSONArray options = new JSONArray();
+      for (ActionSet actionset : _actions) {
+        if (actionset.isOkay(p)) {
+          options.put(actionset.getOption());
+        }
+      }
+      json.put("options", options);
+
     } catch (JSONException e) {
       e.printStackTrace();
     }

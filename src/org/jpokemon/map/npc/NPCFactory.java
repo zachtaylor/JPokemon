@@ -15,7 +15,7 @@ public class NPCFactory {
       NPCInfo info = NPCInfo.get(npcMapping.getNpc());
       List<ActionSet> actions = buildActionSets(npcMapping.getNpc());
       NPC npc = new NPC(info);
-      npc.actions(actions);
+      npc.actionsets(actions);
       npcs.add(npc);
     }
 
@@ -25,7 +25,7 @@ public class NPCFactory {
   private static List<ActionSet> buildActionSets(int number) {
     Map<Integer, ActionSet> actionsMap = new HashMap<Integer, ActionSet>();
 
-    for (NPCActionInfo actset : NPCActionInfo.get(number)) {
+    for (NPCActionMapping actset : NPCActionMapping.get(number)) {
       if (actionsMap.get(actset.getActionset()) == null)
         actionsMap.put(actset.getActionset(), new ActionSet());
 
@@ -34,7 +34,9 @@ public class NPCFactory {
 
     List<ActionSet> actions = new ArrayList<ActionSet>();
     for (Map.Entry<Integer, ActionSet> actset : actionsMap.entrySet()) {
+      actset.getValue().setOption(NPCActionSetInfo.get(number, actset.getKey()).getOption());
       actset.getValue().requirements(buildActionSetRequirements(number, actset.getKey()));
+
       actions.add(actset.getValue());
     }
 

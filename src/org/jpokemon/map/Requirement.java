@@ -14,24 +14,16 @@ public class Requirement {
 
   public boolean isOkay(Player p) {
     switch (_type) {
-    case POKEDEX_COUNT:
-      return p.pokedex().count() >= _data;
-    case POKEMON_MOVE:
-      return false; // TODO check party for move
     case EVENT:
       return p.events().get(Math.abs(_data)) ^ (_data < 0); // XOR
     default:
-      break;
+    break;
     }
     return false;
   }
 
   public String denialReason() {
     switch (_type) {
-    case POKEDEX_COUNT:
-      return "You have not seen enough pokemon!";
-    case POKEMON_MOVE:
-      return "Something is in the way";
     case EVENT:
       return "You are not ready yet";
     }

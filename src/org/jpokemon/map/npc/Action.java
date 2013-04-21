@@ -13,7 +13,14 @@ public class Action {
     switch (_type) {
     case SPEECH:
       PlayerService.addToMessageQueue(p, _data);
-      break;
+    break;
+    case EVENT:
+      p.events().put(Integer.parseInt(_data));
+    break;
+    case ITEM:
+      String[] numberAndQuantity = _data.split(" ");
+      p.item(Integer.parseInt(numberAndQuantity[0])).add(Integer.parseInt(numberAndQuantity[1]));
+    break;
     }
   }
 

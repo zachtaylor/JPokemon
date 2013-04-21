@@ -11,11 +11,22 @@ public class ActionSet {
     return _actions;
   }
 
+  public String getOption() {
+    return _option;
+  }
+
+  public void setOption(String o) {
+    _option = o;
+  }
+
   public void addAction(Action a) {
     _actions.add(a);
   }
 
   public void execute(Player p) {
+    if (!isOkay(p))
+      return;
+
     for (Action action : _actions)
       action.execute(p);
   }
@@ -48,6 +59,7 @@ public class ActionSet {
     return result;
   }
 
+  private String _option;
   private List<Action> _actions = new ArrayList<Action>();
   private List<List<Requirement>> _requirements = new ArrayList<List<Requirement>>();
 }

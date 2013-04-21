@@ -12,7 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JPokemonService {
-  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index";
+  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index",
+      NPC_OPTION_KEY = "option";
 
   protected static Player getPlayer(JSONObject request) throws ServiceException {
     int playerID = -1;
@@ -21,7 +22,7 @@ public abstract class JPokemonService {
     try {
       playerID = request.getInt(PLAYER_ID_KEY);
     } catch (JSONException e) {
-      throw new ServiceException("Player key not provided");
+      throw new ServiceException("Player key not found");
     }
 
     player = PlayerFactory.get(playerID);
@@ -92,7 +93,7 @@ public abstract class JPokemonService {
     try {
       npcNumber = request.getInt(NPC_NUMBER_KEY);
     } catch (JSONException e) {
-      throw new ServiceException("Npc number not provided");
+      throw new ServiceException("Npc number not found");
     }
 
     npc = area.getNpc(npcNumber);
@@ -101,5 +102,17 @@ public abstract class JPokemonService {
       throw new ServiceException("Npc number " + npcNumber + " not found");
 
     return npc;
+  }
+
+  protected static String getOption(JSONObject request) throws ServiceException {
+    String option = null;
+
+    try {
+      option = request.getString(NPC_OPTION_KEY);
+    } catch (JSONException e) {
+      throw new ServiceException("NPC option not found");
+    }
+
+    return option;
   }
 }

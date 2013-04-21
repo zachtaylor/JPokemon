@@ -8,15 +8,15 @@ import com.kremerk.Sqlite.DataConnectionException;
 import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
-public class NPCActionInfo implements JPokemonConstants {
+public class NPCActionMapping implements JPokemonConstants {
   private int number, actionset, type;
   private String data;
 
-  public static List<NPCActionInfo> get(int number) {
+  public static List<NPCActionMapping> get(int number) {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCActionInfo.class).where("number").eq(number).getList();
+      return SqlStatement.select(NPCActionMapping.class).where("number").eq(number).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();
