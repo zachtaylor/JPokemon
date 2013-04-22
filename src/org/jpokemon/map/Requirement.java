@@ -16,8 +16,6 @@ public class Requirement {
     switch (_type) {
     case EVENT:
       return p.events().get(Math.abs(_data)) ^ (_data < 0); // XOR
-    default:
-    break;
     }
     return false;
   }

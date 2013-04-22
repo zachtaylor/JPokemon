@@ -9,17 +9,15 @@ import com.kremerk.Sqlite.DataConnectionManager;
 import com.kremerk.Sqlite.SqlStatement;
 
 public class NPCActionSetInfo implements JPokemonConstants {
-  private int number, actionset;
+  private int number, area, actionset;
   private String option;
 
-  public static NPCActionSetInfo get(int number, int actionset) {
+  public static List<NPCActionSetInfo> get(int area) {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      List<NPCActionSetInfo> query = SqlStatement.select(NPCActionSetInfo.class).where("number").eq(number).and("actionset").eq(actionset).getList();
+      return SqlStatement.select(NPCActionSetInfo.class).where("area").eq(area).getList();
 
-      if (query.size() > 0)
-        return query.get(0);
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
@@ -29,6 +27,7 @@ public class NPCActionSetInfo implements JPokemonConstants {
 
   //@preformat
   public int getNumber() {return number;} public void setNumber(int n) {number=n;}
+  public int getArea() {return area;} public void setArea(int a) {area = a;}
   public int getActionset() {return actionset;} public void setActionset(int a) {actionset=a;}
   public String getOption() {return option;} public void setOption(String o) {option = o;}
   //@format

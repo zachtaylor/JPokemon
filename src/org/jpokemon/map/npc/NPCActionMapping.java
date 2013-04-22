@@ -12,11 +12,11 @@ public class NPCActionMapping implements JPokemonConstants {
   private int number, actionset, type;
   private String data;
 
-  public static List<NPCActionMapping> get(int number) {
+  public static List<NPCActionMapping> get(int number, int actionset) {
     DataConnectionManager.init(DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCActionMapping.class).where("number").eq(number).getList();
+      return SqlStatement.select(NPCActionMapping.class).where("number").eq(number).and("actionset").eq(actionset).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();

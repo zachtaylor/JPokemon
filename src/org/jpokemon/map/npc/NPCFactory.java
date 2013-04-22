@@ -1,6 +1,7 @@
 package org.jpokemon.map.npc;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,39 +9,39 @@ import java.util.Map;
 import org.jpokemon.map.Requirement;
 
 public class NPCFactory {
-  public static List<NPC> build(int area) {
-    List<NPC> npcs = new ArrayList<NPC>();
+  public static Collection<NPC> build(int area) {
+    Map<Integer, NPC> npcs = new HashMap<Integer, NPC>();
 
-    for (NPCMap npcMapping : NPCMap.get(area)) {
-      NPCInfo info = NPCInfo.get(npcMapping.getNpc());
-      List<ActionSet> actions = buildActionSets(npcMapping.getNpc());
-      NPC npc = new NPC(info);
-      npc.actionsets(actions);
-      npcs.add(npc);
+    // Get all in this area
+    for (NPCActionSetInfo npcMapping : NPCActionSetInfo.get(area)) {
+
+      // If this NPC isn't in the area yet, build it
+      if (npcs.get(npcMapping.getNumber()) == null) {
+        NPCInfo info = NPCInfo.get(npcMapping.getNumber());
+        NPC npc = new NPC(info);
+        npcs.put(npcMapping.getNumber(), npc);
+      }
+
+      ActionSet actionset = buildActionSet(npcMapping);
+      npcs.get(npcMapping.getNumber()).addActionSet(actionset);
+
     }
 
-    return npcs;
+    return npcs.values();
   }
 
-  private static List<ActionSet> buildActionSets(int number) {
-    Map<Integer, ActionSet> actionsMap = new HashMap<Integer, ActionSet>();
+  private static ActionSet buildActionSet(NPCActionSetInfo info) {
+    ActionSet as = new ActionSet();
 
-    for (NPCActionMapping actset : NPCActionMapping.get(number)) {
-      if (actionsMap.get(actset.getActionset()) == null)
-        actionsMap.put(actset.getActionset(), new ActionSet());
-
-      actionsMap.get(actset.getActionset()).addAction(new Action(actset.getType(), actset.getData()));
+    for (NPCActionMapping action : NPCActionMapping.get(info.getNumber(), info.getActionset())) {
+      Action a = new Action(action.getType(), action.getData());
+      as.addAction(a);
     }
 
-    List<ActionSet> actions = new ArrayList<ActionSet>();
-    for (Map.Entry<Integer, ActionSet> actset : actionsMap.entrySet()) {
-      actset.getValue().setOption(NPCActionSetInfo.get(number, actset.getKey()).getOption());
-      actset.getValue().requirements(buildActionSetRequirements(number, actset.getKey()));
+    as.setOption(info.getOption());
+    as.requirements(buildActionSetRequirements(info.getNumber(), info.getActionset()));
 
-      actions.add(actset.getValue());
-    }
-
-    return actions;
+    return as;
   }
 
   private static List<List<Requirement>> buildActionSetRequirements(int number, int set) {

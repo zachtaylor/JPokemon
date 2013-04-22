@@ -1,5 +1,6 @@
 package org.jpokemon.map.npc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
@@ -37,21 +38,18 @@ public class NPC implements JPokemonConstants {
     return _type;
   }
 
-  public void actionsets(List<ActionSet> actions) {
-    _actions = actions;
+  public void addActionSet(ActionSet actionset) {
+    _actions.add(actionset);
   }
 
   public ActionSet actionset(String action) {
-    ActionSet actions = null;
-
     for (ActionSet as : _actions) {
       if (action.equals(as.getOption())) {
-        actions = as;
-        break;
+        return as;
       }
     }
 
-    return actions;
+    return null;
   }
 
   public JSONObject toJSON(Player p) {
@@ -83,5 +81,5 @@ public class NPC implements JPokemonConstants {
 
   private NPCType _type;
   private NPCInfo _info;
-  private List<ActionSet> _actions;
+  private List<ActionSet> _actions = new ArrayList<ActionSet>();
 }
