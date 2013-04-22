@@ -21,6 +21,13 @@ public class Action {
       String[] numberAndQuantity = _data.split(" ");
       p.item(Integer.parseInt(numberAndQuantity[0])).add(Integer.parseInt(numberAndQuantity[1]));
     break;
+    case TRANSPORT:
+      String[] areaAndLocation = _data.split(" ");
+      p.area(Integer.parseInt(areaAndLocation[0]));
+
+      if (areaAndLocation.length > 1)
+        ; // When doing coordinates, do that here
+    break;
     }
   }
 
