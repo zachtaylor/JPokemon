@@ -52,6 +52,8 @@ public class OverworldView extends JPokemonView {
         npcPanel.add(new NPCButton(npcs.getJSONObject(i)));
       }
 
+      parent().align();
+
     } catch (JSONException e) {
       e.printStackTrace();
     }
