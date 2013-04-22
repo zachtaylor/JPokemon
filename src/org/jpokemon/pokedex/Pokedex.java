@@ -82,10 +82,10 @@ public class Pokedex implements JPokemonConstants {
       switch (entry.getValue()) {
       case SAW:
         saw.put(entry.getKey());
-        break;
+      break;
       case OWN:
         own.put(entry.getKey());
-        break;
+      break;
       default:
       }
     }
@@ -128,15 +128,23 @@ public class Pokedex implements JPokemonConstants {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
 
-    XMLNode cur = node.getChildren("seen").get(0);
-    String[] data = cur.getValue().replace('[', ' ').replace(']', ' ').split(",");
-    for (String item : data)
-      _data.put(Integer.parseInt(item.trim()), PokedexStatus.SAW);
+    String[] data;
+    XMLNode seen = node.getChildren("seen").get(0);
+    XMLNode owned = node.getChildren("owned").get(0);
 
-    cur = node.getChildren("owned").get(0);
-    data = cur.getValue().replace('[', ' ').replace(']', ' ').split(",");
-    for (String item : data)
-      _data.put(Integer.parseInt(item.trim()), PokedexStatus.OWN);
+    if (seen.getValue() != null) {
+      data = seen.getValue().replace('[', ' ').replace(']', ' ').split(",");
+      for (String item : data) {
+        _data.put(Integer.parseInt(item.trim()), PokedexStatus.SAW);
+      }
+    }
+
+    if (owned.getValue() != null) {
+      data = owned.getValue().replace('[', ' ').replace(']', ' ').split(",");
+      for (String item : data) {
+        _data.put(Integer.parseInt(item.trim()), PokedexStatus.OWN);
+      }
+    }
   }
 
   private Map<Integer, PokedexStatus> _data = new HashMap<Integer, PokedexStatus>();

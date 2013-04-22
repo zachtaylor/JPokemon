@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jpokemon.GameWindow;
+import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonView;
 
 public class OverworldView extends JPokemonView {
@@ -82,7 +82,7 @@ public class OverworldView extends JPokemonView {
     return false;
   }
 
-  private class NPCButton extends JButton implements ActionListener {
+  private class NPCButton extends JPokemonButton implements ActionListener {
 
     public NPCButton(JSONObject obj) throws JSONException {
       super(ImageService.npc(obj.getString("icon")));
@@ -103,6 +103,10 @@ public class OverworldView extends JPokemonView {
     @Override
     public void actionPerformed(ActionEvent e) {
       String selectedOption;
+
+      if (_options.length == 0) {
+        return;
+      }
 
       if (_options.length == 1) {
         selectedOption = _options[0];

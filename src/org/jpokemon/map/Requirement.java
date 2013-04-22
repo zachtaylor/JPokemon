@@ -16,6 +16,8 @@ public class Requirement {
     switch (_type) {
     case EVENT:
       return p.events().get(Math.abs(_data)) ^ (_data < 0); // XOR
+    case POKEDEX:
+      return p.pokedex().count() >= Math.abs(_data) ^ (_data < 0); // XOR
     }
     return false;
   }
@@ -24,6 +26,8 @@ public class Requirement {
     switch (_type) {
     case EVENT:
       return "You are not ready yet";
+    case POKEDEX:
+      return "You haven't seen enough pokemon yet";
     }
 
     return "foo bar?";
