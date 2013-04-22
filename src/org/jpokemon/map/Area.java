@@ -3,6 +3,7 @@ package org.jpokemon.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
@@ -10,7 +11,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Area {
+import com.kremerk.Sqlite.DataConnectionException;
+import com.kremerk.Sqlite.DataConnectionManager;
+import com.kremerk.Sqlite.SqlStatement;
+
+public class Area implements JPokemonConstants {
+  public static Area get(int number) {
+    DataConnectionManager.init(DATABASE_PATH);
+
+    try {
+      List<Area> query = SqlStatement.select(Area.class).where("number").eq(number).getList();
+
+      if (query.size() > 0)
+        return query.get(0);
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
   public int getNumber() {
     return number;
   }

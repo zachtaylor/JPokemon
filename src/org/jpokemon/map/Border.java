@@ -3,12 +3,16 @@ package org.jpokemon.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Border {
+import com.kremerk.Sqlite.DataConnectionException;
+import com.kremerk.Sqlite.DataConnectionManager;
+import com.kremerk.Sqlite.SqlStatement;
 
+public class Border implements JPokemonConstants {
   public int getArea() {
     return area;
   }
@@ -25,9 +29,7 @@ public class Border {
     next = n;
   }
 
-  public void addRequirement(BorderRequirement br) {
-    Requirement r = new Requirement(br.getType(), br.getData());
-
+  public void addRequirement(Requirement r) {
     _requirements.add(r);
   }
 
@@ -65,6 +67,19 @@ public class Border {
     }
 
     return json;
+  }
+
+  public static List<Border> get(int area) {
+    DataConnectionManager.init(DATABASE_PATH);
+
+    try {
+      return SqlStatement.select(Border.class).where("area").eq(area).getList();
+
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   private int area, next;

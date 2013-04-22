@@ -1,16 +1,10 @@
 package org.jpokemon.map;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.map.npc.NPCFactory;
-
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
 
 public class Map implements JPokemonConstants {
   private static HashMap<Integer, Area> map = new HashMap<Integer, Area>();
@@ -22,54 +16,27 @@ public class Map implements JPokemonConstants {
     return map.get(id);
   }
 
-  private static void load(int id) {
-    Area a = loadArea(id);
+  private static void load(int number) {
+    Area a = Area.get(number);
 
     if (a == null)
       return;
 
-    for (Border b : loadBorder(id)) {
-      for (BorderRequirement br : BorderRequirement.get(id, b.getNext()))
-        b.addRequirement(br);
+    for (Border b : Border.get(number)) {
+      for (BorderRequirement br : BorderRequirement.get(b.getArea(), b.getNext())) {
+        Requirement r = new Requirement(br.getType(), br.getData());
+        b.addRequirement(r);
+      }
 
       a.addBorder(b);
     }
 
-    for (WildPokemon wp : WildPokemon.get(id))
+    for (WildPokemon wp : WildPokemon.get(number))
       a.addPokemon(wp);
 
-    for (NPC npc : NPCFactory.build(id))
+    for (NPC npc : NPCFactory.build(number))
       a.addNPC(npc);
 
-    map.put(id, a);
-  }
-
-  private static List<Border> loadBorder(int number) {
-    DataConnectionManager.init(DATABASE_PATH);
-
-    try {
-      return SqlStatement.select(Border.class).where("area").eq(number).getList();
-
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
-    }
-
-    return new ArrayList<Border>();
-  }
-
-  private static Area loadArea(int number) {
-    DataConnectionManager.init(DATABASE_PATH);
-
-    try {
-      List<Area> info = SqlStatement.select(Area.class).where("number").eq(number).getList();
-
-      if (info.size() > 0)
-        return info.get(0);
-
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
-    }
-
-    return null;
+    map.put(number, a);
   }
 }

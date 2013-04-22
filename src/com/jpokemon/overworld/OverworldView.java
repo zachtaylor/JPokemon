@@ -4,8 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,13 +30,29 @@ public class OverworldView extends JPokemonView {
   public OverworldView(GameWindow parent) {
     super(parent);
 
+    JPanel infoPanel = new JPanel();
     nameLabel = new JLabel("x");
-    infoPanel = new JPanel();
-    npcPanel = new JPanel();
 
+    npcPanel = new JPanel();
+    JPanel borderMenuAndLabel = new JPanel();
+    borderSelection = new JComboBox<String>();
+
+    borderSelection.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        String currentAreaName = nameLabel.getText();
+        if (e.getStateChange() == ItemEvent.SELECTED && !e.getItem().equals(currentAreaName))
+          onSelectBorder((String) e.getItem());
+      }
+    });
+
+    infoPanel.setLayout(new BorderLayout());
     setLayout(new BorderLayout());
 
-    infoPanel.add(nameLabel);
+    borderMenuAndLabel.add(new JLabel("Go to >"));
+    borderMenuAndLabel.add(borderSelection);
+    infoPanel.add(nameLabel, BorderLayout.WEST);
+    infoPanel.add(borderMenuAndLabel, BorderLayout.EAST);
     add(infoPanel, BorderLayout.NORTH);
     add(npcPanel, BorderLayout.CENTER);
   }
@@ -50,6 +71,18 @@ public class OverworldView extends JPokemonView {
       JSONArray npcs = data.getJSONArray("npcs");
       for (int i = 0; i < npcs.length(); i++) {
         npcPanel.add(new NPCButton(npcs.getJSONObject(i)));
+      }
+
+      borderMemory.clear();
+      borderSelection.removeAllItems();
+      borderSelection.addItem(data.getString("name"));
+      JSONArray borders = data.getJSONArray("borders");
+      for (int i = 0; i < npcs.length(); i++) {
+        JSONObject border = borders.getJSONObject(i);
+
+        borderSelection.addItem(border.getString("name"));
+
+        borderMemory.add(border);
       }
 
       parent().align();
@@ -75,6 +108,10 @@ public class OverworldView extends JPokemonView {
     } catch (ServiceException e) {
       e.printStackTrace();
     }
+  }
+
+  public void onSelectBorder(String border) {
+    System.out.println("Go to >" + border);
   }
 
   @Override
@@ -112,7 +149,8 @@ public class OverworldView extends JPokemonView {
         selectedOption = _options[0];
       }
       else {
-        selectedOption = (String) JOptionPane.showInputDialog(parent(), _name + "...", "Speaking to " + _name, JOptionPane.QUESTION_MESSAGE, getIcon(), _options, null);
+        selectedOption = (String) JOptionPane.showInputDialog(parent(), _name + "...", "Speaking to " + _name,
+            JOptionPane.QUESTION_MESSAGE, getIcon(), _options, null);
       }
 
       if (selectedOption != null)
@@ -127,7 +165,9 @@ public class OverworldView extends JPokemonView {
   }
 
   private JLabel nameLabel;
-  private JPanel npcPanel, infoPanel;
+  private JPanel npcPanel;
+  private JComboBox<String> borderSelection;
+  private List<JSONObject> borderMemory = new ArrayList<JSONObject>();
 
   private static final long serialVersionUID = 1L;
 }
