@@ -29,7 +29,7 @@ public class PartyMenu extends JPokemonMenu {
       add(_entries[i]);
     }
 
-    _entries[0].active(true);
+    select(0);
   }
 
   public void navPokemon() {

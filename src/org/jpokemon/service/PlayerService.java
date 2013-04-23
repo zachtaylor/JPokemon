@@ -41,9 +41,14 @@ public class PlayerService extends JPokemonService {
 
       p.state(TrainerState.OVERWORLD);
     } catch (LoadException e) {
-      e.printStackTrace();
       throw new ServiceException(e.getMessage());
     }
+  }
+
+  public static void create(String name) {
+    Player p = PlayerFactory.create(name);
+    _messageQueues.put(p, new LinkedList<String>());
+    p.state(TrainerState.OVERWORLD);
   }
 
   public static void save(JSONObject request) throws ServiceException {

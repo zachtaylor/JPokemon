@@ -35,6 +35,12 @@ public class PlayButton extends JButton implements ActionListener {
       PlayerService.load(name);
     } catch (ServiceException e) {
       JOptionPane.showMessageDialog(_launcher, e.toString(), "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
+
+      if (JOptionPane.showConfirmDialog(_launcher, "Would you like to start a new game?", "NEW GAME", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == JOptionPane.OK_OPTION) {
+        PlayerService.create(name);
+      }
+      else
+        return;
     }
 
     _launcher.dispose();

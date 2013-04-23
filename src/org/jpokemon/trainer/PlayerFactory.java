@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.service.LoadException;
 
 import com.zachtaylor.jnodalxml.XMLParser;
@@ -23,35 +22,32 @@ public class PlayerFactory implements JPokemonConstants {
     return players.get(id);
   }
 
-  public static Player create(String name, int pokemonNumber) {
+  public static Player create(String name) {
+    name = getUniqueName(name);
     Player player = newPlayer();
     player.name(name);
-    player.add(new Pokemon(pokemonNumber, STARTER_POKEMON_LEVEL));
-
-    if (fileMapping.values().contains(name)) {
-      int n = 0;
-      for (n = 0; fileMapping.values().contains(name + n); n++)
-        ;
-      name = name + n;
-    }
     fileMapping.put(player, name);
 
     return player;
   }
 
   public static Player load(String filename) throws LoadException {
-    Player player = newPlayer();
-
     if (fileMapping.values().contains(filename))
-      throw new LoadException("File already loaded: " + filename);
+      throw new LoadException("File already loaded");
 
     File file = new File(SAVE_PATH + filename + ".jpkmn");
 
+    if (!file.exists())
+      throw new LoadException("Save file not found");
+
+    Player player = newPlayer();
+
     try {
       player.loadXML(XMLParser.parse(file).get(0));
-    } catch (FileNotFoundException e) { // The file exists, but FNFE...
-      throw new LoadException("Save file not found: " + filename);
+    } catch (FileNotFoundException e) {
     }
+
+    fileMapping.put(player, filename);
 
     return player;
   }
@@ -73,6 +69,17 @@ public class PlayerFactory implements JPokemonConstants {
     players.put(player.id(), player);
 
     return player;
+  }
+
+  private static String getUniqueName(String attempt) {
+    if (!fileMapping.containsValue(attempt) && !new File(SAVE_PATH + attempt + ".jpkmn").exists())
+      return attempt;
+
+    int n = 0;
+    for (; fileMapping.containsValue(attempt + n) || new File(SAVE_PATH + attempt + n + ".jpkmn").exists(); n++)
+      ;
+
+    return attempt + n;
   }
 
   private static Map<Integer, Player> players = new HashMap<Integer, Player>();

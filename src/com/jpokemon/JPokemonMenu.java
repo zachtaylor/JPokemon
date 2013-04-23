@@ -22,6 +22,9 @@ public abstract class JPokemonMenu extends JPanel {
   }
 
   public void select(int s) {
+    if (entries().length == 0)
+      return;
+
     entries()[_select].active(false);
 
     _select = s;
