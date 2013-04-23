@@ -54,23 +54,22 @@ public class PlayerService extends JPokemonService {
 
   public static void party(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
-    Pokemon pokemon = getPokemon(request);
 
     if (player.state() == TrainerState.OVERWORLD) {
       player.state(TrainerState.UPGRADE);
       return;
     }
     if (player.state() != TrainerState.UPGRADE) {
-      ; // TODO : throw error
+      return; // TODO : throw error
+    }
+    if (!request.has("stats")) {
+      player.state(TrainerState.OVERWORLD);
       return;
     }
 
-    try {
-      if (request.get("stats") == JSONObject.NULL) {
-        player.state(TrainerState.OVERWORLD);
-        return;
-      }
+    Pokemon pokemon = getPokemon(request);
 
+    try {
       JSONArray stats = request.getJSONArray("stats");
       for (int i = 0; i < stats.length(); i++) {
         StatType s = StatType.valueOf(stats.getJSONObject(i).getString("stat"));

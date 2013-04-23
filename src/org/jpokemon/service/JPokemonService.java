@@ -3,6 +3,7 @@ package org.jpokemon.service;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.map.Area;
+import org.jpokemon.map.Border;
 import org.jpokemon.map.Map;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
@@ -12,8 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JPokemonService {
-  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index",
-      NPC_OPTION_KEY = "option";
+  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index", OPTION_KEY = "option";
 
   protected static Player getPlayer(JSONObject request) throws ServiceException {
     int playerID = -1;
@@ -108,11 +108,32 @@ public abstract class JPokemonService {
     String option = null;
 
     try {
-      option = request.getString(NPC_OPTION_KEY);
+      option = request.getString(OPTION_KEY);
     } catch (JSONException e) {
       throw new ServiceException("NPC option not found");
     }
 
     return option;
+  }
+
+  protected static Border getBorder(JSONObject request) throws ServiceException {
+    Area area;
+    String borderChoice;
+    Border border;
+
+    area = getArea(request);
+
+    try {
+      borderChoice = request.getString("border");
+    } catch (JSONException e) {
+      throw new ServiceException("Border choice not found");
+    }
+
+    border = area.getBorder(borderChoice);
+
+    if (border == null)
+      throw new ServiceException("Border not found in area");
+
+    return border;
   }
 }

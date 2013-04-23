@@ -26,10 +26,14 @@ public class JPokemonDialog {
     try {
       for (int i = 0; i < data.length(); i++) {
         String message = data.getString(i);
-        JOptionPane.showConfirmDialog(_parent, message, "Title", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
+        showAlert(message);
       }
     } catch (JSONException e) {
     }
+  }
+
+  public void showAlert(String s) {
+    JOptionPane.showConfirmDialog(_parent, s, "Title", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
   }
 
   public int getMoveIndex() throws DialogCancelException, JSONException {

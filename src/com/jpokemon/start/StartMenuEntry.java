@@ -17,7 +17,6 @@ public class StartMenuEntry extends JPokemonMenuEntry {
     try {
       _showPokemonPlz = new JSONObject();
       _showPokemonPlz.put("id", parent().parent().playerID());
-      _showPokemonPlz.put("stats", JSONObject.NULL);
 
       _savePlz = new JSONObject();
       _savePlz.put("id", parent().parent().playerID());
@@ -36,7 +35,7 @@ public class StartMenuEntry extends JPokemonMenuEntry {
       } catch (ServiceException e) {
         e.printStackTrace();
       }
-    break;
+      break;
     case SAVE:
       try {
         PlayerService.save(_savePlz);
@@ -44,10 +43,10 @@ public class StartMenuEntry extends JPokemonMenuEntry {
       } catch (ServiceException e) {
         e.printStackTrace();
       }
-    break;
+      break;
     case EXIT:
       parent().parent().closeStart();
-    break;
+      break;
     case QUIT:
       parent().parent().dispose();
     }

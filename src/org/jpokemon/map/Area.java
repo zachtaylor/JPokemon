@@ -90,8 +90,14 @@ public class Area implements JPokemonConstants {
     _npcs.remove(index);
   }
 
-  public List<Border> borders() {
-    return _borders;
+  public Border getBorder(String name) {
+    for (Border border : _borders) {
+      if (name.equals(Map.area(border.getNext()).getName())) {
+        return border;
+      }
+    }
+
+    return null;
   }
 
   public void addBorder(Border b) {
@@ -118,7 +124,7 @@ public class Area implements JPokemonConstants {
       json.put("npcs", npcs);
 
       JSONArray borders = new JSONArray();
-      for (Border b : borders()) {
+      for (Border b : _borders) {
         borders.put(b.toJSON(p));
       }
       json.put("borders", borders);

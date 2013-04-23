@@ -35,8 +35,9 @@ public class OverworldView extends JPokemonView {
 
     npcPanel = new JPanel();
     JPanel borderMenuAndLabel = new JPanel();
-    borderSelection = new JComboBox<String>();
+    borderSelection = new JComboBox();
 
+    borderSelection.setFocusable(false);
     borderSelection.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
@@ -74,15 +75,17 @@ public class OverworldView extends JPokemonView {
       }
 
       borderMemory.clear();
+
       borderSelection.removeAllItems();
       borderSelection.addItem(data.getString("name"));
+
       JSONArray borders = data.getJSONArray("borders");
-      for (int i = 0; i < npcs.length(); i++) {
+      for (int i = 0; i < borders.length(); i++) {
         JSONObject border = borders.getJSONObject(i);
 
-        borderSelection.addItem(border.getString("name"));
-
         borderMemory.add(border);
+
+        borderSelection.addItem(border.getString("name"));
       }
 
       parent().align();
@@ -111,7 +114,28 @@ public class OverworldView extends JPokemonView {
   }
 
   public void onSelectBorder(String border) {
-    System.out.println("Go to >" + border);
+    try {
+      // Check if valid
+      for (JSONObject json : borderMemory) {
+        if (json.getString("name").equals(border) && !json.getBoolean("is_okay")) {
+          parent().dialogs().showAlert(json.getString("reason"));
+          borderSelection.setSelectedIndex(0);
+          return;
+        }
+      }
+
+      JSONObject request = new JSONObject();
+
+      request.put("id", parent().playerID());
+      request.put("border", border);
+
+      MapService.border(request);
+      refresh();
+    } catch (JSONException e) {
+      e.printStackTrace();
+    } catch (ServiceException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -166,7 +190,7 @@ public class OverworldView extends JPokemonView {
 
   private JLabel nameLabel;
   private JPanel npcPanel;
-  private JComboBox<String> borderSelection;
+  private JComboBox borderSelection;
   private List<JSONObject> borderMemory = new ArrayList<JSONObject>();
 
   private static final long serialVersionUID = 1L;

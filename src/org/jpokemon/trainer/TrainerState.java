@@ -15,10 +15,13 @@ public enum TrainerState {
     switch (this) {
     case BATTLE:
       extraData = BattleService.info(request);
+      break;
     case UPGRADE:
-      extraData = player.toJSON(player.state());
+      extraData = player.toJSON(UPGRADE);
+      break;
     case OVERWORLD:
       extraData = MapService.info(request);
+      break;
     }
 
     response.put(name().toLowerCase(), extraData);
