@@ -49,7 +49,7 @@ public class GameWindow extends JFrame implements KeyListener {
     setFocusable(true);
     setVisible(true);
 
-    align();
+    refresh();
   }
 
   public int playerID() {

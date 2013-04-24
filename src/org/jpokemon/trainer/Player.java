@@ -6,10 +6,10 @@ import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.jpokemon.service.PlayerService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.jpokemon.GameWindow;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 public class Player implements PokemonTrainer {
@@ -23,7 +23,6 @@ public class Player implements PokemonTrainer {
     _pokedex = new Pokedex();
     _progress = new Progress();
     _trainers = new Progress();
-    _gameWindow = new GameWindow(_id);
     _storage = new PokemonStorageBlock();
   }
 
@@ -66,7 +65,6 @@ public class Player implements PokemonTrainer {
 
   public void state(TrainerState state) {
     _state = state;
-    _gameWindow.refresh();
   }
 
   public TrainerState state() {
@@ -101,8 +99,10 @@ public class Player implements PokemonTrainer {
     return false;
   }
 
-  public void notify(String... message) {
-    _gameWindow.inbox().addMessage(message);
+  public void notify(String... messages) {
+    for (String message : messages) {
+      PlayerService.addToMessageQueue(this, message);
+    }
   }
 
   public Pokedex pokedex() {
@@ -193,7 +193,6 @@ public class Player implements PokemonTrainer {
   private String _name;
   private Pokedex _pokedex;
   private TrainerState _state;
-  private GameWindow _gameWindow;
   private PokemonStorageBlock _storage;
   private Progress _progress, _trainers;
   private int _id, _area, _badge, _cash;

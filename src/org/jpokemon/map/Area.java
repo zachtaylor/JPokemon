@@ -129,6 +129,8 @@ public class Area implements JPokemonConstants {
       }
       json.put("borders", borders);
 
+      json.put("has_wild_pokemon", _pokemon.size() > 0);
+
     } catch (JSONException e) {
       e.printStackTrace();
     }

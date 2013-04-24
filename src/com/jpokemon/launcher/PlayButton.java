@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import org.jpokemon.service.PlayerService;
 import org.jpokemon.service.ServiceException;
 
+import com.jpokemon.GameWindow;
+
 public class PlayButton extends JButton implements ActionListener {
   public PlayButton(Launcher l) {
     super("Play");
@@ -31,19 +33,25 @@ public class PlayButton extends JButton implements ActionListener {
     if (name == null)
       return;
 
+    int id = -1;
+    
     try {
-      PlayerService.load(name);
+      id = PlayerService.load(name);
     } catch (ServiceException e) {
       JOptionPane.showMessageDialog(_launcher, e.toString(), "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
 
       if (JOptionPane.showConfirmDialog(_launcher, "Would you like to start a new game?", "NEW GAME", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == JOptionPane.OK_OPTION) {
-        PlayerService.create(name);
+        id = PlayerService.create(name);
       }
       else
         return;
     }
-
+    
+    if (id == -1) {
+      return;
+    }
     _launcher.dispose();
+    new GameWindow(id);
   }
 
   private Launcher _launcher;

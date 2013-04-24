@@ -9,6 +9,7 @@ import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.TrainerState;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -266,6 +267,7 @@ public class Pokemon implements JPokemonConstants {
         data.put("hp", health());
         data.put("hp_max", maxHealth());
         data.put("condition", _condition.toString());
+        data.put("moves", _moves.toJSON());
       }
       else if (state == TrainerState.UPGRADE) {
         data.put("name", name());

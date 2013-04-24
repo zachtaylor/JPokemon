@@ -123,8 +123,8 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      moveIndex = parent().dialogs().getMoveIndex();
-      enemySlotID = parent().dialogs().getMoveTarget(_enemyTeams, moveIndex);
+      moveIndex = parent().dialogs().getMoveIndex(_trainerData.getJSONObject("leader"));
+      enemySlotID = parent().dialogs().getMoveTarget(_trainerData.getJSONObject("leader"), _enemyTeams, moveIndex);
     } catch (Exception e) {
       if (!(e instanceof DialogCancelException))
         e.printStackTrace();
@@ -231,10 +231,10 @@ public class BattleView extends JPokemonView {
       BattleService.turn(request);
       refresh();
     } catch (ServiceException e) {
-      
+
     }
   }
-  
+
   private void enableButtons(boolean enable) {
     _fightButton.setEnabled(enable);
     _itemButton.setEnabled(enable);

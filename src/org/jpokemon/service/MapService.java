@@ -1,9 +1,12 @@
 package org.jpokemon.service;
 
+import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.map.Area;
 import org.jpokemon.map.Border;
 import org.jpokemon.map.npc.NPC;
+import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.Trainer;
 import org.json.JSONObject;
 
 public class MapService extends JPokemonService {
@@ -33,5 +36,20 @@ public class MapService extends JPokemonService {
     else {
       throw new ServiceException(reason);
     }
+  }
+
+  public static void grass(JSONObject request) throws ServiceException {
+    Player player = getPlayer(request);
+    Area area = getArea(request);
+
+    Pokemon pokemon = area.pokemon();
+
+    if (pokemon == null)
+      throw new ServiceException("No wild pokemon in this area");
+
+    Trainer trainer = new Trainer();
+    trainer.add(pokemon);
+
+    BattleRegistry.start(player, trainer);
   }
 }

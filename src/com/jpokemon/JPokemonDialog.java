@@ -36,9 +36,7 @@ public class JPokemonDialog {
     JOptionPane.showConfirmDialog(_parent, s, "Title", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
   }
 
-  public int getMoveIndex() throws DialogCancelException, JSONException {
-
-    JSONObject leader = _data.getJSONArray("pokemon").getJSONObject(0);
+  public int getMoveIndex(JSONObject leader) throws DialogCancelException, JSONException {
     JSONArray moves = leader.getJSONArray("moves");
 
     String prompt = "Select a move for " + leader.getString("name");
@@ -58,9 +56,7 @@ public class JPokemonDialog {
     return answer;
   }
 
-  public int getMoveTarget(JSONArray enemyTeams, int moveIndex) throws DialogCancelException, JSONException {
-    JSONObject leader = _data.getJSONArray("pokemon").getJSONObject(0);
-
+  public int getMoveTarget(JSONObject leader, JSONArray enemyTeams, int moveIndex) throws DialogCancelException, JSONException {
     String move = leader.getJSONArray("moves").getJSONObject(moveIndex).getString("name");
     ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
 

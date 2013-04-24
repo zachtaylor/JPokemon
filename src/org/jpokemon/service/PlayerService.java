@@ -33,9 +33,11 @@ public class PlayerService extends JPokemonService {
     return response;
   }
 
-  public static void load(String name) throws ServiceException {
+  public static int load(String name) throws ServiceException {
+    Player p = null;
+
     try {
-      Player p = PlayerFactory.load(name);
+      p = PlayerFactory.load(name);
 
       _messageQueues.put(p, new LinkedList<String>());
 
@@ -43,12 +45,16 @@ public class PlayerService extends JPokemonService {
     } catch (LoadException e) {
       throw new ServiceException(e.getMessage());
     }
+
+    return p.id();
   }
 
-  public static void create(String name) {
+  public static int create(String name) {
     Player p = PlayerFactory.create(name);
     _messageQueues.put(p, new LinkedList<String>());
     p.state(TrainerState.OVERWORLD);
+
+    return p.id();
   }
 
   public static void save(JSONObject request) throws ServiceException {

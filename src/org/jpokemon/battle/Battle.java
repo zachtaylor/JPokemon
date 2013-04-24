@@ -91,6 +91,10 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
   }
 
   public void start() {
+    for (Slot s : this) {
+      s.trainer().state(TrainerState.BATTLE);
+    }
+
     doTrainerAttacks();
   }
 
@@ -98,7 +102,7 @@ public class Battle implements JPokemonConstants, Iterable<Slot> {
     int trainerID, targetID;
 
     try {
-      trainerID = turn.getInt("trainer");
+      trainerID = turn.getInt("id");
       targetID = turn.getInt("target");
     } catch (JSONException e) {
       e.printStackTrace();

@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +37,13 @@ public class OverworldView extends JPokemonView {
     npcPanel = new JPanel();
     JPanel borderMenuAndLabel = new JPanel();
     borderSelection = new JComboBox();
+
+    grassButton = new JPokemonButton(ImageService.find("grass"));
+    grassButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        onClickGrassButton();
+      }
+    });
 
     borderSelection.setFocusable(false);
     borderSelection.addItemListener(new ItemListener() {
@@ -88,6 +96,10 @@ public class OverworldView extends JPokemonView {
         borderSelection.addItem(border.getString("name"));
       }
 
+      remove(grassButton);
+      if (data.getBoolean("has_wild_pokemon"))
+        add(grassButton, BorderLayout.SOUTH);
+
       parent().align();
 
     } catch (JSONException e) {
@@ -138,6 +150,21 @@ public class OverworldView extends JPokemonView {
     }
   }
 
+  public void onClickGrassButton() {
+    JSONObject request = new JSONObject();
+
+    try {
+      request.put("id", parent().playerID());
+
+      MapService.grass(request);
+    } catch (JSONException e) {
+    } catch (ServiceException e) {
+      e.printStackTrace();
+    }
+
+    refresh();
+  }
+
   @Override
   public boolean key(KeyEvent arg0) {
     return false;
@@ -173,8 +200,8 @@ public class OverworldView extends JPokemonView {
         selectedOption = _options[0];
       }
       else {
-        selectedOption = (String) JOptionPane.showInputDialog(parent(), _name + "...", "Speaking to " + _name,
-            JOptionPane.QUESTION_MESSAGE, getIcon(), _options, null);
+        selectedOption = (String) JOptionPane.showInputDialog(parent(), _name + "...", "Speaking to " + _name, JOptionPane.QUESTION_MESSAGE, getIcon(),
+            _options, null);
       }
 
       if (selectedOption != null)
@@ -190,6 +217,7 @@ public class OverworldView extends JPokemonView {
 
   private JLabel nameLabel;
   private JPanel npcPanel;
+  private JButton grassButton;
   private JComboBox borderSelection;
   private List<JSONObject> borderMemory = new ArrayList<JSONObject>();
 
