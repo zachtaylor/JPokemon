@@ -4,12 +4,17 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.jpokemon.service.BattleService;
+import org.jpokemon.service.ImageService;
 import org.jpokemon.service.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,12 +128,18 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      moveIndex = parent().dialogs().getMoveIndex(_trainerData.getJSONObject("leader"));
-      enemySlotID = parent().dialogs().getMoveTarget(_trainerData.getJSONObject("leader"), _enemyTeams, moveIndex);
-    } catch (Exception e) {
-      if (!(e instanceof DialogCancelException))
-        e.printStackTrace();
+      moveIndex = getMoveIndex();
+      if (moveIndex == -1) {
+        enableButtons(true);
+        return;
+      }
 
+      enemySlotID = getMoveTarget(moveIndex);
+      if (enemySlotID == -1) {
+        enableButtons(true);
+        return;
+      }
+    } catch (Exception e) {
       enableButtons(true);
       return;
     }
@@ -153,11 +164,12 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      swapIndex = parent().dialogs().getSwapIndex();
+      swapIndex = getSwapIndex();
+      if (swapIndex == -1) {
+        enableButtons(true);
+        return;
+      }
     } catch (Exception e) {
-      if (!(e instanceof DialogCancelException))
-        e.printStackTrace();
-
       enableButtons(true);
       return;
     }
@@ -240,6 +252,78 @@ public class BattleView extends JPokemonView {
     _itemButton.setEnabled(enable);
     _swapButton.setEnabled(enable);
     _runButton.setEnabled(enable);
+  }
+
+  private int getMoveIndex() throws DialogCancelException, JSONException {
+    String prompt = null;
+    ImageIcon image = null;
+    List<String> move_names = new ArrayList<String>();
+
+    try {
+      JSONObject leader = _trainerData.getJSONObject("leader");
+      JSONArray moves = leader.getJSONArray("moves");
+
+      prompt = "Select a move for " + leader.getString("name");
+      image = ImageService.find("pkmn/" + leader.getInt("number"));
+      for (int i = 0; i < moves.length(); i++)
+        move_names.add(moves.getJSONObject(i).getString("name"));
+    } catch (JSONException e) {
+      return -1;
+    }
+
+    int answer = JOptionPane.showOptionDialog(parent(), prompt, "MOVE CHOICE", 0, 0, image, move_names.toArray(), null);
+
+    return answer;
+  }
+
+  public int getMoveTarget(int moveIndex) throws DialogCancelException, JSONException {
+    String move = null;
+    ImageIcon image = null;
+    List<String> slotNames = new ArrayList<String>();
+    List<Integer> slotIds = new ArrayList<Integer>();
+
+    try {
+      move = _trainerData.getJSONObject("leader").getJSONArray("moves").getJSONObject(moveIndex).getString("name");
+      image = ImageService.find("pkmn/" + _trainerData.getJSONObject("leader").getInt("number"));
+
+      for (int i = 0; i < _enemyTeams.length(); i++) {
+        for (int j = 0; j < _enemyTeams.getJSONArray(i).length(); j++) {
+          slotNames.add(_enemyTeams.getJSONArray(i).getJSONObject(j).getJSONObject("leader").getString("name"));
+          slotIds.add(_enemyTeams.getJSONArray(i).getJSONObject(j).getInt("id"));
+        }
+      }
+    } catch (JSONException e) {
+    }
+
+    int answer = slotIds.get(0);
+
+    if (slotIds.size() > 1)
+      answer = JOptionPane.showOptionDialog(parent(), "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slotNames.toArray(), null);
+
+    if (answer != -1)
+      answer = slotIds.get(answer);
+
+    return answer;
+  }
+
+  public int getSwapIndex() throws DialogCancelException, JSONException {
+    ImageIcon image = null;
+    List<String> names = new ArrayList<String>();
+
+    try {
+      JSONObject leader = _trainerData.getJSONObject("leader");
+      JSONArray party = _data.getJSONArray("pokemon");
+
+      image = ImageService.find("pkmn/" + leader.getInt("number"));
+      for (int i = 1; i < party.length(); i++) {
+        names.add(party.getJSONObject(i).getString("name"));
+      }
+    } catch (JSONException e) {
+    }
+
+    int answer = JOptionPane.showOptionDialog(parent(), "Select a Pokemon", "SWAP CHOICE", 0, JOptionPane.QUESTION_MESSAGE, image, names.toArray(), null);
+
+    return answer;
   }
 
   private JPanel _enemies, _user;

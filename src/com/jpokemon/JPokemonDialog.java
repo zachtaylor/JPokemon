@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import org.jpokemon.service.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,52 +32,6 @@ public class JPokemonDialog {
 
   public void showAlert(String s) {
     JOptionPane.showConfirmDialog(_parent, s, "Title", JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
-  }
-
-  public int getMoveIndex(JSONObject leader) throws DialogCancelException, JSONException {
-    JSONArray moves = leader.getJSONArray("moves");
-
-    String prompt = "Select a move for " + leader.getString("name");
-    ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
-
-    List<String> move_names = new ArrayList<String>();
-    for (int i = 0; i < moves.length(); i++) {
-      JSONObject move = moves.getJSONObject(i);
-      move_names.add(move.getString("name"));
-    }
-
-    int answer = JOptionPane.showOptionDialog(_parent, prompt, "MOVE CHOICE", 0, 0, image, move_names.toArray(), null);
-
-    if (answer == -1)
-      throw new DialogCancelException();
-
-    return answer;
-  }
-
-  public int getMoveTarget(JSONObject leader, JSONArray enemyTeams, int moveIndex) throws DialogCancelException, JSONException {
-    String move = leader.getJSONArray("moves").getJSONObject(moveIndex).getString("name");
-    ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
-
-    List<String> slot_names = new ArrayList<String>();
-    List<Integer> trainerID_key = new ArrayList<Integer>();
-
-    for (int i = 0; i < enemyTeams.length(); i++) {
-      JSONArray teamData = enemyTeams.getJSONArray(i);
-
-      for (int j = 0; j < teamData.length(); j++) {
-        JSONObject trainerData = teamData.getJSONObject(j);
-
-        slot_names.add(trainerData.getJSONObject("leader").getString("name"));
-        trainerID_key.add(trainerData.getInt("id"));
-      }
-    }
-
-    int answer = JOptionPane.showOptionDialog(_parent, "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slot_names.toArray(), null);
-
-    if (answer == -1)
-      throw new DialogCancelException();
-
-    return trainerID_key.get(answer);
   }
 
   public int getItemChoice() throws DialogCancelException, JSONException {
@@ -118,26 +70,6 @@ public class JPokemonDialog {
 
     String itemName = itemsInType.get(itemChoice);
     return answerKey.get(itemName);
-  }
-
-  public int getSwapIndex() throws DialogCancelException, JSONException {
-    JSONArray party = _data.getJSONArray("pokemon");
-    JSONObject leader = party.getJSONObject(0);
-
-    ImageIcon image = ImageService.find("pkmn/" + leader.getInt("number"));
-
-    List<String> names = new ArrayList<String>();
-    for (int i = 1; i < party.length(); i++) {
-      JSONObject pokemon = party.getJSONObject(i);
-      names.add(pokemon.getString("name"));
-    }
-
-    int answer = JOptionPane.showOptionDialog(_parent, "Select a Pokemon", "SWAP CHOICE", 0, 0, image, names.toArray(), null);
-
-    if (answer <= 0)
-      throw new DialogCancelException();
-
-    return answer;
   }
 
   private JSONObject _data;
