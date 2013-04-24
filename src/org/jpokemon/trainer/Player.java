@@ -129,6 +129,7 @@ public class Player implements PokemonTrainer {
         data.put("id", id());
         data.put("leader", party().get(0).toJSON(state));
         data.put("party", party().toJSON(state));
+        data.put("bag", _bag.toJSON());
       }
       else if (state == TrainerState.UPGRADE) {
         data.put("party", party().toJSON(state));

@@ -78,7 +78,6 @@ public class GameWindow extends JFrame implements KeyListener {
   public void refresh() {
     try {
       JSONObject data = PlayerService.pull(_newDataRequest);
-      _dialogs.setData(data.getJSONObject("player"));
       _dialogs.showMessages(data.getJSONArray("messages"));
 
       if (data.getString("state").equals("BATTLE")) {

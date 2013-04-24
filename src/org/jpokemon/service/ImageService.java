@@ -22,7 +22,7 @@ public class ImageService implements JPokemonConstants {
   }
 
   public static ImageIcon item(String type, String name) {
-    String path = IMAGE_PATH + type.toLowerCase();
+    String path = IMAGE_PATH + "item/" + type.toLowerCase();
 
     if (type.equalsIgnoreCase("ball") || type.equalsIgnoreCase("potion") || type.equals("stone"))
       path += "/" + name.substring(0, 1).toLowerCase();

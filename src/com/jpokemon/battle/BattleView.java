@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.jpokemon.DialogCancelException;
 import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonView;
@@ -194,11 +193,12 @@ public class BattleView extends JPokemonView {
     enableButtons(false);
 
     try {
-      itemID = parent().dialogs().getItemChoice();
+      itemID = getItemChoice();
+      if (itemID == -1) {
+        enableButtons(true);
+        return;
+      }
     } catch (Exception e) {
-      if (!(e instanceof DialogCancelException))
-        e.printStackTrace();
-
       enableButtons(true);
       return;
     }
@@ -254,7 +254,7 @@ public class BattleView extends JPokemonView {
     _runButton.setEnabled(enable);
   }
 
-  private int getMoveIndex() throws DialogCancelException, JSONException {
+  private int getMoveIndex() throws JSONException {
     String prompt = null;
     ImageIcon image = null;
     List<String> move_names = new ArrayList<String>();
@@ -276,7 +276,7 @@ public class BattleView extends JPokemonView {
     return answer;
   }
 
-  public int getMoveTarget(int moveIndex) throws DialogCancelException, JSONException {
+  private int getMoveTarget(int moveIndex) throws JSONException {
     String move = null;
     ImageIcon image = null;
     List<String> slotNames = new ArrayList<String>();
@@ -306,7 +306,7 @@ public class BattleView extends JPokemonView {
     return answer;
   }
 
-  public int getSwapIndex() throws DialogCancelException, JSONException {
+  private int getSwapIndex() throws JSONException {
     ImageIcon image = null;
     List<String> names = new ArrayList<String>();
 
@@ -324,6 +324,39 @@ public class BattleView extends JPokemonView {
     int answer = JOptionPane.showOptionDialog(parent(), "Select a Pokemon", "SWAP CHOICE", 0, JOptionPane.QUESTION_MESSAGE, image, names.toArray(), null);
 
     return answer;
+  }
+
+  private int getItemChoice() throws JSONException {
+    JSONArray items = _trainerData.getJSONArray("bag");
+    JSONObject itemType = null;
+
+    List<String> itemTypes = new ArrayList<String>();
+    List<ImageIcon> itemsInType = new ArrayList<ImageIcon>();
+
+    for (int i = 0; i < items.length(); i++) {
+      itemTypes.add(items.getJSONObject(i).getString("type"));
+    }
+
+    int itemTypeChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null,
+        itemTypes.toArray(), null);
+
+    if (itemTypeChoice == -1)
+      return -1;
+    else
+      itemType = items.getJSONObject(itemTypeChoice);
+
+    for (int i = 0; i < itemType.getJSONArray("items").length(); i++) {
+      String itemName = itemType.getJSONArray("items").getJSONObject(i).getString("name");
+      itemsInType.add(ImageService.item(itemType.getString("type"), itemName));
+    }
+
+    int itemChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null,
+        itemsInType.toArray(), null);
+
+    if (itemChoice == -1)
+      return -1;
+
+    return itemType.getJSONArray("items").getJSONObject(itemChoice).getInt("id");
   }
 
   private JPanel _enemies, _user;

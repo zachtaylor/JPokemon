@@ -64,9 +64,7 @@ public class Item {
     try {
       data.put("id", _info.getNumber());
       data.put("name", name());
-      data.put("value", value());
       data.put("amount", amount());
-      data.put("type", _type.name());
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -79,8 +77,8 @@ public class Item {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    node.setAttribute("number", _info.getNumber()+"");
-    node.setAttribute("quantity", _quantity+"");
+    node.setAttribute("number", _info.getNumber() + "");
+    node.setAttribute("quantity", _quantity + "");
     node.setSelfClosing(true);
 
     return node;
