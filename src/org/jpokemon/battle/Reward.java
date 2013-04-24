@@ -67,15 +67,21 @@ public class Reward implements JPokemonConstants {
 
     int xpEach = Math.max(xp() / hitList.size(), 1);
 
-    /* TODO s is the number of Pokemon that participated in the battle and have
+    /*
+     * TODO s is the number of Pokemon that participated in the battle and have
      * not fainted. If any Pokemon in the party is holding an Exp. Share, s is
      * equal to 2, and for the rest of the Pokemon, s is equal to twice the
      * number of Pokemon that participated instead. If more than one Pokemon is
      * holding an Exp. Share, s is equal to twice the number of Pokemon holding
-     * the Exp. Share for each Pokemon holding one. */
+     * the Exp. Share for each Pokemon holding one.
+     */
 
     for (Pokemon earner : hitList) {
-      earner.xp(earner.xp() + xpEach);
+      if (earner.hasOriginalTrainer())
+        earner.xp((int) (earner.xp() + xpEach * ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
+      else
+        earner.xp((int) (earner.xp() + xpEach * NOT_ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
+
       earner.addEV(effortValues());
       messages.add(earner.name() + " received " + xpEach + " experience!");
     }
