@@ -88,10 +88,10 @@ public class Player implements PokemonTrainer {
   }
 
   public boolean add(Pokemon p) {
-    _pokedex.own(p.number());
-
     for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p)) {
+        _pokedex.own(p.number());
+        p.setTrainerName(name());
         return true;
       }
     }

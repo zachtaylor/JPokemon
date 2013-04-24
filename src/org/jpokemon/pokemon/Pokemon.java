@@ -9,7 +9,6 @@ import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.TrainerState;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,14 +38,14 @@ public class Pokemon implements JPokemonConstants {
   }
 
   public String name() {
-    if (name == null)
+    if (_name == null)
       return species();
 
-    return name;
+    return _name;
   }
 
   public void name(String s) {
-    name = s;
+    _name = s;
   }
 
   public String species() {
@@ -79,6 +78,21 @@ public class Pokemon implements JPokemonConstants {
 
   public Type type2() {
     return Type.valueOf(_species.getType2());
+  }
+
+  public String getTrainerName() {
+    return _ot;
+  }
+
+  public void setTrainerName(String s) {
+    if (_ot != null)
+      _hasOriginalTrainer = false;
+    else
+      _ot = s;
+  }
+
+  public boolean hasOriginalTrainer() {
+    return _hasOriginalTrainer;
   }
 
   public int xp() {
@@ -289,13 +303,15 @@ public class Pokemon implements JPokemonConstants {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    if (name != null) {
-      node.setAttribute("name", name);
+    if (_name != null) {
+      node.setAttribute("name", _name);
     }
 
     node.setAttribute("number", _number + "");
     node.setAttribute("level", _level + "");
     node.setAttribute("xp", _xp + "");
+    node.setAttribute("ot", _ot);
+    node.setAttribute("has_original_trainer", _hasOriginalTrainer + "");
 
     node.addChild(_condition.toXML());
     node.addChild(_stats.toXML());
@@ -309,7 +325,7 @@ public class Pokemon implements JPokemonConstants {
       throw new XMLException("Cannot read node");
 
     if (node.getAttribute("name") != null)
-      name = node.getAttribute("name");
+      _name = node.getAttribute("name");
 
     _number = Integer.parseInt(node.getAttribute("number"));
     _moves.setPokemonNumber(_number);
@@ -320,6 +336,10 @@ public class Pokemon implements JPokemonConstants {
     _stats.level(_level);
 
     _xp = Integer.parseInt(node.getAttribute("xp"));
+
+    _ot = node.getAttribute("ot");
+
+    _hasOriginalTrainer = Boolean.parseBoolean(node.getAttribute("has_original_trainer"));
 
     _moves.loadXML(node.getChildren(MoveBlock.XML_NODE_NAME).get(0));
     _stats.loadXML(node.getChildren(StatBlock.XML_NODE_NAME).get(0));
@@ -365,10 +385,11 @@ public class Pokemon implements JPokemonConstants {
     return (name().hashCode() & 255) + _number + _level;
   }
 
-  private String name;
   private MoveBlock _moves;
   private StatBlock _stats;
+  private String _name, _ot;
   private Condition _condition;
   private PokemonInfo _species;
   private int _number, _level, _xp;
+  private boolean _hasOriginalTrainer;
 }

@@ -6,7 +6,7 @@
   </pokedex>
   <pokemonstorage>
     <pokemonbox>
-      <pokemon level="9" xp="0" number="4">
+      <pokemon level="9" xp="0" number="4" ot="Zach" has_original_trainer="true">
         <condition>  </condition>
         <stats points="4" evtotal="0">
           <stat ev="0" max="27" iv="12" cur="27" points="0" type="HEALTH" ev_pending="0" />
