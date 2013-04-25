@@ -7,20 +7,20 @@ import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class NPCActionRequirement {
+public class NPCRequirement {
   private int number, actionset, requirementset, type, data;
 
-  public static List<NPCActionRequirement> get(int number, int set) {
+  public static List<NPCRequirement> get(int number, int set) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCActionRequirement.class).where("number").eq(number).and("actionset").eq(set).getList();
+      return SqlStatement.select(NPCRequirement.class).where("number").eq(number).and("actionset").eq(set).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
 
-    return new ArrayList<NPCActionRequirement>();
+    return new ArrayList<NPCRequirement>();
   }
 
   //@preformat

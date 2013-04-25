@@ -1,9 +1,7 @@
 package org.jpokemon.map.npc;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jpokemon.action.Action;
@@ -16,55 +14,50 @@ public class NPCFactory {
     Map<Integer, NPC> npcs = new HashMap<Integer, NPC>();
 
     // Get all in this area
-    for (NPCActionSetInfo npcMapping : NPCActionSetInfo.get(area)) {
+    for (NPCActionSetMap npcMapping : NPCActionSetMap.get(area)) {
+      NPC npc = npcs.get(npcMapping.getNumber());
 
-      // If this NPC isn't in the area yet, build it
-      if (npcs.get(npcMapping.getNumber()) == null) {
-        NPCInfo info = NPCInfo.get(npcMapping.getNumber());
-        NPC npc = new NPC(info);
-        npcs.put(npcMapping.getNumber(), npc);
+      if (npc == null) {
+        npcs.put(npcMapping.getNumber(), npc = NPC.get(npcMapping.getNumber()));
       }
 
       ActionSet actionset = buildActionSet(npcMapping);
-      npcs.get(npcMapping.getNumber()).addActionSet(actionset);
-
+      npc.addActionSet(actionset);
     }
 
     return npcs.values();
   }
 
-  private static ActionSet buildActionSet(NPCActionSetInfo info) {
+  private static ActionSet buildActionSet(NPCActionSetMap info) {
     ActionSet as = new ActionSet();
 
-    for (NPCActionMapping action : NPCActionMapping.get(info.getNumber(), info.getActionset())) {
-      Action a = new Action(action.getType(), action.getData());
+    for (NPCActionSet actionset : NPCActionSet.get(info.getNumber(), info.getActionset())) {
+      Action a = new Action(actionset.getType(), actionset.getData());
       as.addAction(a);
     }
 
     as.setOption(info.getOption());
 
-    for (RequirementSet set : buildActionSetRequirements(info.getNumber(), info.getActionset())) {
+    for (RequirementSet set : buildRequirementSets(info.getNumber(), info.getActionset())) {
       as.addRequirements(set);
     }
 
     return as;
   }
 
-  private static List<RequirementSet> buildActionSetRequirements(int number, int set) {
-    Map<Integer, RequirementSet> requirementMaps = new HashMap<Integer, RequirementSet>();
+  private static Collection<RequirementSet> buildRequirementSets(int number, int actionset) {
+    Map<Integer, RequirementSet> requirementsets = new HashMap<Integer, RequirementSet>();
 
-    for (NPCActionRequirement req : NPCActionRequirement.get(number, set)) {
-      if (requirementMaps.get(req.getRequirementset()) == null)
-        requirementMaps.put(req.getRequirementset(), new RequirementSet());
+    for (NPCRequirement req : NPCRequirement.get(number, actionset)) {
+      RequirementSet requirementset = requirementsets.get(req.getRequirementset());
 
-      requirementMaps.get(req.getRequirementset()).add(new Requirement(req.getType(), req.getData()));
+      if (requirementset == null) {
+        requirementsets.put(req.getRequirementset(), requirementset = new RequirementSet());
+      }
+
+      requirementset.add(new Requirement(req.getType(), req.getData()));
     }
 
-    List<RequirementSet> requirements = new ArrayList<RequirementSet>();
-    for (Map.Entry<Integer, RequirementSet> reqList : requirementMaps.entrySet()) {
-      requirements.add(reqList.getValue());
-    }
-
-    return requirements;
+    return requirementsets.values();
   }
 }

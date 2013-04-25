@@ -6,15 +6,15 @@ import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class NPCActionMapping {
+public class NPCActionSet {
   private int number, actionset, type;
   private String data;
 
-  public static List<NPCActionMapping> get(int number, int actionset) {
+  public static List<NPCActionSet> get(int number, int actionset) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCActionMapping.class).where("number").eq(number).and("actionset").eq(actionset).getList();
+      return SqlStatement.select(NPCActionSet.class).where("number").eq(number).and("actionset").eq(actionset).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();
