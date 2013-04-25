@@ -1,6 +1,8 @@
 package org.jpokemon.map;
 
 import java.util.HashMap;
+
+import org.jpokemon.action.Requirement;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.map.npc.NPCFactory;
 

@@ -1,4 +1,4 @@
-package org.jpokemon.map.npc;
+package org.jpokemon.action;
 
 public enum ActionType {
   SPEECH, EVENT, ITEM, TRANSPORT, POKEMON;

@@ -1,4 +1,4 @@
-package org.jpokemon.map.npc;
+package org.jpokemon.action;
 
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.service.PlayerService;

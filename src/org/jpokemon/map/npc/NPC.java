@@ -2,6 +2,8 @@ package org.jpokemon.map.npc;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jpokemon.action.ActionSet;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;

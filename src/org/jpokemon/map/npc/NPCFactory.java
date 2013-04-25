@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.map.Requirement;
+import org.jpokemon.action.Action;
+import org.jpokemon.action.ActionSet;
+import org.jpokemon.action.Requirement;
+import org.jpokemon.action.RequirementSet;
 
 public class NPCFactory {
   public static Collection<NPC> build(int area) {
@@ -39,23 +42,26 @@ public class NPCFactory {
     }
 
     as.setOption(info.getOption());
-    as.requirements(buildActionSetRequirements(info.getNumber(), info.getActionset()));
+
+    for (RequirementSet set : buildActionSetRequirements(info.getNumber(), info.getActionset())) {
+      as.addRequirements(set);
+    }
 
     return as;
   }
 
-  private static List<List<Requirement>> buildActionSetRequirements(int number, int set) {
-    Map<Integer, List<Requirement>> requirementMaps = new HashMap<Integer, List<Requirement>>();
+  private static List<RequirementSet> buildActionSetRequirements(int number, int set) {
+    Map<Integer, RequirementSet> requirementMaps = new HashMap<Integer, RequirementSet>();
 
     for (NPCActionRequirement req : NPCActionRequirement.get(number, set)) {
       if (requirementMaps.get(req.getRequirementset()) == null)
-        requirementMaps.put(req.getRequirementset(), new ArrayList<Requirement>());
+        requirementMaps.put(req.getRequirementset(), new RequirementSet());
 
       requirementMaps.get(req.getRequirementset()).add(new Requirement(req.getType(), req.getData()));
     }
 
-    List<List<Requirement>> requirements = new ArrayList<List<Requirement>>();
-    for (Map.Entry<Integer, List<Requirement>> reqList : requirementMaps.entrySet()) {
+    List<RequirementSet> requirements = new ArrayList<RequirementSet>();
+    for (Map.Entry<Integer, RequirementSet> reqList : requirementMaps.entrySet()) {
       requirements.add(reqList.getValue());
     }
 

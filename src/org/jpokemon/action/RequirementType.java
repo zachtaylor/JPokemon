@@ -1,4 +1,4 @@
-package org.jpokemon.map;
+package org.jpokemon.action;
 
 public enum RequirementType {
   EVENT, POKEDEX;
