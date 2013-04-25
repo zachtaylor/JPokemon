@@ -1,18 +1,16 @@
 package org.jpokemon.map;
 
 import java.util.List;
-
 import org.jpokemon.JPokemonConstants;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
 
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-
-public class BorderRequirement implements JPokemonConstants {
+public class BorderRequirement {
   private int area, next, type, data;
 
   public static List<BorderRequirement> get(int area, int next) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
       return SqlStatement.select(BorderRequirement.class).where("area").eq(area).and("next").eq(next).getList();

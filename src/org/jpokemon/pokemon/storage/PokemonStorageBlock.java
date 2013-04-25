@@ -16,19 +16,19 @@ import com.zachtaylor.jnodalxml.XMLNode;
  * PokemonStorageBlock supports 1 unit of unique size, to be used for the party.
  * Other units have common size.
  */
-public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokemonConstants {
+public class PokemonStorageBlock implements Iterable<PokemonStorageUnit> {
   public static final String XML_NODE_NAME = "pokemonstorage";
 
   public PokemonStorageBlock() {
-    _data = new PokemonStorageUnit[PLAYER_STORAGE_UNIT_COUNT + 1];
+    _data = new PokemonStorageUnit[JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT + 1];
 
-    _data[0] = new PokemonStorageUnit(TRAINER_PARTY_SIZE);
-    for (int i = 1; i <= PLAYER_STORAGE_UNIT_COUNT; i++)
-      _data[i] = new PokemonStorageUnit(PLAYER_STORAGE_UNIT_SIZE);
+    _data[0] = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
+    for (int i = 1; i <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++)
+      _data[i] = new PokemonStorageUnit(JPokemonConstants.PLAYER_STORAGE_UNIT_SIZE);
   }
 
   public PokemonStorageUnit get(int box) {
-    if (box < 0 || box > PLAYER_STORAGE_UNIT_COUNT)
+    if (box < 0 || box > JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT)
       throw new IllegalArgumentException("Invalid box number: " + box);
 
     return _data[box];
@@ -40,7 +40,7 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
     try {
       data.put("party", _data[0].toJSON(state));
 
-      for (int i = 1; i <= PLAYER_STORAGE_UNIT_COUNT; i++)
+      for (int i = 1; i <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++)
         data.put("box" + i, _data[i].toJSON(state));
 
     } catch (JSONException e) {
@@ -79,7 +79,7 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit>, JPokem
   private class PokemonStorageBlockIterator implements Iterator<PokemonStorageUnit> {
     @Override
     public boolean hasNext() {
-      return index <= PLAYER_STORAGE_UNIT_COUNT;
+      return index <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT;
     }
 
     @Override

@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jpokemon.JPokemonConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
@@ -17,7 +14,7 @@ import com.zachtaylor.jnodalxml.XMLNode;
  * A gadget which helps keep track of which Pokemon have been seen or caught in
  * the world. Pokedex maintains a status on each Pokemon it tracks.
  */
-public class Pokedex implements JPokemonConstants {
+public class Pokedex {
   public static final String XML_NODE_NAME = "pokedex";
 
   /**

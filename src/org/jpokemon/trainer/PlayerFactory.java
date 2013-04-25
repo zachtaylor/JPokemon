@@ -14,7 +14,7 @@ import org.jpokemon.service.LoadException;
 
 import com.zachtaylor.jnodalxml.XMLParser;
 
-public class PlayerFactory implements JPokemonConstants {
+public class PlayerFactory {
   public static Player get(int id) {
     if (players.get(id) == null)
       throw new IllegalArgumentException("Could not retrieve PlayerID: " + id);
@@ -35,7 +35,7 @@ public class PlayerFactory implements JPokemonConstants {
     if (fileMapping.values().contains(filename))
       throw new LoadException("File already loaded");
 
-    File file = new File(SAVE_PATH + filename + ".jpkmn");
+    File file = new File(JPokemonConstants.SAVE_PATH + filename + ".jpkmn");
 
     if (!file.exists())
       throw new LoadException("Save file not found");
@@ -53,7 +53,7 @@ public class PlayerFactory implements JPokemonConstants {
   }
 
   public static void save(Player player) {
-    String path = SAVE_PATH + fileMapping.get(player) + ".jpkmn";
+    String path = JPokemonConstants.SAVE_PATH + fileMapping.get(player) + ".jpkmn";
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
@@ -72,11 +72,11 @@ public class PlayerFactory implements JPokemonConstants {
   }
 
   private static String getUniqueName(String attempt) {
-    if (!fileMapping.containsValue(attempt) && !new File(SAVE_PATH + attempt + ".jpkmn").exists())
+    if (!fileMapping.containsValue(attempt) && !new File(JPokemonConstants.SAVE_PATH + attempt + ".jpkmn").exists())
       return attempt;
 
     int n = 0;
-    for (; fileMapping.containsValue(attempt + n) || new File(SAVE_PATH + attempt + n + ".jpkmn").exists(); n++)
+    for (; fileMapping.containsValue(attempt + n) || new File(JPokemonConstants.SAVE_PATH + attempt + n + ".jpkmn").exists(); n++)
       ;
 
     return attempt + n;

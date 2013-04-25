@@ -3,20 +3,18 @@ package org.jpokemon.pokemon.move;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.jpokemon.JPokemonConstants;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
 
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-
-public class MoveMap implements JPokemonConstants {
+public class MoveMap {
   private int pokemon_number, pokemon_level, move_number;
 
   private static Map<Integer, Map<Integer, List<MoveMap>>> cache = new HashMap<Integer, Map<Integer, List<MoveMap>>>();
 
   public static List<MoveMap> get(int number, int level) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     ensureCacheExists(number);
     if (cache.get(number).get(level) == null) {

@@ -2,18 +2,16 @@ package org.jpokemon.map.npc;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jpokemon.JPokemonConstants;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
 
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-
-public class NPCActionRequirement implements JPokemonConstants {
+public class NPCActionRequirement {
   private int number, actionset, requirementset, type, data;
 
   public static List<NPCActionRequirement> get(int number, int set) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
       return SqlStatement.select(NPCActionRequirement.class).where("number").eq(number).and("actionset").eq(set).getList();

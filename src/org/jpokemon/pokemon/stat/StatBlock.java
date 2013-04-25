@@ -13,7 +13,7 @@ import org.json.JSONException;
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
-public class StatBlock implements JPokemonConstants {
+public class StatBlock {
   public static final String XML_NODE_NAME = "stats";
 
   public StatBlock(PokemonInfo info) {
@@ -77,7 +77,7 @@ public class StatBlock implements JPokemonConstants {
       throw new IllegalStateException("No points available");
 
     Stat stat = get(st);
-    int consumable = Math.min(STAT_POINTS_INDIVIDUAL_MAX - stat.points(), amount);
+    int consumable = Math.min(JPokemonConstants.STAT_POINTS_INDIVIDUAL_MAX - stat.points(), amount);
     if (consumable <= 0)
       return;
 
@@ -106,11 +106,11 @@ public class StatBlock implements JPokemonConstants {
       Stat stat = get(StatType.valueOf(ev.getStat()));
       int consumable = ev.getAmount();
 
-      if (_evTotal + ev.getAmount() > EFFORT_VALUE_UNIVERSAL_MAX) {
-        consumable = EFFORT_VALUE_UNIVERSAL_MAX - _evTotal;
+      if (_evTotal + ev.getAmount() > JPokemonConstants.EFFORT_VALUE_UNIVERSAL_MAX) {
+        consumable = JPokemonConstants.EFFORT_VALUE_UNIVERSAL_MAX - _evTotal;
       }
-      else if (stat.ev() + ev.getAmount() > EFFORT_VALUE_INDIVIDUAL_MAX) {
-        consumable = EFFORT_VALUE_INDIVIDUAL_MAX - stat.ev();
+      else if (stat.ev() + ev.getAmount() > JPokemonConstants.EFFORT_VALUE_INDIVIDUAL_MAX) {
+        consumable = JPokemonConstants.EFFORT_VALUE_INDIVIDUAL_MAX - stat.ev();
       }
 
       _evTotal += consumable;

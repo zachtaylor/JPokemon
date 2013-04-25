@@ -1,12 +1,10 @@
 package org.jpokemon.map;
 
 import java.util.HashMap;
-
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.map.npc.NPCFactory;
 
-public class Map implements JPokemonConstants {
+public class Map {
   private static HashMap<Integer, Area> map = new HashMap<Integer, Area>();
 
   public static Area area(int id) {

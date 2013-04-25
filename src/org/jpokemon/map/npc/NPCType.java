@@ -3,25 +3,23 @@ package org.jpokemon.map.npc;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.jpokemon.JPokemonConstants;
-
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
 
 /**
  * A type of NPC (Bug Catcher, Lass, etc). NPCType will distinguish the way a
  * NPCs name is displayed, and they way they appear.
  */
-public class NPCType implements JPokemonConstants {
+public class NPCType {
   private int number;
   private String name, icon;
 
   private static Map<Integer, NPCType> cache = new HashMap<Integer, NPCType>();
 
   public static NPCType get(int number) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     if (cache.get(number) == null) {
       try {

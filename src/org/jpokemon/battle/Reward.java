@@ -9,7 +9,7 @@ import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.TrainerType;
 
-public class Reward implements JPokemonConstants {
+public class Reward {
   public Reward(Slot s) {
     _pokemon = s.leader();
     _message = _pokemon.name() + " fainted!";
@@ -18,7 +18,7 @@ public class Reward implements JPokemonConstants {
     xp *= _pokemon.xpYield();
     xp *= _pokemon.level();
     xp /= 7;
-    xp *= UNIVERSAL_EXPERIENCE_MODIFIER;
+    xp *= JPokemonConstants.UNIVERSAL_EXPERIENCE_MODIFIER;
     _xp = (int) xp;
 
     if (s.trainer().type() == TrainerType.PLAYER)
@@ -78,9 +78,9 @@ public class Reward implements JPokemonConstants {
 
     for (Pokemon earner : hitList) {
       if (earner.hasOriginalTrainer())
-        earner.xp((int) (earner.xp() + xpEach * ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
+        earner.xp((int) (earner.xp() + xpEach * JPokemonConstants.ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
       else
-        earner.xp((int) (earner.xp() + xpEach * NOT_ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
+        earner.xp((int) (earner.xp() + xpEach * JPokemonConstants.NOT_ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
 
       earner.addEV(effortValues());
       messages.add(earner.name() + " received " + xpEach + " experience!");

@@ -6,7 +6,7 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.Pokemon;
 
-public class PlayerTest extends TestCase implements JPokemonConstants {
+public class PlayerTest extends TestCase {
   static int range = 25;
 
   Player player;
@@ -48,7 +48,7 @@ public class PlayerTest extends TestCase implements JPokemonConstants {
     while (player.party().add(new Pokemon(i)))
       i++;
 
-    assertEquals(TRAINER_PARTY_SIZE, player.party().size());
+    assertEquals(JPokemonConstants.TRAINER_PARTY_SIZE, player.party().size());
     assertFalse(player.party().add(new Pokemon(i)));
     assertTrue(player.add(new Pokemon(i)));
   }

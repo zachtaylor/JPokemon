@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
-public class Pokemon implements JPokemonConstants {
+public class Pokemon {
   public static final String XML_NODE_NAME = "pokemon";
 
   public Pokemon(int num) {
@@ -62,7 +62,7 @@ public class Pokemon implements JPokemonConstants {
 
   public void level(int l) {
     if (_level + 1 == l)
-      _stats.points(_stats.points() + STAT_POINTS_PER_LEVEL);
+      _stats.points(_stats.points() + JPokemonConstants.STAT_POINTS_PER_LEVEL);
 
     _level = l;
     _stats.level(l);
@@ -252,7 +252,7 @@ public class Pokemon implements JPokemonConstants {
    * Eevee into Flareon).
    */
   public void evolve(int... num) {
-    _stats.points(_stats.points() + STAT_POINTS_PER_EVOLUTION);
+    _stats.points(_stats.points() + JPokemonConstants.STAT_POINTS_PER_EVOLUTION);
 
     if (num.length != 0)
       _number = num[0]; // special value

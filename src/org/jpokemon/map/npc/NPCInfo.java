@@ -1,19 +1,17 @@
 package org.jpokemon.map.npc;
 
 import java.util.List;
-
 import org.jpokemon.JPokemonConstants;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
 
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-
-public class NPCInfo implements JPokemonConstants {
+public class NPCInfo {
   private int number, type, avoidprefix;
   private String name;
 
   public static NPCInfo get(int number) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
       List<NPCInfo> query = SqlStatement.select(NPCInfo.class).where("number").eq(number).getList();

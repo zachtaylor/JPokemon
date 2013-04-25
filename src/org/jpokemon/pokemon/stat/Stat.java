@@ -8,13 +8,13 @@ import org.json.JSONObject;
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
-public class Stat implements JPokemonConstants {
+public class Stat {
   public static final String XML_NODE_NAME = "stat";
 
   public Stat() {
     _level = 1;
     _modifier = 1;
-    _iv = (int) (Math.random() * INDIVIDUAL_VALUE_RANGE_CAP);
+    _iv = (int) (Math.random() * JPokemonConstants.INDIVIDUAL_VALUE_RANGE_CAP);
   }
 
   public int cur() {
@@ -30,7 +30,7 @@ public class Stat implements JPokemonConstants {
   }
 
   public void ev(int val) {
-    if (!MEASURE_EFFORT_VALUE_REALTIME) {
+    if (!JPokemonConstants.MEASURE_EFFORT_VALUE_REALTIME) {
       _evPending += val;
     }
     else {
@@ -63,7 +63,7 @@ public class Stat implements JPokemonConstants {
   public void level(int l) {
     _level = l;
 
-    if (!MEASURE_EFFORT_VALUE_REALTIME) {
+    if (!JPokemonConstants.MEASURE_EFFORT_VALUE_REALTIME) {
       _ev += _evPending;
       _evPending = 0;
     }
@@ -85,8 +85,8 @@ public class Stat implements JPokemonConstants {
   public void effect(int power) {
     _delta += power;
 
-    if (Math.abs(_delta) > STAT_CHANGE_MAX_DELTA)
-      _delta = (int) Math.copySign(STAT_CHANGE_MAX_DELTA, _delta);
+    if (Math.abs(_delta) > JPokemonConstants.STAT_CHANGE_MAX_DELTA)
+      _delta = (int) Math.copySign(JPokemonConstants.STAT_CHANGE_MAX_DELTA, _delta);
 
     computeCur();
   }
@@ -144,10 +144,10 @@ public class Stat implements JPokemonConstants {
   }
 
   private void computeMax() {
-    double val = (STAT_MAX_VALUE_WEIGHT_BASE * _base);
-    val += (STAT_MAX_VALUE_WEIGHT_IV * _iv);
-    val += (STAT_MAX_VALUE_WEIGHT_EV * _ev);
-    val += (STAT_MAX_VALUE_WEIGHT_POINTS * _pts);
+    double val = (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_BASE * _base);
+    val += (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_IV * _iv);
+    val += (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_EV * _ev);
+    val += (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_POINTS * _pts);
     val += 100;
     val /= 100;
     val *= _level;

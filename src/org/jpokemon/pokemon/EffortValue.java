@@ -1,8 +1,6 @@
 package org.jpokemon.pokemon;
 
-import org.jpokemon.JPokemonConstants;
-
-public class EffortValue implements JPokemonConstants {
+public class EffortValue {
   private int pokemon, stat, amount;
 
   //@preformat

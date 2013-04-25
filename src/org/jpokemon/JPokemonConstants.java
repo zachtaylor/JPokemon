@@ -3,7 +3,7 @@ package org.jpokemon;
 /**
  * System settings
  */
-public interface JPokemonConstants {
+public class JPokemonConstants {
 
   // Environment config
   public static final String SAVE_PATH = "data/save/";

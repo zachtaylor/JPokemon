@@ -11,14 +11,14 @@ import org.json.JSONArray;
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
-public class MoveBlock implements Iterable<Move>, JPokemonConstants {
+public class MoveBlock implements Iterable<Move> {
   public static final String XML_NODE_NAME = "moves";
 
   public MoveBlock(int pokemonNumber) throws ConfigurationException {
     _pokemon = pokemonNumber;
-    _data = new Move[KNOWN_MOVE_COUNT];
+    _data = new Move[JPokemonConstants.KNOWN_MOVE_COUNT];
 
-    for (int i = 0; i < KNOWN_MOVE_COUNT; i++)
+    for (int i = 0; i < JPokemonConstants.KNOWN_MOVE_COUNT; i++)
       _data[i] = new Move(-1);
 
     try {
@@ -49,14 +49,14 @@ public class MoveBlock implements Iterable<Move>, JPokemonConstants {
   }
 
   public void add(int number) {
-    if (_count == KNOWN_MOVE_COUNT)
+    if (_count == JPokemonConstants.KNOWN_MOVE_COUNT)
       throw new IllegalStateException("MoveBlock is full");
 
     add(number, _count);
   }
 
   public void add(int number, int position) {
-    if (position < 0 || position >= KNOWN_MOVE_COUNT)
+    if (position < 0 || position >= JPokemonConstants.KNOWN_MOVE_COUNT)
       throw new IllegalArgumentException("Position out of bounds: " + position);
     if (contains(number))
       throw new IllegalArgumentException("Duplicate move: " + number);
@@ -99,7 +99,7 @@ public class MoveBlock implements Iterable<Move>, JPokemonConstants {
       return;
 
     removeAll();
-    while (!possible.isEmpty() && _count < KNOWN_MOVE_COUNT)
+    while (!possible.isEmpty() && _count < JPokemonConstants.KNOWN_MOVE_COUNT)
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 

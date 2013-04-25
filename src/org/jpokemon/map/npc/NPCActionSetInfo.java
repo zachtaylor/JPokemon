@@ -1,19 +1,17 @@
 package org.jpokemon.map.npc;
 
 import java.util.List;
-
 import org.jpokemon.JPokemonConstants;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
 
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-
-public class NPCActionSetInfo implements JPokemonConstants {
+public class NPCActionSetInfo {
   private int number, area, actionset;
   private String option;
 
   public static List<NPCActionSetInfo> get(int area) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
       return SqlStatement.select(NPCActionSetInfo.class).where("area").eq(area).getList();

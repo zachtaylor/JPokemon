@@ -3,16 +3,14 @@ package org.jpokemon.item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
+import com.njkremer.Sqlite.Annotations.PrimaryKey;
 
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-import com.kremerk.Sqlite.Annotations.PrimaryKey;
-
-public class ItemInfo implements JPokemonConstants {
+public class ItemInfo {
   @PrimaryKey
   private int number;
 
@@ -22,7 +20,7 @@ public class ItemInfo implements JPokemonConstants {
   private static Map<Integer, ItemInfo> cache = new HashMap<Integer, ItemInfo>();
 
   public static ItemInfo getInfo(int number) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     if (number < 1)
       throw new ConfigurationException(number + " is outside item range");

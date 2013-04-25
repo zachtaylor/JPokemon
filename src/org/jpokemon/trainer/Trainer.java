@@ -6,12 +6,12 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Trainer implements PokemonTrainer, JPokemonConstants {
+public class Trainer implements PokemonTrainer {
   public Trainer() {
     _id = 0;
     _name = "Mock Player";
     _type = TrainerType.WILD;
-    _party = new PokemonStorageUnit(TRAINER_PARTY_SIZE);
+    _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
   }
 
   public int id() {
@@ -45,10 +45,10 @@ public class Trainer implements PokemonTrainer, JPokemonConstants {
   public double xpFactor() {
     switch (_type) {
     case GYM:
-      return GYM_EXPERIENCE_MODIFIER;
+      return JPokemonConstants.GYM_EXPERIENCE_MODIFIER;
     case RIVAL:
     case TRAINER:
-      return TRAINER_EXPERIENCE_MODIFIER;
+      return JPokemonConstants.TRAINER_EXPERIENCE_MODIFIER;
     default:
       return 1.0;
     }

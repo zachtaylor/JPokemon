@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jpokemon.JPokemonConstants;
-import com.kremerk.Sqlite.DataConnectionException;
-import com.kremerk.Sqlite.DataConnectionManager;
-import com.kremerk.Sqlite.SqlStatement;
-import com.kremerk.Sqlite.Annotations.OneToMany;
-import com.kremerk.Sqlite.Annotations.PrimaryKey;
+import com.njkremer.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionManager;
+import com.njkremer.Sqlite.SqlStatement;
+import com.njkremer.Sqlite.Annotations.OneToMany;
+import com.njkremer.Sqlite.Annotations.PrimaryKey;
 
-public class PokemonInfo implements JPokemonConstants {
+public class PokemonInfo {
   @PrimaryKey
   private int number;
   private String name;
@@ -23,15 +23,13 @@ public class PokemonInfo implements JPokemonConstants {
   private static Map<Integer, PokemonInfo> cache = new HashMap<Integer, PokemonInfo>();
 
   public static PokemonInfo get(int num) {
-    DataConnectionManager.init(DATABASE_PATH);
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     if (cache.get(num) == null) {
       try {
         List<PokemonInfo> pokemonbase = SqlStatement.select(PokemonInfo.class).where("number").eq(num).getList();
-        List<EffortValue> evbase = SqlStatement.select(EffortValue.class).where("pokemon").eq(num).getList();
 
         if (!pokemonbase.isEmpty()) {
-          pokemonbase.get(0).setEffortValues(evbase);
           cache.put(num, pokemonbase.get(0));
         }
 

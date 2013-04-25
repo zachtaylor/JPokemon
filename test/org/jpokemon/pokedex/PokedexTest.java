@@ -2,9 +2,7 @@ package org.jpokemon.pokedex;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.JPokemonConstants;
-
-public class PokedexTest extends TestCase implements JPokemonConstants {
+public class PokedexTest extends TestCase {
   public static int power = 5, range = 20;
 
   Pokedex dex;

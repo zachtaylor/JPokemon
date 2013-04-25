@@ -2,14 +2,12 @@ package org.jpokemon.map.npc;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NPC implements JPokemonConstants {
+public class NPC {
   public NPC(NPCInfo info) {
     _info = info;
 

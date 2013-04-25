@@ -4,14 +4,14 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
-public class SlotEffect implements JPokemonConstants {
+public class SlotEffect {
   public SlotEffect(SlotEffectType t, Slot user, Slot target) {
     _type = t;
     _user = user;
     _target = target;
 
     if (_type.hasFiniteDuration())
-      _time = SHIELD_ROUND_DURATION;
+      _time = JPokemonConstants.SHIELD_ROUND_DURATION;
     else
       _time = 0;
   }
@@ -24,11 +24,11 @@ public class SlotEffect implements JPokemonConstants {
     MoveStyle style = m.style();
 
     if (_type == SlotEffectType.INVULERNABLE)
-      return (1 - SHIELD_REDUCTION_MODIFIER);
+      return (1 - JPokemonConstants.SHIELD_REDUCTION_MODIFIER);
     if (style == MoveStyle.PHYSICAL && _type == SlotEffectType.PHYSICAL_SHIELD)
-      return (1 - SHIELD_REDUCTION_MODIFIER);
+      return (1 - JPokemonConstants.SHIELD_REDUCTION_MODIFIER);
     if (style == MoveStyle.SPECIAL && _type == SlotEffectType.SPECIAL_SHIELD)
-      return (1 - SHIELD_REDUCTION_MODIFIER);
+      return (1 - JPokemonConstants.SHIELD_REDUCTION_MODIFIER);
 
     return 1;
   }

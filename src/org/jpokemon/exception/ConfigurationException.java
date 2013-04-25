@@ -1,6 +1,6 @@
 package org.jpokemon.exception;
 
-import com.kremerk.Sqlite.DataConnectionException;
+import com.njkremer.Sqlite.DataConnectionException;
 
 /**
  * An error in configuration which is breaking to the system

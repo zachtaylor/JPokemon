@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.battle.turn.TurnFactory;
 import org.jpokemon.pokemon.Pokemon;
@@ -17,7 +15,7 @@ import org.jpokemon.trainer.TrainerState;
 import org.jpokemon.trainer.TrainerType;
 import org.json.JSONObject;
 
-public class Slot implements JPokemonConstants {
+public class Slot {
   public Slot(PokemonTrainer trainer, int team) {
     _trainer = trainer;
     _team = team;

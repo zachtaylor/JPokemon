@@ -2,17 +2,14 @@ package org.jpokemon.trainer;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jpokemon.JPokemonConstants;
 import org.json.JSONArray;
-
 import com.zachtaylor.jnodalxml.XMLException;
 import com.zachtaylor.jnodalxml.XMLNode;
 
 /**
  * A representation of the progress a Player has made
  */
-public class Progress implements JPokemonConstants {
+public class Progress {
   public static final String XML_NODE_NAME = "progress";
 
   public Progress() {
