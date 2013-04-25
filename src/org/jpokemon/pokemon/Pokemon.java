@@ -87,8 +87,10 @@ public class Pokemon {
   public void setTrainerName(String s) {
     if (_ot != null)
       _hasOriginalTrainer = false;
-    else
+    else {
+      _hasOriginalTrainer = true;
       _ot = s;
+    }
   }
 
   public boolean hasOriginalTrainer() {
