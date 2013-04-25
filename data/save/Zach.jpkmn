@@ -1,37 +1,39 @@
 <player area="1" name="Zach" cash="0" badge="0">
-  <bag> </bag>
-  <pokedex>
-    <seen> [99, 151] </seen>
-    <owned> [40, 60] </owned>
-  </pokedex>
-  <pokemonstorage>
-    <pokemonbox>
-      <pokemon level="9" xp="0" number="4" ot="Zach" has_original_trainer="true">
-        <condition>  </condition>
-        <stats points="4" evtotal="0">
-          <stat ev="0" max="27" iv="12" cur="27" points="0" type="HEALTH" ev_pending="0" />
-          <stat ev="0" max="30" iv="24" cur="30" points="0" type="ATTACK" ev_pending="0" />
-          <stat ev="0" max="32" iv="30" cur="32" points="0" type="SPECATTACK" ev_pending="0" />
-          <stat ev="0" max="27" iv="13" cur="27" points="0" type="DEFENSE" ev_pending="0" />
-          <stat ev="0" max="30" iv="30" cur="30" points="0" type="SPECDEFENSE" ev_pending="0" />
-          <stat ev="0" max="33" iv="26" cur="33" points="0" type="SPEED" ev_pending="0" />
-        </stats>
-        <moves>
-          <move enabled="true" ppmax="35" number="143" pp="35" />
-          <move enabled="true" ppmax="35" number="112" pp="35" />
-          <move enabled="true" ppmax="25" number="40" pp="25" />
-        </moves>
-      </pokemon>
-    </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-    <pokemonbox> </pokemonbox>
-  </pokemonstorage>
-  <progress group="events"> [] </progress>
-  <progress group="trainers"> [] </progress>
+	<bag>
+		<item quantity="1" number="5" />
+	</bag>
+	<pokedex>
+		<seen> [99, 151] </seen>
+		<owned> [40, 60] </owned>
+	</pokedex>
+	<pokemonstorage>
+		<pokemonbox>
+			<pokemon ot="Zach" level="9" xp="0" number="4" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="4" evtotal="0">
+					<stat ev="0" max="27" iv="12" cur="27" points="0" type="HEALTH" ev_pending="0" />
+					<stat ev="0" max="30" iv="24" cur="30" points="0" type="ATTACK" ev_pending="0" />
+					<stat ev="0" max="32" iv="30" cur="32" points="0" type="SPECATTACK" ev_pending="0" />
+					<stat ev="0" max="27" iv="13" cur="27" points="0" type="DEFENSE" ev_pending="0" />
+					<stat ev="0" max="30" iv="30" cur="30" points="0" type="SPECDEFENSE" ev_pending="0" />
+					<stat ev="0" max="33" iv="26" cur="33" points="0" type="SPEED" ev_pending="0" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="35" number="143" pp="35" />
+					<move enabled="true" ppmax="35" number="112" pp="35" />
+					<move enabled="true" ppmax="25" number="40" pp="25" />
+				</moves>
+			</pokemon>
+		</pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+	</pokemonstorage>
+	<progress group="events"> [1] </progress>
+	<progress group="trainers"> [] </progress>
 </player>

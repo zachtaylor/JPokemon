@@ -53,12 +53,7 @@ public class Bag {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    _items = new HashMap<Integer, Item>();
-
     for (Map.Entry<Integer, Item> itemEntry : _items.entrySet()) {
-      if (itemEntry.getValue().amount() == 0)
-        continue;
-
       node.addChild(itemEntry.getValue().toXML());
     }
 
