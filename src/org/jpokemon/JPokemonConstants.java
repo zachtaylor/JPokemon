@@ -4,6 +4,8 @@ package org.jpokemon;
  * System settings
  */
 public class JPokemonConstants {
+  // Server config
+  public static final int SERVER_PORT = 9001;
 
   // Environment config
   public static final String SAVE_PATH = "data/save/";
