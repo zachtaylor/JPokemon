@@ -108,11 +108,12 @@ public class Pokemon {
    * @param amount Amount of xp to add
    */
   public void xp(int amount) {
-    int xpNeeded = xpNeeded();
+    int xpNeededAtLevel = xpNeededAtLevel();
 
     _xp += amount;
-    if (_xp >= xpNeeded) {
-      _xp -= xpNeeded;
+
+    if (_xp >= xpNeededAtLevel) {
+      _xp -= xpNeededAtLevel;
       level(level() + 1);
     }
   }
@@ -123,9 +124,7 @@ public class Pokemon {
    * @return The amount of XP needed to gain a level
    */
   public int xpNeeded() {
-    GrowthRate rate = GrowthRate.valueOf(_species.getGrowthrate());
-
-    return rate.xp(level());
+    return xpNeededAtLevel() - xp();
   }
 
   public int xpYield() {
@@ -360,6 +359,12 @@ public class Pokemon {
   private void checkNewMoves() {
     if (!_moves.newMoves(level()).isEmpty())
       ; // TODO : notify of new moves
+  }
+
+  private int xpNeededAtLevel() {
+    GrowthRate rate = GrowthRate.valueOf(_species.getGrowthrate());
+
+    return rate.xp(level());
   }
 
   @Override
