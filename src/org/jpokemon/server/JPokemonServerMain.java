@@ -19,8 +19,6 @@ public class JPokemonServerMain {
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
 
-        logger = Logger.getLogger(JPokemonServerMain.class);
-
         logger.trace("Spinning up servlets");
         ServletContextHandler root = new ServletContextHandler();
         root.setContextPath("/");
@@ -36,5 +34,5 @@ public class JPokemonServerMain {
         server.join();
     }
 
-    private static Logger logger;
+    private static Logger logger = Logger.getLogger(JPokemonServerMain.class);
 }

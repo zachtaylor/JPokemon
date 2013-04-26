@@ -14,5 +14,13 @@
 	<classpathentry kind="lib" path="lib/SQLiteORM/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/SQLiteORM/SqliteORM.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-continuation-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-http-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-io-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-security-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-server-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-servlet-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-util-8.1.10.v20130312.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/servlet-api-3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
