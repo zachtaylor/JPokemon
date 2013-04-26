@@ -1,16 +1,11 @@
-package org.jpokemon.map.npc;
+package org.jpokemon.action;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.map.Requirement;
 import org.jpokemon.trainer.Player;
 
 public class ActionSet {
-  public List<Action> actions() {
-    return _actions;
-  }
-
   public String getOption() {
     return _option;
   }
@@ -23,6 +18,10 @@ public class ActionSet {
     _actions.add(a);
   }
 
+  public List<Action> actions() {
+    return _actions;
+  }
+
   public void execute(Player p) {
     if (!isOkay(p))
       return;
@@ -31,26 +30,15 @@ public class ActionSet {
       action.execute(p);
   }
 
-  public void requirements(List<List<Requirement>> requirements) {
-    _requirements = requirements;
-  }
-
-  public List<List<Requirement>> requirements() {
-    return _requirements;
+  public void addRequirements(RequirementSet requirements) {
+    _requirements.add(requirements);
   }
 
   public boolean isOkay(Player p) {
     boolean result = true;
 
-    for (List<Requirement> opt : _requirements) {
-      result = true;
-
-      for (Requirement r : opt) {
-        if (!r.isOkay(p)) {
-          result = false;
-          break;
-        }
-      }
+    for (RequirementSet option : _requirements) {
+      result = option.isOkay(p);
 
       if (result)
         break;
@@ -61,5 +49,5 @@ public class ActionSet {
 
   private String _option;
   private List<Action> _actions = new ArrayList<Action>();
-  private List<List<Requirement>> _requirements = new ArrayList<List<Requirement>>();
+  private List<RequirementSet> _requirements = new ArrayList<RequirementSet>();
 }

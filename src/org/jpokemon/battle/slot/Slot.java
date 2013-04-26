@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.battle.turn.TurnFactory;
 import org.jpokemon.pokemon.Pokemon;
@@ -12,7 +13,6 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.TrainerState;
-import org.jpokemon.trainer.TrainerType;
 import org.json.JSONObject;
 
 public class Slot {
@@ -102,7 +102,7 @@ public class Slot {
     if (!rivalsList.contains(s.leader()))
       rivalsList.add(s.leader());
 
-    if (_trainer.type() == TrainerType.PLAYER)
+    if (_trainer instanceof Player)
       ((Player) _trainer).pokedex().saw(s.leader().number());
   }
 

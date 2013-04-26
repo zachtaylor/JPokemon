@@ -6,22 +6,20 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Trainer implements PokemonTrainer {
+public class WildTrainer implements PokemonTrainer {
   public int id() {
-    return _id;
+    return -1;
   }
 
   public String name() {
-    return _name;
+    return "Wild Pokemon";
   }
 
-  public void name(String name) {
-    _name = name;
+  public void name(String s) {
   }
 
   public double xpFactor() {
-    // TODO : do something useful here...
-    return JPokemonConstants.TRAINER_EXPERIENCE_MODIFIER;
+    return 0;
   }
 
   public PokemonStorageUnit party() {
@@ -35,7 +33,7 @@ public class Trainer implements PokemonTrainer {
   public void notify(String... message) {
   }
 
-  public void state(TrainerState state) { // Do nothing
+  public void state(TrainerState state) {
   }
 
   public JSONObject toJSON(TrainerState state) {
@@ -56,13 +54,5 @@ public class Trainer implements PokemonTrainer {
     return data;
   }
 
-  public boolean equals(Object o) {
-    if (!(o instanceof Trainer))
-      return false;
-    return ((Trainer) o)._id == _id;
-  }
-
-  private int _id;
-  private String _name;
   private PokemonStorageUnit _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
 }

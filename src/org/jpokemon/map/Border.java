@@ -2,10 +2,13 @@ package org.jpokemon.map;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.action.Requirement;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
