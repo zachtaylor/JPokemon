@@ -7,7 +7,7 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.trainer.TrainerType;
+import org.jpokemon.trainer.Player;
 
 public class Reward {
   public Reward(Slot s) {
@@ -21,7 +21,7 @@ public class Reward {
     xp *= JPokemonConstants.UNIVERSAL_EXPERIENCE_MODIFIER;
     _xp = (int) xp;
 
-    if (s.trainer().type() == TrainerType.PLAYER)
+    if (s.trainer() instanceof Player)
       _evs = new ArrayList<EffortValue>();
     else
       _evs = _pokemon.effortValues();

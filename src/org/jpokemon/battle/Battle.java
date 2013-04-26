@@ -16,7 +16,7 @@ import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.TrainerState;
-import org.jpokemon.trainer.TrainerType;
+import org.jpokemon.trainer.WildTrainer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,19 +44,10 @@ public class Battle implements Iterable<Slot> {
     if (slot.party().awake() == 0) {
       rewardFrom(slot);
 
-      if (slot.trainer().type() == TrainerType.PLAYER) {
+      if (slot.trainer() instanceof Player) {
         // TODO : Punish player
       }
-      else if (slot.trainer().type() == TrainerType.GYM) {
-        for (Slot s : this) {
-          if (s.trainer().type() == TrainerType.PLAYER)
-            ((Player) s.trainer()).badge(trainer.id());
-        }
-
-        // Also add this gym to the list of trainers defeated
-        addTrainerToPlayerHistory(slot.trainer().id());
-      }
-      else if (slot.trainer().type() == TrainerType.TRAINER) {
+      else if (!(slot.trainer() instanceof WildTrainer)) {
         addTrainerToPlayerHistory(slot.trainer().id());
       }
     }
@@ -166,17 +157,16 @@ public class Battle implements Iterable<Slot> {
 
   private void doTrainerAttacks() {
     for (Slot slot : _slots.values()) {
-      if (slot.trainer().type() == TrainerType.PLAYER)
+      if (slot.trainer() instanceof Player)
         continue;
 
-      Slot[] allSlots;
       Slot randomSlot;
       do {
-        allSlots = _slots.values().toArray(new Slot[_slots.values().size()]);
+        Slot[] allSlots = _slots.values().toArray(new Slot[_slots.values().size()]);
         randomSlot = allSlots[(int) (Math.random() * allSlots.length)];
       } while (slot.equals(randomSlot));
 
-      int randomMove = (int) (Math.random()) * slot.leader().moveCount();
+      int randomMove = (int) ((Math.random()) * slot.leader().moveCount());
 
       JSONObject json = new JSONObject();
       try {
@@ -216,15 +206,17 @@ public class Battle implements Iterable<Slot> {
   }
 
   private void addTrainerToPlayerHistory(int id) {
+    Player p;
+
     for (Slot s : this) {
-      if (s.trainer().type() == TrainerType.PLAYER) {
-        try {
-          ((Player) s.trainer()).trainers().put(id);
-        } catch (IllegalArgumentException e) {
-          if (!JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
-            throw e;
-        }
-      }
+      if (!(s.trainer() instanceof Player))
+        continue;
+
+      p = (Player) s.trainer();
+
+      // If the player has the record, IllegalArgumentException will fire
+      if (!p.trainers().get(id) || !JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
+        p.trainers().put(id);
     }
   }
 

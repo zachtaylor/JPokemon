@@ -38,7 +38,6 @@ public class Player implements PokemonTrainer {
     _name = name;
   }
 
-  @Override
   public int area() {
     return _area;
   }
@@ -73,10 +72,6 @@ public class Player implements PokemonTrainer {
 
   public Item item(int itemID) {
     return _bag.get(itemID);
-  }
-
-  public TrainerType type() {
-    return TrainerType.PLAYER;
   }
 
   public double xpFactor() {

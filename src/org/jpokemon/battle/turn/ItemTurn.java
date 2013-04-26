@@ -4,7 +4,7 @@ import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.item.Item;
 import org.jpokemon.item.ItemType;
 import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.trainer.TrainerType;
+import org.jpokemon.trainer.WildTrainer;
 
 public class ItemTurn extends Turn {
   public ItemTurn(Slot user, Slot target, Item item, int targetIndex) {
@@ -27,7 +27,7 @@ public class ItemTurn extends Turn {
     else if (_item.type() == ItemType.POTION)
       _item.effect(target);
     else if (_item.type() == ItemType.BALL) {
-      if (target().trainer().type() != TrainerType.WILD)
+      if (!(target().trainer() instanceof WildTrainer))
         addMessage("Cannot use a ball against " + target.name() + "!");
       else if (_item.effect(target)) {
         if (!slot().trainer().add(target))

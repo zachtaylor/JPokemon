@@ -6,7 +6,8 @@ import org.jpokemon.map.Border;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
-import org.jpokemon.trainer.Trainer;
+import org.jpokemon.trainer.PokemonTrainer;
+import org.jpokemon.trainer.WildTrainer;
 import org.json.JSONObject;
 
 public class MapService extends JPokemonService {
@@ -47,7 +48,7 @@ public class MapService extends JPokemonService {
     if (pokemon == null)
       throw new ServiceException("No wild pokemon in this area");
 
-    Trainer trainer = new Trainer();
+    PokemonTrainer trainer = new WildTrainer();
     trainer.add(pokemon);
 
     BattleRegistry.start(player, trainer);

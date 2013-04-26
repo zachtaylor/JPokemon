@@ -11,14 +11,6 @@ public interface PokemonTrainer {
 
   public void name(String s);
 
-  public int cash();
-
-  public void cash(int c);
-
-  public int area();
-
-  public TrainerType type();
-
   public double xpFactor();
 
   public PokemonStorageUnit party();
