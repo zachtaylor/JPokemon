@@ -15,7 +15,7 @@ import com.zachtaylor.jnodalxml.XMLNode;
  */
 public class PokemonStorageUnit implements Iterable<Pokemon> {
   public static final String XML_NODE_NAME = "pokemonbox";
-  
+
   public PokemonStorageUnit(int size) {
     _size = size;
     _amount = 0;
@@ -109,28 +109,28 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
-    
+
     for (Pokemon p : this) {
       node.addChild(p.toXML());
     }
-    
+
     return node;
   }
-  
+
   public void loadXML(XMLNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
-    
+
     while (_amount > 0)
       remove(0);
-    
+
     for (XMLNode child : node.getChildren(Pokemon.XML_NODE_NAME)) {
       Pokemon p = new Pokemon(1);
       p.loadXML(child);
       add(p);
     }
   }
-  
+
   public Iterator<Pokemon> iterator() {
     return new PokemonStorageUnitIterator();
   }
