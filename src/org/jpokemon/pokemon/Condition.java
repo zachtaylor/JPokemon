@@ -3,7 +3,7 @@ package org.jpokemon.pokemon;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Condition {
   public static final String XML_NODE_NAME = "condition";

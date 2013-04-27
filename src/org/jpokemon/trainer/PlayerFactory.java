@@ -11,8 +11,7 @@ import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.service.LoadException;
-
-import com.zachtaylor.jnodalxml.XMLParser;
+import org.zachtaylor.jnodalxml.XMLParser;
 
 public class PlayerFactory {
   public static Player get(int id) {

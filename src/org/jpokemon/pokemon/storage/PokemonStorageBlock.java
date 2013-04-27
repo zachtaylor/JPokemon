@@ -6,9 +6,8 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>

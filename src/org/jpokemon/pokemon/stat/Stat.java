@@ -4,9 +4,8 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Stat {
   public static final String XML_NODE_NAME = "stat";
@@ -120,27 +119,27 @@ public class Stat {
   public XMLNode toXML() {
     XMLNode myNode = new XMLNode(XML_NODE_NAME);
 
-    myNode.setAttribute("cur", _cur + "");
-    myNode.setAttribute("max", _max+"");
-    myNode.setAttribute("points", _pts + "");
-    myNode.setAttribute("ev", _ev + "");
-    myNode.setAttribute("iv", _iv + "");
-    myNode.setAttribute("ev_pending", _evPending + "");
+    myNode.setAttribute("cur", _cur);
+    myNode.setAttribute("max", _max);
+    myNode.setAttribute("points", _pts);
+    myNode.setAttribute("ev", _ev);
+    myNode.setAttribute("iv", _iv);
+    myNode.setAttribute("ev_pending", _evPending);
     myNode.setSelfClosing(true);
 
     return myNode;
   }
-  
+
   public void loadXML(XMLNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
-    
-    _cur = Integer.parseInt(node.getAttribute("cur"));
-    _max = Integer.parseInt(node.getAttribute("max"));
-    _pts = Integer.parseInt(node.getAttribute("points"));
-    _ev = Integer.parseInt(node.getAttribute("ev"));
-    _iv = Integer.parseInt(node.getAttribute("iv"));
-    _evPending = Integer.parseInt(node.getAttribute("ev_pending"));
+
+    _cur = node.getIntAttribute("cur");
+    _max = node.getIntAttribute("max");
+    _pts = node.getIntAttribute("points");
+    _ev = node.getIntAttribute("ev");
+    _iv = node.getIntAttribute("iv");
+    _evPending = node.getIntAttribute("ev_pending");
   }
 
   private void computeMax() {

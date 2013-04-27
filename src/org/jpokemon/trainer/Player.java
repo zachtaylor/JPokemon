@@ -9,8 +9,7 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.service.PlayerService;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
@@ -141,9 +140,9 @@ public class Player implements PokemonTrainer {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
     node.setAttribute("name", _name);
-    node.setAttribute("cash", _cash + "");
-    node.setAttribute("badge", _badge + "");
-    node.setAttribute("area", _area + "");
+    node.setAttribute("cash", _cash);
+    node.setAttribute("badge", _badge);
+    node.setAttribute("area", _area);
 
     node.addChild(_bag.toXML());
     node.addChild(_pokedex.toXML());
@@ -157,9 +156,9 @@ public class Player implements PokemonTrainer {
 
   public void loadXML(XMLNode node) {
     _name = node.getAttribute("name");
-    _cash = Integer.parseInt(node.getAttribute("cash"));
-    _badge = Integer.parseInt(node.getAttribute("badge"));
-    _area = Integer.parseInt(node.getAttribute("area"));
+    _cash = node.getIntAttribute("cash");
+    _badge = node.getIntAttribute("badge");
+    _area = node.getIntAttribute("area");
 
     _bag.loadXML(node.getChildren(Bag.XML_NODE_NAME).get(0));
     _pokedex.loadXML(node.getChildren(Pokedex.XML_NODE_NAME).get(0));

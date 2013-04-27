@@ -6,9 +6,8 @@ import java.util.Iterator;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 /**
  * A unit of storage for Pokemon.
