@@ -1,6 +1,7 @@
 package org.jpokemon.trainer;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.action.ActionSet;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONException;
@@ -41,6 +42,14 @@ public class Trainer implements PokemonTrainer {
   public void state(TrainerState state) { // Do nothing
   }
 
+  public ActionSet getWinActions() {
+    return _win;
+  }
+
+  public void setWinActions(ActionSet as) {
+    _win = as;
+  }
+
   public JSONObject toJSON(TrainerState state) {
     JSONObject data = new JSONObject();
 
@@ -65,7 +74,21 @@ public class Trainer implements PokemonTrainer {
     node.setAttribute("use_gym_xp_factor", _useGymXPFactor);
     node.addChild(_party.toXML());
 
+    if (_win != null) {
+      node.addChild(_win.toXML());
+    }
+
     return node;
+  }
+
+  public void loadXML(XMLNode node) {
+    _useGymXPFactor = node.getBoolAttribute("use_gym_xp_factor");
+
+    _party.loadXML(node.getChildren(PokemonStorageUnit.XML_NODE_NAME).get(0));
+
+    if (!node.getChildren(ActionSet.XML_NODE_NAME).isEmpty()) {
+      _win = new ActionSet().loadXML(node.getChildren(ActionSet.XML_NODE_NAME).get(0));
+    }
   }
 
   public boolean equals(Object o) {
@@ -75,6 +98,7 @@ public class Trainer implements PokemonTrainer {
   }
 
   private int _id = -1;
+  private ActionSet _win;
   private String _name = null;
   private boolean _useGymXPFactor = false;
   private PokemonStorageUnit _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);

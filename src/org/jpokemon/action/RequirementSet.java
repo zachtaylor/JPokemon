@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.trainer.Player;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class RequirementSet {
+  public static final String XML_NODE_NAME = "requirementset";
+
   public void add(Requirement r) {
     _data.add(r);
   }
@@ -20,6 +23,26 @@ public class RequirementSet {
     }
 
     return result;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    for (Requirement requirement : _data) {
+      node.addChild(requirement.toXML());
+    }
+
+    return node;
+  }
+
+  public RequirementSet loadXML(XMLNode node) {
+    _data = new ArrayList<Requirement>();
+
+    for (XMLNode child : node.getChildren(Requirement.XML_NODE_NAME)) {
+      _data.add(new Requirement(0, -1).loadXML(child));
+    }
+
+    return this;
   }
 
   private List<Requirement> _data = new ArrayList<Requirement>();

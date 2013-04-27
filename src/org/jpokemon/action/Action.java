@@ -3,8 +3,11 @@ package org.jpokemon.action;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.service.PlayerService;
 import org.jpokemon.trainer.Player;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Action {
+  public static final String XML_NODE_NAME = "action";
+
   public Action(int type, String data) {
     _type = ActionType.valueOf(type);
     _data = data;
@@ -14,19 +17,19 @@ public class Action {
     switch (_type) {
     case SPEECH:
       doSpeech(player);
-      break;
+    break;
     case EVENT:
       doEvent(player);
-      break;
+    break;
     case ITEM:
       doItem(player);
-      break;
+    break;
     case TRANSPORT:
       doTransport(player);
-      break;
+    break;
     case POKEMON:
       doPokemon(player);
-      break;
+    break;
     }
   }
 
@@ -36,6 +39,23 @@ public class Action {
 
   public ActionType type() {
     return _type;
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    node.setAttribute("type", _type.toString());
+    node.setAttribute("data", _data);
+    node.setSelfClosing(true);
+
+    return node;
+  }
+
+  public Action loadXML(XMLNode node) {
+    _type = ActionType.valueOf(node.getAttribute("type"));
+    _data = node.getAttribute("data");
+
+    return this;
   }
 
   private void doSpeech(Player player) {
