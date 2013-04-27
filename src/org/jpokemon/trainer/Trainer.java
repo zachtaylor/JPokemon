@@ -71,6 +71,7 @@ public class Trainer implements PokemonTrainer {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
+    node.setAttribute("id", _id);
     node.setAttribute("use_gym_xp_factor", _useGymXPFactor);
     node.addChild(_party.toXML());
 
@@ -82,6 +83,7 @@ public class Trainer implements PokemonTrainer {
   }
 
   public void loadXML(XMLNode node) {
+    _id = node.getIntAttribute("id");
     _useGymXPFactor = node.getBoolAttribute("use_gym_xp_factor");
 
     _party.loadXML(node.getChildren(PokemonStorageUnit.XML_NODE_NAME).get(0));

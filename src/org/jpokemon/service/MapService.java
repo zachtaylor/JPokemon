@@ -23,7 +23,11 @@ public class MapService extends JPokemonService {
     NPC npc = getNpc(request);
     String option = getOption(request);
 
-    npc.actionset(option).execute(player);
+    try {
+      npc.actionset(option).execute(player);
+    } catch (LoadException e) {
+      throw new ServiceException(e.getMessage());
+    }
   }
 
   public static void border(JSONObject request) throws ServiceException {
