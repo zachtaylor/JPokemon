@@ -1,6 +1,7 @@
 package com.jpokemon.mapeditor;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.map.npc.NPCType;
@@ -34,16 +36,6 @@ public class NPCEditor implements MapEditComponent {
     });
     northPanel.add(newNPC);
 
-    JPanel southPanel = new JPanel();
-
-    JButton saveNPC = new JPokemonButton("Save");
-    saveNPC.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        onClickSaveNPC();
-      }
-    });
-    southPanel.add(saveNPC);
-
     JPanel eastPanel = new JPanel();
     eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
 
@@ -57,12 +49,20 @@ public class NPCEditor implements MapEditComponent {
     centerPanel.add(new JPanel());
     centerPanel.add(iconLabel);
     centerPanel.add(new JPanel());
-    centerPanel.add(nameLabel);
+
+    JPanel nameAndTypeName = new JPanel();
+    nameAndTypeName.setLayout(new BoxLayout(nameAndTypeName, BoxLayout.X_AXIS));
+
+    nameAndTypeName.add(typeNameLabel);
+
+    nameField.setMaximumSize(new Dimension(75, 16));
+    nameAndTypeName.add(nameField);
+
+    centerPanel.add(nameAndTypeName);
     centerPanel.add(new JPanel());
 
     editorPanel.setLayout(new BorderLayout());
     editorPanel.add(northPanel, BorderLayout.NORTH);
-    editorPanel.add(southPanel, BorderLayout.SOUTH);
     editorPanel.add(eastPanel, BorderLayout.EAST);
     editorPanel.add(centerPanel, BorderLayout.CENTER);
   }
@@ -87,12 +87,18 @@ public class NPCEditor implements MapEditComponent {
     if (npcs.size() > 0) {
       currentNPC = npcs.get(0);
       iconLabel.setIcon(ImageService.npc(currentNPC.getIcon()));
-      nameLabel.setText(currentNPC.getName());
+
+      if (currentNPC.getName().contains("{typename}"))
+        typeNameLabel.setText(currentNPC.getType().getName());
+      else
+        typeNameLabel.setText(null);
+
+      nameField.setText(currentNPC.getName().replaceAll("\\{typename\\}", ""));
       npcTypes.setSelectedIndex(currentNPC.getType().getNumber() - 1);
     }
     else {
       iconLabel.setIcon(null);
-      nameLabel.setText("No NPC loaded");
+      typeNameLabel.setText("No NPC loaded");
     }
 
     return editorPanel;
@@ -102,13 +108,10 @@ public class NPCEditor implements MapEditComponent {
     System.out.println("New NPC clicked");
   }
 
-  private void onClickSaveNPC() {
-    System.out.println("Save NPC clicked");
-  }
-
   private NPC currentNPC;
   private JPanel editorPanel = new JPanel();
   private List<NPC> npcs = new ArrayList<NPC>();
-  private JLabel nameLabel = new JLabel(), iconLabel = new JLabel();
+  private JLabel typeNameLabel = new JLabel(), iconLabel = new JLabel();
+  private JTextField nameField = new JTextField();
   private JComboBox allNPCs = new JComboBox(), npcTypes = new JComboBox();
 }
