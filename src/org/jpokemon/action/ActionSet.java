@@ -77,7 +77,7 @@ public class ActionSet {
     }
 
     for (XMLNode actionchild : node.getChildren(Action.XML_NODE_NAME)) {
-      _actions.add(new Action(0, null).loadXML(actionchild));
+      _actions.add(ActionFactory.build(actionchild));
     }
 
     for (XMLNode requirementsetchild : node.getChildren(RequirementSet.XML_NODE_NAME)) {

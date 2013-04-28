@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jpokemon.action.Action;
+import org.jpokemon.action.ActionFactory;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.action.Requirement;
 import org.jpokemon.action.RequirementSet;
@@ -32,7 +33,7 @@ public class NPCFactory {
     ActionSet as = new ActionSet();
 
     for (NPCActionSet actionset : NPCActionSet.get(info.getNumber(), info.getActionset())) {
-      Action a = new Action(actionset.getType(), actionset.getData());
+      Action a = ActionFactory.build(actionset.getType(), actionset.getData());
       as.addAction(a);
     }
 
