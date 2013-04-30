@@ -36,6 +36,10 @@ public class NPCType {
     return cache.get(number);
   }
 
+  public String toString() {
+    return "NPCType#" + number + ": " + getName();
+  }
+
   //@preformat
   public int getNumber() {return number;} public void setNumber(int n) {number = n;}
   public String getName() {return name;} public void setName(String n) {name = n;}

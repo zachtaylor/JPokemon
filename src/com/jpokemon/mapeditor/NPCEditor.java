@@ -68,12 +68,13 @@ public class NPCEditor implements MapEditComponent {
 
     nameAndTypeName.add(typeNameLabel);
 
+    nameField.setMinimumSize(new Dimension(75, 16));
+    nameField.setMaximumSize(new Dimension(75, 16));
     nameField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onEnterNewNPCName();
       }
     });
-    nameField.setMaximumSize(new Dimension(75, 16));
     nameAndTypeName.add(nameField);
 
     useTypePrefix.addActionListener(new ActionListener() {
@@ -106,9 +107,9 @@ public class NPCEditor implements MapEditComponent {
       allNPCs.addItem(npc.toString());
     }
 
-    npcTypes.removeAll();
+    npcTypes.removeAllItems();
     for (int i = 1; (npcType = NPCType.get(i)) != null; i++) {
-      npcTypes.addItem(npcType.getName());
+      npcTypes.addItem(npcType.toString());
     }
 
     if (npcs.size() > currentNPCIndex) {
