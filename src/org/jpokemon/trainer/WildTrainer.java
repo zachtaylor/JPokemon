@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class WildTrainer implements PokemonTrainer {
   public int id() {
-    return -1;
+    return 100;
   }
 
   public String name() {

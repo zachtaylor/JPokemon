@@ -324,9 +324,7 @@ public class Pokemon {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
 
-    if (node.getAttribute("name") != null)
-      _name = node.getAttribute("name");
-
+    _name = node.getAttribute("name");
     _number = node.getIntAttribute("number");
     _moves.setPokemonNumber(_number);
     _species = PokemonInfo.get(_number);

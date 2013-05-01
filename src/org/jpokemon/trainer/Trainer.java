@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Trainer implements PokemonTrainer {
-  public static String XML_NODE_NAME;
+  public static String XML_NODE_NAME = "trainer";
 
   public int id() {
     return _id;
@@ -33,6 +33,7 @@ public class Trainer implements PokemonTrainer {
   }
 
   public boolean add(Pokemon p) {
+    p.setTrainerName(name());
     return party().add(p);
   }
 
@@ -72,6 +73,7 @@ public class Trainer implements PokemonTrainer {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
     node.setAttribute("id", _id);
+    node.setAttribute("name", _name);
     node.setAttribute("use_gym_xp_factor", _useGymXPFactor);
     node.addChild(_party.toXML());
 
@@ -84,6 +86,7 @@ public class Trainer implements PokemonTrainer {
 
   public void loadXML(XMLNode node) {
     _id = node.getIntAttribute("id");
+    _name = node.getAttribute("name");
     _useGymXPFactor = node.getBoolAttribute("use_gym_xp_factor");
 
     _party.loadXML(node.getChildren(PokemonStorageUnit.XML_NODE_NAME).get(0));
