@@ -215,8 +215,8 @@ public class Battle implements Iterable<Slot> {
       p = (Player) s.trainer();
 
       // If the player has the record, IllegalArgumentException will fire
-      if (!p.trainers().get(id) || !JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
-        p.trainers().put(id);
+      if (!p.record().getTrainer(id) || !JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
+        p.record().putTrainer(id);
     }
   }
 

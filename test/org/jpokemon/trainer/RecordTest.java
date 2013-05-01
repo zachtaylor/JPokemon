@@ -2,24 +2,24 @@ package org.jpokemon.trainer;
 
 import junit.framework.TestCase;
 
-public class ProgressTest extends TestCase {
-  private Progress progress;
+public class RecordTest extends TestCase {
+  private Record record;
 
   public void setUp() {
-    progress = new Progress();
+    record = new Record();
   }
 
   public void testStorage() {
-    assertFalse(progress.get(7));
+    assertFalse(record.getEvent(7));
 
-    progress.put(7);
+    record.putEvent(7);
 
-    assertTrue(progress.get(7));
+    assertTrue(record.getEvent(7));
   }
 
   public void testBounds() {
     try {
-      progress.put(0);
+      record.putEvent(0);
       fail("Out of bounds event");
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
@@ -27,10 +27,10 @@ public class ProgressTest extends TestCase {
   }
 
   public void testDuplicatePut() {
-    progress.put(7);
+    record.putEvent(7);
 
     try {
-      progress.put(7);
+      record.putEvent(7);
       fail("Duplicate put should fail");
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);

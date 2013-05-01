@@ -8,6 +8,6 @@ public class EventAction extends Action {
   }
 
   public void execute(Player player) {
-    player.events().put(Integer.parseInt(data()));
+    player.record().putEvent(Integer.parseInt(data()));
   }
 }

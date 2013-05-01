@@ -17,7 +17,6 @@ public class BattleAction extends Action {
   }
 
   public void execute(Player player) throws LoadException {
-
     XMLNode trainerData;
 
     try {
@@ -29,7 +28,7 @@ public class BattleAction extends Action {
     Trainer trainer = new Trainer();
     trainer.loadXML(trainerData);
 
-    if (!player.trainers().get(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
+    if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
       BattleRegistry.start(player, trainer);
   }
 }

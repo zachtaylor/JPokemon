@@ -8,12 +8,12 @@ import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 /**
- * A representation of the progress a Player has made
+ * Stores a player's history and useful things about what they have done
  */
-public class Progress {
+public class Record {
   public static final String XML_NODE_NAME = "progress";
 
-  public Progress() {
+  public Record() {
     _events = new ArrayList<Integer>();
   }
 
@@ -22,7 +22,7 @@ public class Progress {
    * 
    * @param id Event number to record
    */
-  public void put(int id) {
+  public void putEvent(int id) {
     if (id < 1)
       throw new IllegalArgumentException("Out of bounds event: " + id);
     if (_events.contains(id))
@@ -37,11 +37,38 @@ public class Progress {
    * @param id Event number to look up
    * @return True if the event has been completed
    */
-  public boolean get(int id) {
+  public boolean getEvent(int id) {
     if (id < 1)
       throw new IllegalArgumentException("Out of bounds event: " + id);
 
     return _events.contains(id);
+  }
+
+  /**
+   * Sets the specified trainer id
+   * 
+   * @param id Trainer number to record
+   */
+  public void putTrainer(int id) {
+    if (id < 1)
+      throw new IllegalArgumentException("Out of bounds trainer: " + id);
+    if (_events.contains(id))
+      throw new IllegalArgumentException("Duplicate put for trainer " + id);
+
+    _trainers.add(id);
+  }
+
+  /**
+   * Gets whether a Trainer has been fought before
+   * 
+   * @param id Trainer number to look up
+   * @return True if the Trainer has been defeated
+   */
+  public boolean getTrainer(int id) {
+    if (id < 1)
+      throw new IllegalArgumentException("Out of bounds event: " + id);
+
+    return _trainers.contains(id);
   }
 
   public JSONArray toJSON() {
@@ -69,9 +96,9 @@ public class Progress {
       if (value.isEmpty())
         continue;
 
-      put(Integer.parseInt(value));
+      putEvent(Integer.parseInt(value));
     }
   }
 
-  private List<Integer> _events;
+  private List<Integer> _events = new ArrayList<Integer>(), _trainers = new ArrayList<Integer>();
 }
