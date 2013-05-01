@@ -6,9 +6,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Bag {
   public static final String XML_NODE_NAME = "bag";
@@ -65,8 +64,8 @@ public class Bag {
       throw new XMLException("Cannot read node");
 
     for (XMLNode itemNode : node.getChildren(Item.XML_NODE_NAME)) {
-      Item i = get(Integer.parseInt(itemNode.getAttribute("number")));
-      i.amount(Integer.parseInt(itemNode.getAttribute("quantity")));
+      Item i = get(itemNode.getIntAttribute("number"));
+      i.amount(itemNode.getIntAttribute("quantity"));
     }
   }
 

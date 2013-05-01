@@ -9,9 +9,8 @@ import org.jpokemon.pokemon.PokemonInfo;
 import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class StatBlock {
   public static final String XML_NODE_NAME = "stats";
@@ -173,8 +172,8 @@ public class StatBlock {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    node.setAttribute("points", _points + "");
-    node.setAttribute("evtotal", _evTotal + "");
+    node.setAttribute("points", _points);
+    node.setAttribute("evtotal", _evTotal);
 
     for (StatType st : StatType.values()) {
       XMLNode child = get(st).toXML();
@@ -189,8 +188,8 @@ public class StatBlock {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
     
-    _points = Integer.parseInt(node.getAttribute("points"));
-    _evTotal = Integer.parseInt(node.getAttribute("evtotal"));
+    _points = node.getIntAttribute("points");
+    _evTotal = node.getIntAttribute("evtotal");
     
     for (XMLNode childNode : node.getChildren(Stat.XML_NODE_NAME)) {
       Stat s = get(StatType.valueOf(childNode.getAttribute("type")));

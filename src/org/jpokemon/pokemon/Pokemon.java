@@ -11,9 +11,8 @@ import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Pokemon {
   public static final String XML_NODE_NAME = "pokemon";
@@ -308,11 +307,11 @@ public class Pokemon {
       node.setAttribute("name", _name);
     }
 
-    node.setAttribute("number", _number + "");
-    node.setAttribute("level", _level + "");
-    node.setAttribute("xp", _xp + "");
+    node.setAttribute("number", _number);
+    node.setAttribute("level", _level);
+    node.setAttribute("xp", _xp);
     node.setAttribute("ot", _ot);
-    node.setAttribute("has_original_trainer", _hasOriginalTrainer + "");
+    node.setAttribute("has_original_trainer", _hasOriginalTrainer);
 
     node.addChild(_condition.toXML());
     node.addChild(_stats.toXML());
@@ -325,22 +324,20 @@ public class Pokemon {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
 
-    if (node.getAttribute("name") != null)
-      _name = node.getAttribute("name");
-
-    _number = Integer.parseInt(node.getAttribute("number"));
+    _name = node.getAttribute("name");
+    _number = node.getIntAttribute("number");
     _moves.setPokemonNumber(_number);
     _species = PokemonInfo.get(_number);
     _stats.rebase(_species);
 
-    _level = Integer.parseInt(node.getAttribute("level"));
+    _level = node.getIntAttribute("level");
     _stats.level(_level);
 
-    _xp = Integer.parseInt(node.getAttribute("xp"));
+    _xp = node.getIntAttribute("xp");
 
     _ot = node.getAttribute("ot");
 
-    _hasOriginalTrainer = Boolean.parseBoolean(node.getAttribute("has_original_trainer"));
+    _hasOriginalTrainer = node.getBoolAttribute("has_original_trainer");
 
     _moves.loadXML(node.getChildren(MoveBlock.XML_NODE_NAME).get(0));
     _stats.loadXML(node.getChildren(StatBlock.XML_NODE_NAME).get(0));

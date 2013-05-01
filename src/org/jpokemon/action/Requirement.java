@@ -1,8 +1,11 @@
 package org.jpokemon.action;
 
 import org.jpokemon.trainer.Player;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Requirement {
+  public static final String XML_NODE_NAME = "requirement";
+
   public Requirement(int type, int data) {
     _type = RequirementType.valueOf(type);
     _data = data;
@@ -31,6 +34,23 @@ public class Requirement {
     }
 
     return "foo bar?";
+  }
+
+  public XMLNode toXML() {
+    XMLNode node = new XMLNode(XML_NODE_NAME);
+
+    node.setAttribute("type", _type.toString());
+    node.setAttribute("data", _data);
+    node.setSelfClosing(true);
+
+    return node;
+  }
+
+  public Requirement loadXML(XMLNode node) {
+    _type = RequirementType.valueOf(node.getAttribute("type"));
+    _data = node.getIntAttribute("data");
+
+    return this;
   }
 
   private int _data;

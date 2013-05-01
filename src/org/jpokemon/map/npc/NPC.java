@@ -47,11 +47,16 @@ public class NPC {
   }
 
   public void setType(int t) {
+    type = t;
     npctype = NPCType.get(t);
   }
 
   public String getName() {
     return name.replace("{typename}", getType().getName());
+  }
+
+  public String getNameRaw() {
+    return name;
   }
 
   public void setName(String n) {

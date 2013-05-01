@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/JSON.jar"/>
-	<classpathentry kind="lib" path="lib/JNodalXML.jar"/>
 	<classpathentry kind="lib" path="lib/SQLiteORM/com.springsource.net.sf.cglib-2.2.0.jar"/>
 	<classpathentry kind="lib" path="lib/SQLiteORM/com.springsource.org.aopalliance-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/SQLiteORM/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
@@ -22,5 +21,6 @@
 	<classpathentry kind="lib" path="lib/jetty/jetty-servlet-8.1.10.v20130312.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-util-8.1.10.v20130312.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.zachtaylor.jnodalxml-0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

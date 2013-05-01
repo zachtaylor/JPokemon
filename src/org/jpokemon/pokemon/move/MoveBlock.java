@@ -7,9 +7,8 @@ import java.util.List;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
 import org.json.JSONArray;
-
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class MoveBlock implements Iterable<Move> {
   public static final String XML_NODE_NAME = "moves";

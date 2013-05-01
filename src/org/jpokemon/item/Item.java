@@ -4,8 +4,7 @@ import org.jpokemon.battle.Target;
 import org.jpokemon.pokemon.Pokemon;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Item {
   public static final String XML_NODE_NAME = "item";
@@ -77,8 +76,8 @@ public class Item {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    node.setAttribute("number", _info.getNumber() + "");
-    node.setAttribute("quantity", _quantity + "");
+    node.setAttribute("number", _info.getNumber());
+    node.setAttribute("quantity", _quantity);
     node.setSelfClosing(true);
 
     return node;

@@ -243,7 +243,7 @@ public class BattleView extends JPokemonView {
       BattleService.turn(request);
       refresh();
     } catch (ServiceException e) {
-
+      e.printStackTrace();
     }
   }
 
@@ -298,10 +298,7 @@ public class BattleView extends JPokemonView {
     int answer = slotIds.get(0);
 
     if (slotIds.size() > 1)
-      answer = JOptionPane.showOptionDialog(parent(), "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slotNames.toArray(), null);
-
-    if (answer != -1)
-      answer = slotIds.get(answer);
+      answer = slotIds.get(JOptionPane.showOptionDialog(parent(), "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slotNames.toArray(), null));
 
     return answer;
   }

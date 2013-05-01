@@ -2,9 +2,10 @@ package org.jpokemon.trainer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
-import com.zachtaylor.jnodalxml.XMLException;
-import com.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XMLException;
+import org.zachtaylor.jnodalxml.XMLNode;
 
 /**
  * A representation of the progress a Player has made
