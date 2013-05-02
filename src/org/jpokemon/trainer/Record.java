@@ -13,10 +13,6 @@ import org.zachtaylor.jnodalxml.XMLNode;
 public class Record {
   public static final String XML_NODE_NAME = "progress";
 
-  public Record() {
-    _events = new ArrayList<Integer>();
-  }
-
   public void setRivalName(String rivalName) {
     _rivalName = rivalName;
   }
@@ -85,6 +81,13 @@ public class Record {
       throw new IllegalArgumentException("Out of bounds event: " + id);
 
     return _trainers.contains(id);
+  }
+
+  public String replaceMacros(String s, String playerName) {
+    s = s.replaceAll("\\{rival\\}", getRivalName());
+    s = s.replaceAll("\\{player\\}", playerName);
+
+    return s;
   }
 
   public JSONArray toJSON() {
