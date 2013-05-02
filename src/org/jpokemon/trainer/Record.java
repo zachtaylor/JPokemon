@@ -17,6 +17,14 @@ public class Record {
     _events = new ArrayList<Integer>();
   }
 
+  public void setRivalName(String rivalName) {
+    _rivalName = rivalName;
+  }
+
+  public String getRivalName() {
+    return _rivalName;
+  }
+
   /**
    * Sets the specified event id
    * 
@@ -100,5 +108,6 @@ public class Record {
     }
   }
 
+  private String _rivalName;
   private List<Integer> _events = new ArrayList<Integer>(), _trainers = new ArrayList<Integer>();
 }

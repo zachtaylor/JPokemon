@@ -48,8 +48,8 @@ public class PlayerService extends JPokemonService {
     return p.id();
   }
 
-  public static int create(String name) {
-    Player p = PlayerFactory.create(name);
+  public static int create(String name, String rivalName) {
+    Player p = PlayerFactory.create(name, rivalName);
     _messageQueues.put(p, new LinkedList<String>());
     p.state(TrainerState.OVERWORLD);
 

@@ -21,10 +21,11 @@ public class PlayerFactory {
     return players.get(id);
   }
 
-  public static Player create(String name) {
+  public static Player create(String name, String rivalName) {
     name = getUniqueName(name);
     Player player = newPlayer();
     player.name(name);
+    player.record().setRivalName(rivalName);
     fileMapping.put(player, name);
 
     return player;
