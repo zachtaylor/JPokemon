@@ -81,6 +81,10 @@ public class Player implements PokemonTrainer {
   }
 
   public boolean add(Pokemon p) {
+    if (_record.getStarterPokemon() == null) {
+      _record.setStarterPokemon(p.name());
+    }
+
     for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p)) {
         _pokedex.own(p.number());

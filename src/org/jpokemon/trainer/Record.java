@@ -25,6 +25,14 @@ public class Record {
     return _rivalName;
   }
 
+  public void setStarterPokemon(String p) {
+    _pokemon = p;
+  }
+
+  public String getStarterPokemon() {
+    return _pokemon;
+  }
+
   /**
    * Sets the specified event id
    * 
@@ -108,6 +116,6 @@ public class Record {
     }
   }
 
-  private String _rivalName;
+  private String _rivalName, _pokemon;
   private List<Integer> _events = new ArrayList<Integer>(), _trainers = new ArrayList<Integer>();
 }
