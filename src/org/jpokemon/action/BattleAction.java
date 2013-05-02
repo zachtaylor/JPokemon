@@ -17,10 +17,12 @@ public class BattleAction extends Action {
   }
 
   public void execute(Player player) throws LoadException {
+    String filePath = JPokemonConstants.TRAINER_PATH + player.record().replaceMacros(data(), player.name()) + ".jpkmn";
+
     XMLNode trainerData;
 
     try {
-      trainerData = XMLParser.parse(new File(JPokemonConstants.TRAINER_PATH + data() + ".jpkmn")).get(0);
+      trainerData = XMLParser.parse(new File(filePath)).get(0);
     } catch (FileNotFoundException e) {
       throw new LoadException("Trainer file not found: " + data());
     }

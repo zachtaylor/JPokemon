@@ -86,6 +86,7 @@ public class Record {
   public String replaceMacros(String s, String playerName) {
     s = s.replaceAll("\\{rival\\}", getRivalName());
     s = s.replaceAll("\\{player\\}", playerName);
+    s = s.replaceAll("\\{starter\\}", _pokemon);
 
     return s;
   }
