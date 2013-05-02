@@ -52,7 +52,7 @@ public class Record {
   public void putTrainer(int id) {
     if (id < 1)
       throw new IllegalArgumentException("Out of bounds trainer: " + id);
-    if (_events.contains(id))
+    if (_trainers.contains(id))
       throw new IllegalArgumentException("Duplicate put for trainer " + id);
 
     _trainers.add(id);
