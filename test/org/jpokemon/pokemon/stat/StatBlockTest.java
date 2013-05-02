@@ -12,7 +12,7 @@ public class StatBlockTest extends TestCase {
   PokemonInfo pokemon;
 
   public void setUp() {
-    int pokemonNumber = (int) (Math.random() * range);
+    int pokemonNumber = (int) (Math.random() * range) + 1;
     pokemon = PokemonInfo.get(pokemonNumber);
     block = new StatBlock(pokemon);
     block.level(100);

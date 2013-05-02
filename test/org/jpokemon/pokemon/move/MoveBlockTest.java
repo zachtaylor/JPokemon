@@ -1,25 +1,21 @@
 package org.jpokemon.pokemon.move;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 
+import org.jpokemon.JPokemonConstants;
 import org.junit.Test;
 
 public class MoveBlockTest extends TestCase {
-  static int moveRange = 40, pokemonRange = 25;
-
   MoveBlock block;
-  int pokemonNumber;
+  int pokemonNumber, moveRange = 40, pokemonRange = 25;
 
   public void setUp() {
-    pokemonNumber = 1 + (int) (Math.random() * pokemonRange);
+    pokemonNumber = 1 + (int) (Math.random() * pokemonRange) + 1;
     block = new MoveBlock(pokemonNumber);
   }
 
   @Test
-  public void testDefaultMoves() {
+  public void testEveryPokemonHasDefaultMoves() {
     for (int i = 1; i <= pokemonRange; i++) {
       pokemonNumber = i;
       block = new MoveBlock(pokemonNumber);
@@ -28,12 +24,84 @@ public class MoveBlockTest extends TestCase {
     }
   }
 
+  public void testAdd() {
+    while (block.count() == JPokemonConstants.KNOWN_MOVE_COUNT)
+      setUp();
+
+    int count = block.count();
+
+    try {
+      block.add(0);
+      fail("You cannot add Move #0");
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
+
+    assertEquals(count, block.count());
+
+    block.add(3);
+
+    assertEquals(count + 1, block.count());
+
+    int number;
+    for (number = 14; block.count() < JPokemonConstants.KNOWN_MOVE_COUNT; number++) {
+      try {
+        block.add(number);
+      } catch (IllegalArgumentException e) { // Duplicate move exception is ok
+      }
+    }
+
+    try {
+      for (; block.count() < JPokemonConstants.KNOWN_MOVE_COUNT; number++) {
+        try {
+          block.add(number);
+        } catch (IllegalArgumentException e) { // Duplicate move exception is ok
+        }
+      }
+      block.add(number);
+      fail("Should die when overadding things");
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalStateException);
+    }
+  }
+
   public void testAddOverwrite() {
-    int moveNumber = (int) (Math.random() * moveRange);
+    try {
+      block.add(3, -1);
+      fail("Cannot add to position -1");
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
+
+    int moveNumber;
+
+    do {
+      moveNumber = (int) (Math.random() * moveRange);
+    } while (moveNumber == block.get(0).number());
 
     block.add(moveNumber, 0);
 
     assertEquals(new Move(moveNumber), block.get(0));
+
+    while (block.count() >= JPokemonConstants.KNOWN_MOVE_COUNT - 1)
+      setUp();
+
+    int count = block.count();
+
+    try {
+      block.add(0, count);
+      fail("You cannot add Move #0");
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
+
+    assertEquals(count, block.count());
+
+    try {
+      block.add(count, count + 1);
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalArgumentException);
+    }
   }
 
   public void testRemoveAll() {
@@ -60,15 +128,6 @@ public class MoveBlockTest extends TestCase {
     assertTrue(block.get(1).enabled());
   }
 
-  public void testNewMoves() {
-    List<String> newMoves = new ArrayList<String>();
-
-    for (int i = 2; i < 100 && newMoves.isEmpty(); i++)
-      newMoves = block.newMoves(i);
-
-    assertTrue(!newMoves.isEmpty());
-  }
-
   public void testRandomizeNoMoves() {
     block.randomize(0);
 
@@ -87,23 +146,5 @@ public class MoveBlockTest extends TestCase {
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
     }
-  }
-
-  public void testSetPokemonNumber() {
-    List<String> newMoves = new ArrayList<String>();
-
-    int level = 2;
-    for (; level < 100 && newMoves.isEmpty(); level++)
-      newMoves = block.newMoves(level);
-
-    level--;
-    assertEquals(newMoves, block.newMoves(level));
-
-    int otherNumber = (pokemonNumber + 15) % pokemonRange;
-    block.setPokemonNumber(otherNumber);
-    List<String> otherMoves = block.newMoves(level);
-
-    assertTrue("OK if pokemon " + pokemonNumber + " is related to "
-        + otherNumber, !newMoves.equals(otherMoves));
   }
 }

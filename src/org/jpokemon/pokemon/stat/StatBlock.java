@@ -183,14 +183,14 @@ public class StatBlock {
 
     return node;
   }
-  
+
   public void loadXML(XMLNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
-    
+
     _points = node.getIntAttribute("points");
     _evTotal = node.getIntAttribute("evtotal");
-    
+
     for (XMLNode childNode : node.getChildren(Stat.XML_NODE_NAME)) {
       Stat s = get(StatType.valueOf(childNode.getAttribute("type")));
       s.loadXML(childNode);
