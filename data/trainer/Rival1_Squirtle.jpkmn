@@ -1,4 +1,4 @@
-<trainer id="100" name="Gary" use_gym_xp_factor="false">
+<trainer name="Gary" use_gym_xp_factor="false">
 	<pokemonbox>
 		<pokemon ot="Gary" level="5" xp="0" number="1" has_original_trainer="true">
 			<condition>  </condition>
