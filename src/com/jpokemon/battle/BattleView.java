@@ -122,7 +122,8 @@ public class BattleView extends JPokemonView {
   }
 
   private void fight() {
-    int moveIndex, enemySlotID;
+    int moveIndex;
+    String enemySlotID;
 
     enableButtons(false);
 
@@ -134,7 +135,7 @@ public class BattleView extends JPokemonView {
       }
 
       enemySlotID = getMoveTarget(moveIndex);
-      if (enemySlotID == -1) {
+      if (enemySlotID == null) {
         enableButtons(true);
         return;
       }
@@ -203,7 +204,8 @@ public class BattleView extends JPokemonView {
       return;
     }
 
-    int targetID = 0, targetIndex = 0; // TODO : target choice
+    String targetID = parent().playerID();// TODO : target choice
+    int targetIndex = 0;
 
     JSONObject request = new JSONObject();
     try {
@@ -276,11 +278,11 @@ public class BattleView extends JPokemonView {
     return answer;
   }
 
-  private int getMoveTarget(int moveIndex) throws JSONException {
+  private String getMoveTarget(int moveIndex) throws JSONException {
     String move = null;
     ImageIcon image = null;
     List<String> slotNames = new ArrayList<String>();
-    List<Integer> slotIds = new ArrayList<Integer>();
+    List<String> slotIds = new ArrayList<String>();
 
     try {
       move = _trainerData.getJSONObject("leader").getJSONArray("moves").getJSONObject(moveIndex).getString("name");
@@ -289,13 +291,13 @@ public class BattleView extends JPokemonView {
       for (int i = 0; i < _enemyTeams.length(); i++) {
         for (int j = 0; j < _enemyTeams.getJSONArray(i).length(); j++) {
           slotNames.add(_enemyTeams.getJSONArray(i).getJSONObject(j).getJSONObject("leader").getString("name"));
-          slotIds.add(_enemyTeams.getJSONArray(i).getJSONObject(j).getInt("id"));
+          slotIds.add(_enemyTeams.getJSONArray(i).getJSONObject(j).getString("id"));
         }
       }
     } catch (JSONException e) {
     }
 
-    int answer = slotIds.get(0);
+    String answer = slotIds.get(0);
 
     if (slotIds.size() > 1)
       answer = slotIds.get(JOptionPane.showOptionDialog(parent(), "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slotNames.toArray(), null));

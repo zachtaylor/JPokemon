@@ -17,7 +17,8 @@ public class BattleAction extends Action {
   }
 
   public void execute(Player player) throws LoadException {
-    String filePath = JPokemonConstants.TRAINER_PATH + player.record().replaceMacros(data(), player.name()) + ".jpkmn";
+    String fileName = player.record().replaceMacros(data(), player.name());
+    String filePath = JPokemonConstants.TRAINER_PATH + fileName + ".jpkmn";
 
     XMLNode trainerData;
 
@@ -27,7 +28,7 @@ public class BattleAction extends Action {
       throw new LoadException("Trainer file not found: " + data());
     }
 
-    Trainer trainer = new Trainer();
+    Trainer trainer = new Trainer(fileName);
     trainer.loadXML(trainerData);
 
     if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)

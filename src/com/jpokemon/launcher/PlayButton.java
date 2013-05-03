@@ -33,7 +33,7 @@ public class PlayButton extends JButton implements ActionListener {
     if (name == null)
       return;
 
-    int id = -1;
+    String id = null;
     
     try {
       id = PlayerService.load(name);
@@ -52,7 +52,7 @@ public class PlayButton extends JButton implements ActionListener {
         return;
     }
     
-    if (id == -1) {
+    if (id == null) {
       return;
     }
     _launcher.dispose();

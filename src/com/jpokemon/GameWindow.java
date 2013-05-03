@@ -20,7 +20,7 @@ import com.jpokemon.pokemon.PokemonView;
 import com.jpokemon.start.StartMenu;
 
 public class GameWindow extends JFrame implements KeyListener {
-  public GameWindow(int playerID) {
+  public GameWindow(String playerID) {
     _playerID = playerID;
     _inbox = new InboxMenu(this);
     _start = new StartMenu(this);
@@ -52,7 +52,7 @@ public class GameWindow extends JFrame implements KeyListener {
     refresh();
   }
 
-  public int playerID() {
+  public String playerID() {
     return _playerID;
   }
 
@@ -156,7 +156,7 @@ public class GameWindow extends JFrame implements KeyListener {
     align();
   }
 
-  private int _playerID;
+  private String _playerID;
   private JPokemonDialog _dialogs;
   private JSONObject _newDataRequest;
   private JPokemonMenu _menu, _start, _inbox;

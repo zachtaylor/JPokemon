@@ -22,12 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Battle implements Iterable<Slot> {
-  public Battle() {
-    _round = new Round(this);
-    _slots = new HashMap<Integer, Slot>();
-    _haveSelectedTurn = new ArrayList<Slot>();
-  }
-
   public void addTrainer(PokemonTrainer trainer, int team) {
     if (contains(trainer))
       throw new IllegalArgumentException("Duplicate trainer: " + trainer);
@@ -90,11 +84,11 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void createTurn(JSONObject turn) {
-    int trainerID, targetID;
+    String trainerID, targetID;
 
     try {
-      trainerID = turn.getInt("id");
-      targetID = turn.getInt("target");
+      trainerID = turn.getString("id");
+      targetID = turn.getString("target");
     } catch (JSONException e) {
       e.printStackTrace();
       return;
@@ -205,7 +199,7 @@ public class Battle implements Iterable<Slot> {
     }
   }
 
-  private void addTrainerToPlayerHistory(int id) {
+  private void addTrainerToPlayerHistory(String id) {
     Player p;
 
     for (Slot s : this) {
@@ -279,7 +273,7 @@ public class Battle implements Iterable<Slot> {
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
-  private Round _round;
-  private Map<Integer, Slot> _slots;
-  private List<Slot> _haveSelectedTurn;
+  private Round _round = new Round(this);
+  private List<Slot> _haveSelectedTurn = new ArrayList<Slot>();
+  private Map<String, Slot> _slots = new HashMap<String, Slot>();
 }

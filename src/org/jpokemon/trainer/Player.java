@@ -14,8 +14,8 @@ import org.zachtaylor.jnodalxml.XMLNode;
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
 
-  public Player() {
-    _id = PLAYER_COUNT++;
+  public Player(String id) {
+    _id = id;
     _area = 1;
 
     _bag = new Bag();
@@ -24,7 +24,7 @@ public class Player implements PokemonTrainer {
     _storage = new PokemonStorageBlock();
   }
 
-  public int id() {
+  public String id() {
     return _id;
   }
 
@@ -172,16 +172,14 @@ public class Player implements PokemonTrainer {
 
   @Override
   public int hashCode() {
-    return _id;
+    return _id.hashCode();
   }
 
   private Bag _bag;
-  private String _name;
   private Record _record;
   private Pokedex _pokedex;
+  private String _name, _id;
   private TrainerState _state;
+  private int _area, _badge, _cash;
   private PokemonStorageBlock _storage;
-  private int _id, _area, _badge, _cash;
-
-  private static int PLAYER_COUNT = 1;
 }

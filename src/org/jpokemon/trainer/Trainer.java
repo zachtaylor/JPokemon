@@ -11,7 +11,11 @@ import org.zachtaylor.jnodalxml.XMLNode;
 public class Trainer implements PokemonTrainer {
   public static String XML_NODE_NAME = "trainer";
 
-  public int id() {
+  public Trainer(String id) {
+    _id = id;
+  }
+
+  public String id() {
     return _id;
   }
 
@@ -72,7 +76,6 @@ public class Trainer implements PokemonTrainer {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    node.setAttribute("id", _id);
     node.setAttribute("name", _name);
     node.setAttribute("use_gym_xp_factor", _useGymXPFactor);
     node.addChild(_party.toXML());
@@ -85,7 +88,6 @@ public class Trainer implements PokemonTrainer {
   }
 
   public void loadXML(XMLNode node) {
-    _id = node.getIntAttribute("id");
     _name = node.getAttribute("name");
     _useGymXPFactor = node.getBoolAttribute("use_gym_xp_factor");
 
@@ -102,9 +104,12 @@ public class Trainer implements PokemonTrainer {
     return ((Trainer) o)._id == _id;
   }
 
-  private int _id = -1;
+  public int hashCode() {
+    return _id.hashCode();
+  }
+
   private ActionSet _win;
-  private String _name = null;
+  private String _name = null, _id = null;
   private boolean _useGymXPFactor = false;
   private PokemonStorageUnit _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
 }

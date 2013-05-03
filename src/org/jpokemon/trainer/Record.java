@@ -61,9 +61,7 @@ public class Record {
    * 
    * @param id Trainer number to record
    */
-  public void putTrainer(int id) {
-    if (id < 1)
-      throw new IllegalArgumentException("Out of bounds trainer: " + id);
+  public void putTrainer(String id) {
     if (_trainers.contains(id))
       throw new IllegalArgumentException("Duplicate put for trainer " + id);
 
@@ -76,17 +74,19 @@ public class Record {
    * @param id Trainer number to look up
    * @return True if the Trainer has been defeated
    */
-  public boolean getTrainer(int id) {
-    if (id < 1)
-      throw new IllegalArgumentException("Out of bounds event: " + id);
-
+  public boolean getTrainer(String id) {
     return _trainers.contains(id);
   }
 
   public String replaceMacros(String s, String playerName) {
-    s = s.replaceAll("\\{rival\\}", getRivalName());
-    s = s.replaceAll("\\{player\\}", playerName);
-    s = s.replaceAll("\\{starter\\}", _pokemon);
+    if (_rivalName != null)
+      s = s.replaceAll("\\{rival\\}", _rivalName);
+
+    if (playerName != null)
+      s = s.replaceAll("\\{player\\}", playerName);
+
+    if (_pokemon != null)
+      s = s.replaceAll("\\{starter\\}", _pokemon);
 
     return s;
   }
@@ -121,5 +121,6 @@ public class Record {
   }
 
   private String _rivalName, _pokemon;
-  private List<Integer> _events = new ArrayList<Integer>(), _trainers = new ArrayList<Integer>();
+  private List<Integer> _events = new ArrayList<Integer>();
+  private List<String> _trainers = new ArrayList<String>();
 }

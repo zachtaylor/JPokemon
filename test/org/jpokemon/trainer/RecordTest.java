@@ -18,11 +18,11 @@ public class RecordTest extends TestCase {
   }
 
   public void testGetPutTrainer() {
-    assertFalse(record.getTrainer(3));
+    assertFalse(record.getTrainer("foo"));
 
-    record.putTrainer(3);
+    record.putTrainer("foo");
 
-    assertTrue(record.getTrainer(3));
+    assertTrue(record.getTrainer("foo"));
   }
 
   public void testEventBounds() {
@@ -41,22 +41,6 @@ public class RecordTest extends TestCase {
     }
   }
 
-  public void testTrainerBounds() {
-    try {
-      record.getTrainer(0);
-      fail("Out of bounds trainer");
-    } catch (Exception e) {
-      assertTrue(e instanceof IllegalArgumentException);
-    }
-
-    try {
-      record.putTrainer(0);
-      fail("Out of bounds trainer");
-    } catch (Exception e) {
-      assertTrue(e instanceof IllegalArgumentException);
-    }
-  }
-
   public void testRepeatPutEvent() {
     record.putEvent(7);
 
@@ -69,10 +53,10 @@ public class RecordTest extends TestCase {
   }
 
   public void testRepeatPutTrainer() {
-    record.putTrainer(3);
+    record.putTrainer("gary");
 
     try {
-      record.putTrainer(3);
+      record.putTrainer("gary");
       fail("Duplicate put should fail");
     } catch (Exception e) {
       assertTrue(e instanceof IllegalArgumentException);
