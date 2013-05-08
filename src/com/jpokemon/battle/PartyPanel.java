@@ -35,8 +35,14 @@ public class PartyPanel extends JPanel {
       xp = leader.getInt("xp");
       xp_needed = leader.getInt("xp_needed");
 
-      for (int i = 0; i < party.length(); i++)
-        partyIcons.add(party.getString(i));
+      for (int i = 0; i < party.length(); i++) {
+        if (party.getJSONObject(i).getString("condition").isEmpty()) {
+          partyIcons.add("battle/slot_ok");
+        }
+        else {
+          partyIcons.add("battle/slot_sick");
+        }
+      }
 
     } catch (JSONException e) {
       e.printStackTrace();

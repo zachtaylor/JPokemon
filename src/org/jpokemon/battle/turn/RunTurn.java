@@ -1,7 +1,8 @@
 package org.jpokemon.battle.turn;
 
+import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.battle.Battle;
-import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.battle.slot.Slot;
 
 public class RunTurn extends Turn {
@@ -11,7 +12,7 @@ public class RunTurn extends Turn {
 
   @Override
   protected void doExecute() {
-    Battle battle = BattleRegistry.get(slot().trainer());
+    Battle battle = ((BattleActivity) ActivityTracker.getActivity(slot().trainer())).getBattle();
     double chance = 100;
 
     for (Slot s : battle) {

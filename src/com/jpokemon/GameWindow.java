@@ -80,15 +80,15 @@ public class GameWindow extends JFrame implements KeyListener {
       JSONObject data = PlayerService.pull(_newDataRequest);
       _dialogs.showMessages(data.getJSONArray("messages"));
 
-      if (data.getString("state").equals("BATTLE")) {
+      if (data.getString("state").equals("battle")) {
         _battle.update(data.getJSONObject("battle"));
         show(_battle);
       }
-      else if (data.getString("state").equals("UPGRADE")) {
+      else if (data.getString("state").equals("upgrade")) {
         _upgrade.update(data.getJSONObject("upgrade"));
         show(_upgrade);
       }
-      else if (data.getString("state").equals("OVERWORLD")) {
+      else if (data.getString("state").equals("overworld")) {
         _world.update(data.getJSONObject("overworld"));
         show(_world);
       }

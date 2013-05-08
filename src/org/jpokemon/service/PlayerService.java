@@ -5,11 +5,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.activity.OverworldActivity;
+import org.jpokemon.activity.UpgradeActivity;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
-import org.jpokemon.trainer.TrainerState;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,13 +20,14 @@ import org.json.JSONObject;
 public class PlayerService extends JPokemonService {
   public static JSONObject pull(JSONObject request) throws ServiceException {
     Player p = getPlayer(request);
+    Activity a = getActivity(request);
 
     JSONObject response = new JSONObject();
 
     try {
-      response.put("state", p.state().toString());
+      response.put("state", a.getName());
       response.put("messages", loadMessagesForPlayer(p));
-      p.state().appendDataToResponse(response, request, p);
+      a.appendDataToResponse(response, request, p);
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -37,10 +41,8 @@ public class PlayerService extends JPokemonService {
 
     try {
       p = PlayerFactory.load(name);
-
       _messageQueues.put(p, new LinkedList<String>());
-
-      p.state(TrainerState.OVERWORLD);
+      ActivityTracker.setActivity(p, OverworldActivity.getInstance());
     } catch (LoadException e) {
       throw new ServiceException(e.getMessage());
     }
@@ -51,7 +53,7 @@ public class PlayerService extends JPokemonService {
   public static String create(String name, String rivalName) {
     Player p = PlayerFactory.create(name, rivalName);
     _messageQueues.put(p, new LinkedList<String>());
-    p.state(TrainerState.OVERWORLD);
+    ActivityTracker.setActivity(p, OverworldActivity.getInstance());
 
     return p.id();
   }
@@ -63,19 +65,10 @@ public class PlayerService extends JPokemonService {
   }
 
   public static void party(JSONObject request) throws ServiceException {
-    Player player = getPlayer(request);
+    Activity activity = getActivity(request);
 
-    if (player.state() == TrainerState.OVERWORLD) {
-      player.state(TrainerState.UPGRADE);
-      return;
-    }
-    if (player.state() != TrainerState.UPGRADE) {
+    if (!(activity instanceof UpgradeActivity))
       return; // TODO : throw error
-    }
-    if (!request.has("stats")) {
-      player.state(TrainerState.OVERWORLD);
-      return;
-    }
 
     Pokemon pokemon = getPokemon(request);
 

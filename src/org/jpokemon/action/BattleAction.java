@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.battle.BattleRegistry;
+import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.service.LoadException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
@@ -31,7 +32,8 @@ public class BattleAction extends Action {
     Trainer trainer = new Trainer(fileName);
     trainer.loadXML(trainerData);
 
-    if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
-      BattleRegistry.start(player, trainer);
+    if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES) {
+      ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+    }
   }
 }

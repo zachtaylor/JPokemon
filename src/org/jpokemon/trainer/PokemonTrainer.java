@@ -19,7 +19,5 @@ public interface PokemonTrainer {
 
   public void notify(String... message);
 
-  public void state(TrainerState state);
-
-  public JSONObject toJSON(TrainerState state);
+  public JSONObject toJSON();
 }

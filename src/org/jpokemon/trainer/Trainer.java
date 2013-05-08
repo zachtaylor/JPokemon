@@ -43,18 +43,13 @@ public class Trainer implements PokemonTrainer {
   public void notify(String... message) {
   }
 
-  public void state(TrainerState state) { // Do nothing
-  }
-
-  public JSONObject toJSON(TrainerState state) {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
-      if (state == TrainerState.BATTLE) {
-        data.put("id", id());
-        data.put("leader", party().get(0).toJSON(state));
-        data.put("party", party().toJSON(state));
-      }
+      data.put("id", id());
+      data.put("leader", party().get(0).toJSON());
+      data.put("party", party().toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();

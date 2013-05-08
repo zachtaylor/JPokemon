@@ -8,7 +8,6 @@ import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
-import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
@@ -267,31 +266,21 @@ public class Pokemon {
     checkNewMoves();
   }
 
-  public JSONObject toJSON(TrainerState state) {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
-
-      if (state == TrainerState.BATTLE) {
-        data.put("name", name());
-        data.put("number", number());
-        data.put("level", level());
-        data.put("xp", xp());
-        data.put("xp_needed", xpNeeded());
-        data.put("hp", health());
-        data.put("hp_max", maxHealth());
-        data.put("condition", _condition.toString());
-        data.put("moves", _moves.toJSON());
-      }
-      else if (state == TrainerState.UPGRADE) {
-        data.put("name", name());
-        data.put("number", number());
-        data.put("level", level());
-        data.put("xp", xp());
-        data.put("points", _stats.points());
-        data.put("stats", _stats.toJSON(state));
-      }
-
+      data.put("name", name());
+      data.put("number", number());
+      data.put("level", level());
+      data.put("xp", xp());
+      data.put("xp_needed", xpNeeded());
+      data.put("hp", health());
+      data.put("hp_max", maxHealth());
+      data.put("condition", _condition.toString());
+      data.put("moves", _moves.toJSON());
+      data.put("points", _stats.points());
+      data.put("stats", _stats.toJSON());
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;

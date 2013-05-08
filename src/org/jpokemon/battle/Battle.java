@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
@@ -15,13 +16,24 @@ import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
-import org.jpokemon.trainer.TrainerState;
-import org.jpokemon.trainer.WildTrainer;
+import org.jpokemon.trainer.Trainer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Battle implements Iterable<Slot> {
+  public static Battle create(PokemonTrainer... trainers) {
+    Battle b = new Battle();
+
+    PokemonTrainer trainer;
+    for (int i = 0; i < trainers.length; i++) {
+      trainer = trainers[i];
+      b.addTrainer(trainer, i);
+    }
+
+    return b;
+  }
+
   public void addTrainer(PokemonTrainer trainer, int team) {
     if (contains(trainer))
       throw new IllegalArgumentException("Duplicate trainer: " + trainer);
@@ -31,19 +43,19 @@ public class Battle implements Iterable<Slot> {
 
   public void remove(Slot slot) {
     PokemonTrainer trainer = slot.trainer();
+
     _slots.remove(trainer.id());
-    BattleRegistry.remove(trainer);
-    trainer.state(TrainerState.OVERWORLD);
+    ActivityTracker.clearActivity(trainer);
 
     if (slot.party().awake() == 0) {
-      rewardFrom(slot);
-
       if (slot.trainer() instanceof Player) {
         // TODO : Punish player
       }
-      else if (!(slot.trainer() instanceof WildTrainer)) {
+      else if (slot.trainer() instanceof Trainer) {
         addTrainerToPlayerHistory(slot.trainer().id());
       }
+
+      rewardFrom(slot);
     }
 
     verifyTeamCount();
@@ -76,10 +88,6 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void start() {
-    for (Slot s : this) {
-      s.trainer().state(TrainerState.BATTLE);
-    }
-
     doTrainerAttacks();
   }
 
@@ -192,9 +200,7 @@ public class Battle implements Iterable<Slot> {
 
     if (onlyOneTeamLeft) {
       for (Slot slot : this) {
-        PokemonTrainer trainer = slot.trainer();
-        BattleRegistry.remove(trainer);
-        trainer.state(TrainerState.OVERWORLD);
+        ActivityTracker.clearActivity(slot.trainer());
       }
     }
   }

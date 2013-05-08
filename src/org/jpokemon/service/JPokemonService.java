@@ -1,7 +1,9 @@
 package org.jpokemon.service;
 
+import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.battle.Battle;
-import org.jpokemon.battle.BattleRegistry;
 import org.jpokemon.map.Area;
 import org.jpokemon.map.Border;
 import org.jpokemon.map.Map;
@@ -13,7 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JPokemonService {
-  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index", OPTION_KEY = "option";
+  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index",
+      OPTION_KEY = "option";
 
   protected static Player getPlayer(JSONObject request) throws ServiceException {
     String playerID = null;
@@ -31,6 +34,12 @@ public abstract class JPokemonService {
       throw new ServiceException("PlayerID " + playerID + " not found");
 
     return player;
+  }
+
+  protected static Activity getActivity(JSONObject request) throws ServiceException {
+    Player player = getPlayer(request);
+
+    return ActivityTracker.getActivity(player);
   }
 
   protected static Pokemon getPokemon(JSONObject request) throws ServiceException {
@@ -58,13 +67,16 @@ public abstract class JPokemonService {
   protected static Battle getBattle(JSONObject request) throws ServiceException {
     Battle battle = null;
     Player player = null;
+    Activity activity = null;
 
     player = getPlayer(request);
 
-    battle = BattleRegistry.get(player);
+    activity = getActivity(request);
 
-    if (battle == null)
-      throw new ServiceException("Battle for player " + player.toString() + " not found");
+    if (!(activity instanceof BattleActivity))
+      throw new ServiceException("Activity for player " + player.toString() + " is not a battle");
+
+    battle = ((BattleActivity) activity).getBattle();
 
     return battle;
   }

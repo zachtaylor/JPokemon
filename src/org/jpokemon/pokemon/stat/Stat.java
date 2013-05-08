@@ -1,7 +1,6 @@
 package org.jpokemon.pokemon.stat;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
@@ -97,17 +96,14 @@ public class Stat {
     computeCur();
   }
 
-  public JSONObject toJSON(TrainerState state) {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
-      if (state == TrainerState.UPGRADE) {
-        data.put("max", max());
-        data.put("ev", ev());
-        data.put("points", points());
-        data.put("iv", iv());
-      }
-
+      data.put("max", max());
+      data.put("ev", ev());
+      data.put("points", points());
+      data.put("iv", iv());
     } catch (JSONException e) {
       e.printStackTrace();
       data = null;

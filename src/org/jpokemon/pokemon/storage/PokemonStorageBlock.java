@@ -3,7 +3,6 @@ package org.jpokemon.pokemon.storage;
 import java.util.Iterator;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.trainer.TrainerState;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
@@ -33,14 +32,14 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit> {
     return _data[box];
   }
 
-  public JSONObject toJSON(TrainerState state) {
+  public JSONObject toJSON() {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("party", _data[0].toJSON(state));
+      data.put("party", _data[0].toJSON());
 
       for (int i = 1; i <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++)
-        data.put("box" + i, _data[i].toJSON(state));
+        data.put("box" + i, _data[i].toJSON());
 
     } catch (JSONException e) {
       e.printStackTrace();

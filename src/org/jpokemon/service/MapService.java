@@ -1,6 +1,7 @@
 package org.jpokemon.service;
 
-import org.jpokemon.battle.BattleRegistry;
+import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.map.Area;
 import org.jpokemon.map.Border;
 import org.jpokemon.map.npc.NPC;
@@ -55,6 +56,6 @@ public class MapService extends JPokemonService {
     PokemonTrainer trainer = new WildTrainer();
     trainer.add(pokemon);
 
-    BattleRegistry.start(player, trainer);
+    ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
   }
 }
