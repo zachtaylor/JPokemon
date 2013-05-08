@@ -3,6 +3,7 @@ package org.jpokemon.activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jpokemon.map.OverworldActivity;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 

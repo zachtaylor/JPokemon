@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UpgradeActivity extends JPokemonService implements Activity {
-
   @Override
   public String getName() {
     return "upgrade";

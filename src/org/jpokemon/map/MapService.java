@@ -1,7 +1,8 @@
-package org.jpokemon.activity;
+package org.jpokemon.map;
 
-import org.jpokemon.map.Area;
-import org.jpokemon.map.Border;
+import org.jpokemon.activity.ActivityService;
+import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.service.JPokemonService;
@@ -10,44 +11,32 @@ import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.WildTrainer;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OverworldActivity extends JPokemonService implements Activity {
-  private OverworldActivity() {
+public class MapService extends JPokemonService implements ActivityService {
+  private MapService() {
   }
 
-  public String getName() {
-    return "overworld";
+  public static MapService getInstance() {
+    return instance;
   }
 
   @Override
   public void handleRequest(JSONObject request) throws ServiceException {
-    String option = getOption(request);
+    throw new ServiceException("MapService has no default handler");
+  }
 
+  @Override
+  public void handleRequestOption(String option, JSONObject request) throws ServiceException {
     if (option.equals("npc"))
-      npc(request);
+      handleNPCRequest(request);
     else if (option.equals("border"))
-      border(request);
+      handleBorderRequest(request);
     else if (option.equals("grass"))
-      grass(request);
+      handleGrassRequest(request);
   }
 
-  public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException,
-      ServiceException {
-    Area area = getArea(request);
-
-    response.put(getName(), area.toJSON(player));
-  }
-
-  public static OverworldActivity getInstance() {
-    if (instance == null)
-      instance = new OverworldActivity();
-
-    return instance;
-  }
-
-  private void npc(JSONObject request) throws ServiceException {
+  private void handleNPCRequest(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
     NPC npc = getNpc(request);
     String option = getNPCOption(request);
@@ -59,7 +48,7 @@ public class OverworldActivity extends JPokemonService implements Activity {
     }
   }
 
-  private void border(JSONObject request) throws ServiceException {
+  private void handleBorderRequest(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
     Border border = getBorder(request);
 
@@ -72,7 +61,7 @@ public class OverworldActivity extends JPokemonService implements Activity {
     }
   }
 
-  private void grass(JSONObject request) throws ServiceException {
+  private void handleGrassRequest(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
     Area area = getArea(request);
 
@@ -87,5 +76,5 @@ public class OverworldActivity extends JPokemonService implements Activity {
     ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
   }
 
-  public static OverworldActivity instance;
+  private static MapService instance = new MapService();
 }

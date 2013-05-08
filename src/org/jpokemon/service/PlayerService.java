@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.ActivityService;
 import org.jpokemon.activity.ActivityTracker;
-import org.jpokemon.activity.OverworldActivity;
+import org.jpokemon.map.OverworldActivity;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.json.JSONArray;
@@ -59,6 +60,19 @@ public class PlayerService extends JPokemonService {
     Player player = getPlayer(request);
 
     PlayerFactory.save(player);
+  }
+
+  public static void activity(JSONObject request) throws ServiceException {
+    Activity activity = getActivity(request);
+
+    ActivityService service = activity.getHandler();
+
+    if (request.has("option")) {
+      service.handleRequestOption(getOption(request), request);
+    }
+    else {
+      service.handleRequest(request);
+    }
   }
 
   public static void addToMessageQueue(Player p, String message) {

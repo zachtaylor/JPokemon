@@ -2,8 +2,6 @@ package org.jpokemon.service;
 
 import org.jpokemon.activity.Activity;
 import org.jpokemon.activity.ActivityTracker;
-import org.jpokemon.activity.BattleActivity;
-import org.jpokemon.battle.Battle;
 import org.jpokemon.map.Area;
 import org.jpokemon.map.Border;
 import org.jpokemon.map.Map;
@@ -15,8 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JPokemonService {
-  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index",
-      OPTION_KEY = "option", NPC_OPTION_KEY = "npc_option";
+  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index", OPTION_KEY = "option",
+      NPC_OPTION_KEY = "npc_option";
 
   protected static Player getPlayer(JSONObject request) throws ServiceException {
     String playerID = null;
@@ -62,23 +60,6 @@ public abstract class JPokemonService {
     }
 
     return pokemon;
-  }
-
-  protected static Battle getBattle(JSONObject request) throws ServiceException {
-    Battle battle = null;
-    Player player = null;
-    Activity activity = null;
-
-    player = getPlayer(request);
-
-    activity = getActivity(request);
-
-    if (!(activity instanceof BattleActivity))
-      throw new ServiceException("Activity for player " + player.toString() + " is not a battle");
-
-    battle = ((BattleActivity) activity).getBattle();
-
-    return battle;
   }
 
   protected static Area getArea(JSONObject request) throws ServiceException {

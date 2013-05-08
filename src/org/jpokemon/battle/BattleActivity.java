@@ -1,6 +1,7 @@
-package org.jpokemon.activity;
+package org.jpokemon.battle;
 
-import org.jpokemon.battle.Battle;
+import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.service.JPokemonService;
 import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
@@ -19,14 +20,17 @@ public class BattleActivity extends JPokemonService implements Activity {
   }
 
   @Override
-  public void handleRequest(JSONObject request) throws ServiceException {
-    Battle battle = getBattle(request);
-
-    battle.createTurn(request);
+  public BattleService getHandler() {
+    return BattleService.getInstance();
   }
 
   public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException {
-    Battle battle = getBattle(request);
+    Activity activity = ActivityTracker.getActivity(player);
+
+    if (!(activity instanceof BattleActivity))
+      throw new ServiceException("Current activity for " + player.name() + " is not a battle");
+
+    Battle battle = ((BattleActivity) activity).getBattle();
 
     response.put(getName(), battle.toJSON(player));
   }

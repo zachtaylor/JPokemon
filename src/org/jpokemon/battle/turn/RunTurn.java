@@ -1,8 +1,8 @@
 package org.jpokemon.battle.turn;
 
 import org.jpokemon.activity.ActivityTracker;
-import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
 
 public class RunTurn extends Turn {

@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public interface Activity {
   public String getName();
 
-  public void handleRequest(JSONObject request) throws ServiceException;
-  
+  public ActivityService getHandler();
+
   public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException;
 }
