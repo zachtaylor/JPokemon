@@ -13,7 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PlayerServlet extends HttpServlet {
-    static int zachsId = 0;
+    static String zachsId = null;
 
     /**
      * Respond to a GET request
@@ -24,7 +24,7 @@ public class PlayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.info(request.getMethod() + " " + request.getRequestURI());
 
-        if (zachsId == 0) {
+        if (zachsId == null) {
             try {
                 zachsId = PlayerService.load("Zach");
             }
