@@ -48,6 +48,8 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   public void add(int number) {
+    if (number <= 0)
+      throw new IllegalArgumentException("Move number out of bounds");
     if (_count == JPokemonConstants.KNOWN_MOVE_COUNT)
       throw new IllegalStateException("MoveBlock is full");
 
@@ -55,7 +57,9 @@ public class MoveBlock implements Iterable<Move> {
   }
 
   public void add(int number, int position) {
-    if (position < 0 || position >= JPokemonConstants.KNOWN_MOVE_COUNT)
+    if (number <= 0)
+      throw new IllegalArgumentException("Move number out of bounds");
+    if (position < 0 || position > _count)
       throw new IllegalArgumentException("Position out of bounds: " + position);
     if (contains(number))
       throw new IllegalArgumentException("Duplicate move: " + number);
@@ -120,13 +124,13 @@ public class MoveBlock implements Iterable<Move> {
 
     return node;
   }
-  
+
   public void loadXML(XMLNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
-    
+
     removeAll();
-    
+
     for (XMLNode childNode : node.getChildren(Move.XML_NODE_NAME)) {
       _data[_count].loadXML(childNode);
       _count++;

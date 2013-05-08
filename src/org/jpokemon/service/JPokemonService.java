@@ -16,11 +16,11 @@ public abstract class JPokemonService {
   private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index", OPTION_KEY = "option";
 
   protected static Player getPlayer(JSONObject request) throws ServiceException {
-    int playerID = -1;
+    String playerID = null;
     Player player = null;
 
     try {
-      playerID = request.getInt(PLAYER_ID_KEY);
+      playerID = request.getString(PLAYER_ID_KEY);
     } catch (JSONException e) {
       throw new ServiceException("Player key not found");
     }

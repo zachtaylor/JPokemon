@@ -1,0 +1,19 @@
+<trainer name="Gary" use_gym_xp_factor="false">
+	<pokemonbox>
+		<pokemon ot="Gary" level="5" xp="0" number="4" has_original_trainer="true">
+			<condition>  </condition>
+			<stats points="0" evtotal="0">
+				<stat ev="0" max="20" iv="24" cur="20" points="0" type="HEALTH" ev_pending="0" />
+				<stat ev="0" max="21" iv="17" cur="21" points="0" type="ATTACK" ev_pending="0" />
+				<stat ev="0" max="22" iv="25" cur="22" points="0" type="SPECATTACK" ev_pending="0" />
+				<stat ev="0" max="20" iv="17" cur="20" points="0" type="DEFENSE" ev_pending="0" />
+				<stat ev="0" max="20" iv="7" cur="20" points="0" type="SPECDEFENSE" ev_pending="0" />
+				<stat ev="0" max="21" iv="3" cur="21" points="0" type="SPEED" ev_pending="0" />
+			</stats>
+			<moves>
+				<move enabled="true" ppmax="35" number="112" pp="35" />
+				<move enabled="true" ppmax="40" number="53" pp="40" />
+			</moves>
+		</pokemon>
+	</pokemonbox>
+</trainer>

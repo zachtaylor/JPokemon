@@ -14,24 +14,23 @@ import org.jpokemon.service.LoadException;
 import org.zachtaylor.jnodalxml.XMLParser;
 
 public class PlayerFactory {
-  public static Player get(int id) {
+  public static Player get(String id) {
     if (players.get(id) == null)
       throw new IllegalArgumentException("Could not retrieve PlayerID: " + id);
 
     return players.get(id);
   }
 
-  public static Player create(String name) {
-    name = getUniqueName(name);
-    Player player = newPlayer();
+  public static Player create(String name, String rivalName) {
+    Player player = newPlayer(name = getUniqueName(name));
     player.name(name);
-    fileMapping.put(player, name);
+    player.record().setRivalName(rivalName);
 
     return player;
   }
 
   public static Player load(String filename) throws LoadException {
-    if (fileMapping.values().contains(filename))
+    if (players.keySet().contains(filename))
       throw new LoadException("File already loaded");
 
     File file = new File(JPokemonConstants.SAVE_PATH + filename + ".jpkmn");
@@ -39,20 +38,18 @@ public class PlayerFactory {
     if (!file.exists())
       throw new LoadException("Save file not found");
 
-    Player player = newPlayer();
+    Player player = newPlayer(filename);
 
     try {
       player.loadXML(XMLParser.parse(file).get(0));
     } catch (FileNotFoundException e) {
     }
 
-    fileMapping.put(player, filename);
-
     return player;
   }
 
   public static void save(Player player) {
-    String path = JPokemonConstants.SAVE_PATH + fileMapping.get(player) + ".jpkmn";
+    String path = JPokemonConstants.SAVE_PATH + player.id() + ".jpkmn";
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
@@ -63,24 +60,23 @@ public class PlayerFactory {
     }
   }
 
-  private static Player newPlayer() {
-    Player player = new Player();
-    players.put(player.id(), player);
+  private static Player newPlayer(String id) {
+    Player player = new Player(id);
+    players.put(id, player);
 
     return player;
   }
 
   private static String getUniqueName(String attempt) {
-    if (!fileMapping.containsValue(attempt) && !new File(JPokemonConstants.SAVE_PATH + attempt + ".jpkmn").exists())
+    if (!players.containsKey(attempt) && !new File(JPokemonConstants.SAVE_PATH + attempt + ".jpkmn").exists())
       return attempt;
 
     int n = 0;
-    for (; fileMapping.containsValue(attempt + n) || new File(JPokemonConstants.SAVE_PATH + attempt + n + ".jpkmn").exists(); n++)
+    for (; players.containsKey(attempt + n) || new File(JPokemonConstants.SAVE_PATH + attempt + n + ".jpkmn").exists(); n++)
       ;
 
     return attempt + n;
   }
 
-  private static Map<Integer, Player> players = new HashMap<Integer, Player>();
-  private static Map<Player, String> fileMapping = new HashMap<Player, String>();
+  private static Map<String, Player> players = new HashMap<String, Player>();
 }

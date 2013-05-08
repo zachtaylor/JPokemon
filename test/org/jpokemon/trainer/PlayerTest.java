@@ -12,7 +12,7 @@ public class PlayerTest extends TestCase {
   Player player;
 
   public void setUp() {
-    player = new Player();
+    player = new Player("id");
   }
 
   public void testName() {

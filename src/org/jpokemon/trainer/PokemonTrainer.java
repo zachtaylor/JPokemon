@@ -5,7 +5,7 @@ import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.json.JSONObject;
 
 public interface PokemonTrainer {
-  public int id();
+  public String id();
 
   public String name();
 

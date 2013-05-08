@@ -14,18 +14,17 @@ import org.zachtaylor.jnodalxml.XMLNode;
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
 
-  public Player() {
-    _id = PLAYER_COUNT++;
+  public Player(String id) {
+    _id = id;
     _area = 1;
 
     _bag = new Bag();
+    _record = new Record();
     _pokedex = new Pokedex();
-    _progress = new Progress();
-    _trainers = new Progress();
     _storage = new PokemonStorageBlock();
   }
 
-  public int id() {
+  public String id() {
     return _id;
   }
 
@@ -82,6 +81,10 @@ public class Player implements PokemonTrainer {
   }
 
   public boolean add(Pokemon p) {
+    if (_record.getStarterPokemon() == null) {
+      _record.setStarterPokemon(p.name());
+    }
+
     for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p)) {
         _pokedex.own(p.number());
@@ -103,12 +106,8 @@ public class Player implements PokemonTrainer {
     return _pokedex;
   }
 
-  public Progress events() {
-    return _progress;
-  }
-
-  public Progress trainers() {
-    return _trainers;
+  public Record record() {
+    return _record;
   }
 
   public JSONObject toJSON(TrainerState state) {
@@ -145,11 +144,9 @@ public class Player implements PokemonTrainer {
     node.setAttribute("area", _area);
 
     node.addChild(_bag.toXML());
+    node.addChild(_record.toXML());
     node.addChild(_pokedex.toXML());
     node.addChild(_storage.toXML());
-
-    node.addChild(_progress.toXML().setAttribute("group", "events"));
-    node.addChild(_trainers.toXML().setAttribute("group", "trainers"));
 
     return node;
   }
@@ -161,15 +158,9 @@ public class Player implements PokemonTrainer {
     _area = node.getIntAttribute("area");
 
     _bag.loadXML(node.getChildren(Bag.XML_NODE_NAME).get(0));
+    _record.loadXML(node.getChildren(Record.XML_NODE_NAME).get(0));
     _pokedex.loadXML(node.getChildren(Pokedex.XML_NODE_NAME).get(0));
     _storage.loadXML(node.getChildren(PokemonStorageBlock.XML_NODE_NAME).get(0));
-
-    for (XMLNode progressNode : node.getChildren(Progress.XML_NODE_NAME)) {
-      if (progressNode.getAttribute("group").equals("events"))
-        _progress.loadXML(progressNode);
-      else if (progressNode.getAttribute("group").equals("trainers"))
-        _trainers.loadXML(progressNode);
-    }
   }
 
   @Override
@@ -181,16 +172,14 @@ public class Player implements PokemonTrainer {
 
   @Override
   public int hashCode() {
-    return _id;
+    return _id.hashCode();
   }
 
   private Bag _bag;
-  private String _name;
+  private Record _record;
   private Pokedex _pokedex;
+  private String _name, _id;
   private TrainerState _state;
+  private int _area, _badge, _cash;
   private PokemonStorageBlock _storage;
-  private Progress _progress, _trainers;
-  private int _id, _area, _badge, _cash;
-
-  private static int PLAYER_COUNT = 1;
 }

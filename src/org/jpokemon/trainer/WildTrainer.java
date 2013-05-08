@@ -7,8 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WildTrainer implements PokemonTrainer {
-  public int id() {
-    return 100;
+  public String id() {
+    return "wild_pokemon";
   }
 
   public String name() {

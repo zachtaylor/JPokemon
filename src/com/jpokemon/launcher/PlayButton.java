@@ -33,7 +33,7 @@ public class PlayButton extends JButton implements ActionListener {
     if (name == null)
       return;
 
-    int id = -1;
+    String id = null;
     
     try {
       id = PlayerService.load(name);
@@ -41,13 +41,18 @@ public class PlayButton extends JButton implements ActionListener {
       JOptionPane.showMessageDialog(_launcher, e.toString(), "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
 
       if (JOptionPane.showConfirmDialog(_launcher, "Would you like to start a new game?", "NEW GAME", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == JOptionPane.OK_OPTION) {
-        id = PlayerService.create(name);
+        String rivalName = JOptionPane.showInputDialog("What is your rival's name, again?", null);
+        
+        if (rivalName != null && !rivalName.isEmpty())
+          id = PlayerService.create(name, rivalName);
+        else
+          return;
       }
       else
         return;
     }
     
-    if (id == -1) {
+    if (id == null) {
       return;
     }
     _launcher.dispose();

@@ -1,5 +1,8 @@
 package org.jpokemon.pokemon;
 
+import org.jpokemon.JPokemonConstants;
+import org.jpokemon.pokemon.stat.StatType;
+
 import junit.framework.TestCase;
 
 public class PokemonTest extends TestCase {
@@ -13,6 +16,10 @@ public class PokemonTest extends TestCase {
     level = 5 + (int) (Math.random() * 5);
 
     pokemon = new Pokemon(number, level);
+  }
+
+  public void testNumber() {
+    assertEquals(number, pokemon.number());
   }
 
   public void testName() {
@@ -44,8 +51,64 @@ public class PokemonTest extends TestCase {
     assertEquals(level + 1, pokemon.level());
   }
 
+  public void testStatLookup() {
+    
+    assertEquals(pokemon.attack(), pokemon.getStat(StatType.ATTACK).cur());
+    assertEquals(pokemon.specattack(), pokemon.getStat(StatType.SPECATTACK).cur());
+    assertEquals(pokemon.defense(), pokemon.getStat(StatType.DEFENSE).cur());
+    assertEquals(pokemon.specdefense(), pokemon.getStat(StatType.SPECDEFENSE).cur());
+    assertEquals(pokemon.speed(), pokemon.getStat(StatType.SPEED).cur());
+  }
+
+  public void testStatPoints() {
+    try {
+      pokemon.statPoints(StatType.ATTACK, 1);
+      fail("Cannot spend when have no stat points to spend");
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalStateException);
+    }
+
+    assertEquals(0, pokemon.getStat(StatType.ATTACK).points());
+
+    level++;
+    pokemon.level(level);
+    pokemon.statPoints(StatType.ATTACK, 1);
+    assertEquals(JPokemonConstants.STAT_POINTS_PER_LEVEL, pokemon.getStat(StatType.ATTACK).points());
+
+    try {
+      pokemon.statPoints(StatType.ATTACK, 1);
+      fail("Cannot spend when have no stat points to spend");
+    } catch (Exception e) {
+      assertTrue(e instanceof IllegalStateException);
+    }
+
+    assertEquals(JPokemonConstants.STAT_POINTS_PER_LEVEL, pokemon.getStat(StatType.ATTACK).points());
+  }
+
+  public void testDamageAndHealth() {
+    int maxhealth = pokemon.maxHealth();
+    int damage = pokemon.health() - 1;
+
+    assertTrue(pokemon.awake());
+
+    pokemon.takeDamage(damage);
+    assertEquals(1, pokemon.health());
+    assertEquals(maxhealth, pokemon.maxHealth());
+    assertTrue(pokemon.awake());
+
+    pokemon.takeDamage(1);
+    assertEquals(0, pokemon.health());
+    assertEquals(maxhealth, pokemon.maxHealth());
+    assertFalse(pokemon.awake());
+
+    pokemon.healDamage(5);
+    assertEquals(5, pokemon.health());
+    assertEquals(maxhealth, pokemon.maxHealth());
+    assertTrue(pokemon.awake());
+  }
+
   public void testOriginalTrainer() {
-    assertTrue(!pokemon.hasOriginalTrainer());
+    assertFalse(pokemon.hasOriginalTrainer());
     assertEquals(null, pokemon.getTrainerName());
 
     pokemon.setTrainerName("foo");

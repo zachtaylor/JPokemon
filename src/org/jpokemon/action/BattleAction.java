@@ -17,19 +17,21 @@ public class BattleAction extends Action {
   }
 
   public void execute(Player player) throws LoadException {
+    String fileName = player.record().replaceMacros(data(), player.name());
+    String filePath = JPokemonConstants.TRAINER_PATH + fileName + ".jpkmn";
 
     XMLNode trainerData;
 
     try {
-      trainerData = XMLParser.parse(new File(JPokemonConstants.TRAINER_PATH + data() + ".jpkmn")).get(0);
+      trainerData = XMLParser.parse(new File(filePath)).get(0);
     } catch (FileNotFoundException e) {
       throw new LoadException("Trainer file not found: " + data());
     }
 
-    Trainer trainer = new Trainer();
+    Trainer trainer = new Trainer(fileName);
     trainer.loadXML(trainerData);
 
-    if (!player.trainers().get(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
+    if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
       BattleRegistry.start(player, trainer);
   }
 }
