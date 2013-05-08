@@ -8,9 +8,6 @@ import java.util.Queue;
 import org.jpokemon.activity.Activity;
 import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.activity.OverworldActivity;
-import org.jpokemon.activity.UpgradeActivity;
-import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.json.JSONArray;
@@ -62,24 +59,6 @@ public class PlayerService extends JPokemonService {
     Player player = getPlayer(request);
 
     PlayerFactory.save(player);
-  }
-
-  public static void party(JSONObject request) throws ServiceException {
-    Activity activity = getActivity(request);
-
-    if (!(activity instanceof UpgradeActivity))
-      return; // TODO : throw error
-
-    Pokemon pokemon = getPokemon(request);
-
-    try {
-      JSONArray stats = request.getJSONArray("stats");
-      for (int i = 0; i < stats.length(); i++) {
-        StatType s = StatType.valueOf(stats.getJSONObject(i).getString("stat"));
-        pokemon.statPoints(s, stats.getJSONObject(i).getInt("amount"));
-      }
-    } catch (JSONException e) {
-    }
   }
 
   public static void addToMessageQueue(Player p, String message) {

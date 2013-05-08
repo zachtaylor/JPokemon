@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.jpokemon.service.BattleService;
+import org.jpokemon.service.ActivityService;
 import org.jpokemon.service.ImageService;
 import org.jpokemon.service.ServiceException;
 import org.json.JSONArray;
@@ -242,7 +242,7 @@ public class BattleView extends JPokemonView {
 
   private void submitTurn(JSONObject request) {
     try {
-      BattleService.turn(request);
+      ActivityService.submit(request);
       refresh();
     } catch (ServiceException e) {
       e.printStackTrace();

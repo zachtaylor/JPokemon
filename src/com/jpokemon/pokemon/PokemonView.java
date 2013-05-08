@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.jpokemon.service.ActivityService;
 import org.jpokemon.service.ImageService;
 import org.jpokemon.service.PlayerService;
 import org.jpokemon.service.ServiceException;
@@ -131,7 +132,7 @@ public class PokemonView extends JPokemonView {
       }
       request.put("stats", stats);
 
-      PlayerService.party(request);
+      ActivityService.submit(request);
     } catch (JSONException e) {
     } catch (ServiceException e) {
     }
