@@ -11,7 +11,7 @@ import org.zachtaylor.jnodalxml.XMLNode;
  * Stores a player's history and useful things about what they have done
  */
 public class Record {
-  public static final String XML_NODE_NAME = "progress";
+  public static final String XML_NODE_NAME = "record";
 
   public void setRivalName(String rivalName) {
     _rivalName = rivalName;
@@ -103,7 +103,21 @@ public class Record {
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
-    node.setValue(_events.toString());
+    if (_rivalName != null) {
+      node.setAttribute("rival", _rivalName);
+    }
+
+    if (_pokemon != null) {
+      node.setAttribute("starter", _pokemon);
+    }
+
+    XMLNode eventNode = new XMLNode("events");
+    eventNode.setValue(_events.toString());
+    node.addChild(eventNode);
+
+    XMLNode trainerNode = new XMLNode("trainers");
+    trainerNode.setValue(_trainers.toString());
+    node.addChild(trainerNode);
 
     return node;
   }
@@ -112,11 +126,26 @@ public class Record {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
 
-    for (String value : node.getValue().replace('[', ' ').replace(']', ' ').trim().split(",")) {
+    if (node.hasAttribute("rival")) {
+      _rivalName = node.getAttribute("rival");
+    }
+
+    if (node.hasAttribute("starter")) {
+      _pokemon = node.getAttribute("starter");
+    }
+
+    for (String value : node.getChildren("events").get(0).getValue().replace('[', ' ').replace(']', ' ').trim().split(",")) {
       if (value.isEmpty())
         continue;
 
       putEvent(Integer.parseInt(value));
+    }
+
+    for (String value : node.getChildren("trainers").get(0).getValue().replace('[', ' ').replace(']', ' ').trim().split(",")) {
+      if (value.isEmpty())
+        continue;
+
+      putTrainer(value);
     }
   }
 
