@@ -28,6 +28,8 @@ public class ActionFactory {
       return new PokemonAction(data);
     case BATTLE:
       return new BattleAction(data);
+    case UPGRADE:
+      return new UpgradeAction(data);
     }
 
     return null;

@@ -6,15 +6,13 @@ import org.jpokemon.map.Area;
 import org.jpokemon.map.Border;
 import org.jpokemon.map.Map;
 import org.jpokemon.map.npc.NPC;
-import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PlayerFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class JPokemonService {
-  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", POKEMON_INDEX_KEY = "pokemon_index", OPTION_KEY = "option",
-      NPC_OPTION_KEY = "npc_option";
+  private static final String PLAYER_ID_KEY = "id", NPC_NUMBER_KEY = "number", OPTION_KEY = "option", NPC_OPTION_KEY = "npc_option";
 
   protected static Player getPlayer(JSONObject request) throws ServiceException {
     String playerID = null;
@@ -38,28 +36,6 @@ public abstract class JPokemonService {
     Player player = getPlayer(request);
 
     return ActivityTracker.getActivity(player);
-  }
-
-  protected static Pokemon getPokemon(JSONObject request) throws ServiceException {
-    int pokemonIndex = -1;
-    Pokemon pokemon = null;
-    Player player = null;
-
-    player = getPlayer(request);
-
-    try {
-      pokemonIndex = request.getInt(POKEMON_INDEX_KEY);
-    } catch (JSONException e) {
-      throw new ServiceException("Pokemon index not provided");
-    }
-
-    try {
-      pokemon = player.party().get(pokemonIndex);
-    } catch (IllegalArgumentException e) {
-      throw new ServiceException("Pokemon index " + pokemonIndex + " not found");
-    }
-
-    return pokemon;
   }
 
   protected static Area getArea(JSONObject request) throws ServiceException {
