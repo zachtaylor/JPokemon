@@ -60,6 +60,10 @@ public class Player implements PokemonTrainer {
     _cash = cash;
   }
 
+  public Bag bag() {
+    return _bag;
+  }
+
   public Item item(int itemID) {
     return _bag.get(itemID);
   }
@@ -70,6 +74,10 @@ public class Player implements PokemonTrainer {
 
   public PokemonStorageUnit party() {
     return _storage.get(0);
+  }
+
+  public PokemonStorageBlock getAllPokemon() {
+    return _storage;
   }
 
   public boolean add(Pokemon p) {

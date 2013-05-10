@@ -1,6 +1,7 @@
 package org.jpokemon.item;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -9,7 +10,7 @@ import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
-public class Bag {
+public class Bag implements Iterable<Item> {
   public static final String XML_NODE_NAME = "bag";
 
   public Item get(int itemID) {
@@ -19,6 +20,11 @@ public class Bag {
       _items.put(itemID, item = new Item(itemID));
 
     return item;
+  }
+
+  @Override
+  public Iterator<Item> iterator() {
+    return new BagIterator();
   }
 
   public JSONArray toJSON() {
@@ -67,6 +73,26 @@ public class Bag {
       Item i = get(itemNode.getIntAttribute("number"));
       i.amount(itemNode.getIntAttribute("quantity"));
     }
+  }
+
+  private class BagIterator implements Iterator<Item> {
+    @Override
+    public boolean hasNext() {
+      return index < keys.length;
+    }
+
+    @Override
+    public Item next() {
+      return Bag.this.get(keys[index++]);
+    }
+
+    @Override
+    public void remove() { // nope
+    }
+
+    // One-liners, man... Fuck constructors.
+    private int index = 0;
+    private Integer[] keys = Bag.this._items.keySet().toArray(new Integer[Bag.this._items.keySet().size()]);
   }
 
   private Map<Integer, Item> _items = new HashMap<Integer, Item>();
