@@ -14,11 +14,11 @@ import org.jpokemon.trainer.Record;
 public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
   @Override
   public Object data() {
-    return json;
+    return data;
   }
 
   public void setData(Object object) {
-    json = object;
+    data = object;
   }
 
   @Override
@@ -123,7 +123,7 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
     return lastStatType;
   }
 
-  private Object json;
+  private Object data;
   private Item lastItem;
   private Pokemon lastPokemon;
   private StatType lastStatType;
