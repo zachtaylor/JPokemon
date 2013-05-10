@@ -1,10 +1,11 @@
-package org.jpokemon.activity;
+package org.jpokemon;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.stat.Stat;
+import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
@@ -13,11 +14,11 @@ import org.jpokemon.trainer.Record;
 public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
   @Override
   public Object data() {
-    return data;
+    return json;
   }
 
   public void setData(Object object) {
-    data = object;
+    json = object;
   }
 
   @Override
@@ -91,7 +92,7 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
   @Override
   public void visit_storage_unit(PokemonStorageUnit unit) {
     for (Pokemon pokemon : unit) {
-      visit_pokemon(pokemon);
+      visit_pokemon(lastPokemon = pokemon);
     }
   }
 
@@ -106,14 +107,25 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
 
   @Override
   public void visit_pokemon(Pokemon pokemon) {
+    for (StatType st : StatType.values()) {
+      visit_stat(pokemon.getStat(lastStatType = st));
+    }
   }
 
   protected Pokemon last_pokemon() {
     return lastPokemon;
   }
 
-  private Object data;
+  public void visit_stat(Stat stat) {
+  }
+
+  protected StatType last_stat_type() {
+    return lastStatType;
+  }
+
+  private Object json;
   private Item lastItem;
   private Pokemon lastPokemon;
+  private StatType lastStatType;
   private PokemonStorageUnit lastUnit;
 }

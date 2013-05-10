@@ -1,9 +1,10 @@
-package org.jpokemon.activity;
+package org.jpokemon;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
@@ -31,4 +32,6 @@ public interface JPokemonVisitor {
   public void visit_party_leader(Pokemon pokemon);
 
   public void visit_pokemon(Pokemon pokemon);
+
+  public void visit_stat(Stat stat);
 }

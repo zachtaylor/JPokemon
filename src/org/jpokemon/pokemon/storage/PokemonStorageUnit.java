@@ -67,6 +67,16 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     return true;
   }
 
+  public int indexOf(Pokemon p) {
+    for (int i = 0; i < _amount; i++) {
+      if (_data[i].equals(p)) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   public boolean contains(Pokemon p) {
     return indexOf(p) != -1;
   }
@@ -117,13 +127,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public Iterator<Pokemon> iterator() {
     return new PokemonStorageUnitIterator();
-  }
-
-  private int indexOf(Pokemon p) {
-    for (int i = 0; i < _amount; i++)
-      if (_data[i].equals(p))
-        return i;
-    return -1;
   }
 
   private boolean remove(int index) {

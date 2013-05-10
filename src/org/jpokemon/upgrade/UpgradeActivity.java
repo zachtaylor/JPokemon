@@ -20,6 +20,6 @@ public class UpgradeActivity extends JPokemonService implements Activity {
 
   @Override
   public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException {
-    response.put(getName(), player.toJSON());
+    response.put(getName(), new UpgradeServer(player).data());
   }
 }

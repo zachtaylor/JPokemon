@@ -133,6 +133,10 @@ public class Pokemon {
     return _stats.get(s);
   }
 
+  public int availableStatPoints() {
+    return _stats.points();
+  }
+
   public void statPoints(StatType s, int amount) {
     _stats.usePoints(s, amount);
   }
