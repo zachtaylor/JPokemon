@@ -3,7 +3,6 @@ package org.jpokemon.trainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -89,15 +88,6 @@ public class Record {
       s = s.replaceAll("\\{starter\\}", _pokemon);
 
     return s;
-  }
-
-  public JSONArray toJSON() {
-    JSONArray data = new JSONArray();
-
-    for (Integer i : _events)
-      data.put(i.intValue());
-
-    return data;
   }
 
   public XMLNode toXML() {

@@ -2,8 +2,6 @@ package org.jpokemon.item;
 
 import org.jpokemon.battle.Target;
 import org.jpokemon.pokemon.Pokemon;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Item {
@@ -12,6 +10,10 @@ public class Item {
   public Item(int itemID) {
     _info = ItemInfo.getInfo(itemID);
     _type = ItemType.valueOf(_info.getType());
+  }
+
+  public int number() {
+    return _info.getNumber();
   }
 
   public String name() {
@@ -55,22 +57,6 @@ public class Item {
       --_quantity;
 
     return result;
-  }
-
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("id", _info.getNumber());
-      data.put("name", name());
-      data.put("amount", amount());
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

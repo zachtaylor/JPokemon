@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -25,34 +22,6 @@ public class Bag implements Iterable<Item> {
   @Override
   public Iterator<Item> iterator() {
     return new BagIterator();
-  }
-
-  public JSONArray toJSON() {
-    JSONArray data = new JSONArray();
-
-    Map<ItemType, JSONArray> itemTypes = new HashMap<ItemType, JSONArray>();
-
-    for (Item item : _items.values()) {
-      if (!item.visible())
-        continue;
-
-      if (itemTypes.get(item.type()) == null)
-        itemTypes.put(item.type(), new JSONArray());
-
-      itemTypes.get(item.type()).put(item.toJSON());
-    }
-
-    try {
-      for (Map.Entry<ItemType, JSONArray> itemTypeEntry : itemTypes.entrySet()) {
-        JSONObject itemType = new JSONObject();
-        itemType.put("type", itemTypeEntry.getKey().toString().toLowerCase());
-        itemType.put("items", itemTypeEntry.getValue());
-        data.put(itemType);
-      }
-    } catch (JSONException e) {
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

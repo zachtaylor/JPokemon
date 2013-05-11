@@ -7,8 +7,6 @@ import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.service.PlayerService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Player implements PokemonTrainer {
@@ -108,25 +106,6 @@ public class Player implements PokemonTrainer {
 
   public Record record() {
     return _record;
-  }
-
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("id", id());
-      data.put("name", name());
-      data.put("id", id());
-      data.put("leader", party().get(0).toJSON());
-      data.put("party", party().toJSON());
-      data.put("bag", _bag.toJSON());
-      data.put("party", party().toJSON());
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

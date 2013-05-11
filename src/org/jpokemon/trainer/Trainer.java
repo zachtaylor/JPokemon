@@ -3,8 +3,6 @@ package org.jpokemon.trainer;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Trainer implements PokemonTrainer {
@@ -41,22 +39,6 @@ public class Trainer implements PokemonTrainer {
   }
 
   public void notify(String... message) {
-  }
-
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("id", id());
-      data.put("leader", party().get(0).toJSON());
-      data.put("party", party().toJSON());
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

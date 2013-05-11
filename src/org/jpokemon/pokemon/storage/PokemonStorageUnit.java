@@ -4,7 +4,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import org.jpokemon.pokemon.Pokemon;
-import org.json.JSONArray;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -90,15 +89,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     }
 
     return answer;
-  }
-
-  public JSONArray toJSON() {
-    JSONArray data = new JSONArray();
-
-    for (Pokemon p : this)
-      data.put(p.toJSON());
-
-    return data;
   }
 
   public XMLNode toXML() {

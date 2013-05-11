@@ -128,10 +128,6 @@ public class Slot {
     return hitList;
   }
 
-  public JSONObject toJSON() {
-    return _trainer.toJSON();
-  }
-
   private List<Pokemon> rivalsList(Pokemon p) {
     if (_rivalsLists.get(p) == null)
       _rivalsLists.put(p, new ArrayList<Pokemon>());

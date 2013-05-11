@@ -1,8 +1,6 @@
 package org.jpokemon.pokemon.stat;
 
 import org.jpokemon.JPokemonConstants;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -94,22 +92,6 @@ public class Stat {
 
     computeMax();
     computeCur();
-  }
-
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("max", max());
-      data.put("ev", ev());
-      data.put("points", points());
-      data.put("iv", iv());
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

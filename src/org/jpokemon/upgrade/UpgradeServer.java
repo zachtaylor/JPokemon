@@ -12,6 +12,8 @@ import org.json.JSONObject;
 public class UpgradeServer extends ActivityServer {
   public UpgradeServer(Player player) {
     super(player);
+
+    visit_player(player);
   }
 
   public void visit_party(PokemonStorageUnit unit) {

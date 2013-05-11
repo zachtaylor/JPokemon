@@ -17,7 +17,6 @@ import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,41 +105,6 @@ public class Battle implements Iterable<Slot> {
     Slot target = _slots.get(targetID);
 
     addTurn(slot.turn(turn, target));
-  }
-
-  public JSONObject toJSON(PokemonTrainer perspective) {
-    Slot slot = _slots.get(perspective.id());
-
-    JSONObject data = new JSONObject();
-    Map<Integer, JSONArray> teams = new HashMap<Integer, JSONArray>();
-
-    try {
-      data.put("player", slot.toJSON());
-
-      for (Slot cur : this) {
-        if (cur == slot)
-          continue;
-        if (teams.get(cur.team()) == null)
-          teams.put(cur.team(), new JSONArray());
-
-        teams.get(cur.team()).put(cur.toJSON());
-      }
-
-      JSONArray enemies = new JSONArray();
-      for (Map.Entry<Integer, JSONArray> team : teams.entrySet()) {
-        if (team.getKey() == slot.team())
-          data.put("allies", team.getValue());
-        else
-          enemies.put(team.getValue());
-      }
-      data.put("enemies", enemies);
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   @Override

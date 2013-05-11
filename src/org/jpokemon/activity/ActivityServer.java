@@ -8,7 +8,11 @@ public abstract class ActivityServer extends AbstractJPokemonVisitor {
   public ActivityServer(Player player) {
     setData(new JSONObject());
 
-    visit_player(player);
+    calling_player = player;
+  }
+
+  protected Player get_calling_player() {
+    return calling_player;
   }
 
   @Override
@@ -24,4 +28,6 @@ public abstract class ActivityServer extends AbstractJPokemonVisitor {
       throw new IllegalArgumentException("Data must be of type JSONObject");
     }
   }
+
+  private Player calling_player;
 }

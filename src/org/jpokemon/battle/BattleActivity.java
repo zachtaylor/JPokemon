@@ -1,7 +1,6 @@
 package org.jpokemon.battle;
 
 import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.service.JPokemonService;
 import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
@@ -25,14 +24,7 @@ public class BattleActivity extends JPokemonService implements Activity {
   }
 
   public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException {
-    Activity activity = ActivityTracker.getActivity(player);
-
-    if (!(activity instanceof BattleActivity))
-      throw new ServiceException("Current activity for " + player.name() + " is not a battle");
-
-    Battle battle = ((BattleActivity) activity).getBattle();
-
-    response.put(getName(), battle.toJSON(player));
+    response.put(getName(), new BattleServer(player).data());
   }
 
   public Battle getBattle() {

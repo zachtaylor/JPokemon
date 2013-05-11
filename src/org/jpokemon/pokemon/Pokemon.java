@@ -8,8 +8,6 @@ import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -268,29 +266,6 @@ public class Pokemon {
     _stats.rebase(_species);
 
     checkNewMoves();
-  }
-
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("name", name());
-      data.put("number", number());
-      data.put("level", level());
-      data.put("xp", xp());
-      data.put("xp_needed", xpNeeded());
-      data.put("hp", health());
-      data.put("hp_max", maxHealth());
-      data.put("condition", _condition.toString());
-      data.put("moves", _moves.toJSON());
-      data.put("points", _stats.points());
-      data.put("stats", _stats.toJSON());
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

@@ -4,6 +4,7 @@ import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
@@ -110,6 +111,10 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
     for (StatType st : StatType.values()) {
       visit_stat(pokemon.getStat(lastStatType = st));
     }
+
+    for (int moveIndex = 0; moveIndex < pokemon.moveCount(); moveIndex++) {
+      visit_move(pokemon.move(moveIndex));
+    }
   }
 
   protected Pokemon last_pokemon() {
@@ -121,6 +126,9 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
 
   protected StatType last_stat_type() {
     return lastStatType;
+  }
+
+  public void visit_move(Move move) {
   }
 
   private Object data;

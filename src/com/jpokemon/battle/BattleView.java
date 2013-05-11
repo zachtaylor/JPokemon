@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -28,80 +30,32 @@ public class BattleView extends JPokemonView {
   public BattleView(GameWindow parent) {
     super(parent);
 
-    _user = new JPanel();
-    _enemies = new JPanel();
-    JPanel userAndButtons = new JPanel();
-    JPanel buttonPanel = new JPanel();
-
-    _fightButton = new JPokemonButton("FIGHT");
-    buttonPanel.add(_fightButton);
-    _fightButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        fight();
-      }
-    });
-
-    _itemButton = new JPokemonButton("ITEM");
-    buttonPanel.add(_itemButton);
-    _itemButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        item();
-      }
-    });
-
-    _swapButton = new JPokemonButton("SWAP");
-    buttonPanel.add(_swapButton);
-    _swapButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        swap();
-      }
-    });
-
-    _runButton = new JPokemonButton("RUN");
-    buttonPanel.add(_runButton);
-    _runButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        run();
-      }
-    });
-
-    userAndButtons.add(_user);
-    userAndButtons.add(buttonPanel);
-    userAndButtons.add(spacer());
+    _teams = new JPanel();
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-    _user.setLayout(new BoxLayout(_user, BoxLayout.Y_AXIS));
-    _enemies.setLayout(new BoxLayout(_enemies, BoxLayout.X_AXIS));
-    userAndButtons.setLayout(new BoxLayout(userAndButtons, BoxLayout.Y_AXIS));
+    _teams.setLayout(new BoxLayout(_teams, BoxLayout.X_AXIS));
 
-    add(userAndButtons);
-    add(_enemies);
+    add(_teams);
   }
 
   public void update(JSONObject data) {
     _data = data;
 
-    _user.removeAll();
-    _enemies.removeAll();
+    _teams.removeAll();
 
     try {
       _trainerData = _data.getJSONObject("player");
-      _user.add(new PartyPanel(_trainerData, true));
 
-      _enemyTeams = _data.getJSONArray("enemies");
+      _enemyTeams = _data.getJSONArray("teams");
       for (int i = 0; i < _enemyTeams.length(); i++) {
         JPanel teamPanel = new JPanel();
         teamPanel.setLayout(new BoxLayout(teamPanel, BoxLayout.Y_AXIS));
 
         JSONArray teamData = _enemyTeams.getJSONArray(i);
         for (int j = 0; j < teamData.length(); j++)
-          teamPanel.add(new PartyPanel(teamData.getJSONObject(j), false));
+          teamPanel.add(new PartyPanel(this, teamData.getJSONObject(j)));
 
-        _enemies.add(teamPanel);
+        _teams.add(teamPanel);
       }
 
     } catch (JSONException e) {
@@ -119,6 +73,20 @@ public class BattleView extends JPokemonView {
 
   public boolean key(KeyEvent arg0) {
     return false;
+  }
+
+  public JButton fightButton() {
+    if (_fightButton == null) {
+      _fightButton = new JPokemonButton("FIGHT");
+      _fightButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          fight();
+        }
+      });
+    }
+
+    return _fightButton;
   }
 
   private void fight() {
@@ -159,6 +127,20 @@ public class BattleView extends JPokemonView {
     submitTurn(request);
   }
 
+  public JButton swapButton() {
+    if (_swapButton == null) {
+      _swapButton = new JPokemonButton("SWAP");
+      _swapButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          swap();
+        }
+      });
+    }
+
+    return _swapButton;
+  }
+
   private void swap() {
     int swapIndex;
     enableButtons(false);
@@ -187,6 +169,20 @@ public class BattleView extends JPokemonView {
     }
 
     submitTurn(request);
+  }
+
+  public JButton itemButton() {
+    if (_itemButton == null) {
+      _itemButton = new JPokemonButton("ITEM");
+      _itemButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          item();
+        }
+      });
+    }
+
+    return _itemButton;
   }
 
   private void item() {
@@ -221,6 +217,20 @@ public class BattleView extends JPokemonView {
     }
 
     submitTurn(request);
+  }
+
+  public JButton runButton() {
+    if (_runButton == null) {
+      _runButton = new JPokemonButton("ITEM");
+      _runButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          run();
+        }
+      });
+    }
+
+    return _runButton;
   }
 
   private void run() {
@@ -327,38 +337,47 @@ public class BattleView extends JPokemonView {
 
   private int getItemChoice() throws JSONException {
     JSONArray items = _trainerData.getJSONArray("bag");
-    JSONObject itemType = null;
-
     List<String> itemTypes = new ArrayList<String>();
-    List<ImageIcon> itemsInType = new ArrayList<ImageIcon>();
+    Map<String, List<JSONObject>> itemsPerType = new HashMap<String, List<JSONObject>>();
 
     for (int i = 0; i < items.length(); i++) {
-      itemTypes.add(items.getJSONObject(i).getString("type"));
+      JSONObject itemJSON = items.getJSONObject(i);
+      String itemType = itemJSON.getString("type");
+      itemTypes.add(itemType);
+
+      if (itemsPerType.get(itemType) == null) {
+        itemsPerType.put(itemType, new ArrayList<JSONObject>());
+      }
+
+      itemsPerType.get(itemType).add(itemJSON);
     }
 
-    int itemTypeChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null,
-        itemTypes.toArray(), null);
+    int itemTypeChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null, itemTypes.toArray(), null);
 
     if (itemTypeChoice == -1)
       return -1;
-    else
-      itemType = items.getJSONObject(itemTypeChoice);
 
-    for (int i = 0; i < itemType.getJSONArray("items").length(); i++) {
-      String itemName = itemType.getJSONArray("items").getJSONObject(i).getString("name");
-      itemsInType.add(ImageService.item(itemType.getString("type"), itemName));
+    List<JSONObject> itemsInSelectedType = itemsPerType.get(itemTypes.get(itemTypeChoice));
+
+    List<ImageIcon> itemIconsInType = new ArrayList<ImageIcon>();
+
+    for (int i = 0; i < itemsInSelectedType.size(); i++) {
+      JSONObject itemJSON = itemsInSelectedType.get(i);
+      String itemName = itemJSON.getString("name");
+      String itemType = itemJSON.getString("type");
+
+      itemIconsInType.add(ImageService.item(itemType, itemName));
     }
 
-    int itemChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null,
-        itemsInType.toArray(), null);
+    int itemChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null, itemIconsInType.toArray(), null);
 
     if (itemChoice == -1)
       return -1;
 
-    return itemType.getJSONArray("items").getJSONObject(itemChoice).getInt("id");
+    return itemsInSelectedType.get(itemChoice).getInt("id");
   }
 
-  private JPanel _enemies, _user;
+  private JPanel _teams;
   private JSONArray _enemyTeams;
   private JSONObject _data, _trainerData;
   private JButton _fightButton, _itemButton, _swapButton, _runButton;
