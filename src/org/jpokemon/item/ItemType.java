@@ -28,72 +28,62 @@ public enum ItemType {
     }
   }
 
-  public boolean effect(Pokemon p, ItemInfo info) {
+  public boolean effect(Pokemon pokemon, ItemInfo info) {
     switch (this) {
     case BALL:
-      double STAT = p.catchBonus();
-      int HPmax = p.maxHealth(),
-      HPcur = p.health(),
-      BALL = info.getData(),
-      q = (int) (BALL * 40 * STAT / HPmax * ((3 * HPmax) - (2 * HPcur)));
+      int a = (int) (Math.random() * info.getData()) + 1;
+      a *= (3 * pokemon.maxHealth() - 2 * pokemon.health()) * pokemon.catchRate();
+      a /= 30 * pokemon.maxHealth();
+      a *= pokemon.catchBonus();
 
-      if (q >= 255)
-        return true;
-      else {
-        double r = Math.sqrt(Math.sqrt(((double) q) / (255.0)));
-        for (int i = 0; i < 4; i++)
-          if (r < Math.random())
-            return false;
-
-        return true;
-      }
+      return a >= 255;
     case POTION:
-      p.healDamage(info.getData());
+      pokemon.healDamage(info.getData());
       return true;
     case XSTAT:
-      p.getStat(StatType.valueOf(info.getData())).effect(1);
+      pokemon.getStat(StatType.valueOf(info.getData())).effect(1);
       return true;
     case STONE:
-      int n = p.number();
+      int n = pokemon.number();
 
       // Eevee (#133) evolutions are not linear
       switch (Type.valueOf(info.getData())) {
       case FIRE:
         if (n == 37 || n == 58)
-          p.evolve();
+          pokemon.evolve();
         else if (n == 133)
-          p.evolve(136);
-        break;
+          pokemon.evolve(136);
+      break;
       case WATER:
         if (n == 60 || n == 90 || n == 120)
-          p.evolve();
+          pokemon.evolve();
         else if (n == 133)
-          p.evolve(134);
-        break;
+          pokemon.evolve(134);
+      break;
       case ELECTRIC:
-        if (p.number() == 25)
-          p.evolve();
+        if (pokemon.number() == 25)
+          pokemon.evolve();
         else if (n == 133)
-          p.evolve(135);
-        break;
+          pokemon.evolve(135);
+      break;
       case GRASS:
         if (n == 44 || n == 70 || n == 102)
-          p.evolve();
-        break;
+          pokemon.evolve();
+      break;
       case NORMAL:
         if (n == 30 || n == 33 || n == 35 || n == 39)
-          p.evolve();
-        break;
+          pokemon.evolve();
+      break;
       default:
-        break;
+      break;
       }
-      return p.number() != n;
+      return pokemon.number() != n;
     case MACHINE:
-      if (new Move(info.getData()).STAB(p) == 1)
+      if (new Move(info.getData()).STAB(pokemon) == 1)
         return false;
 
       try {
-        p.addMove(info.getData());
+        pokemon.addMove(info.getData());
       } catch (IllegalStateException e) {
         ; // TODO : calculate position and ask
       }

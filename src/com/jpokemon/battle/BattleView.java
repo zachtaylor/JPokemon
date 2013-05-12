@@ -102,7 +102,7 @@ public class BattleView extends JPokemonView {
         return;
       }
 
-      enemySlotID = getMoveTarget(moveIndex);
+      enemySlotID = getTarget(_trainerData.getJSONObject("leader").getJSONArray("moves").getJSONObject(moveIndex).getString("name"));
       if (enemySlotID == null) {
         enableButtons(true);
         return;
@@ -186,7 +186,9 @@ public class BattleView extends JPokemonView {
   }
 
   private void item() {
-    int itemID;
+    String targetSlotID = null;
+    int itemID = -1, partyIndex = -1;
+
     enableButtons(false);
 
     try {
@@ -195,20 +197,36 @@ public class BattleView extends JPokemonView {
         enableButtons(true);
         return;
       }
+
+      String itemName = null;
+      for (int i = 0; i < _trainerData.getJSONArray("bag").length(); i++) {
+        JSONObject itemJSON = _trainerData.getJSONArray("bag").getJSONObject(i);
+
+        if (itemJSON.getInt("id") == itemID) {
+          itemName = itemJSON.getString("name");
+        }
+      }
+
+      targetSlotID = getTarget("Select a target to use " + itemName + " on");
+      if (targetSlotID == null) {
+        enableButtons(true);
+        return;
+      }
+
+      // TODO : party index
+      partyIndex = 0;
     } catch (Exception e) {
       enableButtons(true);
       return;
     }
 
-    String targetID = parent().playerID();// TODO : target choice
-    int targetIndex = 0;
-
     JSONObject request = new JSONObject();
+
     try {
       request.put("turn", "ITEM");
       request.put("id", parent().playerID());
-      request.put("target", targetID);
-      request.put("target_index", targetIndex);
+      request.put("target", targetSlotID);
+      request.put("target_index", partyIndex);
       request.put("item", itemID);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -288,14 +306,12 @@ public class BattleView extends JPokemonView {
     return answer;
   }
 
-  private String getMoveTarget(int moveIndex) throws JSONException {
-    String move = null;
+  private String getTarget(String prompt) throws JSONException {
     ImageIcon image = null;
     List<String> slotNames = new ArrayList<String>();
     List<String> slotIds = new ArrayList<String>();
 
     try {
-      move = _trainerData.getJSONObject("leader").getJSONArray("moves").getJSONObject(moveIndex).getString("name");
       image = ImageService.find("pkmn/" + _trainerData.getJSONObject("leader").getInt("number"));
 
       for (int i = 0; i < _enemyTeams.length(); i++) {
@@ -310,7 +326,7 @@ public class BattleView extends JPokemonView {
     String answer = slotIds.get(0);
 
     if (slotIds.size() > 1)
-      answer = slotIds.get(JOptionPane.showOptionDialog(parent(), "Select a target for " + move, "MOVE CHOICE", 0, 0, image, slotNames.toArray(), null));
+      answer = slotIds.get(JOptionPane.showOptionDialog(parent(), prompt, "SELECT TARGET", 0, 0, image, slotNames.toArray(), null));
 
     return answer;
   }

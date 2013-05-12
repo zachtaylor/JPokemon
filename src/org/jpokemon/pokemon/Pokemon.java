@@ -56,6 +56,10 @@ public class Pokemon {
     return _species.getEvolutionlevel();
   }
 
+  public int catchRate() {
+    return _species.getCatchrate();
+  }
+
   public void level(int l) {
     if (_level + 1 == l)
       _stats.points(_stats.points() + JPokemonConstants.STAT_POINTS_PER_LEVEL);
