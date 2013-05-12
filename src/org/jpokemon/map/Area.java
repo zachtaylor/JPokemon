@@ -1,14 +1,13 @@
 package org.jpokemon.map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.trainer.Player;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
@@ -45,6 +44,10 @@ public class Area {
     name = n;
   }
 
+  public List<WildPokemon> wildPokemon() {
+    return Collections.unmodifiableList(_pokemon);
+  }
+
   public Pokemon pokemon() {
     int totalFlex = 0;
 
@@ -68,7 +71,7 @@ public class Area {
   }
 
   public List<NPC> npcs() {
-    return _npcs;
+    return Collections.unmodifiableList(_npcs);
   }
 
   public NPC getNpc(int number) {
@@ -86,6 +89,10 @@ public class Area {
 
   public void removeNPC(int index) {
     _npcs.remove(index);
+  }
+
+  public List<Border> borders() {
+    return Collections.unmodifiableList(_borders);
   }
 
   public Border getBorder(String name) {
@@ -107,33 +114,6 @@ public class Area {
 
   public void removeBorder(int index) {
     _borders.remove(index);
-  }
-
-  public JSONObject toJSON(Player p) {
-    JSONObject json = new JSONObject();
-
-    try {
-      json.put("name", getName());
-
-      JSONArray npcs = new JSONArray();
-      for (NPC npc : npcs()) {
-        npcs.put(npc.toJSON(p));
-      }
-      json.put("npcs", npcs);
-
-      JSONArray borders = new JSONArray();
-      for (Border b : _borders) {
-        borders.put(b.toJSON(p));
-      }
-      json.put("borders", borders);
-
-      json.put("has_wild_pokemon", _pokemon.size() > 0);
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-
-    return json;
   }
 
   public boolean equals(Object o) {

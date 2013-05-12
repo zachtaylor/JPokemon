@@ -26,9 +26,7 @@ public class OverworldActivity extends JPokemonService implements Activity {
 
   @Override
   public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException {
-    Area area = getArea(request);
-
-    response.put(getName(), area.toJSON(player));
+    response.put(getName(), new MapServer(player).data());
   }
 
   public static OverworldActivity instance = new OverworldActivity();
