@@ -13,9 +13,10 @@ public class UpgradeServer extends ActivityServer {
   public UpgradeServer(Player player) {
     super(player);
 
-    visit_player(player);
+    visit(player);
   }
 
+  @Override
   public void visit_party(PokemonStorageUnit unit) {
     try {
       data().put("party", party = new JSONArray());
@@ -23,13 +24,15 @@ public class UpgradeServer extends ActivityServer {
       return;
     }
 
-    super.visit_storage_unit(unit);
+    super.visit_party(unit);
   }
 
-  public void visit_storage_unit(PokemonStorageUnit unit) { // Nothing
+  @Override
+  public void visit(PokemonStorageUnit unit) { // Nothing
   }
 
-  public void visit_pokemon(Pokemon pokemon) {
+  @Override
+  public void visit(Pokemon pokemon) {
     JSONObject json = new JSONObject();
 
     try {
@@ -43,10 +46,11 @@ public class UpgradeServer extends ActivityServer {
 
     party.put(json);
 
-    super.visit_pokemon(pokemon);
+    super.visit(pokemon);
   }
 
-  public void visit_stat(Stat stat) {
+  @Override
+  public void visit(Stat stat) {
     JSONObject json = new JSONObject();
 
     try {
@@ -61,7 +65,7 @@ public class UpgradeServer extends ActivityServer {
 
     stats.put(json);
 
-    super.visit_stat(stat);
+    super.visit(stat);
   }
 
   private JSONArray party, stats;

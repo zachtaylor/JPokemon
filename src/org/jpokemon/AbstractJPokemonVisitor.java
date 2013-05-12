@@ -23,35 +23,33 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
   }
 
   @Override
-  public void visit_player(Player player) {
-    // TODO Auto-generated method stub
+  public void visit(Player player) {
+    visit(player.record());
 
-    visit_record(player.record());
+    visit(player.pokedex());
 
-    visit_pokedex(player.pokedex());
+    visit(player.bag());
 
-    visit_bag(player.bag());
-
-    visit_storage_block(player.getAllPokemon());
+    visit(player.getAllPokemon());
   }
 
   @Override
-  public void visit_record(Record record) {
+  public void visit(Record record) {
   }
 
   @Override
-  public void visit_pokedex(Pokedex pokedex) {
+  public void visit(Pokedex pokedex) {
   }
 
   @Override
-  public void visit_bag(Bag bag) {
+  public void visit(Bag bag) {
     for (Item item : bag) {
-      visit_item(lastItem = item);
+      visit(lastItem = item);
     }
   }
 
   @Override
-  public void visit_item(Item item) {
+  public void visit(Item item) {
   }
 
   protected Item last_visited_item() {
@@ -59,7 +57,7 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
   }
 
   @Override
-  public void visit_storage_block(PokemonStorageBlock block) {
+  public void visit(PokemonStorageBlock block) {
     PokemonStorageUnit unit;
 
     for (int i = 0; i < JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++) {
@@ -69,7 +67,7 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
         visit_party(unit);
       }
       else {
-        visit_storage_unit(unit);
+        visit(unit);
       }
     }
   }
@@ -85,15 +83,15 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
         visit_party_leader(pokemon);
       }
       else {
-        visit_pokemon(pokemon);
+        visit(pokemon);
       }
     }
   }
 
   @Override
-  public void visit_storage_unit(PokemonStorageUnit unit) {
+  public void visit(PokemonStorageUnit unit) {
     for (Pokemon pokemon : unit) {
-      visit_pokemon(lastPokemon = pokemon);
+      visit(lastPokemon = pokemon);
     }
   }
 
@@ -103,17 +101,17 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
 
   @Override
   public void visit_party_leader(Pokemon pokemon) {
-    visit_pokemon(pokemon);
+    visit(pokemon);
   }
 
   @Override
-  public void visit_pokemon(Pokemon pokemon) {
+  public void visit(Pokemon pokemon) {
     for (StatType st : StatType.values()) {
-      visit_stat(pokemon.getStat(lastStatType = st));
+      visit(pokemon.getStat(lastStatType = st));
     }
 
     for (int moveIndex = 0; moveIndex < pokemon.moveCount(); moveIndex++) {
-      visit_move(pokemon.move(moveIndex));
+      visit(pokemon.move(moveIndex));
     }
   }
 
@@ -121,14 +119,16 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
     return lastPokemon;
   }
 
-  public void visit_stat(Stat stat) {
+  @Override
+  public void visit(Stat stat) {
   }
 
   protected StatType last_stat_type() {
     return lastStatType;
   }
 
-  public void visit_move(Move move) {
+  @Override
+  public void visit(Move move) {
   }
 
   private Object data;

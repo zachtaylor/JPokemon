@@ -22,13 +22,14 @@ public class BattleServer extends ActivityServer {
   public BattleServer(Player player) {
     super(player);
 
-    visit_player(player);
+    visit(player);
   }
 
   /* NB: Call order: BattleServer.BattleServer > ActivityServer.ActivityServer >
    * BattleServer.visit_player (context_owner set) > ActivityServer.visit_player
    * etc... > visit_battle etc... */
-  public void visit_player(Player player) {
+  @Override
+  public void visit(Player player) {
     try {
       trainer_json = new JSONObject();
       trainer_json.put("id", player.id());
@@ -42,7 +43,7 @@ public class BattleServer extends ActivityServer {
     } catch (JSONException e) {
     }
 
-    super.visit_player(player);
+    super.visit(player);
 
     if (current_slot == null) {
       Activity activity = ActivityTracker.getActivity(player);
@@ -50,18 +51,20 @@ public class BattleServer extends ActivityServer {
     }
   }
 
-  public void visit_bag(Bag bag) {
+  @Override
+  public void visit(Bag bag) {
     if (current_slot == null) {
       try {
         trainer_json.put("bag", bag_json = new JSONArray());
       } catch (JSONException e) {
       }
 
-      super.visit_bag(bag);
+      super.visit(bag);
     }
   }
 
-  public void visit_item(Item item) {
+  @Override
+  public void visit(Item item) {
     JSONObject stuff = new JSONObject();
 
     try {
@@ -74,6 +77,7 @@ public class BattleServer extends ActivityServer {
     bag_json.put(stuff);
   }
 
+  @Override
   public void visit_party_leader(Pokemon pokemon) {
     JSONObject leader_json = new JSONObject();
 
@@ -90,7 +94,6 @@ public class BattleServer extends ActivityServer {
         leader_json.put("xp_needed", pokemon.xpNeeded());
 
         leader_json.put("moves", move_json = new JSONArray());
-        super.visit_pokemon(pokemon);
       }
 
       trainer_json.put("leader", leader_json);
@@ -111,7 +114,8 @@ public class BattleServer extends ActivityServer {
     }
   }
 
-  public void visit_pokemon(Pokemon pokemon) {
+  @Override
+  public void visit(Pokemon pokemon) {
     JSONObject pokemon_json = new JSONObject();
 
     try {
@@ -125,15 +129,17 @@ public class BattleServer extends ActivityServer {
       if (current_slot == null) {
         pokemon_json.put("number", pokemon.number());
         pokemon_json.put("name", pokemon.name());
+
+        super.visit(pokemon);
       }
 
       party_json.put(pokemon_json);
     } catch (JSONException e) {
-
     }
   }
 
-  public void visit_move(Move move) {
+  @Override
+  public void visit(Move move) {
     JSONObject json = new JSONObject();
 
     try {
@@ -181,20 +187,15 @@ public class BattleServer extends ActivityServer {
   }
 
   private void visit_pokemon_trainer(PokemonTrainer trainer) {
-    if (trainer instanceof Player) {
-      visit_player((Player) trainer);
-    }
-    else {
-      trainer_json = new JSONObject();
-      team_json_by_team.get(current_slot.team()).put(trainer_json);
+    trainer_json = new JSONObject();
+    team_json_by_team.get(current_slot.team()).put(trainer_json);
 
-      try {
-        trainer_json.put("id", trainer.id());
-      } catch (JSONException e) {
-      }
-
-      visit_party(trainer.party());
+    try {
+      trainer_json.put("id", trainer.id());
+    } catch (JSONException e) {
     }
+
+    visit_party(trainer.party());
   }
 
   /* current_slot == null indicates that the Player making the request is being

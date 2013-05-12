@@ -14,27 +14,27 @@ import org.jpokemon.trainer.Record;
 public interface JPokemonVisitor {
   public Object data();
 
-  public void visit_player(Player player);
+  public void visit(Player player);
 
-  public void visit_record(Record record);
+  public void visit(Record record);
 
-  public void visit_pokedex(Pokedex pokedex);
+  public void visit(Pokedex pokedex);
 
-  public void visit_bag(Bag bag);
+  public void visit(Bag bag);
 
-  public void visit_item(Item item);
+  public void visit(Item item);
 
-  public void visit_storage_block(PokemonStorageBlock block);
+  public void visit(PokemonStorageBlock block);
 
   public void visit_party(PokemonStorageUnit unit);
 
-  public void visit_storage_unit(PokemonStorageUnit unit);
+  public void visit(PokemonStorageUnit unit);
 
   public void visit_party_leader(Pokemon pokemon);
 
-  public void visit_pokemon(Pokemon pokemon);
+  public void visit(Pokemon pokemon);
 
-  public void visit_stat(Stat stat);
+  public void visit(Stat stat);
 
-  public void visit_move(Move move);
+  public void visit(Move move);
 }

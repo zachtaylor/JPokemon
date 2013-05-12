@@ -118,6 +118,7 @@ public class Battle implements Iterable<Slot> {
     _haveSelectedTurn = new ArrayList<Slot>();
 
     current.execute();
+
     doTrainerAttacks();
   }
 
@@ -163,7 +164,9 @@ public class Battle implements Iterable<Slot> {
     }
 
     if (onlyOneTeamLeft) {
-      for (Slot slot : this) {
+      while (!_slots.isEmpty()) {
+        String slotKey = (String) _slots.keySet().toArray()[0];
+        Slot slot = _slots.remove(slotKey);
         ActivityTracker.clearActivity(slot.trainer());
       }
     }

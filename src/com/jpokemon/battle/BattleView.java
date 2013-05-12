@@ -221,7 +221,7 @@ public class BattleView extends JPokemonView {
 
   public JButton runButton() {
     if (_runButton == null) {
-      _runButton = new JPokemonButton("ITEM");
+      _runButton = new JPokemonButton("RUN");
       _runButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
