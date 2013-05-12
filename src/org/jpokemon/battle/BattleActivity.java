@@ -1,14 +1,10 @@
 package org.jpokemon.battle;
 
 import org.jpokemon.activity.Activity;
-import org.jpokemon.service.JPokemonService;
-import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class BattleActivity extends JPokemonService implements Activity {
+public class BattleActivity implements Activity {
   public BattleActivity(PokemonTrainer... trainers) {
     _battle = Battle.create(trainers);
     _battle.start();
@@ -23,8 +19,9 @@ public class BattleActivity extends JPokemonService implements Activity {
     return BattleService.getInstance();
   }
 
-  public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException {
-    response.put(getName(), new BattleServer(player).data());
+  @Override
+  public BattleServer getServer(Player player) {
+    return new BattleServer(player);
   }
 
   public Battle getBattle() {

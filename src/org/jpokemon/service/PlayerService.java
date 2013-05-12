@@ -25,7 +25,7 @@ public class PlayerService extends JPokemonService {
     try {
       response.put("state", a.getName());
       response.put("messages", loadMessagesForPlayer(p));
-      a.appendDataToResponse(response, request, p);
+      response.put(a.getName(), a.getServer(p).data());
 
     } catch (JSONException e) {
       e.printStackTrace();

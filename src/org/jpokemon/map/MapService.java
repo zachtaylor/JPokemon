@@ -11,9 +11,12 @@ import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.WildTrainer;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MapService extends JPokemonService implements ActivityService {
+  private static final String NPC_NUMBER_KEY = "number", NPC_OPTION_KEY = "npc_option";
+
   private MapService() {
   }
 
@@ -74,6 +77,70 @@ public class MapService extends JPokemonService implements ActivityService {
     trainer.add(pokemon);
 
     ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+  }
+
+  private Area getArea(JSONObject request) throws ServiceException {
+    Player player = getPlayer(request);
+    Area area = Map.area(player.area());
+
+    if (area == null)
+      throw new ServiceException("Area number " + player.area() + " not found");
+
+    return area;
+  }
+
+  private NPC getNpc(JSONObject request) throws ServiceException {
+    int npcNumber = -1;
+    NPC npc = null;
+    Area area = null;
+
+    area = getArea(request);
+
+    try {
+      npcNumber = request.getInt(NPC_NUMBER_KEY);
+    } catch (JSONException e) {
+      throw new ServiceException("Npc number not found");
+    }
+
+    npc = area.getNpc(npcNumber);
+
+    if (npc == null)
+      throw new ServiceException("Npc number " + npcNumber + " not found");
+
+    return npc;
+  }
+
+  private String getNPCOption(JSONObject request) throws ServiceException {
+    String npc_option = null;
+
+    try {
+      npc_option = request.getString(NPC_OPTION_KEY);
+    } catch (JSONException e) {
+      throw new ServiceException("NPC option not found");
+    }
+
+    return npc_option;
+  }
+
+  private Border getBorder(JSONObject request) throws ServiceException {
+    Area area;
+    String borderChoice;
+    Border border;
+
+    area = getArea(request);
+
+    try {
+      borderChoice = request.getString("border");
+    } catch (JSONException e) {
+      throw new ServiceException("Border choice not found");
+    }
+
+    border = area.getBorder(borderChoice);
+
+    if (border == null)
+      throw new ServiceException("Border not found in area");
+
+    return border;
   }
 
   private static MapService instance = new MapService();

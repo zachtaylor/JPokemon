@@ -2,10 +2,7 @@ package org.jpokemon.map;
 
 import org.jpokemon.activity.Activity;
 import org.jpokemon.service.JPokemonService;
-import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class OverworldActivity extends JPokemonService implements Activity {
   private OverworldActivity() {
@@ -24,9 +21,8 @@ public class OverworldActivity extends JPokemonService implements Activity {
     return MapService.getInstance();
   }
 
-  @Override
-  public void appendDataToResponse(JSONObject response, JSONObject request, Player player) throws JSONException, ServiceException {
-    response.put(getName(), new MapServer(player).data());
+  public MapServer getServer(Player player) {
+    return new MapServer(player);
   }
 
   public static OverworldActivity instance = new OverworldActivity();
