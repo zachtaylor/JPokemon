@@ -1,9 +1,7 @@
 package org.jpokemon.battle;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
@@ -53,22 +51,9 @@ public class Battle implements Iterable<Slot> {
       else if (slot.trainer() instanceof Trainer) {
         addTrainerToPlayerHistory(slot.trainer().id());
       }
-
-      rewardFrom(slot);
     }
 
     verifyTeamCount();
-  }
-
-  public void rewardFrom(Slot s) {
-    Reward reward = new Reward(s);
-
-    for (Slot slot : this) {
-      if (slot == s)
-        continue;
-
-      reward.apply(slot);
-    }
   }
 
   public boolean contains(PokemonTrainer trainer) {
@@ -76,14 +61,11 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void addTurn(Turn turn) {
-    if (_haveSelectedTurn.contains(turn.slot()))
-      return;
-
-    _haveSelectedTurn.add(turn.slot());
     _round.add(turn);
 
-    if (_round.size() == _slots.size())
+    if (_round.size() == _slots.size()) {
       executeRound();
+    }
   }
 
   public void start() {
@@ -115,7 +97,6 @@ public class Battle implements Iterable<Slot> {
   private void executeRound() {
     Round current = _round;
     _round = new Round(this);
-    _haveSelectedTurn = new ArrayList<Slot>();
 
     current.execute();
 
@@ -247,6 +228,5 @@ public class Battle implements Iterable<Slot> {
   }
 
   private Round _round = new Round(this);
-  private List<Slot> _haveSelectedTurn = new ArrayList<Slot>();
   private Map<String, Slot> _slots = new HashMap<String, Slot>();
 }

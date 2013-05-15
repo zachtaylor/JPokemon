@@ -1,15 +1,17 @@
 package org.jpokemon.battle.turn;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.Reward;
 import org.jpokemon.battle.slot.Slot;
 
 public class Round {
   public Round(Battle b) {
     _battle = b;
-    _turns = new PriorityQueue<Turn>();
   }
 
   public int size() {
@@ -17,49 +19,69 @@ public class Round {
   }
 
   public void add(Turn t) {
-    _turns.add(t);
+    _turns.put(t.slot(), t);
   }
 
   public void execute() {
-    // Setup rivals
+    Queue<Turn> queue = new PriorityQueue<Turn>();
+
+    // Setup rivals + turn queue
     for (Slot a : _battle) {
       for (Slot b : _battle) {
-        if (!a.trainer().equals(b))
+        if (a.team() != b.team()) {
           a.addRival(b);
+        }
       }
+
+      queue.add(_turns.get(a));
     }
 
     // MADNESS
-    while (!_turns.isEmpty()) {
-      Turn turn = _turns.remove();
+    while (!queue.isEmpty()) {
+      Turn turn = queue.remove();
+
+      if (_turns.remove(turn.slot()) == null) {
+        continue;
+      }
+
       turn.execute();
       notifyAllTrainers(turn.getMessages());
+
       verifyTurnList();
 
-      if (turn.reAdd())
+      if (turn.reAdd()) {
         _battle.addTurn(turn);
+      }
     }
 
     applyEndOfRoundEffects();
   }
 
   private void verifyTurnList() {
-    Slot slot;
+    Slot slotWithNoPokemon = null, slotWithFaintedLeader = null;
 
-    for (Turn turn : _turns) {
-      slot = turn.slot();
-
-      if (slot.party().awake() == 0) {
-        _turns.remove(turn);
-        _battle.remove(slot);
+    for (Slot s : _battle) {
+      if (s.party().awake() == 0) {
+        slotWithNoPokemon = s;
+        break;
       }
-      else if (!slot.leader().awake()) {
-        _battle.rewardFrom(slot);
-        turn.forceSwap();
+      else if (!s.leader().awake()) {
+        slotWithFaintedLeader = s;
+        break;
       }
+    }
 
-      if (!_battle.contains(turn.target().trainer())) {
-        // TODO shit bricks
+    if (slotWithNoPokemon != null) {
+      rewardFrom(slotWithNoPokemon);
+
+      _turns.remove(slotWithNoPokemon);
+      _battle.remove(slotWithNoPokemon);
+    }
+    else if (slotWithFaintedLeader != null) {
+      rewardFrom(slotWithFaintedLeader);
+
+      if (_turns.get(slotWithFaintedLeader) != null) {
+        _turns.get(slotWithFaintedLeader).forceSwap();
       }
     }
   }
@@ -81,6 +103,18 @@ public class Round {
       s.trainer().notify(message);
   }
 
+  private void rewardFrom(Slot slot) {
+    Reward reward = new Reward(slot);
+
+    for (Slot s : _battle) {
+      if (s == slot) {
+        continue;
+      }
+
+      reward.apply(s);
+    }
+  }
+
   private Battle _battle;
-  private Queue<Turn> _turns;
+  private Map<Slot, Turn> _turns = new HashMap<Slot, Turn>();
 }
