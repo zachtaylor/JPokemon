@@ -4,8 +4,6 @@ import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -249,23 +247,6 @@ public class Move {
   public boolean damageIsAbsolute() {
     // TODO : add dragon rage, bide
     return false;
-  }
-
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("name", name());
-      data.put("pp", _pp);
-      data.put("pp_max", _ppMax);
-      data.put("enabled", enabled());
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

@@ -6,9 +6,6 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.PokemonInfo;
-import org.jpokemon.trainer.TrainerState;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -149,24 +146,6 @@ public class StatBlock {
       _paralyze = false;
       _data[StatType.SPEED.ordinal()].modify(1);
     }
-  }
-
-  public JSONArray toJSON(TrainerState state) {
-    JSONArray data = new JSONArray();
-
-    try {
-
-      if (state == TrainerState.UPGRADE) {
-        for (StatType st : StatType.values())
-          data.put(get(st).toJSON(state).put("name", st.toString()));
-      }
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

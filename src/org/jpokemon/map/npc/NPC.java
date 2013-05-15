@@ -6,9 +6,6 @@ import java.util.List;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.trainer.Player;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -81,27 +78,16 @@ public class NPC {
     return null;
   }
 
-  public JSONObject toJSON(Player p) {
-    JSONObject json = new JSONObject();
+  public List<String> getOptionsForPlayer(Player player) {
+    List<String> options = new ArrayList<String>();
 
-    try {
-      json.put("name", getName());
-      json.put("number", getNumber());
-      json.put("icon", getIcon());
-
-      JSONArray options = new JSONArray();
-      for (ActionSet actionset : _actions) {
-        if (actionset.isOkay(p)) {
-          options.put(actionset.getOption());
-        }
+    for (ActionSet actionset : _actions) {
+      if (actionset.isOkay(player)) {
+        options.add(actionset.getOption());
       }
-      json.put("options", options);
-
-    } catch (JSONException e) {
-      e.printStackTrace();
     }
 
-    return json;
+    return options;
   }
 
   public String toString() {

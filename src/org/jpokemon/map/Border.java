@@ -6,8 +6,6 @@ import java.util.List;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.Requirement;
 import org.jpokemon.trainer.Player;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -44,30 +42,6 @@ public class Border {
       }
 
     return null;
-  }
-
-  public JSONObject toJSON(Player p) {
-    JSONObject json = new JSONObject();
-
-    Area nextArea = Map.area(next);
-
-    try {
-      json.put("name", nextArea.getName());
-
-      String reason = isOkay(p);
-
-      if (reason == null) {
-        json.put("is_okay", true);
-      }
-      else {
-        json.put("is_okay", false);
-        json.put("reason", reason);
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-
-    return json;
   }
 
   public static List<Border> get(int area) {

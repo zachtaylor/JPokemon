@@ -16,8 +16,8 @@ import org.json.JSONObject;
 import com.jpokemon.battle.BattleView;
 import com.jpokemon.inbox.InboxMenu;
 import com.jpokemon.overworld.OverworldView;
-import com.jpokemon.pokemon.PokemonView;
 import com.jpokemon.start.StartMenu;
+import com.jpokemon.upgrade.UpgradeView;
 
 public class GameWindow extends JFrame implements KeyListener {
   public GameWindow(String playerID) {
@@ -26,7 +26,7 @@ public class GameWindow extends JFrame implements KeyListener {
     _start = new StartMenu(this);
 
     _battle = new BattleView(this);
-    _upgrade = new PokemonView(this);
+    _upgrade = new UpgradeView(this);
     _world = new OverworldView(this);
 
     _dialogs = new JPokemonDialog(this);
@@ -80,15 +80,15 @@ public class GameWindow extends JFrame implements KeyListener {
       JSONObject data = PlayerService.pull(_newDataRequest);
       _dialogs.showMessages(data.getJSONArray("messages"));
 
-      if (data.getString("state").equals("BATTLE")) {
+      if (data.getString("state").equals("battle")) {
         _battle.update(data.getJSONObject("battle"));
         show(_battle);
       }
-      else if (data.getString("state").equals("UPGRADE")) {
+      else if (data.getString("state").equals("upgrade")) {
         _upgrade.update(data.getJSONObject("upgrade"));
         show(_upgrade);
       }
-      else if (data.getString("state").equals("OVERWORLD")) {
+      else if (data.getString("state").equals("overworld")) {
         _world.update(data.getJSONObject("overworld"));
         show(_world);
       }

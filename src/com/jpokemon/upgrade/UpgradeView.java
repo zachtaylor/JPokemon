@@ -1,4 +1,4 @@
-package com.jpokemon.pokemon;
+package com.jpokemon.upgrade;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -25,17 +25,8 @@ import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 import com.jpokemon.party.PartyMenu;
 
-public class PokemonView extends JPokemonView {
-  public static void main(String[] args) {
-    try {
-      PlayerService.load("Zach.jpkmn");
-
-    } catch (ServiceException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public PokemonView(GameWindow g) {
+public class UpgradeView extends JPokemonView {
+  public UpgradeView(GameWindow g) {
     super(g);
 
     _menu = new PartyMenu(g, this);
@@ -114,9 +105,6 @@ public class PokemonView extends JPokemonView {
   }
 
   public void applyChanges() {
-    if (spending.isEmpty())
-      return;
-
     try {
       JSONObject request = new JSONObject();
       request.put("id", parent().playerID());
@@ -131,7 +119,7 @@ public class PokemonView extends JPokemonView {
       }
       request.put("stats", stats);
 
-      PlayerService.party(request);
+      PlayerService.activity(request);
     } catch (JSONException e) {
     } catch (ServiceException e) {
     }

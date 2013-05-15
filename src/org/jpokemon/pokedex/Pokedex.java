@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -71,34 +68,6 @@ public class Pokedex {
     return _data.size();
   }
 
-  public JSONObject toJSON() {
-    JSONObject data = new JSONObject();
-    JSONArray own = new JSONArray();
-    JSONArray saw = new JSONArray();
-
-    for (Map.Entry<Integer, PokedexStatus> entry : _data.entrySet()) {
-      switch (entry.getValue()) {
-      case SAW:
-        saw.put(entry.getKey());
-      break;
-      case OWN:
-        own.put(entry.getKey());
-      break;
-      default:
-      }
-    }
-
-    try {
-      data.put("saw", saw);
-      data.put("own", own);
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
-  }
-
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
@@ -126,20 +95,23 @@ public class Pokedex {
     if (!XML_NODE_NAME.equals(node.getName()))
       throw new XMLException("Cannot read node");
 
-    String[] data;
+    String[] dataPieces;
+    String seenData, ownedData;
     XMLNode seen = node.getChildren("seen").get(0);
     XMLNode owned = node.getChildren("owned").get(0);
 
-    if (seen.getValue() != null) {
-      data = seen.getValue().replace('[', ' ').replace(']', ' ').split(",");
-      for (String item : data) {
+    seenData = seen.getValue().replace('[', ' ').replace(']', ' ').trim();
+    if (!seenData.isEmpty()) {
+      dataPieces = seenData.split(",");
+      for (String item : dataPieces) {
         _data.put(Integer.parseInt(item.trim()), PokedexStatus.SAW);
       }
     }
 
-    if (owned.getValue() != null) {
-      data = owned.getValue().replace('[', ' ').replace(']', ' ').split(",");
-      for (String item : data) {
+    ownedData = owned.getValue().replace('[', ' ').replace(']', ' ').trim();
+    if (!ownedData.isEmpty()) {
+      dataPieces = ownedData.split(",");
+      for (String item : dataPieces) {
         _data.put(Integer.parseInt(item.trim()), PokedexStatus.OWN);
       }
     }

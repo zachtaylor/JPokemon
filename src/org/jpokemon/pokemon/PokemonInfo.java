@@ -3,7 +3,9 @@ package org.jpokemon.pokemon;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jpokemon.JPokemonConstants;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
@@ -14,8 +16,8 @@ public class PokemonInfo {
   @PrimaryKey
   private int number;
   private String name;
-  private int type1, type2, attack, specattack, defense, specdefense, speed,
-      health, evolutionlevel, xpyield, growthrate;
+  private int type1, type2, attack, specattack, defense, specdefense, speed, health, evolutionlevel, xpyield,
+      growthrate, catchrate;
 
   @OneToMany("pokemon")
   private List<EffortValue> effortValues;
@@ -53,8 +55,9 @@ public class PokemonInfo {
   public int getSpeed()          { return speed;          } public void setSpeed(int val)          { speed          = val; }
   public int getHealth()         { return health;         } public void setHealth(int val)         { health         = val; }
   public int getEvolutionlevel() { return evolutionlevel; } public void setEvolutionlevel(int val) { evolutionlevel = val; }
-  public int getXpyield()        { return xpyield;        } public void setXpyield(int val)       { xpyield       = val;  }
-  public int getGrowthrate()     { return growthrate;     } public void setGrowthrate(int val)    { growthrate     = val; }
+  public int getXpyield()        { return xpyield;        } public void setXpyield(int val)        { xpyield        = val; }
+  public int getGrowthrate()     { return growthrate;     } public void setGrowthrate(int val)     { growthrate     = val; }
+  public int getCatchrate()      { return catchrate;      } public void setCatchrate(int val)      { catchrate      = val; }
   public List<EffortValue> getEffortValues() { return effortValues; } public void setEffortValues(List<EffortValue> val) { effortValues = val; }
   //@format
 }

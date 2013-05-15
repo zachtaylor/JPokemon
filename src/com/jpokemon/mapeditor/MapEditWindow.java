@@ -51,8 +51,12 @@ public class MapEditWindow extends JFrame {
     public void actionPerformed(ActionEvent arg0) {
       onClickComponentButton(getText());
     }
+
+    private static final long serialVersionUID = 1L;
   }
 
   private JPanel currentView = null;
   private Map<String, MapEditComponent> components = new HashMap<String, MapEditComponent>();
+
+  private static final long serialVersionUID = 1L;
 }

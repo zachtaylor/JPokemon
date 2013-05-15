@@ -3,9 +3,6 @@ package org.jpokemon.pokemon.storage;
 import java.util.Iterator;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.trainer.TrainerState;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -31,23 +28,6 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit> {
       throw new IllegalArgumentException("Invalid box number: " + box);
 
     return _data[box];
-  }
-
-  public JSONObject toJSON(TrainerState state) {
-    JSONObject data = new JSONObject();
-
-    try {
-      data.put("party", _data[0].toJSON(state));
-
-      for (int i = 1; i <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++)
-        data.put("box" + i, _data[i].toJSON(state));
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {

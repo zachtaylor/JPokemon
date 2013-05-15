@@ -2,7 +2,6 @@ package org.jpokemon.trainer;
 
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
-import org.json.JSONObject;
 
 public interface PokemonTrainer {
   public String id();
@@ -18,8 +17,4 @@ public interface PokemonTrainer {
   public boolean add(Pokemon p);
 
   public void notify(String... message);
-
-  public void state(TrainerState state);
-
-  public JSONObject toJSON(TrainerState state);
 }

@@ -17,26 +17,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PartyPanel extends JPanel {
-  public PartyPanel(JSONObject data, boolean isPlayer) {
+  public PartyPanel(final BattleView view, JSONObject data) {
+
     String condition, name;
-    int hp, hp_max, level, number, xp, xp_needed;
+    int hp, hp_max, level, number, xp = 0, xp_needed = 0;
     List<String> partyIcons = new ArrayList<String>();
+
+    boolean show_buttons_and_xp = false;
 
     try {
       JSONObject leader = data.getJSONObject("leader");
-      JSONArray party = data.getJSONArray("party");
+      JSONArray party = data.getJSONArray("pokemon");
+
+      show_buttons_and_xp = data.getString("id").equals(view.parent().playerID());
 
       name = leader.getString("name");
-      level = leader.getInt("level");
       number = leader.getInt("number");
+      level = leader.getInt("level");
       hp = leader.getInt("hp");
       hp_max = leader.getInt("hp_max");
       condition = leader.getString("condition");
-      xp = leader.getInt("xp");
-      xp_needed = leader.getInt("xp_needed");
 
-      for (int i = 0; i < party.length(); i++)
-        partyIcons.add(party.getString(i));
+      if (show_buttons_and_xp) {
+        xp = leader.getInt("xp");
+        xp_needed = leader.getInt("xp_needed");
+      }
+
+      for (int i = 0; i < party.length(); i++) {
+        partyIcons.add(party.getJSONObject(i).getString("ball_icon"));
+      }
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -65,16 +74,27 @@ public class PartyPanel extends JPanel {
     hpBar.setStringPainted(true);
     hpBar.setBorderPainted(false);
 
-    if (isPlayer) {
+    if (show_buttons_and_xp) {
       JProgressBar xpBar = new JProgressBar();
       info.add(xpBar);
       xpBar.setMinimum(0);
       xpBar.setValue(xp);
-      xpBar.setMaximum(xp_needed);
+      xpBar.setMaximum(xp + xp_needed);
       xpBar.setForeground(Color.CYAN);
       xpBar.setBackground(Color.GRAY);
       xpBar.setStringPainted(true);
       xpBar.setBorderPainted(false);
+
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+      add(buttonPanel);
+
+      buttonPanel.add(view.fightButton());
+      buttonPanel.add(view.itemButton());
+      buttonPanel.add(view.swapButton());
+      buttonPanel.add(view.runButton());
+
+      add(view.spacer());
     }
     info.add(new JLabel(condition));
 

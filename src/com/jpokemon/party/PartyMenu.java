@@ -8,10 +8,10 @@ import org.json.JSONException;
 import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonMenuEntry;
-import com.jpokemon.pokemon.PokemonView;
+import com.jpokemon.upgrade.UpgradeView;
 
 public class PartyMenu extends JPokemonMenu {
-  public PartyMenu(GameWindow parent, PokemonView view) {
+  public PartyMenu(GameWindow parent, UpgradeView view) {
     super(parent);
 
     _view = view;
@@ -45,7 +45,7 @@ public class PartyMenu extends JPokemonMenu {
     return 200;
   }
 
-  private PokemonView _view;
+  private UpgradeView _view;
   private PartyEntry[] _entries;
 
   private static final long serialVersionUID = 1L;

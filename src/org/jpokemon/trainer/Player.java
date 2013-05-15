@@ -7,8 +7,6 @@ import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.service.PlayerService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Player implements PokemonTrainer {
@@ -60,12 +58,8 @@ public class Player implements PokemonTrainer {
     _cash = cash;
   }
 
-  public void state(TrainerState state) {
-    _state = state;
-  }
-
-  public TrainerState state() {
-    return _state;
+  public Bag bag() {
+    return _bag;
   }
 
   public Item item(int itemID) {
@@ -78,6 +72,10 @@ public class Player implements PokemonTrainer {
 
   public PokemonStorageUnit party() {
     return _storage.get(0);
+  }
+
+  public PokemonStorageBlock getAllPokemon() {
+    return _storage;
   }
 
   public boolean add(Pokemon p) {
@@ -108,31 +106,6 @@ public class Player implements PokemonTrainer {
 
   public Record record() {
     return _record;
-  }
-
-  public JSONObject toJSON(TrainerState state) {
-    JSONObject data = new JSONObject();
-
-    try {
-      if (state == null) {
-        data.put("id", id());
-        data.put("name", name());
-      }
-      else if (state == TrainerState.BATTLE) {
-        data.put("id", id());
-        data.put("leader", party().get(0).toJSON(state));
-        data.put("party", party().toJSON(state));
-        data.put("bag", _bag.toJSON());
-      }
-      else if (state == TrainerState.UPGRADE) {
-        data.put("party", party().toJSON(state));
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
-      data = null;
-    }
-
-    return data;
   }
 
   public XMLNode toXML() {
@@ -179,7 +152,6 @@ public class Player implements PokemonTrainer {
   private Record _record;
   private Pokedex _pokedex;
   private String _name, _id;
-  private TrainerState _state;
   private int _area, _badge, _cash;
   private PokemonStorageBlock _storage;
 }

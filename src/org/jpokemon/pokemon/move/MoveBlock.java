@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.exception.ConfigurationException;
-import org.json.JSONArray;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -104,15 +103,6 @@ public class MoveBlock implements Iterable<Move> {
     removeAll();
     while (!possible.isEmpty() && _count < JPokemonConstants.KNOWN_MOVE_COUNT)
       add(possible.remove((int) (Math.random() * possible.size())));
-  }
-
-  public JSONArray toJSON() {
-    JSONArray data = new JSONArray();
-
-    for (Move m : this)
-      data.put(m.toJSON());
-
-    return data;
   }
 
   public XMLNode toXML() {

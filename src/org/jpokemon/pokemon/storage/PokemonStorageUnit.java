@@ -4,8 +4,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.trainer.TrainerState;
-import org.json.JSONArray;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
@@ -68,6 +66,16 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     return true;
   }
 
+  public int indexOf(Pokemon p) {
+    for (int i = 0; i < _amount; i++) {
+      if (_data[i].equals(p)) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   public boolean contains(Pokemon p) {
     return indexOf(p) != -1;
   }
@@ -81,29 +89,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     }
 
     return answer;
-  }
-
-  public JSONArray toJSON(TrainerState state) {
-    JSONArray data = new JSONArray();
-
-    if (state == TrainerState.BATTLE)
-      for (int i = 0; i < _size; i++) {
-        if (i < size()) {
-          if (!get(i).awake())
-            data.put("unconscious");
-          else if (!get(i).condition().isEmpty())
-            data.put("sick");
-          else
-            data.put("ok");
-        }
-        else
-          data.put("unconscious");
-      }
-    else if (state == TrainerState.UPGRADE)
-      for (Pokemon p : this)
-        data.put(p.toJSON(state));
-
-    return data;
   }
 
   public XMLNode toXML() {
@@ -132,13 +117,6 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public Iterator<Pokemon> iterator() {
     return new PokemonStorageUnitIterator();
-  }
-
-  private int indexOf(Pokemon p) {
-    for (int i = 0; i < _amount; i++)
-      if (_data[i].equals(p))
-        return i;
-    return -1;
   }
 
   private boolean remove(int index) {

@@ -1,27 +1,30 @@
-<player area="1" name="Zach" cash="0" badge="0">
+<player area="3" name="Zach" cash="0" badge="0">
 	<bag>
 		<item quantity="1" number="5" />
 	</bag>
+	<record starter="Charmander" rival="Gary">
+		<events> [1] </events>
+		<trainers> [Rival1_Charmander] </trainers>
+	</record>
 	<pokedex>
-		<seen> [99, 151] </seen>
-		<owned> [40, 60] </owned>
+		<seen> [7] </seen>
+		<owned> [4] </owned>
 	</pokedex>
 	<pokemonstorage>
 		<pokemonbox>
-			<pokemon ot="Zach" level="9" xp="0" number="4" has_original_trainer="true">
+			<pokemon ot="Zach" level="5" xp="58" number="4" has_original_trainer="true">
 				<condition>  </condition>
-				<stats points="4" evtotal="0">
-					<stat ev="0" max="27" iv="12" cur="27" points="0" type="HEALTH" ev_pending="0" />
-					<stat ev="0" max="30" iv="24" cur="30" points="0" type="ATTACK" ev_pending="0" />
-					<stat ev="0" max="32" iv="30" cur="32" points="0" type="SPECATTACK" ev_pending="0" />
-					<stat ev="0" max="27" iv="13" cur="27" points="0" type="DEFENSE" ev_pending="0" />
-					<stat ev="0" max="30" iv="30" cur="30" points="0" type="SPECDEFENSE" ev_pending="0" />
-					<stat ev="0" max="33" iv="26" cur="33" points="0" type="SPEED" ev_pending="0" />
+				<stats points="0" evtotal="1">
+					<stat ev="0" max="19" iv="17" cur="1" points="0" type="HEALTH" ev_pending="0" />
+					<stat ev="0" max="21" iv="26" cur="21" points="0" type="ATTACK" ev_pending="0" />
+					<stat ev="0" max="22" iv="20" cur="22" points="0" type="SPECATTACK" ev_pending="0" />
+					<stat ev="0" max="19" iv="10" cur="9" points="0" type="DEFENSE" ev_pending="1" />
+					<stat ev="0" max="21" iv="21" cur="21" points="0" type="SPECDEFENSE" ev_pending="0" />
+					<stat ev="0" max="22" iv="16" cur="22" points="0" type="SPEED" ev_pending="0" />
 				</stats>
 				<moves>
-					<move enabled="true" ppmax="35" number="143" pp="35" />
-					<move enabled="true" ppmax="35" number="112" pp="35" />
-					<move enabled="true" ppmax="25" number="40" pp="25" />
+					<move enabled="true" ppmax="35" number="112" pp="30" />
+					<move enabled="true" ppmax="40" number="53" pp="38" />
 				</moves>
 			</pokemon>
 		</pokemonbox>
@@ -34,6 +37,4 @@
 		<pokemonbox> </pokemonbox>
 		<pokemonbox> </pokemonbox>
 	</pokemonstorage>
-	<progress group="events"> [1] </progress>
-	<progress group="trainers"> [] </progress>
 </player>

@@ -12,7 +12,6 @@ import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
-import org.jpokemon.trainer.TrainerState;
 import org.json.JSONObject;
 
 public class Slot {
@@ -127,10 +126,6 @@ public class Slot {
     }
 
     return hitList;
-  }
-
-  public JSONObject toJSON() {
-    return _trainer.toJSON(TrainerState.BATTLE);
   }
 
   private List<Pokemon> rivalsList(Pokemon p) {

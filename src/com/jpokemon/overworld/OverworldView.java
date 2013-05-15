@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.jpokemon.service.ImageService;
-import org.jpokemon.service.MapService;
+import org.jpokemon.service.PlayerService;
 import org.jpokemon.service.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,9 +113,10 @@ public class OverworldView extends JPokemonView {
 
       request.put("id", parent().playerID());
       request.put("number", number);
-      request.put("option", option);
+      request.put("option", "npc");
+      request.put("npc_option", option);
 
-      MapService.npc(request);
+      PlayerService.activity(request);
       refresh();
 
     } catch (JSONException e) {
@@ -140,8 +141,9 @@ public class OverworldView extends JPokemonView {
 
       request.put("id", parent().playerID());
       request.put("border", border);
+      request.put("option", "border");
 
-      MapService.border(request);
+      PlayerService.activity(request);
       refresh();
     } catch (JSONException e) {
       e.printStackTrace();
@@ -155,8 +157,9 @@ public class OverworldView extends JPokemonView {
 
     try {
       request.put("id", parent().playerID());
+      request.put("option", "grass");
 
-      MapService.grass(request);
+      PlayerService.activity(request);
     } catch (JSONException e) {
     } catch (ServiceException e) {
       e.printStackTrace();
@@ -200,8 +203,7 @@ public class OverworldView extends JPokemonView {
         selectedOption = _options[0];
       }
       else {
-        selectedOption = (String) JOptionPane.showInputDialog(parent(), _name + "...", "Speaking to " + _name, JOptionPane.QUESTION_MESSAGE, getIcon(),
-            _options, null);
+        selectedOption = (String) JOptionPane.showInputDialog(parent(), _name + "...", "Speaking to " + _name, JOptionPane.QUESTION_MESSAGE, getIcon(), _options, null);
       }
 
       if (selectedOption != null)
