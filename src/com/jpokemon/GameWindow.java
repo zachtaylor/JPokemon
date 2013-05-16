@@ -17,6 +17,7 @@ import com.jpokemon.battle.BattleView;
 import com.jpokemon.inbox.InboxMenu;
 import com.jpokemon.overworld.OverworldView;
 import com.jpokemon.start.StartMenu;
+import com.jpokemon.store.StoreView;
 import com.jpokemon.upgrade.UpgradeView;
 
 public class GameWindow extends JFrame implements KeyListener {
@@ -26,6 +27,7 @@ public class GameWindow extends JFrame implements KeyListener {
     _start = new StartMenu(this);
 
     _battle = new BattleView(this);
+    _store = new StoreView(this);
     _upgrade = new UpgradeView(this);
     _world = new OverworldView(this);
 
@@ -91,6 +93,10 @@ public class GameWindow extends JFrame implements KeyListener {
       else if (data.getString("state").equals("overworld")) {
         _world.update(data.getJSONObject("overworld"));
         show(_world);
+      }
+      else if (data.getString("state").equals("store")) {
+        _store.update(data.getJSONObject("store"));
+        show(_store);
       }
 
     } catch (ServiceException e) {
@@ -160,7 +166,7 @@ public class GameWindow extends JFrame implements KeyListener {
   private JPokemonDialog _dialogs;
   private JSONObject _newDataRequest;
   private JPokemonMenu _menu, _start, _inbox;
-  private JPokemonView _active, _battle, _upgrade, _world;
+  private JPokemonView _active, _battle, _upgrade, _world, _store;
 
   private static final long serialVersionUID = 1L;
 }
