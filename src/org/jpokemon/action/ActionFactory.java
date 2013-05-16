@@ -30,6 +30,8 @@ public class ActionFactory {
       return new BattleAction(data);
     case UPGRADE:
       return new UpgradeAction(data);
+    case STORE:
+      return new StoreAction(data);
     }
 
     return null;
