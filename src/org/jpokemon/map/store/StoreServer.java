@@ -37,7 +37,7 @@ public class StoreServer extends ActivityServer {
     try {
       inventoryItem.put("id", inventory.getItem());
       inventoryItem.put("price", inventory.getPrice());
-      inventoryItem.put("amount", inventory.getAmount());
+      inventoryItem.put("available", inventory.getAvailable());
       inventoryItem.put("denomination", inventory.getDenomination());
       inventoryItem.put("purchase_price", inventory.getPurchaseprice());
 
@@ -52,6 +52,7 @@ public class StoreServer extends ActivityServer {
   public void visit(Item item) {
     try {
       inventoryItem.put("name", item.name());
+      inventoryItem.put("amount", item.amount());
       inventoryItem.put("type", item.type().toString());
     } catch (JSONException e) {
     }

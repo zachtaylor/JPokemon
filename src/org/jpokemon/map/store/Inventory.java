@@ -9,7 +9,7 @@ import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
 public class Inventory {
-  private int number, item, price, purchaseprice, denomination, amount;
+  private int number, item, price, purchaseprice, denomination, available;
 
   public static List<Inventory> get(int number) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
@@ -29,6 +29,6 @@ public class Inventory {
   public int getPrice() {return price;} public void setPrice(int p) {price = p;}
   public int getPurchaseprice() {return purchaseprice;} public void setPurchaseprice(int p) {purchaseprice = p;}
   public int getDenomination() {return denomination;} public void setDenomination(int d) {denomination = d;}
-  public int getAmount() {return amount;} public void setAmount(int a) {amount = a;}
+  public int getAvailable() {return available;} public void setAvailable(int a) {available = a;}
   //@format
 }
