@@ -16,13 +16,14 @@ public class InventoryItemPanel extends JPanel {
   public InventoryItemPanel(JSONObject data) throws JSONException {
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
+    itemID = data.getInt("id");
     price = data.getInt("price");
     itemType = data.getString("type");
     itemName = data.getString("name");
     denomination = data.getInt("denomination");
     purchaseprice = data.getInt("purchase_price");
 
-    JButton sellButton = new JButton(String.format("-%i (+$%i)", denomination, purchaseprice));
+    JButton sellButton = new JButton("-" + denomination + " (+$" + purchaseprice + ")");
     sellButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         sell();
@@ -36,7 +37,7 @@ public class InventoryItemPanel extends JPanel {
 
     add(new JPanel());
 
-    JButton buyButton = new JButton(String.format("+%i (-$%i)", denomination, price));
+    JButton buyButton = new JButton("+" + denomination + " (-$" + price + ")");
     buyButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         buy();
@@ -45,16 +46,37 @@ public class InventoryItemPanel extends JPanel {
     add(buyButton);
   }
 
+  public JSONObject getChanges() {
+    if (change == 0) {
+      return null;
+    }
+
+    JSONObject request = new JSONObject();
+
+    try {
+      request.put("item", itemID);
+      request.put("denomination", denomination);
+      request.put("change", change);
+    } catch (JSONException e) {
+    }
+
+    return request;
+  }
+
   private void sell() {
-    System.out.println("Sell " + denomination + " of " + itemName + ", receive " + purchaseprice);
+    change--;
+
+    // TODO : Graphically show
   }
 
   private void buy() {
-    System.out.println("Buy " + denomination + " of " + itemName + ", pay " + price);
+    change++;
+
+    // TODO : Graphically show
   }
 
   private String itemType, itemName;
-  private int price, denomination, purchaseprice;
+  private int itemID, price, denomination, purchaseprice, change;
 
   private static final long serialVersionUID = 1L;
 }

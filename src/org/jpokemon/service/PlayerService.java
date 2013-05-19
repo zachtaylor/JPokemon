@@ -82,8 +82,10 @@ public class PlayerService extends JPokemonService {
 
   public static JSONArray loadMessagesForPlayer(Player p) {
     JSONArray array = new JSONArray();
+
     while (!_messageQueues.get(p).isEmpty())
       array.put(_messageQueues.get(p).remove());
+
     return array;
   }
 
