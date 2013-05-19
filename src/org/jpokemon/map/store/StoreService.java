@@ -1,6 +1,7 @@
 package org.jpokemon.map.store;
 
 import org.jpokemon.activity.ActivityService;
+import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.service.JPokemonService;
 import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
@@ -75,6 +76,8 @@ public class StoreService extends JPokemonService implements ActivityService {
           player.cash(player.cash() - change * inventory.getPurchaseprice());
         }
       }
+
+      ActivityTracker.clearActivity(player);
     } catch (JSONException e) {
     }
   }
