@@ -4,6 +4,7 @@ import org.jpokemon.activity.Activity;
 import org.jpokemon.activity.ActivityServer;
 import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.item.Item;
+import org.jpokemon.map.Map;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,8 @@ public class StoreServer extends ActivityServer {
     Store store = ((StoreActivity) activity).getStore();
 
     try {
+      data().put("area_name", Map.area(player.area()).getName());
+      data().put("cash", player.cash());
       data().put("inventory", inventoryItems = new JSONArray());
     } catch (JSONException e) {
     }

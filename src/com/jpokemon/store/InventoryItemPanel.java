@@ -14,7 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class InventoryItemPanel extends JPanel {
-  public InventoryItemPanel(JSONObject data) throws JSONException {
+  public InventoryItemPanel(StoreView view, JSONObject data) throws JSONException {
+
+    storeView = view;
 
     itemID = data.getInt("id");
     price = data.getInt("price");
@@ -31,21 +33,14 @@ public class InventoryItemPanel extends JPanel {
     add(iconAndInfoPanel);
 
     iconAndInfoPanel.add(new JLabel(ImageService.item(itemType, itemName)));
+
+    iconAndInfoPanel.add(new JLabel(itemName + " x" + denomination));
     iconAndInfoPanel.add(new JPanel());
-
-    JPanel infoPanel = new JPanel();
-    infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-    iconAndInfoPanel.add(infoPanel);
-
-    infoPanel.add(new JLabel(itemName + " x" + denomination));
-    infoPanel.add(new JLabel("Price: " + price));
-    infoPanel.add(new JLabel("Purchase Price: " + purchaseprice));
-
     JPanel buttonAndAmountPanel = new JPanel();
     buttonAndAmountPanel.setLayout(new BoxLayout(buttonAndAmountPanel, BoxLayout.X_AXIS));
     add(buttonAndAmountPanel, BorderLayout.SOUTH);
 
-    JButton sellButton = new JButton("-" + denomination);
+    JButton sellButton = new JButton("-" + denomination + " +$" + purchaseprice);
     sellButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         sell();
@@ -57,7 +52,7 @@ public class InventoryItemPanel extends JPanel {
     buttonAndAmountPanel.add(amountLabel = new JLabel());
     buttonAndAmountPanel.add(new JPanel());
 
-    JButton buyButton = new JButton("+" + denomination);
+    JButton buyButton = new JButton("+" + denomination + " -$" + price);
     buyButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         buy();
@@ -88,29 +83,41 @@ public class InventoryItemPanel extends JPanel {
   private void sell() {
     change--;
     update();
+
+    if (change >= 0) {
+      storeView.updateCashLabel(price);
+    }
+    else {
+      storeView.updateCashLabel(purchaseprice);
+    }
   }
 
   private void buy() {
     change++;
     update();
+
+    if (change <= 0) {
+      storeView.updateCashLabel(-purchaseprice);
+    }
+    else {
+      storeView.updateCashLabel(-price);
+    }
   }
 
   private void update() {
-    String amountText;
+    String changeText;
 
-    if (change > 0) {
-      amountText = "Buy " + change + " (" + (amount + change) + ")";
-    }
-    else if (change < 0) {
-      amountText = "Sell " + -change + " (" + (amount + change) + ")";
+    if (change >= 0) {
+      changeText = "+" + change;
     }
     else {
-      amountText = "No change (" + amount + ")";
+      changeText = change + "";
     }
 
-    amountLabel.setText(amountText);
+    amountLabel.setText(amount + change + "(" + changeText + ")");
   }
 
+  private StoreView storeView;
   private JLabel amountLabel;
   private String itemType, itemName;
   private int itemID, amount, price, denomination, purchaseprice, change;

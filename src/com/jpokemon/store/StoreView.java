@@ -1,5 +1,6 @@
 package com.jpokemon.store;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,12 +28,23 @@ import com.jpokemon.JPokemonView;
 public class StoreView extends JPokemonView {
   public StoreView(GameWindow parent) {
     super(parent);
+    setLayout(new BorderLayout());
+
+    JPanel topPanel = new JPanel();
+    topPanel.setLayout(new BorderLayout());
+    add(topPanel, BorderLayout.NORTH);
+
+    nameLabel = new JLabel("X");
+    topPanel.add(nameLabel, BorderLayout.WEST);
+
+    cashLabel = new JLabel("$0");
+    topPanel.add(cashLabel, BorderLayout.EAST);
 
     itemsPanel = new JPanel();
-    add(itemsPanel);
+    add(itemsPanel, BorderLayout.CENTER);
 
     JPanel buttonsPanel = new JPanel();
-    add(buttonsPanel);
+    add(buttonsPanel, BorderLayout.SOUTH);
 
     JButton acceptButton = new JPokemonButton("Accept");
     acceptButton.addActionListener(new ActionListener() {
@@ -41,13 +53,11 @@ public class StoreView extends JPokemonView {
       }
     });
     buttonsPanel.add(acceptButton);
-
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
   }
 
   @Override
   public Dimension dimension() {
-    return new Dimension(400, 200);
+    return new Dimension(400, 300);
   }
 
   @Override
@@ -57,8 +67,12 @@ public class StoreView extends JPokemonView {
     itemPanels = new ArrayList<InventoryItemPanel>();
 
     try {
-      JSONArray inventoryArray = data.getJSONArray("inventory");
+      nameLabel.setText(data.getString("area_name"));
 
+      cash = data.getInt("cash");
+      updateCashLabel(0);
+
+      JSONArray inventoryArray = data.getJSONArray("inventory");
       for (int index = 0; index < inventoryArray.length(); index++) {
         JSONObject inventoryItem = inventoryArray.getJSONObject(index);
         String itemType = inventoryItem.getString("type");
@@ -70,14 +84,14 @@ public class StoreView extends JPokemonView {
           itemFamilyPanels.put(itemType, newPanel);
         }
 
-        InventoryItemPanel itemPanel = new InventoryItemPanel(inventoryItem);
+        InventoryItemPanel itemPanel = new InventoryItemPanel(this, inventoryItem);
         itemPanels.add(itemPanel);
         itemFamilyPanels.get(itemType).add(itemPanel);
       }
-
       for (Map.Entry<String, JPanel> itemFamilyPanelMapping : itemFamilyPanels.entrySet()) {
         itemsPanel.add(itemFamilyPanelMapping.getValue());
       }
+
     } catch (JSONException e) {
     }
   }
@@ -85,6 +99,18 @@ public class StoreView extends JPokemonView {
   @Override
   public boolean key(KeyEvent arg0) {
     return false;
+  }
+
+  public void updateCashLabel(int cashChange) {
+    cash = cash + cashChange;
+
+    String cashText = "$";
+    if (cash < 0) {
+      cashText = "-$";
+    }
+    cashText += Math.abs(cash);
+
+    cashLabel.setText(cashText);
   }
 
   private void onClickAcceptButton() {
@@ -113,7 +139,9 @@ public class StoreView extends JPokemonView {
     }
   }
 
+  private int cash;
   private JPanel itemsPanel;
+  private JLabel cashLabel, nameLabel;
   private List<InventoryItemPanel> itemPanels;
   private Map<String, JPanel> itemFamilyPanels;
 
