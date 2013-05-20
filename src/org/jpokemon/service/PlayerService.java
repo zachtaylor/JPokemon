@@ -77,7 +77,7 @@ public class PlayerService extends JPokemonService {
 
   public static void addToMessageQueue(Player p, String message) {
     Queue<String> q = _messageQueues.get(p);
-    q.add(message);
+    q.add(p.record().replaceMacros(message, p.name()));
   }
 
   public static JSONArray loadMessagesForPlayer(Player p) {

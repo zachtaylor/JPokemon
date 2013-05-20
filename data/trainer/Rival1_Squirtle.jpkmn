@@ -1,6 +1,6 @@
-<trainer name="Gary" use_gym_xp_factor="false">
+<trainer name="{rival}" use_gym_xp_factor="false">
 	<pokemonbox>
-		<pokemon ot="Gary" level="5" xp="0" number="1" has_original_trainer="true">
+		<pokemon ot="{rival}" level="5" xp="0" number="1" has_original_trainer="true">
 			<condition>  </condition>
 			<stats points="0" evtotal="0">
 				<stat ev="0" max="20" iv="28" cur="20" points="0" type="HEALTH" ev_pending="0" />

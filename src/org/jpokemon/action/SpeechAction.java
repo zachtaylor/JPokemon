@@ -9,7 +9,6 @@ public class SpeechAction extends Action {
   }
 
   public void execute(Player player) {
-    String data = player.record().replaceMacros(data(), player.name());
-    PlayerService.addToMessageQueue(player, data);
+    PlayerService.addToMessageQueue(player, data());
   }
 }
