@@ -29,7 +29,7 @@ public class BattleAction extends Action {
       throw new LoadException("Trainer file not found: " + data());
     }
 
-    Trainer trainer = new Trainer(fileName);
+    Trainer trainer = new Trainer(data());
     trainer.loadXML(trainerData);
 
     if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES) {

@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.action.ActionFactory;
+import org.jpokemon.action.ActionSet;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.service.LoadException;
 import org.jpokemon.trainer.Player;
 
 public class Reward {
   public Reward(Slot s) {
     _pokemon = s.leader();
-    _message = _pokemon.name() + " fainted!";
+    _faintMessage = _pokemon.name() + " fainted!";
 
     double xp = s.trainer().xpFactor();
     xp *= _pokemon.xpYield();
@@ -21,10 +24,17 @@ public class Reward {
     xp *= JPokemonConstants.UNIVERSAL_EXPERIENCE_MODIFIER;
     _xp = (int) xp;
 
-    if (s.trainer() instanceof Player)
-      _evs = new ArrayList<EffortValue>();
-    else
+    if (!(s.trainer() instanceof Player)) {
       _evs = _pokemon.effortValues();
+    }
+
+    if (s.party().awake() == 0) {
+      _defeatMessage = " defeated " + s.trainer().name();
+
+      for (RewardAction ra : RewardAction.get(s.trainer().id())) {
+        _actions.addAction(ActionFactory.build(ra.getType(), ra.getData()));
+      }
+    }
   }
 
   public void xp(int amount) {
@@ -43,14 +53,6 @@ public class Reward {
     return _evs;
   }
 
-  public void message(String m) {
-    _message = m;
-  }
-
-  public String message() {
-    return _message;
-  }
-
   public void pokemon(Pokemon p) {
     _pokemon = p;
   }
@@ -60,21 +62,26 @@ public class Reward {
   }
 
   public void apply(Slot s) {
-    List<String> messages = new ArrayList<String>();
-    List<Pokemon> hitList = s.removeRival(pokemon());
+    s.trainer().notify(_faintMessage);
 
-    messages.add(message());
+    applyXP(s);
+
+    if (_defeatMessage != null && s.trainer() instanceof Player) {
+      applyDefeat(s);
+    }
+  }
+
+  private void applyXP(Slot s) {
+    List<Pokemon> hitList = s.removeRival(pokemon());
 
     int xpEach = Math.max(xp() / hitList.size(), 1);
 
-    /*
-     * TODO s is the number of Pokemon that participated in the battle and have
+    /* TODO s is the number of Pokemon that participated in the battle and have
      * not fainted. If any Pokemon in the party is holding an Exp. Share, s is
      * equal to 2, and for the rest of the Pokemon, s is equal to twice the
      * number of Pokemon that participated instead. If more than one Pokemon is
      * holding an Exp. Share, s is equal to twice the number of Pokemon holding
-     * the Exp. Share for each Pokemon holding one.
-     */
+     * the Exp. Share for each Pokemon holding one. */
 
     for (Pokemon earner : hitList) {
       if (earner.hasOriginalTrainer())
@@ -83,14 +90,22 @@ public class Reward {
         earner.xp((int) (earner.xp() + xpEach * JPokemonConstants.NOT_ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
 
       earner.addEV(effortValues());
-      messages.add(earner.name() + " received " + xpEach + " experience!");
+      s.trainer().notify(earner.name() + " received " + xpEach + " experience!");
     }
+  }
 
-    s.trainer().notify(messages.toArray(new String[messages.size()]));
+  private void applyDefeat(Slot s) {
+    s.trainer().notify(s.trainer().name() + _defeatMessage);
+
+    try {
+      _actions.execute((Player) s.trainer());
+    } catch (LoadException e) {
+    }
   }
 
   private int _xp;
-  private String _message;
   private Pokemon _pokemon;
-  private List<EffortValue> _evs;
+  private String _faintMessage, _defeatMessage;
+  private ActionSet _actions = new ActionSet();
+  private List<EffortValue> _evs = new ArrayList<EffortValue>();
 }
