@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
+import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 
 public class StoreView extends JPokemonView {
@@ -101,6 +102,11 @@ public class StoreView extends JPokemonView {
     return false;
   }
 
+  @Override
+  public JPokemonMenu menu() {
+    return null;
+  }
+
   public void updateCashLabel(int cashChange) {
     cash = cash + cashChange;
 
@@ -146,4 +152,5 @@ public class StoreView extends JPokemonView {
   private Map<String, JPanel> itemFamilyPanels;
 
   private static final long serialVersionUID = 1L;
+
 }

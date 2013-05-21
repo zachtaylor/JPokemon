@@ -41,9 +41,6 @@ public class StartMenuEntry extends JPokemonMenuEntry {
         e.printStackTrace();
       }
     break;
-    case EXIT:
-      parent().parent().closeStart();
-    break;
     case QUIT:
       parent().parent().dispose();
     }

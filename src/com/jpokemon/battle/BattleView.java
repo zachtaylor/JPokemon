@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
+import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 
 public class BattleView extends JPokemonView {
@@ -47,17 +48,21 @@ public class BattleView extends JPokemonView {
       _trainerData = _data.getJSONObject("player");
 
       _enemyTeams = _data.getJSONArray("teams");
-      for (int i = 0; i < _enemyTeams.length(); i++) {
+      for (int enemyTeamIndex = 0; enemyTeamIndex < _enemyTeams.length(); enemyTeamIndex++) {
+        JSONArray enemyTeamJSON = _enemyTeams.getJSONArray(enemyTeamIndex);
+
         JPanel teamPanel = new JPanel();
         teamPanel.setLayout(new BoxLayout(teamPanel, BoxLayout.Y_AXIS));
 
-        JSONArray teamData = _enemyTeams.getJSONArray(i);
-        for (int j = 0; j < teamData.length(); j++)
-          teamPanel.add(new PartyPanel(this, teamData.getJSONObject(j)));
+        teamPanel.add(spacer());
+        for (int j = 0; j < enemyTeamJSON.length(); j++) {
+          JSONObject enemySlotJSON = enemyTeamJSON.getJSONObject(j);
+          teamPanel.add(new PartyPanel(this, enemySlotJSON));
+        }
+        teamPanel.add(spacer());
 
         _teams.add(teamPanel);
       }
-
     } catch (JSONException e) {
       e.printStackTrace();
       return;
@@ -68,11 +73,16 @@ public class BattleView extends JPokemonView {
   }
 
   public Dimension dimension() {
-    return new Dimension(625, 200);
+    return new Dimension(440 + ((_enemyTeams.length() - 1) * 120), 160);
   }
 
   public boolean key(KeyEvent arg0) {
     return false;
+  }
+
+  @Override
+  public JPokemonMenu menu() {
+    return null;
   }
 
   public JButton fightButton() {
@@ -398,4 +408,5 @@ public class BattleView extends JPokemonView {
   private JSONObject _data, _trainerData;
   private JButton _fightButton, _itemButton, _swapButton, _runButton;
   private static final long serialVersionUID = 1L;
+
 }

@@ -14,17 +14,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jpokemon.battle.BattleView;
-import com.jpokemon.inbox.InboxMenu;
 import com.jpokemon.overworld.OverworldView;
-import com.jpokemon.start.StartMenu;
 import com.jpokemon.store.StoreView;
 import com.jpokemon.upgrade.UpgradeView;
 
 public class GameWindow extends JFrame implements KeyListener {
   public GameWindow(String playerID) {
     _playerID = playerID;
-    _inbox = new InboxMenu(this);
-    _start = new StartMenu(this);
 
     _battle = new BattleView(this);
     _store = new StoreView(this);
@@ -38,7 +34,6 @@ public class GameWindow extends JFrame implements KeyListener {
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     setIconImage(ImageService.find("main-icon").getImage());
 
-    _menu = _inbox;
     _active = _upgrade;
 
     _newDataRequest = new JSONObject();
@@ -60,21 +55,6 @@ public class GameWindow extends JFrame implements KeyListener {
 
   public JPokemonDialog dialogs() {
     return _dialogs;
-  }
-
-  public InboxMenu inbox() {
-    return (InboxMenu) _inbox;
-  }
-
-  public void showStart() {
-    show(_start);
-  }
-
-  public void closeStart() {
-    if (_active.hasDependentMenu())
-      show(_active.dependentMenu());
-    else
-      show(_inbox);
   }
 
   public void refresh() {
@@ -108,7 +88,14 @@ public class GameWindow extends JFrame implements KeyListener {
 
   public void align() {
     Dimension d = _active.dimension();
-    d.setSize(d.width + _menu.width(), d.height);
+
+    int width = d.width, height = d.height;
+
+    if (_active.menu() != null) {
+      width += _active.menu().width();
+    }
+
+    d.setSize(width, height);
     setSize(d);
 
     validate();
@@ -116,17 +103,19 @@ public class GameWindow extends JFrame implements KeyListener {
   }
 
   public void keyPressed(KeyEvent arg0) {
-    if (_menu.key(arg0))
+    if (arg0.getKeyCode() == 27) {
+      toggleMenu();
       return;
+    }
 
-    if (_active.key(arg0))
+    if (_menu != null && _menu.key(arg0)) {
       return;
+    }
 
-    else if (arg0.getKeyCode() == 27)
-      if (_menu != _start)
-        showStart();
-      else
-        closeStart();
+    if (_active.key(arg0)) {
+      return;
+    }
+
   }
 
   @Override
@@ -144,28 +133,43 @@ public class GameWindow extends JFrame implements KeyListener {
 
       _active = view;
       add(_active, BorderLayout.CENTER);
-
-      if (_active.hasDependentMenu())
-        show(_active.dependentMenu());
+      hideMenu();
 
       align();
     }
   }
 
-  private void show(JPokemonMenu menu) {
-    if (_menu != null)
-      remove(_menu);
+  private void showMenu() {
+    _menu = _active.menu();
 
-    _menu = menu;
-    add(_menu, BorderLayout.EAST);
+    if (_menu != null) {
+      add(_menu, BorderLayout.EAST);
+    }
+  }
+
+  private void hideMenu() {
+    if (_menu != null) {
+      remove(_menu);
+    }
+
+    _menu = null;
+  }
+
+  private void toggleMenu() {
+    if (_menu == null) {
+      showMenu();
+    }
+    else {
+      hideMenu();
+    }
 
     align();
   }
 
   private String _playerID;
+  private JPokemonMenu _menu;
   private JPokemonDialog _dialogs;
   private JSONObject _newDataRequest;
-  private JPokemonMenu _menu, _start, _inbox;
   private JPokemonView _active, _battle, _upgrade, _world, _store;
 
   private static final long serialVersionUID = 1L;

@@ -21,6 +21,7 @@ import org.jpokemon.service.ImageService;
 
 import com.jpokemon.JPokemonButton;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class NPCEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "NPCs";
 

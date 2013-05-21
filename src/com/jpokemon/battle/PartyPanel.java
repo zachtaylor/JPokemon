@@ -1,8 +1,8 @@
 package com.jpokemon.battle;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,16 +52,36 @@ public class PartyPanel extends JPanel {
       return;
     }
 
+    setLayout(new BorderLayout());
+
     JPanel partyStatus = new JPanel();
-    for (String icon : partyIcons)
-      partyStatus.add(new JLabel(ImageService.find(icon)));
-    add(partyStatus);
+    add(partyStatus, BorderLayout.WEST);
+    partyStatus.setLayout(new BorderLayout());
     partyStatus.setPreferredSize(new Dimension(40, 50));
 
-    add(new JLabel(ImageService.pokemon(number + "")));
+    JPanel partyIconsEastPanel, partyIconsWestPanel;
 
-    add(info = new JPanel());
+    partyStatus.add(view.spacer(), BorderLayout.NORTH);
+    partyStatus.add(view.spacer(), BorderLayout.SOUTH);
+    partyStatus.add(partyIconsEastPanel = new JPanel(), BorderLayout.WEST);
+    partyStatus.add(partyIconsWestPanel = new JPanel(), BorderLayout.EAST);
 
+    for (int iconIndex = 0; iconIndex < partyIcons.size(); iconIndex++) {
+      if (iconIndex % 2 == 0) {
+        partyIconsEastPanel.add(new JLabel(ImageService.find(partyIcons.get(iconIndex))));
+      }
+      else {
+        partyIconsWestPanel.add(new JLabel(ImageService.find(partyIcons.get(iconIndex))));
+      }
+    }
+
+    add(new JLabel(ImageService.pokemon(number + "")), BorderLayout.CENTER);
+
+    JPanel info = new JPanel();
+    info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
+    add(info, BorderLayout.EAST);
+
+    info.add(new JPanel());
     info.add(new JLabel(name + " Lvl." + level));
 
     JProgressBar hpBar = new JProgressBar();
@@ -87,23 +107,17 @@ public class PartyPanel extends JPanel {
 
       JPanel buttonPanel = new JPanel();
       buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-      add(buttonPanel);
+      add(buttonPanel, BorderLayout.SOUTH);
 
+      buttonPanel.add(view.spacer());
       buttonPanel.add(view.fightButton());
       buttonPanel.add(view.itemButton());
       buttonPanel.add(view.swapButton());
       buttonPanel.add(view.runButton());
-
-      add(view.spacer());
     }
     info.add(new JLabel(condition));
-
-    setLayout(new FlowLayout());
-    info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
-
-    setPreferredSize(new Dimension(340, 80));
+    info.add(new JPanel());
   }
 
-  private JPanel info;
   private static final long serialVersionUID = 1L;
 }
