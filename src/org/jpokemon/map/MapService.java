@@ -9,6 +9,7 @@ import org.jpokemon.service.JPokemonService;
 import org.jpokemon.service.LoadException;
 import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
+import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.WildTrainer;
 import org.json.JSONException;
@@ -37,6 +38,8 @@ public class MapService extends JPokemonService implements ActivityService {
       handleBorderRequest(request);
     else if (option.equals("grass"))
       handleGrassRequest(request);
+    else if (option.equals("save"))
+      handleSaveRequest(request);
   }
 
   private void handleNPCRequest(JSONObject request) throws ServiceException {
@@ -77,6 +80,12 @@ public class MapService extends JPokemonService implements ActivityService {
     trainer.add(pokemon);
 
     ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+  }
+
+  private void handleSaveRequest(JSONObject request) throws ServiceException {
+    Player player = getPlayer(request);
+
+    PlayerFactory.save(player);
   }
 
   private Area getArea(JSONObject request) throws ServiceException {

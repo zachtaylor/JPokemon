@@ -20,6 +20,7 @@ public class StartMenuEntry extends JPokemonMenuEntry {
 
       _savePlz = new JSONObject();
       _savePlz.put("id", parent().parent().playerID());
+      _savePlz.put("option", "save");
     } catch (JSONException e) {
     }
 
@@ -31,18 +32,18 @@ public class StartMenuEntry extends JPokemonMenuEntry {
     case POKEMON:
       // TODO
       parent().refresh();
-      break;
+    break;
     case SAVE:
       try {
-        PlayerService.save(_savePlz);
+        PlayerService.activity(_savePlz);
         parent().refresh();
       } catch (ServiceException e) {
         e.printStackTrace();
       }
-      break;
+    break;
     case EXIT:
       parent().parent().closeStart();
-      break;
+    break;
     case QUIT:
       parent().parent().dispose();
     }
