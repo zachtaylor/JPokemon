@@ -116,6 +116,10 @@ public class Area {
     _borders.remove(index);
   }
 
+  public String toString() {
+    return "Area#" + getNumber() + ": " + getName();
+  }
+
   public boolean equals(Object o) {
     if (o instanceof Area)
       return ((Area) o).number == number;

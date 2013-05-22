@@ -195,7 +195,7 @@ public class NPCEditor implements MapEditComponent {
 
   private NPC currentNPC;
   private int currentNPCIndex = 0;
-  boolean readyToEdit = false;
+  private boolean readyToEdit = false;
   private JPanel editorPanel = new JPanel();
   private List<NPC> npcs = new ArrayList<NPC>();
   private JTextField nameField = new JTextField();
