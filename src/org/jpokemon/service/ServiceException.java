@@ -1,6 +1,10 @@
 package org.jpokemon.service;
 
 public class ServiceException extends Exception {
+  public ServiceException(LoadException e) {
+    super(e);
+  }
+
   public ServiceException(String message) {
     _message = message;
   }

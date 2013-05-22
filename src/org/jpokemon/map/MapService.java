@@ -50,7 +50,7 @@ public class MapService extends JPokemonService implements ActivityService {
     try {
       npc.actionset(option).execute(player);
     } catch (LoadException e) {
-      throw new ServiceException(e.getMessage());
+      throw new ServiceException(e);
     }
   }
 
@@ -79,7 +79,11 @@ public class MapService extends JPokemonService implements ActivityService {
     PokemonTrainer trainer = new WildTrainer();
     trainer.add(pokemon);
 
-    ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+    try {
+      ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+    } catch (LoadException e) {
+      throw new ServiceException(e);
+    }
   }
 
   private void handleSaveRequest(JSONObject request) throws ServiceException {
