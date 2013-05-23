@@ -16,6 +16,7 @@ public class MapEditWindow extends JFrame {
     components.put(NPCEditor.BUTTON_NAME, new NPCEditor());
     components.put(NPCTypeEditor.BUTTON_NAME, new NPCTypeEditor());
     components.put(AreaEditor.BUTTON_NAME, new AreaEditor());
+    components.put(WildPokemonEditor.BUTTON_NAME, new WildPokemonEditor());
 
     setLayout(new BorderLayout());
 
