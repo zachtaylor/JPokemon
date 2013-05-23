@@ -16,10 +16,10 @@ import org.jpokemon.map.Area;
 import com.jpokemon.JPokemonButton;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class AreaEditComponent implements MapEditComponent {
+public class AreaEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "Areas";
 
-  public AreaEditComponent() {
+  public AreaEditor() {
     allAreas.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onClickSelectArea();
@@ -39,7 +39,7 @@ public class AreaEditComponent implements MapEditComponent {
     JButton newArea = new JPokemonButton("New");
     newArea.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        AreaEditComponent.this.onClickNewArea();
+        AreaEditor.this.onClickNewArea();
       }
     });
     editorPanel.add(newArea);
