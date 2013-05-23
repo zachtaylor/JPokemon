@@ -1,6 +1,7 @@
 package com.jpokemon.mapeditor;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -40,6 +41,11 @@ public class MapEditWindow extends JFrame {
     if (mec != null) {
       currentView = mec.getEditor();
       add(currentView, BorderLayout.CENTER);
+
+      Dimension d = mec.getSize();
+      d.setSize(d.width, d.height + 80);
+      setSize(d);
+      repaint();
     }
   }
 

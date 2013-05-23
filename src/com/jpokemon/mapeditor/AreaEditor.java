@@ -68,6 +68,11 @@ public class AreaEditor implements MapEditComponent {
     return editorPanel;
   }
 
+  @Override
+  public Dimension getSize() {
+    return new Dimension(480, 40);
+  }
+
   private void onClickNewArea() {
     currentArea = Area.createNew();
     currentAreaID = allAreas.getItemCount();

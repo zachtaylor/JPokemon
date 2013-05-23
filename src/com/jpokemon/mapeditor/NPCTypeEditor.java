@@ -98,6 +98,11 @@ public class NPCTypeEditor implements MapEditComponent {
     return editorPanel;
   }
 
+  @Override
+  public Dimension getSize() {
+    return new Dimension(300, 120);
+  }
+
   private void onClickSelectNPCType() {
     if (!readyToEdit)
       return;

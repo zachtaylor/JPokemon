@@ -139,6 +139,11 @@ public class NPCEditor implements MapEditComponent {
     return editorPanel;
   }
 
+  @Override
+  public Dimension getSize() {
+    return new Dimension(480, 120);
+  }
+
   private void onClickSelectNPC() {
     if (!readyToEdit)
       return;
