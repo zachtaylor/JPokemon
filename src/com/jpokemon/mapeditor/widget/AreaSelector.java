@@ -56,7 +56,6 @@ public class AreaSelector extends JComboBox {
     private static final long serialVersionUID = 1L;
   }
 
-  // private int selectedIndex = -1;
   private DefaultComboBoxModel model = new DefaultComboBoxModel();
 
   private static final long serialVersionUID = 1L;
