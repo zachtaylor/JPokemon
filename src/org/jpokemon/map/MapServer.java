@@ -41,7 +41,7 @@ public class MapServer extends ActivityServer {
     JSONObject json = new JSONObject();
 
     try {
-      json.put("name", npc.getName());
+      json.put("name", npc.getNameFormatted());
       json.put("number", npc.getNumber());
       json.put("icon", npc.getIcon());
       json.put("options", new JSONArray());

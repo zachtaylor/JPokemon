@@ -69,10 +69,9 @@ public class AreaEditComponent implements MapEditComponent {
   }
 
   private void onClickNewArea() {
-    if (!readyToEdit)
-      return;
-
-    System.out.println("New Area clicked");
+    currentArea = Area.createNew();
+    currentAreaID = allAreas.getItemCount();
+    getEditor();
   }
 
   private void onClickSelectArea() {
@@ -96,8 +95,7 @@ public class AreaEditComponent implements MapEditComponent {
   }
 
   private void commitChange() {
-    System.out.println(currentArea.toString());
-    // TODO
+    currentArea.commit();
   }
 
   private Area currentArea;

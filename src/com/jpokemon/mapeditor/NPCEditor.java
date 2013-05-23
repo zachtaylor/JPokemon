@@ -117,17 +117,18 @@ public class NPCEditor implements MapEditComponent {
       currentNPC = npcs.get(currentNPCIndex);
       iconLabel.setIcon(ImageService.npc(currentNPC.getIcon()));
 
-      if (currentNPC.getNameRaw().contains("{typename} ")) {
+      if (currentNPC.getName().contains("{typename} ")) {
         useTypePrefix.setSelected(true);
-        typeNameLabel.setText(currentNPC.getType().getName());
+        typeNameLabel.setText(currentNPC.getNPCType().getName());
       }
       else {
         useTypePrefix.setSelected(false);
         typeNameLabel.setText(null);
       }
 
-      nameField.setText(currentNPC.getNameRaw().replaceAll("\\{typename\\} ", ""));
-      npcTypes.setSelectedIndex(currentNPC.getType().getNumber() - 1);
+      allNPCs.setSelectedIndex(currentNPCIndex);
+      npcTypes.setSelectedIndex(currentNPC.getNPCType().getNumber() - 1);
+      nameField.setText(currentNPC.getName().replaceAll("\\{typename\\} ", ""));
     }
     else {
       iconLabel.setIcon(null);
@@ -148,7 +149,9 @@ public class NPCEditor implements MapEditComponent {
   }
 
   private void onClickNewNPC() {
-    System.out.println("New NPC clicked");
+    currentNPC = NPC.createNew();
+    currentNPCIndex = allNPCs.getItemCount();
+    getEditor();
   }
 
   private void onEnterNewNPCName() {
@@ -179,18 +182,17 @@ public class NPCEditor implements MapEditComponent {
       return;
 
     if (useTypePrefix.isSelected()) {
-      currentNPC.setName("{typename} " + currentNPC.getNameRaw());
+      currentNPC.setName("{typename} " + currentNPC.getName());
     }
     else {
-      currentNPC.setName(currentNPC.getNameRaw().replaceAll("\\{typename\\} ", ""));
+      currentNPC.setName(currentNPC.getName().replaceAll("\\{typename\\} ", ""));
     }
     commitChange();
     getEditor();
   }
 
   private void commitChange() {
-    System.out.println(currentNPC.toString());
-    // TODO
+    currentNPC.commit();
   }
 
   private NPC currentNPC;

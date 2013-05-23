@@ -108,7 +108,9 @@ public class NPCTypeEditor implements MapEditComponent {
   }
 
   private void onClickNewNPCType() {
-    System.out.println("New NPCType clicked");
+    currentNPCType = NPCType.createNew();
+    currentTypeIndex = npcTypes.getItemCount();
+    getEditor();
   }
 
   private void onEnterNewName() {
@@ -132,7 +134,7 @@ public class NPCTypeEditor implements MapEditComponent {
   }
 
   private void commitChange() {
-    System.out.println(currentNPCType.toString());
+    currentNPCType.commit();
   }
 
   private NPCType currentNPCType;

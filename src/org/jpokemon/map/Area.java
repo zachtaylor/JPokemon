@@ -11,8 +11,24 @@ import org.jpokemon.pokemon.Pokemon;
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
+import com.njkremer.Sqlite.Annotations.AutoIncrement;
+import com.njkremer.Sqlite.Annotations.PrimaryKey;
 
 public class Area {
+  public static Area createNew() {
+    Area area = new Area();
+    area.setName("undefined");
+
+    try {
+      SqlStatement.insert(area).execute();
+    } catch (DataConnectionException e) {
+      area = null;
+      e.printStackTrace();
+    }
+
+    return area;
+  }
+
   public static Area get(int number) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
@@ -26,6 +42,14 @@ public class Area {
     }
 
     return null;
+  }
+
+  public void commit() {
+    try {
+      SqlStatement.update(this).execute();
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
   }
 
   public int getNumber() {
@@ -131,6 +155,8 @@ public class Area {
     return number;
   }
 
+  @PrimaryKey
+  @AutoIncrement
   private int number;
   private String name;
   private List<NPC> _npcs = new ArrayList<NPC>();
