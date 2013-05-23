@@ -3,29 +3,26 @@ package com.jpokemon.mapeditor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.jpokemon.map.Area;
 
 import com.jpokemon.JPokemonButton;
+import com.jpokemon.mapeditor.widget.AreaSelector;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class AreaEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "Areas";
 
   public AreaEditor() {
-    allAreas.addActionListener(new ActionListener() {
+    areaSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onClickSelectArea();
       }
     });
-    editorPanel.add(allAreas);
+    editorPanel.add(areaSelector);
 
     nameField.setMinimumSize(new Dimension(75, 16));
     nameField.setMaximumSize(new Dimension(75, 16));
@@ -47,21 +44,12 @@ public class AreaEditor implements MapEditComponent {
 
   @Override
   public JPanel getEditor() {
-    Area area;
     readyToEdit = false;
 
-    areas.clear();
-    allAreas.removeAllItems();
-    for (int i = 1; (area = Area.get(i)) != null; i++) {
-      areas.add(area);
-      allAreas.addItem(area.toString());
-    }
+    areaSelector.reload();
 
-    if (areas.size() > currentAreaID) {
-      currentArea = areas.get(currentAreaID);
-
-      nameField.setText(currentArea.getName());
-      allAreas.setSelectedIndex(currentAreaID);
+    if (areaSelector.getArea() != null) {
+      nameField.setText(areaSelector.getArea().getName());
     }
 
     readyToEdit = true;
@@ -74,16 +62,13 @@ public class AreaEditor implements MapEditComponent {
   }
 
   private void onClickNewArea() {
-    currentArea = Area.createNew();
-    currentAreaID = allAreas.getItemCount();
+    Area.createNew();
     getEditor();
   }
 
   private void onClickSelectArea() {
     if (!readyToEdit)
       return;
-
-    currentAreaID = allAreas.getSelectedIndex();
 
     getEditor();
   }
@@ -92,22 +77,20 @@ public class AreaEditor implements MapEditComponent {
     if (!readyToEdit)
       return;
 
+    Area area = areaSelector.getArea();
     String name = nameField.getText();
 
-    currentArea.setName(name);
+    area.setName(name);
     commitChange();
     getEditor();
   }
 
   private void commitChange() {
-    currentArea.commit();
+    areaSelector.getArea().commit();
   }
 
-  private Area currentArea;
-  private int currentAreaID;
   private boolean readyToEdit = false;
   private JPanel editorPanel = new JPanel();
-  private JComboBox allAreas = new JComboBox();
   private JTextField nameField = new JTextField();
-  private List<Area> areas = new ArrayList<Area>();
+  private AreaSelector areaSelector = new AreaSelector();
 }
