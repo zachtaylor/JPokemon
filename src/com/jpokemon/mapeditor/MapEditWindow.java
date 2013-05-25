@@ -17,6 +17,7 @@ public class MapEditWindow extends JFrame {
     components.put(NPCTypeEditor.BUTTON_NAME, new NPCTypeEditor());
     components.put(AreaEditor.BUTTON_NAME, new AreaEditor());
     components.put(WildPokemonEditor.BUTTON_NAME, new WildPokemonEditor());
+    components.put(NPCActionSetMapEditor.BUTTON_NAME, new NPCActionSetMapEditor());
 
     setLayout(new BorderLayout());
 
@@ -28,7 +29,7 @@ public class MapEditWindow extends JFrame {
     add(sectionPanel, BorderLayout.NORTH);
 
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    setSize(400, 300);
+    setSize(800, 80);
     setVisible(true);
   }
 
@@ -44,7 +45,7 @@ public class MapEditWindow extends JFrame {
       add(currentView, BorderLayout.CENTER);
 
       Dimension d = mec.getSize();
-      d.setSize(d.width, d.height + 80);
+      d.setSize(Math.max(d.width, 800), d.height + 80);
       setSize(d);
       repaint();
     }
