@@ -14,7 +14,8 @@ import javax.swing.JTextField;
 import org.jpokemon.map.WildPokemon;
 
 import com.jpokemon.JPokemonButton;
-import com.jpokemon.mapeditor.widget.AreaSelector;
+import com.jpokemon.mapeditor.widget.selector.AreaSelector;
+import com.jpokemon.mapeditor.widget.selector.PokemonInfoSelector;
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.SqlStatement;
 
@@ -56,7 +57,7 @@ public class WildPokemonEditor implements MapEditComponent {
     areaSelector.reload();
 
     childContainer.removeAll();
-    for (WildPokemon wildPokemon : WildPokemon.get(areaSelector.getArea().getNumber())) {
+    for (WildPokemon wildPokemon : WildPokemon.get(areaSelector.getCurrentElement().getNumber())) {
       childContainer.add(new WildPokemonPanel(wildPokemon));
     }
 
@@ -82,7 +83,7 @@ public class WildPokemonEditor implements MapEditComponent {
       return;
 
     WildPokemon wildPokemon = new WildPokemon();
-    wildPokemon.setArea(areaSelector.getArea().getNumber());
+    wildPokemon.setArea(areaSelector.getCurrentElement().getNumber());
 
     try {
       SqlStatement.insert(wildPokemon).execute();
@@ -97,10 +98,11 @@ public class WildPokemonEditor implements MapEditComponent {
     public WildPokemonPanel(WildPokemon wp) {
       wildPokemon = wp;
 
-      pokemonNumberField.setText(wp.getNumber() + "");
-      pokemonNumberField.addActionListener(new ActionListener() {
+      pokemonInfoSelector.reload();
+      pokemonInfoSelector.setSelectedIndex(wp.getNumber() - 1);
+      pokemonInfoSelector.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
-          onSelectNumberField();
+          onSelectPokemonSelector();
         }
       });
 
@@ -125,8 +127,7 @@ public class WildPokemonEditor implements MapEditComponent {
         }
       });
 
-      add(new JLabel("Pokemon #"));
-      add(pokemonNumberField);
+      add(pokemonInfoSelector);
       add(new JPanel());
       add(new JLabel("Levels: "));
       add(levelMinField);
@@ -137,9 +138,9 @@ public class WildPokemonEditor implements MapEditComponent {
       add(flexField);
     }
 
-    private void onSelectNumberField() {
+    private void onSelectPokemonSelector() {
       int oldNumber = wildPokemon.getNumber();
-      int newNumber = Integer.parseInt(pokemonNumberField.getText());
+      int newNumber = pokemonInfoSelector.getCurrentElement().getNumber();
 
       wildPokemon.setNumber(newNumber);
 
@@ -198,12 +199,12 @@ public class WildPokemonEditor implements MapEditComponent {
     private JTextField flexField = new JTextField();
     private JTextField levelMinField = new JTextField();
     private JTextField levelMaxField = new JTextField();
-    private JTextField pokemonNumberField = new JTextField();
+    private PokemonInfoSelector pokemonInfoSelector = new PokemonInfoSelector();
 
     private static final long serialVersionUID = 1L;
   }
 
   private boolean readyToEdit = false;
-  private JPanel editorPanel = new JPanel(), childContainer = new JPanel();
   private AreaSelector areaSelector = new AreaSelector();
+  private JPanel editorPanel = new JPanel(), childContainer = new JPanel();
 }

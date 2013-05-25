@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 import org.jpokemon.map.Area;
 
 import com.jpokemon.JPokemonButton;
-import com.jpokemon.mapeditor.widget.AreaSelector;
+import com.jpokemon.mapeditor.widget.selector.AreaSelector;
 
 public class AreaEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "Areas";
@@ -48,8 +48,8 @@ public class AreaEditor implements MapEditComponent {
 
     areaSelector.reload();
 
-    if (areaSelector.getArea() != null) {
-      nameField.setText(areaSelector.getArea().getName());
+    if (areaSelector.getCurrentElement() != null) {
+      nameField.setText(areaSelector.getCurrentElement().getName());
     }
 
     readyToEdit = true;
@@ -77,7 +77,7 @@ public class AreaEditor implements MapEditComponent {
     if (!readyToEdit)
       return;
 
-    Area area = areaSelector.getArea();
+    Area area = areaSelector.getCurrentElement();
     String name = nameField.getText();
 
     area.setName(name);
@@ -86,7 +86,7 @@ public class AreaEditor implements MapEditComponent {
   }
 
   private void commitChange() {
-    areaSelector.getArea().commit();
+    areaSelector.getCurrentElement().commit();
   }
 
   private boolean readyToEdit = false;

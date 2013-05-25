@@ -4,36 +4,33 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.jpokemon.map.npc.NPC;
-import org.jpokemon.map.npc.NPCType;
 import org.jpokemon.service.ImageService;
 
 import com.jpokemon.JPokemonButton;
+import com.jpokemon.mapeditor.widget.selector.NPCSelector;
+import com.jpokemon.mapeditor.widget.selector.NPCTypeSelector;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class NPCEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "NPCs";
 
   public NPCEditor() {
     JPanel northPanel = new JPanel();
 
-    allNPCs.addActionListener(new ActionListener() {
+    npcSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onClickSelectNPC();
       }
     });
-    northPanel.add(allNPCs);
+    northPanel.add(npcSelector);
 
     JButton newNPC = new JPokemonButton("New");
     newNPC.addActionListener(new ActionListener() {
@@ -48,12 +45,12 @@ public class NPCEditor implements MapEditComponent {
 
     eastPanel.add(new JPanel());
 
-    npcTypes.addActionListener(new ActionListener() {
+    npcTypeSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onClickNPCType();
       }
     });
-    eastPanel.add(npcTypes);
+    eastPanel.add(npcTypeSelector);
 
     eastPanel.add(new JPanel());
 
@@ -96,44 +93,23 @@ public class NPCEditor implements MapEditComponent {
 
   @Override
   public JPanel getEditor() {
-    NPC npc;
-    NPCType npcType;
-
     readyToEdit = false;
 
-    npcs.clear();
-    allNPCs.removeAllItems();
-    for (int i = 1; (npc = NPC.get(i)) != null; i++) {
-      npcs.add(npc);
-      allNPCs.addItem(npc.toString());
-    }
+    npcSelector.reload();
+    npcTypeSelector.reload();
 
-    npcTypes.removeAllItems();
-    for (int i = 1; (npcType = NPCType.get(i)) != null; i++) {
-      npcTypes.addItem(npcType.toString());
-    }
+    iconLabel.setIcon(ImageService.npc(npcSelector.getCurrentElement().getIcon()));
 
-    if (npcs.size() > currentNPCIndex) {
-      currentNPC = npcs.get(currentNPCIndex);
-      iconLabel.setIcon(ImageService.npc(currentNPC.getIcon()));
-
-      if (currentNPC.getName().contains("{typename} ")) {
-        useTypePrefix.setSelected(true);
-        typeNameLabel.setText(currentNPC.getNPCType().getName());
-      }
-      else {
-        useTypePrefix.setSelected(false);
-        typeNameLabel.setText(null);
-      }
-
-      allNPCs.setSelectedIndex(currentNPCIndex);
-      npcTypes.setSelectedIndex(currentNPC.getNPCType().getNumber() - 1);
-      nameField.setText(currentNPC.getName().replaceAll("\\{typename\\} ", ""));
+    if (npcSelector.getCurrentElement().getName().contains("{typename} ")) {
+      useTypePrefix.setSelected(true);
+      typeNameLabel.setText(npcSelector.getCurrentElement().getNPCType().getName());
     }
     else {
-      iconLabel.setIcon(null);
-      typeNameLabel.setText("No NPC loaded");
+      useTypePrefix.setSelected(false);
+      typeNameLabel.setText(null);
     }
+
+    nameField.setText(npcSelector.getCurrentElement().getName().replaceAll("\\{typename\\} ", ""));
 
     readyToEdit = true;
     return editorPanel;
@@ -148,14 +124,12 @@ public class NPCEditor implements MapEditComponent {
     if (!readyToEdit)
       return;
 
-    currentNPCIndex = allNPCs.getSelectedIndex();
-
     getEditor();
   }
 
   private void onClickNewNPC() {
-    currentNPC = NPC.createNew();
-    currentNPCIndex = allNPCs.getItemCount();
+    NPC.createNew();
+    npcSelector.setSelectedIndex(npcSelector.getItemCount());
     getEditor();
   }
 
@@ -168,7 +142,7 @@ public class NPCEditor implements MapEditComponent {
     if (useTypePrefix.isSelected())
       name = "{typename} " + name;
 
-    currentNPC.setName(name);
+    npcSelector.getCurrentElement().setName(name);
     commitChange();
     getEditor();
   }
@@ -177,7 +151,7 @@ public class NPCEditor implements MapEditComponent {
     if (!readyToEdit)
       return;
 
-    currentNPC.setType(npcTypes.getSelectedIndex() + 1);
+    npcSelector.getCurrentElement().setType(npcTypeSelector.getCurrentElement().getNumber());
     commitChange();
     getEditor();
   }
@@ -185,6 +159,8 @@ public class NPCEditor implements MapEditComponent {
   private void onClickUseTypePrefix() {
     if (!readyToEdit)
       return;
+
+    NPC currentNPC = npcSelector.getCurrentElement();
 
     if (useTypePrefix.isSelected()) {
       currentNPC.setName("{typename} " + currentNPC.getName());
@@ -197,16 +173,14 @@ public class NPCEditor implements MapEditComponent {
   }
 
   private void commitChange() {
-    currentNPC.commit();
+    npcSelector.getCurrentElement().commit();
   }
 
-  private NPC currentNPC;
-  private int currentNPCIndex = 0;
   private boolean readyToEdit = false;
   private JPanel editorPanel = new JPanel();
-  private List<NPC> npcs = new ArrayList<NPC>();
   private JTextField nameField = new JTextField();
+  private NPCSelector npcSelector = new NPCSelector();
+  private NPCTypeSelector npcTypeSelector = new NPCTypeSelector();
   private JLabel typeNameLabel = new JLabel(), iconLabel = new JLabel();
-  private JComboBox allNPCs = new JComboBox(), npcTypes = new JComboBox();
   private JCheckBox useTypePrefix = new JCheckBox("Use type prefix", false);
 }

@@ -16,8 +16,7 @@ public class PokemonInfo {
   @PrimaryKey
   private int number;
   private String name;
-  private int type1, type2, attack, specattack, defense, specdefense, speed, health, evolutionlevel, xpyield,
-      growthrate, catchrate;
+  private int type1, type2, attack, specattack, defense, specdefense, speed, health, evolutionlevel, xpyield, growthrate, catchrate;
 
   @OneToMany("pokemon")
   private List<EffortValue> effortValues;
@@ -41,6 +40,10 @@ public class PokemonInfo {
     }
 
     return cache.get(num);
+  }
+
+  public String toString() {
+    return "Pokemon#" + getNumber() + " " + getName();
   }
 
   //@preformat

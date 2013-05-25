@@ -100,7 +100,7 @@ public class NPCTypeEditor implements MapEditComponent {
 
   @Override
   public Dimension getSize() {
-    return new Dimension(300, 120);
+    return new Dimension(460, 120);
   }
 
   private void onClickSelectNPCType() {
