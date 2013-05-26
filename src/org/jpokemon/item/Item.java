@@ -8,7 +8,7 @@ public class Item {
   public static final String XML_NODE_NAME = "item";
 
   public Item(int itemID) {
-    _info = ItemInfo.getInfo(itemID);
+    _info = ItemInfo.get(itemID);
     _type = ItemType.valueOf(_info.getType());
   }
 

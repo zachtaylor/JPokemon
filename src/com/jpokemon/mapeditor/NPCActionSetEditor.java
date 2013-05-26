@@ -16,7 +16,7 @@ import org.jpokemon.map.npc.NPCActionSet;
 import org.jpokemon.map.npc.NPCActionSetMap;
 import org.jpokemon.map.npc.NPCRequirement;
 
-import com.jpokemon.mapeditor.widget.selector.ActionTypeSelector;
+import com.jpokemon.mapeditor.widget.panel.NPCActionSetPanel;
 import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCActionSetSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;
@@ -125,7 +125,7 @@ public class NPCActionSetEditor implements MapEditComponent {
 
     actionSetContainer.removeAll();
     for (NPCActionSet npcActionSet : NPCActionSet.get(npcSelector.getCurrentElement().getNumber(), npcActionSetSelector.getCurrentElement().getActionset())) {
-      actionSetContainer.add(new NPCActionSetPanel(npcActionSet));
+      actionSetContainer.add(new NPCActionSetPanel(this, npcActionSet));
     }
 
     requirementSetContainer.removeAll();
@@ -139,7 +139,7 @@ public class NPCActionSetEditor implements MapEditComponent {
 
   @Override
   public Dimension getSize() {
-    return new Dimension(1280, 240);
+    return new Dimension(1360, 240);
   }
 
   private void onAddNPCActionSetClick() {
@@ -229,70 +229,6 @@ public class NPCActionSetEditor implements MapEditComponent {
     getEditor();
   }
 
-  private class NPCActionSetPanel extends JPanel {
-    public NPCActionSetPanel(NPCActionSet npcas) {
-      npcActionSet = npcas;
-
-      actionTypeSelector.reload();
-      actionTypeSelector.setSelectedIndex(npcas.getType());
-      actionTypeSelector.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-          onActionTypeSelect();
-        }
-      });
-      add(actionTypeSelector);
-
-      dataExplanationLabel = new JLabel("data: ");
-      add(dataExplanationLabel);
-
-      dataField.setPreferredSize(new Dimension(240, 20));
-      dataField.setText(npcas.getData());
-      dataField.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-          onDataFieldEnter();
-        }
-      });
-      add(dataField);
-    }
-
-    private void onActionTypeSelect() {
-      int oldActionType = npcActionSet.getType();
-      int newActionType = actionTypeSelector.getSelectedIndex();
-
-      npcActionSet.setType(newActionType);
-
-      try {
-        SqlStatement.update(npcActionSet).where("number").eq(npcActionSet.getNumber()).and("actionset").eq(npcActionSet.getActionset()).and("type").eq(oldActionType).and("data").eq(npcActionSet.getData()).execute();
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
-
-      getEditor();
-    }
-
-    private void onDataFieldEnter() {
-      String oldData = npcActionSet.getData();
-      String newData = dataField.getText();
-
-      npcActionSet.setData(newData);
-
-      try {
-        SqlStatement.update(npcActionSet).where("number").eq(npcActionSet.getNumber()).and("actionset").eq(npcActionSet.getActionset()).and("type").eq(npcActionSet.getType()).and("data").eq(oldData).execute();
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
-
-      getEditor();
-    }
-
-    private NPCActionSet npcActionSet;
-    private JLabel dataExplanationLabel;
-    private JTextField dataField = new JTextField();
-    private ActionTypeSelector actionTypeSelector = new ActionTypeSelector();
-
-    private static final long serialVersionUID = 1L;
-  }
-
   private class NPCRequirementPanel extends JPanel {
     public NPCRequirementPanel(NPCRequirement npcr) {
       npcRequirement = npcr;
@@ -330,7 +266,7 @@ public class NPCActionSetEditor implements MapEditComponent {
       invertSelection.setSelected(npcRequirement.getData() < 0);
       invertSelection.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
-          onInvertSelectionClick();
+          onEventSelect();
         }
       });
       add(invertSelection);
@@ -343,7 +279,7 @@ public class NPCActionSetEditor implements MapEditComponent {
       dataField.setText(Math.abs(npcRequirement.getData()) + "");
       dataField.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
-          onDataFieldEnter();
+          onPokedexSelect();
         }
       });
       add(dataField);
@@ -352,7 +288,7 @@ public class NPCActionSetEditor implements MapEditComponent {
       invertSelection.setSelected(npcRequirement.getData() < 0);
       invertSelection.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
-          onInvertSelectionClick();
+          onPokedexSelect();
         }
       });
       add(invertSelection);
@@ -381,20 +317,23 @@ public class NPCActionSetEditor implements MapEditComponent {
       }
 
       dataField.setText(requirementData + "");
-      onDataFieldEnter();
+      commitNewData();
     }
 
-    private void onInvertSelectionClick() {
-      onDataFieldEnter();
-    }
-
-    private void onDataFieldEnter() {
-      int oldData = npcRequirement.getData();
-      int newData = Math.abs(Integer.parseInt(dataField.getText()));
+    private void onPokedexSelect() {
+      String newData = Math.abs(Integer.parseInt(dataField.getText())) + "";
 
       if (invertSelection.isSelected()) {
-        newData = -newData;
+        newData = "-" + newData;
       }
+
+      dataField.setText(newData);
+      commitNewData();
+    }
+
+    private void commitNewData() {
+      int oldData = npcRequirement.getData();
+      int newData = Integer.parseInt(dataField.getText());
 
       npcRequirement.setData(newData);
 

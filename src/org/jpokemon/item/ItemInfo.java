@@ -19,7 +19,7 @@ public class ItemInfo {
 
   private static Map<Integer, ItemInfo> cache = new HashMap<Integer, ItemInfo>();
 
-  public static ItemInfo getInfo(int number) {
+  public static ItemInfo get(int number) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     if (number < 1)
@@ -27,8 +27,7 @@ public class ItemInfo {
 
     if (cache.get(number) == null) {
       try {
-        List<ItemInfo> info = SqlStatement.select(ItemInfo.class)
-            .where("number").eq(number).getList();
+        List<ItemInfo> info = SqlStatement.select(ItemInfo.class).where("number").eq(number).getList();
 
         if (!info.isEmpty())
           cache.put(number, info.get(0));
@@ -38,6 +37,10 @@ public class ItemInfo {
     }
 
     return cache.get(number);
+  }
+
+  public String toString() {
+    return "Item#" + getNumber() + " " + getName();
   }
 
   //@preformat
