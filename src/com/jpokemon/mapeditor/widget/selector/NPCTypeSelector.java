@@ -12,4 +12,6 @@ public class NPCTypeSelector extends JPokemonSelector<NPCType> {
       addElementToModel(npcType);
     }
   }
+
+  private static final long serialVersionUID = 1L;
 }

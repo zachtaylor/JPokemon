@@ -12,4 +12,6 @@ public class AreaSelector extends JPokemonSelector<Area> {
       addElementToModel(area);
     }
   }
+
+  private static final long serialVersionUID = 1L;
 }

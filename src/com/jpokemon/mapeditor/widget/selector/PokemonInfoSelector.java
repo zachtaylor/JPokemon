@@ -12,4 +12,6 @@ public class PokemonInfoSelector extends JPokemonSelector<PokemonInfo> {
       addElementToModel(pokemonInfo);
     }
   }
+
+  private static final long serialVersionUID = 1L;
 }
