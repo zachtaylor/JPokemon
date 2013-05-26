@@ -27,7 +27,9 @@ public abstract class JPokemonSelector<E> extends JComboBox<E> {
 
     reloadItems();
 
-    setSelectedIndex(selectedIndex);
+    if (model.getSize() > selectedIndex) {
+      setSelectedIndex(selectedIndex);
+    }
   }
 
   protected abstract void reloadItems();

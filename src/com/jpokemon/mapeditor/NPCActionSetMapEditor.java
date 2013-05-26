@@ -4,11 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import org.jpokemon.map.npc.NPCActionSetMap;
 
@@ -54,20 +55,33 @@ public class NPCActionSetMapEditor implements MapEditComponent {
     npcSelector.reload();
     areaSelector.reload();
 
+    childrenPanel.removeAll();
+
     int areaID = areaSelector.getCurrentElement().getNumber();
     int npcNumber = npcSelector.getCurrentElement().getNumber();
 
-    childrenPanel.removeAll();
+    List<Integer> seenActionSetNumbers = new ArrayList<Integer>();
+
+    // Add ones that are in the current area
     for (NPCActionSetMap npcActionSetMap : NPCActionSetMap.get(areaID)) {
       if (npcActionSetMap.getNumber() != npcNumber) {
         continue;
       }
 
-      childrenPanel.add(new NPCActionSetMapPanel(npcActionSetMap));
-      childrenPanel.add(new JPanel());
+      seenActionSetNumbers.add(npcActionSetMap.getActionset());
+      childrenPanel.add(new NPCActionSetMapCheckBox(npcActionSetMap, true));
     }
-    
-    // TODO : Add an add row button which adds a new actionsetmap option and id
+    // Add ones that are not in the current area
+    for (NPCActionSetMap npcActionSetMap : NPCActionSetMap.getByNPCNumber(npcNumber)) {
+      if (seenActionSetNumbers.contains(npcActionSetMap.getActionset())) {
+        continue;
+      }
+
+      seenActionSetNumbers.add(npcActionSetMap.getActionset());
+      childrenPanel.add(new NPCActionSetMapCheckBox(npcActionSetMap, false));
+    }
+
+    childrenPanel.add(new JPanel());
 
     readyToEdit = true;
     return editorPanel;
@@ -94,42 +108,87 @@ public class NPCActionSetMapEditor implements MapEditComponent {
     editorPanel.repaint();
   }
 
-  private class NPCActionSetMapPanel extends JPanel {
-    public NPCActionSetMapPanel(NPCActionSetMap npcasm) {
+  private class NPCActionSetMapCheckBox extends JCheckBox {
+    public NPCActionSetMapCheckBox(NPCActionSetMap npcasm, boolean select) {
       npcActionSetMap = npcasm;
-
-      JLabel idLabel = new JLabel(npcActionSetMap.getActionset() + ":");
-
-      nameField.setMinimumSize(new Dimension(160, 16));
-      nameField.setMaximumSize(new Dimension(160, 16));
-      nameField.setText(npcActionSetMap.getOption());
-      nameField.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-          onNameFieldEnter();
+      setSelected(select);
+      setText(npcActionSetMap.toString());
+      addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          onCheckBoxClick();
         }
       });
-
-      setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-      add(idLabel);
-      add(nameField);
     }
 
-    private void onNameFieldEnter() {
-      String newOption = nameField.getText();
-
-      npcActionSetMap.setOption(newOption);
-
-      try {
-        SqlStatement.update(npcActionSetMap).where("area").eq(npcActionSetMap.getArea()).and("number").eq(npcActionSetMap.getNumber()).and("actionset").eq(npcActionSetMap.getActionset()).execute();
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
+    private void onCheckBoxClick() {
+      if (isSelected()) {
+        commitAddition();
+      }
+      else {
+        commitDeletion();
       }
 
       getEditor();
     }
 
+    private void commitAddition() {
+      if (npcActionSetMap.getArea() == 0) {
+        int newAreaNumber = areaSelector.getCurrentElement().getNumber();
+
+        npcActionSetMap.setArea(newAreaNumber);
+
+        try {
+          SqlStatement.update(npcActionSetMap).where("number").eq(npcActionSetMap.getNumber()).and("area").eq(0).and("actionset").eq(npcActionSetMap.getActionset()).execute();
+        } catch (DataConnectionException e) {
+          e.printStackTrace();
+        }
+      }
+      else {
+        NPCActionSetMap newNPCActionSetMap = new NPCActionSetMap();
+
+        newNPCActionSetMap.setArea(areaSelector.getCurrentElement().getNumber());
+        newNPCActionSetMap.setNumber(npcActionSetMap.getNumber());
+        newNPCActionSetMap.setActionset(npcActionSetMap.getActionset());
+        newNPCActionSetMap.setOption(npcActionSetMap.getOption());
+
+        try {
+          SqlStatement.insert(newNPCActionSetMap).execute();
+        } catch (DataConnectionException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    private void commitDeletion() {
+      int occuranceCount = 0;
+
+      for (NPCActionSetMap npcasm : NPCActionSetMap.getByNPCNumber(npcActionSetMap.getNumber())) {
+        if (npcasm.getActionset() == npcActionSetMap.getActionset()) {
+          occuranceCount++;
+        }
+      }
+
+      if (occuranceCount == 1) {
+        int oldAreaNumber = npcActionSetMap.getArea();
+
+        npcActionSetMap.setArea(0);
+
+        try {
+          SqlStatement.update(npcActionSetMap).where("number").eq(npcActionSetMap.getNumber()).and("area").eq(oldAreaNumber).and("actionset").eq(npcActionSetMap.getActionset()).execute();
+        } catch (DataConnectionException e) {
+          e.printStackTrace();
+        }
+      }
+      else {
+        try {
+          SqlStatement.delete(npcActionSetMap).where("number").eq(npcActionSetMap.getNumber()).and("area").eq(npcActionSetMap.getArea()).and("actionset").eq(npcActionSetMap.getActionset()).execute();
+        } catch (DataConnectionException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
     private NPCActionSetMap npcActionSetMap;
-    private JTextField nameField = new JTextField();
 
     private static final long serialVersionUID = 1L;
   }

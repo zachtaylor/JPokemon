@@ -23,6 +23,23 @@ public class NPCActionSetMap {
     return null;
   }
 
+  public static List<NPCActionSetMap> getByNPCNumber(int npcNumber) {
+    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+
+    try {
+      return SqlStatement.select(NPCActionSetMap.class).where("number").eq(npcNumber).getList();
+
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  public String toString() {
+    return "NPCActionSet#" + getActionset() + " " + getOption();
+  }
+
   //@preformat
   public int getNumber() {return number;} public void setNumber(int n) {number=n;}
   public int getArea() {return area;} public void setArea(int a) {area = a;}
