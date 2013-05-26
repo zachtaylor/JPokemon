@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.ActionSetEntry;
+import org.jpokemon.action.ActionSetEntry;
 
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.mapeditor.widget.selector.ActionTypeSelector;

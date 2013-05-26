@@ -1,8 +1,9 @@
 package org.jpokemon.map.npc;
 
 import java.util.List;
+
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.map.ActionSetEntry;
+import org.jpokemon.action.ActionSetEntry;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;

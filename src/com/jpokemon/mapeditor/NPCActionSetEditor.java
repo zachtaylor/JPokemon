@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -17,10 +16,9 @@ import org.jpokemon.map.npc.NPCActionSetMap;
 import org.jpokemon.map.npc.NPCRequirement;
 
 import com.jpokemon.mapeditor.widget.panel.ActionSetPanel;
-import com.jpokemon.mapeditor.widget.selector.EventSelector;
+import com.jpokemon.mapeditor.widget.panel.RequirementPanel;
 import com.jpokemon.mapeditor.widget.selector.NPCActionSetSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;
-import com.jpokemon.mapeditor.widget.selector.RequirementTypeSelector;
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.SqlStatement;
 
@@ -130,7 +128,7 @@ public class NPCActionSetEditor implements MapEditComponent {
 
     requirementSetContainer.removeAll();
     for (NPCRequirement npcRequirement : NPCRequirement.get(npcSelector.getCurrentElement().getNumber(), npcActionSetSelector.getCurrentElement().getActionset())) {
-      requirementSetContainer.add(new NPCRequirementPanel(npcRequirement));
+      requirementSetContainer.add(new RequirementPanel(this, npcRequirement));
     }
 
     readyToEdit = true;
@@ -227,132 +225,6 @@ public class NPCActionSetEditor implements MapEditComponent {
     }
 
     getEditor();
-  }
-
-  private class NPCRequirementPanel extends JPanel {
-    public NPCRequirementPanel(NPCRequirement npcr) {
-      npcRequirement = npcr;
-
-      requirementTypeSelector.reload();
-      requirementTypeSelector.setSelectedIndex(npcr.getType());
-      requirementTypeSelector.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          onRequirementTypeSelect();
-        }
-      });
-      add(requirementTypeSelector);
-
-      switch (requirementTypeSelector.getCurrentElement()) {
-      case EVENT:
-        addEventStuff();
-      break;
-      case POKEDEX:
-        addPokedexStuff();
-      break;
-      }
-    }
-
-    private void addEventStuff() {
-      eventSelector.reload();
-      eventSelector.setSelectedIndex(Math.abs(npcRequirement.getData()) - 1);
-      eventSelector.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          onEventSelect();
-        }
-      });
-      add(eventSelector);
-
-      invertSelection = new JCheckBox("Has not done yet");
-      invertSelection.setSelected(npcRequirement.getData() < 0);
-      invertSelection.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-          onEventSelect();
-        }
-      });
-      add(invertSelection);
-
-      dataField.setText(Math.abs(npcRequirement.getData()) + "");
-    }
-
-    private void addPokedexStuff() {
-      dataField.setPreferredSize(new Dimension(80, 20));
-      dataField.setText(Math.abs(npcRequirement.getData()) + "");
-      dataField.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-          onPokedexSelect();
-        }
-      });
-      add(dataField);
-
-      invertSelection = new JCheckBox("Less than");
-      invertSelection.setSelected(npcRequirement.getData() < 0);
-      invertSelection.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent arg0) {
-          onPokedexSelect();
-        }
-      });
-      add(invertSelection);
-    }
-
-    private void onRequirementTypeSelect() {
-      int oldActionType = npcRequirement.getType();
-      int newActionType = requirementTypeSelector.getSelectedIndex();
-
-      npcRequirement.setType(newActionType);
-
-      try {
-        SqlStatement.update(npcRequirement).where("number").eq(npcRequirement.getNumber()).and("actionset").eq(npcRequirement.getActionset()).and("type").eq(oldActionType).and("data").eq(npcRequirement.getData()).execute();
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
-
-      getEditor();
-    }
-
-    private void onEventSelect() {
-      int requirementData = eventSelector.getCurrentElement().getNumber();
-
-      if (invertSelection.isSelected()) {
-        requirementData = -requirementData;
-      }
-
-      dataField.setText(requirementData + "");
-      commitNewData();
-    }
-
-    private void onPokedexSelect() {
-      String newData = Math.abs(Integer.parseInt(dataField.getText())) + "";
-
-      if (invertSelection.isSelected()) {
-        newData = "-" + newData;
-      }
-
-      dataField.setText(newData);
-      commitNewData();
-    }
-
-    private void commitNewData() {
-      int oldData = npcRequirement.getData();
-      int newData = Integer.parseInt(dataField.getText());
-
-      npcRequirement.setData(newData);
-
-      try {
-        SqlStatement.update(npcRequirement).where("number").eq(npcRequirement.getNumber()).and("actionset").eq(npcRequirement.getActionset()).and("type").eq(npcRequirement.getType()).and("data").eq(oldData).execute();
-      } catch (DataConnectionException e) {
-        e.printStackTrace();
-      }
-
-      getEditor();
-    }
-
-    private JCheckBox invertSelection;
-    private NPCRequirement npcRequirement;
-    private JTextField dataField = new JTextField();
-    private EventSelector eventSelector = new EventSelector();
-    private RequirementTypeSelector requirementTypeSelector = new RequirementTypeSelector();
-
-    private static final long serialVersionUID = 1L;
   }
 
   private boolean readyToEdit = false;
