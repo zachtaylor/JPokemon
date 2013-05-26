@@ -129,7 +129,6 @@ public class NPCEditor implements MapEditComponent {
 
   private void onClickNewNPC() {
     NPC.createNew();
-    npcSelector.setSelectedIndex(npcSelector.getItemCount());
     getEditor();
   }
 

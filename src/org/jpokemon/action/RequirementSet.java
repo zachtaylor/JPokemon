@@ -52,5 +52,4 @@ public class RequirementSet implements Iterable<Requirement> {
   }
 
   private List<Requirement> _data = new ArrayList<Requirement>();
-
 }
