@@ -1,8 +1,6 @@
 package org.jpokemon.map;
 
 public interface ActionSetEntry {
-  public int getActionset();
-
   public int getType();
 
   public void setType(int t);
