@@ -32,7 +32,7 @@ public class EventEditor implements MapEditComponent {
     });
     editorPanel.add(eventSelector);
 
-    descriptionField.setPreferredSize(new Dimension(75, 20));
+    descriptionField.setPreferredSize(new Dimension(160, 20));
     descriptionField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onDescriptionFieldEnter();

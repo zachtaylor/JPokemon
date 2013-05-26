@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -16,6 +17,7 @@ import org.jpokemon.map.npc.NPCActionSetMap;
 import org.jpokemon.map.npc.NPCRequirement;
 
 import com.jpokemon.mapeditor.widget.selector.ActionTypeSelector;
+import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCActionSetSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;
 import com.jpokemon.mapeditor.widget.selector.RequirementTypeSelector;
@@ -137,7 +139,7 @@ public class NPCActionSetEditor implements MapEditComponent {
 
   @Override
   public Dimension getSize() {
-    return new Dimension(1200, 240);
+    return new Dimension(1280, 240);
   }
 
   private void onAddNPCActionSetClick() {
@@ -304,14 +306,56 @@ public class NPCActionSetEditor implements MapEditComponent {
       });
       add(requirementTypeSelector);
 
-      dataField.setPreferredSize(new Dimension(240, 20));
-      dataField.setText(npcr.getData() + "");
+      switch (requirementTypeSelector.getCurrentElement()) {
+      case EVENT:
+        addEventStuff();
+      break;
+      case POKEDEX:
+        addPokedexStuff();
+      break;
+      }
+    }
+
+    private void addEventStuff() {
+      eventSelector.reload();
+      eventSelector.setSelectedIndex(Math.abs(npcRequirement.getData()) - 1);
+      eventSelector.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          onEventSelect();
+        }
+      });
+      add(eventSelector);
+
+      invertSelection = new JCheckBox("Has not done yet");
+      invertSelection.setSelected(npcRequirement.getData() < 0);
+      invertSelection.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent arg0) {
+          onInvertSelectionClick();
+        }
+      });
+      add(invertSelection);
+
+      dataField.setText(Math.abs(npcRequirement.getData()) + "");
+    }
+
+    private void addPokedexStuff() {
+      dataField.setPreferredSize(new Dimension(80, 20));
+      dataField.setText(Math.abs(npcRequirement.getData()) + "");
       dataField.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
           onDataFieldEnter();
         }
       });
       add(dataField);
+
+      invertSelection = new JCheckBox("Less than");
+      invertSelection.setSelected(npcRequirement.getData() < 0);
+      invertSelection.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent arg0) {
+          onInvertSelectionClick();
+        }
+      });
+      add(invertSelection);
     }
 
     private void onRequirementTypeSelect() {
@@ -329,9 +373,28 @@ public class NPCActionSetEditor implements MapEditComponent {
       getEditor();
     }
 
+    private void onEventSelect() {
+      int requirementData = eventSelector.getCurrentElement().getNumber();
+
+      if (invertSelection.isSelected()) {
+        requirementData = -requirementData;
+      }
+
+      dataField.setText(requirementData + "");
+      onDataFieldEnter();
+    }
+
+    private void onInvertSelectionClick() {
+      onDataFieldEnter();
+    }
+
     private void onDataFieldEnter() {
       int oldData = npcRequirement.getData();
-      int newData = Integer.parseInt(dataField.getText());
+      int newData = Math.abs(Integer.parseInt(dataField.getText()));
+
+      if (invertSelection.isSelected()) {
+        newData = -newData;
+      }
 
       npcRequirement.setData(newData);
 
@@ -344,8 +407,10 @@ public class NPCActionSetEditor implements MapEditComponent {
       getEditor();
     }
 
+    private JCheckBox invertSelection;
     private NPCRequirement npcRequirement;
     private JTextField dataField = new JTextField();
+    private EventSelector eventSelector = new EventSelector();
     private RequirementTypeSelector requirementTypeSelector = new RequirementTypeSelector();
 
     private static final long serialVersionUID = 1L;
