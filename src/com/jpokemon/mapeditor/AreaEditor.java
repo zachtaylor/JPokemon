@@ -32,13 +32,13 @@ public class AreaEditor implements MapEditComponent {
 
     areaSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        onClickSelectArea();
+        onAreaSelect();
       }
     });
     editorPanel.add(areaSelector);
 
-    nameField.setMinimumSize(new Dimension(75, 16));
-    nameField.setMaximumSize(new Dimension(75, 16));
+    nameField.setMinimumSize(new Dimension(75, 20));
+    nameField.setMaximumSize(new Dimension(75, 20));
     nameField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onEnterNewAreaName();
@@ -88,7 +88,7 @@ public class AreaEditor implements MapEditComponent {
     getEditor();
   }
 
-  private void onClickSelectArea() {
+  private void onAreaSelect() {
     if (!readyToEdit)
       return;
 

@@ -1,5 +1,6 @@
 package org.jpokemon.action;
 
+import org.jpokemon.map.Event;
 import org.jpokemon.trainer.Player;
 
 public class EventAction extends Action {
@@ -8,6 +9,7 @@ public class EventAction extends Action {
   }
 
   public void execute(Player player) {
-    player.record().putEvent(Integer.parseInt(data()));
+    Event event = Event.get(Integer.parseInt(data()));
+    player.record().putEvent(event.getNumber());
   }
 }
