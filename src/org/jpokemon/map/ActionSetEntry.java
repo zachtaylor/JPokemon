@@ -1,0 +1,17 @@
+package org.jpokemon.map;
+
+public interface ActionSetEntry {
+  public int getActionset();
+
+  public int getType();
+
+  public void setType(int t);
+
+  public void commitTypeChange(int t);
+
+  public String getData();
+
+  public void setData(String d);
+
+  public void commitDataChange(String newData);
+}

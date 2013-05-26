@@ -16,7 +16,7 @@ import org.jpokemon.map.npc.NPCActionSet;
 import org.jpokemon.map.npc.NPCActionSetMap;
 import org.jpokemon.map.npc.NPCRequirement;
 
-import com.jpokemon.mapeditor.widget.panel.NPCActionSetPanel;
+import com.jpokemon.mapeditor.widget.panel.ActionSetPanel;
 import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCActionSetSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;
@@ -125,7 +125,7 @@ public class NPCActionSetEditor implements MapEditComponent {
 
     actionSetContainer.removeAll();
     for (NPCActionSet npcActionSet : NPCActionSet.get(npcSelector.getCurrentElement().getNumber(), npcActionSetSelector.getCurrentElement().getActionset())) {
-      actionSetContainer.add(new NPCActionSetPanel(this, npcActionSet));
+      actionSetContainer.add(new ActionSetPanel(this, npcActionSet));
     }
 
     requirementSetContainer.removeAll();

@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.npc.NPCActionSet;
+import org.jpokemon.map.ActionSetEntry;
 
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.mapeditor.widget.selector.ActionTypeSelector;
@@ -17,16 +17,14 @@ import com.jpokemon.mapeditor.widget.selector.AreaSelector;
 import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.ItemSelector;
 import com.jpokemon.mapeditor.widget.selector.PokemonInfoSelector;
-import com.njkremer.Sqlite.DataConnectionException;
-import com.njkremer.Sqlite.SqlStatement;
 
-public class NPCActionSetPanel extends JPanel {
-  public NPCActionSetPanel(MapEditComponent mec, NPCActionSet npcas) {
+public class ActionSetPanel extends JPanel {
+  public ActionSetPanel(MapEditComponent mec, ActionSetEntry ase) {
     parent = mec;
-    npcActionSet = npcas;
+    actionSetEntry = ase;
 
     actionTypeSelector.reload();
-    actionTypeSelector.setSelectedIndex(npcas.getType());
+    actionTypeSelector.setSelectedIndex(actionSetEntry.getType());
     actionTypeSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onActionTypeSelect();
@@ -54,7 +52,7 @@ public class NPCActionSetPanel extends JPanel {
   }
 
   private void addItemStuff() {
-    String[] pieces = npcActionSet.getData().split(" ");
+    String[] pieces = actionSetEntry.getData().split(" ");
 
     itemSelector.reload();
     try {
@@ -96,7 +94,7 @@ public class NPCActionSetPanel extends JPanel {
   private void addEventStuff() {
     eventSelector.reload();
     try {
-      eventSelector.setSelectedIndex(Integer.parseInt(npcActionSet.getData()) - 1);
+      eventSelector.setSelectedIndex(Integer.parseInt(actionSetEntry.getData()) - 1);
     } catch (NumberFormatException e) {
     }
     eventSelector.addActionListener(new ActionListener() {
@@ -110,7 +108,7 @@ public class NPCActionSetPanel extends JPanel {
   private void addTransportStuff() {
     areaSelector.reload();
     try {
-      areaSelector.setSelectedIndex(Integer.parseInt(npcActionSet.getData()) - 1);
+      areaSelector.setSelectedIndex(Integer.parseInt(actionSetEntry.getData()) - 1);
     } catch (NumberFormatException e) {
     }
     areaSelector.addActionListener(new ActionListener() {
@@ -122,7 +120,7 @@ public class NPCActionSetPanel extends JPanel {
   }
 
   private void addPokemonStuff() {
-    String[] pieces = npcActionSet.getData().split(" ");
+    String[] pieces = actionSetEntry.getData().split(" ");
     ActionListener pokemonSelectCaller = new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onPokemonSelect();
@@ -148,7 +146,7 @@ public class NPCActionSetPanel extends JPanel {
 
     dataField.setPreferredSize(new Dimension(100, 20));
     if (pieces.length > 1) {
-      dataField.setText(npcActionSet.getData().replaceAll(pieces[0], "").replace(pieces[1], "").trim());
+      dataField.setText(actionSetEntry.getData().replaceAll(pieces[0], "").replace(pieces[1], "").trim());
     }
 
     invertSelection = new JCheckBox("Remove");
@@ -176,7 +174,7 @@ public class NPCActionSetPanel extends JPanel {
     add(dataExplanationLabel);
 
     dataField.setPreferredSize(new Dimension(240, 20));
-    dataField.setText(npcActionSet.getData());
+    dataField.setText(actionSetEntry.getData());
     dataField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onTextFieldEnter();
@@ -186,16 +184,7 @@ public class NPCActionSetPanel extends JPanel {
   }
 
   private void onActionTypeSelect() {
-    int oldActionType = npcActionSet.getType();
-    int newActionType = actionTypeSelector.getSelectedIndex();
-
-    npcActionSet.setType(newActionType);
-
-    try {
-      SqlStatement.update(npcActionSet).where("number").eq(npcActionSet.getNumber()).and("actionset").eq(npcActionSet.getActionset()).and("type").eq(oldActionType).and("data").eq(npcActionSet.getData()).execute();
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
-    }
+    actionSetEntry.commitTypeChange(actionTypeSelector.getSelectedIndex());
 
     parent.getEditor();
   }
@@ -237,16 +226,7 @@ public class NPCActionSetPanel extends JPanel {
   }
 
   private void onTextFieldEnter() {
-    String oldData = npcActionSet.getData();
-    String newData = dataField.getText();
-
-    npcActionSet.setData(newData);
-
-    try {
-      SqlStatement.update(npcActionSet).where("number").eq(npcActionSet.getNumber()).and("actionset").eq(npcActionSet.getActionset()).and("type").eq(npcActionSet.getType()).and("data").eq(oldData).execute();
-    } catch (DataConnectionException e) {
-      e.printStackTrace();
-    }
+    actionSetEntry.commitDataChange(dataField.getText());
 
     parent.getEditor();
   }
@@ -254,8 +234,8 @@ public class NPCActionSetPanel extends JPanel {
   private MapEditComponent parent;
   private JTextField extraTextField;
   private JCheckBox invertSelection;
-  private NPCActionSet npcActionSet;
   private JLabel dataExplanationLabel;
+  private ActionSetEntry actionSetEntry;
   private JTextField dataField = new JTextField();
   private ItemSelector itemSelector = new ItemSelector();
   private AreaSelector areaSelector = new AreaSelector();
