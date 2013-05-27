@@ -9,13 +9,13 @@ import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
 public class Inventory {
-  private int number, item, price, purchaseprice, denomination, available;
+  private int store, item, price, purchaseprice, denomination, available;
 
-  public static List<Inventory> get(int number) {
+  public static List<Inventory> get(int store) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
-      return SqlStatement.select(Inventory.class).where("number").eq(number).getList();
+      return SqlStatement.select(Inventory.class).where("store").eq(store).getList();
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
@@ -24,7 +24,7 @@ public class Inventory {
   }
 
   //@preformat
-  public int getNumber() {return number;} public void setNumber(int n) {number = n;}
+  public int getStore() {return store;} public void setStore(int s) {store = s;}
   public int getItem() {return item;} public void setItem(int i) {item = i;}
   public int getPrice() {return price;} public void setPrice(int p) {price = p;}
   public int getPurchaseprice() {return purchaseprice;} public void setPurchaseprice(int p) {purchaseprice = p;}

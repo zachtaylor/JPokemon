@@ -20,6 +20,7 @@ public class MapEditWindow extends JFrame {
     components.put(NPCActionSetMapEditor.BUTTON_NAME, new NPCActionSetMapEditor());
     components.put(NPCActionSetEditor.BUTTON_NAME, new NPCActionSetEditor());
     components.put(EventEditor.BUTTON_NAME, new EventEditor());
+    components.put(StoreEditor.BUTTON_NAME, new StoreEditor());
 
     setLayout(new BorderLayout());
 
@@ -31,7 +32,7 @@ public class MapEditWindow extends JFrame {
     add(sectionPanel, BorderLayout.NORTH);
 
     setDefaultCloseOperation(EXIT_ON_CLOSE);
-    setSize(840, 80);
+    setSize(MINIMUM_WIDTH, 80);
     setVisible(true);
   }
 
@@ -47,7 +48,7 @@ public class MapEditWindow extends JFrame {
       add(currentView, BorderLayout.CENTER);
 
       Dimension d = mec.getSize();
-      d.setSize(Math.max(d.width, 840), d.height + 80);
+      d.setSize(Math.max(d.width, MINIMUM_WIDTH), d.height + 80);
       setSize(d);
       repaint();
     }
@@ -69,5 +70,6 @@ public class MapEditWindow extends JFrame {
   private JPanel currentView = null;
   private Map<String, MapEditComponent> components = new HashMap<String, MapEditComponent>();
 
+  private static final int MINIMUM_WIDTH = 960; 
   private static final long serialVersionUID = 1L;
 }
