@@ -10,21 +10,47 @@ import org.jpokemon.trainer.Player;
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
+import com.njkremer.Sqlite.Annotations.AutoIncrement;
+import com.njkremer.Sqlite.Annotations.PrimaryKey;
 
 public class NPC {
+  public static NPC createNew() {
+    NPC npc = new NPC();
+    npc.setType(0);
+    npc.setName("undefined");
+
+    try {
+      SqlStatement.insert(npc).execute();
+    } catch (DataConnectionException e) {
+      npc = null;
+      e.printStackTrace();
+    }
+
+    return npc;
+  }
+
   public static NPC get(int number) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
       List<NPC> query = SqlStatement.select(NPC.class).where("number").eq(number).getList();
 
-      if (query.size() > 0)
+      if (query.size() > 0) {
         return query.get(0);
+      }
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
 
     return null;
+  }
+
+  public void commit() {
+    try {
+      SqlStatement.update(this).execute();
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
   }
 
   public int getNumber() {
@@ -35,11 +61,11 @@ public class NPC {
     number = n;
   }
 
-  public NPCType getType() {
+  public NPCType getNPCType() {
     return npctype;
   }
 
-  public int getTypeAsInt() {
+  public int getType() {
     return type;
   }
 
@@ -48,11 +74,11 @@ public class NPC {
     npctype = NPCType.get(t);
   }
 
-  public String getName() {
-    return name.replace("{typename}", getType().getName());
+  public String getNameFormatted() {
+    return name.replace("{typename}", getNPCType().getName());
   }
 
-  public String getNameRaw() {
+  public String getName() {
     return name;
   }
 
@@ -61,7 +87,7 @@ public class NPC {
   }
 
   public String getIcon() {
-    return getType().getIcon();
+    return getNPCType().getIcon();
   }
 
   public void addActionSet(ActionSet actionset) {
@@ -91,11 +117,15 @@ public class NPC {
   }
 
   public String toString() {
-    return "NPC#" + number + ": " + getName();
+    return "NPC#" + number + ": " + getNameFormatted();
   }
 
+  @PrimaryKey
+  @AutoIncrement
+  private int number;
+
+  private int type;
   private String name;
-  private int number, type;
   private NPCType npctype;
   private List<ActionSet> _actions = new ArrayList<ActionSet>();
 }

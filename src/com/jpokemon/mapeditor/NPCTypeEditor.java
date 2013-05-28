@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import org.jpokemon.map.npc.NPCType;
 import org.jpokemon.service.ImageService;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class NPCTypeEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "NPC Types";
 
@@ -97,6 +98,11 @@ public class NPCTypeEditor implements MapEditComponent {
     return editorPanel;
   }
 
+  @Override
+  public Dimension getSize() {
+    return new Dimension(460, 120);
+  }
+
   private void onClickSelectNPCType() {
     if (!readyToEdit)
       return;
@@ -107,7 +113,9 @@ public class NPCTypeEditor implements MapEditComponent {
   }
 
   private void onClickNewNPCType() {
-    System.out.println("New NPCType clicked");
+    currentNPCType = NPCType.createNew();
+    currentTypeIndex = npcTypes.getItemCount();
+    getEditor();
   }
 
   private void onEnterNewName() {
@@ -131,7 +139,7 @@ public class NPCTypeEditor implements MapEditComponent {
   }
 
   private void commitChange() {
-    System.out.println(currentNPCType.toString());
+    currentNPCType.commit();
   }
 
   private NPCType currentNPCType;

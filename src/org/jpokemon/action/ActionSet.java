@@ -34,21 +34,12 @@ public class ActionSet {
       action.execute(p);
   }
 
-  public void addRequirements(RequirementSet requirements) {
-    _requirements.add(requirements);
+  public void addRequirement(Requirement requirement) {
+    _requirements.add(requirement);
   }
 
   public boolean isOkay(Player p) {
-    boolean result = true;
-
-    for (RequirementSet option : _requirements) {
-      result = option.isOkay(p);
-
-      if (result)
-        break;
-    }
-
-    return result;
+    return _requirements.isOkay(p);
   }
 
   public XMLNode toXML() {
@@ -61,7 +52,7 @@ public class ActionSet {
     for (Action action : _actions) {
       node.addChild(action.toXML());
     }
-    for (RequirementSet requirement : _requirements) {
+    for (Requirement requirement : _requirements) {
       node.addChild(requirement.toXML());
     }
 
@@ -70,7 +61,7 @@ public class ActionSet {
 
   public ActionSet loadXML(XMLNode node) {
     _actions = new ArrayList<Action>();
-    _requirements = new ArrayList<RequirementSet>();
+    _requirements = new RequirementSet();
 
     if (node.hasAttribute("option")) {
       _option = node.getAttribute("option");
@@ -80,8 +71,8 @@ public class ActionSet {
       _actions.add(ActionFactory.build(actionchild));
     }
 
-    for (XMLNode requirementsetchild : node.getChildren(RequirementSet.XML_NODE_NAME)) {
-      _requirements.add(new RequirementSet().loadXML(requirementsetchild));
+    for (XMLNode requirementchild : node.getChildren(Requirement.XML_NODE_NAME)) {
+      _requirements.add(new Requirement(requirementchild));
     }
 
     return this;
@@ -89,5 +80,5 @@ public class ActionSet {
 
   private String _option;
   private List<Action> _actions = new ArrayList<Action>();
-  private List<RequirementSet> _requirements = new ArrayList<RequirementSet>();
+  private RequirementSet _requirements = new RequirementSet();
 }

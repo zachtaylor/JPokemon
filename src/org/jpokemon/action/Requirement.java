@@ -11,6 +11,10 @@ public class Requirement {
     _data = data;
   }
 
+  public Requirement(XMLNode node) {
+    loadXML(node);
+  }
+
   public RequirementType type() {
     return _type;
   }

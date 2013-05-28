@@ -8,7 +8,6 @@ import org.jpokemon.action.Action;
 import org.jpokemon.action.ActionFactory;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.action.Requirement;
-import org.jpokemon.action.RequirementSet;
 
 public class NPCFactory {
   public static Collection<NPC> build(int area) {
@@ -39,26 +38,10 @@ public class NPCFactory {
 
     as.setOption(info.getOption());
 
-    for (RequirementSet set : buildRequirementSets(info.getNumber(), info.getActionset())) {
-      as.addRequirements(set);
+    for (NPCRequirement npcRequirement : NPCRequirement.get(info.getNumber(), info.getActionset())) {
+      as.addRequirement(new Requirement(npcRequirement.getType(), npcRequirement.getData()));
     }
 
     return as;
-  }
-
-  private static Collection<RequirementSet> buildRequirementSets(int number, int actionset) {
-    Map<Integer, RequirementSet> requirementsets = new HashMap<Integer, RequirementSet>();
-
-    for (NPCRequirement req : NPCRequirement.get(number, actionset)) {
-      RequirementSet requirementset = requirementsets.get(req.getRequirementset());
-
-      if (requirementset == null) {
-        requirementsets.put(req.getRequirementset(), requirementset = new RequirementSet());
-      }
-
-      requirementset.add(new Requirement(req.getType(), req.getData()));
-    }
-
-    return requirementsets.values();
   }
 }

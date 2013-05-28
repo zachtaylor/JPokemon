@@ -168,11 +168,7 @@ public class UpgradeView extends JPokemonView {
     }
   }
 
-  public boolean hasDependentMenu() {
-    return true;
-  }
-
-  public JPokemonMenu dependentMenu() {
+  public JPokemonMenu menu() {
     return _menu;
   }
 

@@ -56,12 +56,6 @@ public class PlayerService extends JPokemonService {
     return p.id();
   }
 
-  public static void save(JSONObject request) throws ServiceException {
-    Player player = getPlayer(request);
-
-    PlayerFactory.save(player);
-  }
-
   public static void activity(JSONObject request) throws ServiceException {
     Activity activity = getActivity(request);
 

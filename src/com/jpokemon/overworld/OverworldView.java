@@ -25,11 +25,16 @@ import org.json.JSONObject;
 
 import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
+import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
+import com.jpokemon.start.StartMenu;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class OverworldView extends JPokemonView {
   public OverworldView(GameWindow parent) {
     super(parent);
+
+    startMenu = new StartMenu(parent);
 
     JPanel infoPanel = new JPanel();
     nameLabel = new JLabel("x");
@@ -107,6 +112,15 @@ public class OverworldView extends JPokemonView {
     }
   }
 
+  @Override
+  public boolean key(KeyEvent arg0) {
+    return false;
+  }
+
+  public JPokemonMenu menu() {
+    return startMenu;
+  }
+
   public void onClickNPCButton(int number, String option) {
     try {
       JSONObject request = new JSONObject();
@@ -168,11 +182,6 @@ public class OverworldView extends JPokemonView {
     refresh();
   }
 
-  @Override
-  public boolean key(KeyEvent arg0) {
-    return false;
-  }
-
   private class NPCButton extends JPokemonButton implements ActionListener {
 
     public NPCButton(JSONObject obj) throws JSONException {
@@ -217,9 +226,10 @@ public class OverworldView extends JPokemonView {
     private static final long serialVersionUID = 1L;
   }
 
-  private JLabel nameLabel;
   private JPanel npcPanel;
+  private JLabel nameLabel;
   private JButton grassButton;
+  private JPokemonMenu startMenu;
   private JComboBox borderSelection;
   private List<JSONObject> borderMemory = new ArrayList<JSONObject>();
 
