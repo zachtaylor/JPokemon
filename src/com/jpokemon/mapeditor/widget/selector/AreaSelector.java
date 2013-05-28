@@ -1,6 +1,6 @@
 package com.jpokemon.mapeditor.widget.selector;
 
-import org.jpokemon.map.Area;
+import org.jpokemon.map.gps.Area;
 
 public class AreaSelector extends JPokemonSelector<Area> {
   @Override

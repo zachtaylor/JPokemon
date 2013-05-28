@@ -1,4 +1,4 @@
-package org.jpokemon.action;
+package org.jpokemon.action.performer;
 
 import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.map.store.Store;
@@ -6,14 +6,14 @@ import org.jpokemon.map.store.StoreActivity;
 import org.jpokemon.service.LoadException;
 import org.jpokemon.trainer.Player;
 
-public class StoreAction extends Action {
-  public StoreAction(String data) {
+public class StoreActionPerformer extends AbstractActionPerformer {
+  public StoreActionPerformer(String data) {
     super(data);
   }
 
   @Override
   public void execute(Player player) throws LoadException {
-    int storeNumber = Integer.parseInt(data());
+    int storeNumber = Integer.parseInt(getData());
 
     Store store = Store.get(storeNumber);
 

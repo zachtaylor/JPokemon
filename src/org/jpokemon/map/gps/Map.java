@@ -1,8 +1,8 @@
-package org.jpokemon.map;
+package org.jpokemon.map.gps;
 
 import java.util.HashMap;
 
-import org.jpokemon.action.Requirement;
+import org.jpokemon.map.WildPokemon;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.map.npc.NPCFactory;
 
@@ -23,9 +23,8 @@ public class Map {
       return;
 
     for (Border b : Border.get(number)) {
-      for (BorderRequirement br : BorderRequirement.get(b.getArea(), b.getNext())) {
-        Requirement r = new Requirement(br.getType(), br.getData());
-        b.addRequirement(r);
+      for (BorderRequirement borderRequirement : BorderRequirement.get(b.getArea(), b.getNext())) {
+        b.addRequirement(borderRequirement);
       }
 
       a.addBorder(b);

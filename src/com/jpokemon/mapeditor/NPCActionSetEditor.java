@@ -11,11 +11,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.npc.NPCActionSet;
+import org.jpokemon.map.npc.NPCAction;
 import org.jpokemon.map.npc.NPCActionSetMap;
 import org.jpokemon.map.npc.NPCRequirement;
 
-import com.jpokemon.mapeditor.widget.panel.ActionSetPanel;
+import com.jpokemon.mapeditor.widget.panel.ActionPanel;
 import com.jpokemon.mapeditor.widget.panel.RequirementPanel;
 import com.jpokemon.mapeditor.widget.selector.NPCActionSetSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;
@@ -122,8 +122,8 @@ public class NPCActionSetEditor implements MapEditComponent {
     nameField.setText(npcActionSetSelector.getCurrentElement().getOption());
 
     actionSetContainer.removeAll();
-    for (NPCActionSet npcActionSet : NPCActionSet.get(npcSelector.getCurrentElement().getNumber(), npcActionSetSelector.getCurrentElement().getActionset())) {
-      actionSetContainer.add(new ActionSetPanel(this, npcActionSet));
+    for (NPCAction npcActionSet : NPCAction.get(npcSelector.getCurrentElement().getNumber(), npcActionSetSelector.getCurrentElement().getActionset())) {
+      actionSetContainer.add(new ActionPanel(this, npcActionSet));
     }
 
     requirementSetContainer.removeAll();
@@ -194,7 +194,7 @@ public class NPCActionSetEditor implements MapEditComponent {
   }
 
   private void onNewActionClick() {
-    NPCActionSet npcActionSet = new NPCActionSet();
+    NPCAction npcActionSet = new NPCAction();
 
     npcActionSet.setNumber(npcSelector.getCurrentElement().getNumber());
     npcActionSet.setActionset(npcActionSetSelector.getCurrentElement().getActionset());

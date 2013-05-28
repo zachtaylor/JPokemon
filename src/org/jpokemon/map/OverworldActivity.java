@@ -17,12 +17,12 @@ public class OverworldActivity extends JPokemonService implements Activity {
   }
 
   @Override
-  public MapService getHandler() {
-    return MapService.getInstance();
+  public OverworldService getHandler() {
+    return OverworldService.getInstance();
   }
 
-  public MapServer getServer(Player player) {
-    return new MapServer(player);
+  public OverworldServer getServer(Player player) {
+    return new OverworldServer(player);
   }
 
   public static OverworldActivity instance = new OverworldActivity();

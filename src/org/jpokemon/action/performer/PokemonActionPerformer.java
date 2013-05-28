@@ -1,16 +1,16 @@
-package org.jpokemon.action;
+package org.jpokemon.action.performer;
 
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 
-public class PokemonAction extends Action {
-  public PokemonAction(String data) {
+public class PokemonActionPerformer extends AbstractActionPerformer {
+  public PokemonActionPerformer(String data) {
     super(data);
   }
 
   public void execute(Player player) {
     Pokemon pokemon = null;
-    String[] parameters = data().split(" ");
+    String[] parameters = getData().split(" ");
 
     int number = Integer.parseInt(parameters[0]);
 

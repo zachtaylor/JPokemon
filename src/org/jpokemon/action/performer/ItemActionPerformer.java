@@ -1,14 +1,14 @@
-package org.jpokemon.action;
+package org.jpokemon.action.performer;
 
 import org.jpokemon.trainer.Player;
 
-public class ItemAction extends Action {
-  public ItemAction(String data) {
+public class ItemActionPerformer extends AbstractActionPerformer {
+  public ItemActionPerformer(String data) {
     super(data);
   }
 
   public void execute(Player player) {
-    String[] numberAndQuantity = data().split(" ");
+    String[] numberAndQuantity = getData().split(" ");
     player.item(Integer.parseInt(numberAndQuantity[0])).add(Integer.parseInt(numberAndQuantity[1]));
   }
 }

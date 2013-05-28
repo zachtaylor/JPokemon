@@ -10,8 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.Area;
-import org.jpokemon.map.Border;
+import org.jpokemon.map.gps.Area;
+import org.jpokemon.map.gps.Border;
 
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.mapeditor.widget.selector.AreaSelector;

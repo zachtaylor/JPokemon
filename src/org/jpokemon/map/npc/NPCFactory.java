@@ -4,10 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpokemon.action.Action;
-import org.jpokemon.action.ActionFactory;
 import org.jpokemon.action.ActionSet;
-import org.jpokemon.action.Requirement;
 
 public class NPCFactory {
   public static Collection<NPC> build(int area) {
@@ -31,15 +28,13 @@ public class NPCFactory {
   private static ActionSet buildActionSet(NPCActionSetMap info) {
     ActionSet as = new ActionSet();
 
-    for (NPCActionSet actionset : NPCActionSet.get(info.getNumber(), info.getActionset())) {
-      Action a = ActionFactory.build(actionset.getType(), actionset.getData());
-      as.addAction(a);
-    }
-
     as.setOption(info.getOption());
 
+    for (NPCAction action : NPCAction.get(info.getNumber(), info.getActionset())) {
+      as.addAction(action);
+    }
     for (NPCRequirement npcRequirement : NPCRequirement.get(info.getNumber(), info.getActionset())) {
-      as.addRequirement(new Requirement(npcRequirement.getType(), npcRequirement.getData()));
+      as.addRequirement(npcRequirement);
     }
 
     return as;

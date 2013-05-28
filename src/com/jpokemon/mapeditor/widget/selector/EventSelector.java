@@ -1,6 +1,6 @@
 package com.jpokemon.mapeditor.widget.selector;
 
-import org.jpokemon.map.Event;
+import org.jpokemon.trainer.Event;
 
 public class EventSelector extends JPokemonSelector<Event> {
   @Override

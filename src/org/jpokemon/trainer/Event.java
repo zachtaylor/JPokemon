@@ -1,4 +1,4 @@
-package org.jpokemon.map;
+package org.jpokemon.trainer;
 
 import java.util.List;
 

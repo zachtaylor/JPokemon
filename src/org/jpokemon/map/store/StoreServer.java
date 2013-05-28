@@ -4,7 +4,7 @@ import org.jpokemon.activity.Activity;
 import org.jpokemon.activity.ActivityServer;
 import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.item.Item;
-import org.jpokemon.map.Map;
+import org.jpokemon.map.gps.Map;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;

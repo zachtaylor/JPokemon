@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.action.ActionSetEntry;
+import org.jpokemon.action.Action;
 
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.mapeditor.widget.selector.ActionTypeSelector;
@@ -18,13 +18,13 @@ import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.ItemSelector;
 import com.jpokemon.mapeditor.widget.selector.PokemonInfoSelector;
 
-public class ActionSetPanel extends JPanel {
-  public ActionSetPanel(MapEditComponent mec, ActionSetEntry ase) {
+public class ActionPanel extends JPanel {
+  public ActionPanel(MapEditComponent mec, Action a) {
     parent = mec;
-    actionSetEntry = ase;
+    action = a;
 
     actionTypeSelector.reload();
-    actionTypeSelector.setSelectedIndex(actionSetEntry.getType());
+    actionTypeSelector.setSelectedIndex(action.getType());
     actionTypeSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onActionTypeSelect();
@@ -52,7 +52,7 @@ public class ActionSetPanel extends JPanel {
   }
 
   private void addItemStuff() {
-    String[] pieces = actionSetEntry.getData().split(" ");
+    String[] pieces = action.getData().split(" ");
 
     itemSelector.reload();
     try {
@@ -94,7 +94,7 @@ public class ActionSetPanel extends JPanel {
   private void addEventStuff() {
     eventSelector.reload();
     try {
-      eventSelector.setSelectedIndex(Integer.parseInt(actionSetEntry.getData()) - 1);
+      eventSelector.setSelectedIndex(Integer.parseInt(action.getData()) - 1);
     } catch (NumberFormatException e) {
     }
     eventSelector.addActionListener(new ActionListener() {
@@ -108,7 +108,7 @@ public class ActionSetPanel extends JPanel {
   private void addTransportStuff() {
     areaSelector.reload();
     try {
-      areaSelector.setSelectedIndex(Integer.parseInt(actionSetEntry.getData()) - 1);
+      areaSelector.setSelectedIndex(Integer.parseInt(action.getData()) - 1);
     } catch (NumberFormatException e) {
     }
     areaSelector.addActionListener(new ActionListener() {
@@ -120,7 +120,7 @@ public class ActionSetPanel extends JPanel {
   }
 
   private void addPokemonStuff() {
-    String[] pieces = actionSetEntry.getData().split(" ");
+    String[] pieces = action.getData().split(" ");
     ActionListener pokemonSelectCaller = new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onPokemonSelect();
@@ -146,7 +146,7 @@ public class ActionSetPanel extends JPanel {
 
     dataField.setPreferredSize(new Dimension(100, 20));
     if (pieces.length > 1) {
-      dataField.setText(actionSetEntry.getData().replaceAll(pieces[0], "").replace(pieces[1], "").trim());
+      dataField.setText(action.getData().replaceAll(pieces[0], "").replace(pieces[1], "").trim());
     }
 
     invertSelection = new JCheckBox("Remove");
@@ -174,7 +174,7 @@ public class ActionSetPanel extends JPanel {
     add(dataExplanationLabel);
 
     dataField.setPreferredSize(new Dimension(240, 20));
-    dataField.setText(actionSetEntry.getData());
+    dataField.setText(action.getData());
     dataField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onTextFieldEnter();
@@ -184,7 +184,7 @@ public class ActionSetPanel extends JPanel {
   }
 
   private void onActionTypeSelect() {
-    actionSetEntry.commitTypeChange(actionTypeSelector.getSelectedIndex());
+    action.commitTypeChange(actionTypeSelector.getSelectedIndex());
 
     parent.getEditor();
   }
@@ -226,16 +226,16 @@ public class ActionSetPanel extends JPanel {
   }
 
   private void onTextFieldEnter() {
-    actionSetEntry.commitDataChange(dataField.getText());
+    action.commitDataChange(dataField.getText());
 
     parent.getEditor();
   }
 
+  private Action action;
   private MapEditComponent parent;
   private JTextField extraTextField;
   private JCheckBox invertSelection;
   private JLabel dataExplanationLabel;
-  private ActionSetEntry actionSetEntry;
   private JTextField dataField = new JTextField();
   private ItemSelector itemSelector = new ItemSelector();
   private AreaSelector areaSelector = new AreaSelector();

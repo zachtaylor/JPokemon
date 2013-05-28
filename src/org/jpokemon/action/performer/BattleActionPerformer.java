@@ -1,4 +1,4 @@
-package org.jpokemon.action;
+package org.jpokemon.action.performer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,13 +12,13 @@ import org.jpokemon.trainer.Trainer;
 import org.zachtaylor.jnodalxml.XMLNode;
 import org.zachtaylor.jnodalxml.XMLParser;
 
-public class BattleAction extends Action {
-  public BattleAction(String data) {
+public class BattleActionPerformer extends AbstractActionPerformer {
+  public BattleActionPerformer(String data) {
     super(data);
   }
 
   public void execute(Player player) throws LoadException {
-    String fileName = player.record().replaceMacros(data(), player.name());
+    String fileName = player.record().replaceMacros(getData(), player.name());
     String filePath = JPokemonConstants.TRAINER_PATH + fileName + ".jpkmn";
 
     XMLNode trainerData;
@@ -26,10 +26,10 @@ public class BattleAction extends Action {
     try {
       trainerData = XMLParser.parse(new File(filePath)).get(0);
     } catch (FileNotFoundException e) {
-      throw new LoadException("Trainer file not found: " + data());
+      throw new LoadException("Trainer file not found: " + getData());
     }
 
-    Trainer trainer = new Trainer(data());
+    Trainer trainer = new Trainer(getData());
     trainer.loadXML(trainerData);
 
     if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES) {

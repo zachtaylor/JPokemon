@@ -1,9 +1,10 @@
-package org.jpokemon.map;
+package org.jpokemon.map.gps;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.action.Action;
+import org.jpokemon.action.ActionSet;
 import org.jpokemon.action.Requirement;
 import org.jpokemon.trainer.Player;
 
@@ -28,20 +29,22 @@ public class Border {
     next = n;
   }
 
-  public void addRequirement(Requirement r) {
-    _requirements.add(r);
+  public void addAction(Action action) {
+    actionSet.addAction(action);
   }
 
-  public String isOkay(Player p) {
-    if (_requirements == null)
-      return null;
+  public void addRequirement(Requirement requirement) {
+    actionSet.addRequirement(requirement);
+  }
 
-    for (Requirement requirement : _requirements)
-      if (!requirement.isOkay(p)) {
-        return requirement.denialReason();
-      }
+  public boolean performAction(Player player) {
+    // TODO
+    return false;
+  }
 
-    return null;
+  public boolean isOkay(Player player) {
+    // TODO
+    return false;
   }
 
   public static List<Border> get(int area) {
@@ -58,5 +61,5 @@ public class Border {
   }
 
   private int area, next;
-  private List<Requirement> _requirements = new ArrayList<Requirement>();
+  private ActionSet actionSet = new ActionSet();
 }

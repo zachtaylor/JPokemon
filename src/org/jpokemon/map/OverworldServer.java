@@ -1,14 +1,17 @@
 package org.jpokemon.map;
 
 import org.jpokemon.activity.ActivityServer;
+import org.jpokemon.map.gps.Area;
+import org.jpokemon.map.gps.Border;
+import org.jpokemon.map.gps.Map;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MapServer extends ActivityServer {
-  public MapServer(Player player) {
+public class OverworldServer extends ActivityServer {
+  public OverworldServer(Player player) {
     super(player);
 
     visit(player);
@@ -63,14 +66,12 @@ public class MapServer extends ActivityServer {
     try {
       json.put("name", nextArea.getName());
 
-      String reason = border.isOkay(get_calling_player());
-
-      if (reason == null) {
+      if (border.isOkay(get_calling_player())) {
         json.put("is_okay", true);
       }
       else {
         json.put("is_okay", false);
-        json.put("reason", reason);
+        json.put("reason", "You cannot go that way");
       }
     } catch (JSONException e) {
     }

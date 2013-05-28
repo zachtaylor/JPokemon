@@ -1,10 +1,11 @@
-package org.jpokemon.map;
+package org.jpokemon.map.gps;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
+import org.jpokemon.map.WildPokemon;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 

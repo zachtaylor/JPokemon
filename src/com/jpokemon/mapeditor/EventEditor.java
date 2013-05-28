@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.Event;
+import org.jpokemon.trainer.Event;
 
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.mapeditor.widget.selector.EventSelector;

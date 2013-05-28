@@ -1,14 +1,14 @@
-package org.jpokemon.action;
+package org.jpokemon.action.performer;
 
 import org.jpokemon.trainer.Player;
 
-public class TransportAction extends Action {
-  public TransportAction(String data) {
+public class TransportActionPerformer extends AbstractActionPerformer {
+  public TransportActionPerformer(String data) {
     super(data);
   }
 
   public void execute(Player player) {
-    String[] areaAndLocation = data().split(" ");
+    String[] areaAndLocation = getData().split(" ");
     player.area(Integer.parseInt(areaAndLocation[0]));
 
     if (areaAndLocation.length > 1)

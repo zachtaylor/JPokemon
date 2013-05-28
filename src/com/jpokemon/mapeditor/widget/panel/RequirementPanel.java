@@ -8,19 +8,19 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.action.RequirementSetEntry;
+import org.jpokemon.action.Requirement;
 
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.RequirementTypeSelector;
 
 public class RequirementPanel extends JPanel {
-  public RequirementPanel(MapEditComponent mec, RequirementSetEntry rse) {
+  public RequirementPanel(MapEditComponent mec, Requirement r) {
     parent = mec;
-    requirementSetEntry = rse;
+    requirement = r;
 
     requirementTypeSelector.reload();
-    requirementTypeSelector.setSelectedIndex(requirementSetEntry.getType());
+    requirementTypeSelector.setSelectedIndex(requirement.getType());
     requirementTypeSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         onRequirementTypeSelect();
@@ -40,7 +40,7 @@ public class RequirementPanel extends JPanel {
 
   private void addEventStuff() {
     eventSelector.reload();
-    eventSelector.setSelectedIndex(Math.abs(requirementSetEntry.getData()) - 1);
+    eventSelector.setSelectedIndex(Math.abs(requirement.getData()) - 1);
     eventSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         onEventSelect();
@@ -49,7 +49,7 @@ public class RequirementPanel extends JPanel {
     add(eventSelector);
 
     invertSelection = new JCheckBox("Has not done yet");
-    invertSelection.setSelected(requirementSetEntry.getData() < 0);
+    invertSelection.setSelected(requirement.getData() < 0);
     invertSelection.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onEventSelect();
@@ -57,12 +57,12 @@ public class RequirementPanel extends JPanel {
     });
     add(invertSelection);
 
-    dataField.setText(Math.abs(requirementSetEntry.getData()) + "");
+    dataField.setText(Math.abs(requirement.getData()) + "");
   }
 
   private void addPokedexStuff() {
     dataField.setPreferredSize(new Dimension(80, 20));
-    dataField.setText(Math.abs(requirementSetEntry.getData()) + "");
+    dataField.setText(Math.abs(requirement.getData()) + "");
     dataField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onPokedexSelect();
@@ -71,7 +71,7 @@ public class RequirementPanel extends JPanel {
     add(dataField);
 
     invertSelection = new JCheckBox("Less than");
-    invertSelection.setSelected(requirementSetEntry.getData() < 0);
+    invertSelection.setSelected(requirement.getData() < 0);
     invertSelection.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onPokedexSelect();
@@ -81,7 +81,7 @@ public class RequirementPanel extends JPanel {
   }
 
   private void onRequirementTypeSelect() {
-    requirementSetEntry.commitTypeChange(requirementTypeSelector.getSelectedIndex());
+    requirement.commitTypeChange(requirementTypeSelector.getSelectedIndex());
 
     parent.getEditor();
   }
@@ -109,14 +109,14 @@ public class RequirementPanel extends JPanel {
   }
 
   private void commitNewData() {
-    requirementSetEntry.commitDataChange(Integer.parseInt(dataField.getText()));
+    requirement.commitDataChange(Integer.parseInt(dataField.getText()));
 
     parent.getEditor();
   }
 
   private MapEditComponent parent;
   private JCheckBox invertSelection;
-  private RequirementSetEntry requirementSetEntry;
+  private Requirement requirement;
   private JTextField dataField = new JTextField();
   private EventSelector eventSelector = new EventSelector();
   private RequirementTypeSelector requirementTypeSelector = new RequirementTypeSelector();

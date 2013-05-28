@@ -1,37 +1,37 @@
 package org.jpokemon.map.npc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.action.AbstractRequirement;
+import org.jpokemon.action.AbstractAction;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class NPCRequirement extends AbstractRequirement {
-  private int number, actionset, type, data;
+public class NPCAction extends AbstractAction {
+  private int number, actionset, type;
+  private String data;
 
-  public static List<NPCRequirement> get(int number, int set) {
+  public static List<NPCAction> get(int number, int actionset) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
     try {
-      return SqlStatement.select(NPCRequirement.class).where("number").eq(number).and("actionset").eq(set).getList();
+      return SqlStatement.select(NPCAction.class).where("number").eq(number).and("actionset").eq(actionset).getList();
 
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
 
-    return new ArrayList<NPCRequirement>();
+    return null;
   }
 
-  public void commitDataChange(int newData) {
-    int oldData = getData();
+  public void commitDataChange(String newData) {
+    String oldData = getData();
     setData(newData);
 
     try {
-      SqlStatement.update(this).where("number").eq(number).and("actionset").eq(actionset).and("type").eq(type).and("data").eq(oldData).execute();
+      SqlStatement.update(this).where("number").eq(getNumber()).and("actionset").eq(getActionset()).and("type").eq(getType()).and("data").eq(oldData).execute();
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
@@ -42,7 +42,7 @@ public class NPCRequirement extends AbstractRequirement {
     setType(newType);
 
     try {
-      SqlStatement.update(this).where("number").eq(number).and("actionset").eq(actionset).and("type").eq(oldType).and("data").eq(data).execute();
+      SqlStatement.update(this).where("number").eq(getNumber()).and("actionset").eq(getActionset()).and("type").eq(oldType).and("data").eq(getData()).execute();
     } catch (DataConnectionException e) {
       e.printStackTrace();
     }
@@ -52,6 +52,6 @@ public class NPCRequirement extends AbstractRequirement {
   public int getNumber() {return number;} public void setNumber(int n) {number = n;}
   public int getActionset() {return actionset;} public void setActionset(int s) {actionset = s;}
   public int getType() {return type;} public void setType(int t) {type = t;}
-  public int getData() {return data;} public void setData(int d) {data = d;}
+  public String getData() {return data;} public void setData(String d) {data = d;}
   //@format
 }

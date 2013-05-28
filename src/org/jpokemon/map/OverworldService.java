@@ -3,6 +3,9 @@ package org.jpokemon.map;
 import org.jpokemon.activity.ActivityService;
 import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.battle.BattleActivity;
+import org.jpokemon.map.gps.Area;
+import org.jpokemon.map.gps.Border;
+import org.jpokemon.map.gps.Map;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.service.JPokemonService;
@@ -15,13 +18,13 @@ import org.jpokemon.trainer.WildTrainer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MapService extends JPokemonService implements ActivityService {
+public class OverworldService extends JPokemonService implements ActivityService {
   private static final String NPC_NUMBER_KEY = "number", NPC_OPTION_KEY = "npc_option";
 
-  private MapService() {
+  private OverworldService() {
   }
 
-  public static MapService getInstance() {
+  public static OverworldService getInstance() {
     return instance;
   }
 
@@ -58,12 +61,11 @@ public class MapService extends JPokemonService implements ActivityService {
     Player player = getPlayer(request);
     Border border = getBorder(request);
 
-    String reason = border.isOkay(player);
-    if (reason == null) {
+    if (border.performAction(player)) {
       player.area(border.getNext());
     }
     else {
-      throw new ServiceException(reason);
+      throw new ServiceException("You cannot go that way");
     }
   }
 
@@ -156,5 +158,5 @@ public class MapService extends JPokemonService implements ActivityService {
     return border;
   }
 
-  private static MapService instance = new MapService();
+  private static OverworldService instance = new OverworldService();
 }
