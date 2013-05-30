@@ -123,7 +123,7 @@ public class BorderEditor implements MapEditComponent {
 
     borderAction.setArea(borderSelector.getCurrentElement().getArea());
     borderAction.setNext(borderSelector.getCurrentElement().getNext());
-    borderAction.setType(0);
+    borderAction.setType("undefined");
     borderAction.setData("undefined");
 
     try {

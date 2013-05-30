@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.jpokemon.action.Action;
+import org.jpokemon.action.ActionType;
 
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.mapeditor.widget.selector.ActionTypeSelector;
@@ -25,7 +26,9 @@ public class ActionPanel extends JPanel {
     action = a;
 
     actionTypeSelector.reload();
-    actionTypeSelector.setSelectedIndex(action.getType());
+    if (!action.getType().toString().equals("undefined")) {
+      actionTypeSelector.setSelectedItem(ActionType.valueOf(action.getType()));
+    }
     actionTypeSelector.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onActionTypeSelect();
@@ -48,7 +51,7 @@ public class ActionPanel extends JPanel {
     break;
     case STORE:
       addStoreStuff();
-      break;
+    break;
     default:
       addDefaultStuff();
     break;
@@ -186,7 +189,7 @@ public class ActionPanel extends JPanel {
     });
     add(storeSelector);
   }
-  
+
   private void addDefaultStuff() {
     dataExplanationLabel = new JLabel("data: ");
     add(dataExplanationLabel);
@@ -202,7 +205,7 @@ public class ActionPanel extends JPanel {
   }
 
   private void onActionTypeSelect() {
-    action.commitTypeChange(actionTypeSelector.getSelectedIndex());
+    action.commitTypeChange(actionTypeSelector.getCurrentElement().toString());
 
     parent.getEditor();
   }

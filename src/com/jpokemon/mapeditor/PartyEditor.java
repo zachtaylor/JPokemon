@@ -142,6 +142,7 @@ public class PartyEditor implements MapEditComponent {
 
     RewardAction rewardAction = new RewardAction();
     rewardAction.setTrainerid(trainer.id());
+    rewardAction.setType("undefined");
     rewardAction.setData("undefined");
 
     try {

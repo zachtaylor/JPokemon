@@ -10,8 +10,8 @@ import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
 public class NPCAction extends AbstractAction {
-  private int number, actionset, type;
-  private String data;
+  private int number, actionset;
+  private String type, data;
 
   public static List<NPCAction> get(int number, int actionset) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
@@ -39,8 +39,8 @@ public class NPCAction extends AbstractAction {
   }
 
   @Override
-  public void commitTypeChange(int newType) {
-    int oldType = getType();
+  public void commitTypeChange(String newType) {
+    String oldType = getType();
     setType(newType);
 
     try {
@@ -53,7 +53,7 @@ public class NPCAction extends AbstractAction {
   //@preformat
   public int getNumber() {return number;} public void setNumber(int n) {number = n;}
   public int getActionset() {return actionset;} public void setActionset(int s) {actionset = s;}
-  public int getType() {return type;} public void setType(int t) {type = t;}
+  public String getType() {return type;} public void setType(String t) {type = t;}
   public String getData() {return data;} public void setData(String d) {data = d;}
   //@format
 }

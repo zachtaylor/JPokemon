@@ -10,8 +10,8 @@ import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
 public class BorderAction extends AbstractAction {
-  private int area, next, type;
-  private String data;
+  private int area, next;
+  private String type, data;
 
   public static List<BorderAction> get(int area, int next) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
@@ -39,8 +39,8 @@ public class BorderAction extends AbstractAction {
   }
 
   @Override
-  public void commitTypeChange(int newType) {
-    int oldType = getType();
+  public void commitTypeChange(String newType) {
+    String oldType = getType();
     setType(newType);
 
     try {
@@ -53,7 +53,7 @@ public class BorderAction extends AbstractAction {
   //@preformat
   public int getArea() {return area;} public void setArea(int a) {area = a;}
   public int getNext() {return next;} public void setNext(int n) {next = n;}
-  public int getType() {return type;} public void setType(int t) {type = t;}
+  public String getType() {return type;} public void setType(String t) {type = t;}
   public String getData() {return data;} public void setData(String d) {data = d;}
   //@format
 }

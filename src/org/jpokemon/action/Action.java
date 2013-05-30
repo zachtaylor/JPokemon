@@ -5,11 +5,11 @@ import org.jpokemon.action.performer.ActionPerformer;
 public interface Action {
   public ActionPerformer getPerformer();
 
-  public int getType();
+  public String getType();
 
-  public void setType(int t);
+  public void setType(String t);
 
-  public void commitTypeChange(int t);
+  public void commitTypeChange(String t);
 
   public String getData();
 

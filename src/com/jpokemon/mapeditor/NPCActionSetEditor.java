@@ -198,7 +198,7 @@ public class NPCActionSetEditor implements MapEditComponent {
 
     npcActionSet.setNumber(npcSelector.getCurrentElement().getNumber());
     npcActionSet.setActionset(npcActionSetSelector.getCurrentElement().getActionset());
-    npcActionSet.setType(0);
+    npcActionSet.setType("undefined");
     npcActionSet.setData("undefined");
 
     try {

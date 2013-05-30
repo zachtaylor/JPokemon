@@ -10,8 +10,7 @@ import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
 public class RewardAction extends AbstractAction {
-  private int type;
-  private String trainerid, data;
+  private String trainerid, type, data;
 
   public static List<RewardAction> get(String trainerID) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
@@ -43,8 +42,8 @@ public class RewardAction extends AbstractAction {
   }
 
   @Override
-  public void commitTypeChange(int newType) {
-    int oldType = getType();
+  public void commitTypeChange(String newType) {
+    String oldType = getType();
     setType(newType);
 
     try {
@@ -56,8 +55,7 @@ public class RewardAction extends AbstractAction {
 
   //@preformat
   public String getTrainerid() {return trainerid;} public void setTrainerid(String t) {trainerid = t;}
-  public int getType() {return type;} public void setType(int t) {type = t;}
+  public String getType() {return type;} public void setType(String t) {type = t;}
   public String getData() {return data;} public void setData(String d) {data = d;}
   //@format
-
 }
