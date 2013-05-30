@@ -1,11 +1,11 @@
-package org.jpokemon.activity;
+package org.jpokemon.manager;
 
 import org.jpokemon.AbstractJPokemonVisitor;
 import org.jpokemon.trainer.Player;
 import org.json.JSONObject;
 
-public abstract class ActivityServer extends AbstractJPokemonVisitor {
-  public ActivityServer(Player player) {
+public abstract class JPokemonServer extends AbstractJPokemonVisitor {
+  public JPokemonServer(Player player) {
     setData(new JSONObject());
 
     calling_player = player;

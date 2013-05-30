@@ -1,17 +1,16 @@
-package org.jpokemon.upgrade;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.ActivityService;
-import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.manager.JPokemonService;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;
-import org.jpokemon.service.JPokemonService;
-import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UpgradeService extends JPokemonService implements ActivityService {
+public class UpgradeService extends JPokemonService {
   private static final String POKEMON_INDEX_KEY = "pokemon_index";
 
   private UpgradeService() {
@@ -35,7 +34,7 @@ public class UpgradeService extends JPokemonService implements ActivityService {
     } catch (JSONException e) {
     }
 
-    ActivityTracker.clearActivity(player);
+    PlayerManager.clearActivity(player);
   }
 
   @Override

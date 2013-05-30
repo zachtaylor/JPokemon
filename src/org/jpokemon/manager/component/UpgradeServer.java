@@ -1,6 +1,6 @@
-package org.jpokemon.upgrade;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.ActivityServer;
+import org.jpokemon.manager.JPokemonServer;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
@@ -9,7 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UpgradeServer extends ActivityServer {
+public class UpgradeServer extends JPokemonServer {
   public UpgradeServer(Player player) {
     super(player);
 

@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
+import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
@@ -42,7 +42,7 @@ public class Battle implements Iterable<Slot> {
     PokemonTrainer trainer = slot.trainer();
 
     _slots.remove(trainer.id());
-    ActivityTracker.clearActivity(trainer);
+    PlayerManager.clearActivity(trainer);
 
     if (slot.party().awake() == 0) {
       if (slot.trainer() instanceof Player) {
@@ -148,7 +148,7 @@ public class Battle implements Iterable<Slot> {
       while (!_slots.isEmpty()) {
         String slotKey = (String) _slots.keySet().toArray()[0];
         Slot slot = _slots.remove(slotKey);
-        ActivityTracker.clearActivity(slot.trainer());
+        PlayerManager.clearActivity(slot.trainer());
       }
     }
   }

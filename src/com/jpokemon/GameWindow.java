@@ -7,9 +7,9 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-import org.jpokemon.service.ImageService;
-import org.jpokemon.service.PlayerService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
+import org.jpokemon.manager.component.ImageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,7 +59,7 @@ public class GameWindow extends JFrame implements KeyListener {
 
   public void refresh() {
     try {
-      JSONObject data = PlayerService.pull(_newDataRequest);
+      JSONObject data = PlayerManager.getDataRequest(_newDataRequest);
       _dialogs.showMessages(data.getJSONArray("messages"));
 
       if (data.getString("state").equals("battle")) {

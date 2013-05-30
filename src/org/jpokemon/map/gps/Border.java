@@ -6,7 +6,7 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.Action;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.action.Requirement;
-import org.jpokemon.service.LoadException;
+import org.jpokemon.manager.LoadException;
 import org.jpokemon.trainer.Player;
 
 import com.njkremer.Sqlite.DataConnectionException;

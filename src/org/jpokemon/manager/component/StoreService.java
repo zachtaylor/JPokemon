@@ -1,15 +1,16 @@
-package org.jpokemon.map.store;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.ActivityService;
-import org.jpokemon.activity.ActivityTracker;
-import org.jpokemon.service.JPokemonService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.manager.JPokemonService;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
+import org.jpokemon.map.store.Inventory;
+import org.jpokemon.map.store.Store;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class StoreService extends JPokemonService implements ActivityService {
+public class StoreService extends JPokemonService {
   private StoreService() {
   }
 
@@ -77,7 +78,7 @@ public class StoreService extends JPokemonService implements ActivityService {
         }
       }
 
-      ActivityTracker.clearActivity(player);
+      PlayerManager.clearActivity(player);
     } catch (JSONException e) {
     }
   }

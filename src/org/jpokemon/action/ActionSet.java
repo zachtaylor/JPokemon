@@ -3,7 +3,7 @@ package org.jpokemon.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.service.LoadException;
+import org.jpokemon.manager.LoadException;
 import org.jpokemon.trainer.Player;
 
 public class ActionSet {

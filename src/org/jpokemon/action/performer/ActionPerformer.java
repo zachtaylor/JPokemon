@@ -1,6 +1,6 @@
 package org.jpokemon.action.performer;
 
-import org.jpokemon.service.LoadException;
+import org.jpokemon.manager.LoadException;
 import org.jpokemon.trainer.Player;
 
 public interface ActionPerformer {

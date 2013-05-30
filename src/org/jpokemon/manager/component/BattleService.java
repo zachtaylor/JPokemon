@@ -1,13 +1,13 @@
-package org.jpokemon.battle;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.ActivityService;
-import org.jpokemon.service.JPokemonService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.battle.Battle;
+import org.jpokemon.manager.Activity;
+import org.jpokemon.manager.JPokemonService;
+import org.jpokemon.manager.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONObject;
 
-public class BattleService extends JPokemonService implements ActivityService {
+public class BattleService extends JPokemonService {
   @Override
   public void handleRequest(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);

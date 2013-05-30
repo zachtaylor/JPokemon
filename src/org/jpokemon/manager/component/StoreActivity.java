@@ -1,7 +1,8 @@
-package org.jpokemon.map.store;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.ActivityService;
+import org.jpokemon.manager.Activity;
+import org.jpokemon.manager.JPokemonService;
+import org.jpokemon.map.store.Store;
 import org.jpokemon.trainer.Player;
 
 public class StoreActivity implements Activity {
@@ -15,7 +16,7 @@ public class StoreActivity implements Activity {
   }
 
   @Override
-  public ActivityService getHandler() {
+  public JPokemonService getHandler() {
     return StoreService.getInstance();
   }
 

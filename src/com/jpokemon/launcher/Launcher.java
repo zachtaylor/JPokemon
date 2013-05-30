@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
-import org.jpokemon.service.ImageService;
+import org.jpokemon.manager.component.ImageService;
 
 public class Launcher extends JFrame {
   public Launcher() {

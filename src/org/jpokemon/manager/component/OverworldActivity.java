@@ -1,10 +1,9 @@
-package org.jpokemon.map;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.service.JPokemonService;
+import org.jpokemon.manager.Activity;
 import org.jpokemon.trainer.Player;
 
-public class OverworldActivity extends JPokemonService implements Activity {
+public class OverworldActivity implements Activity {
   private OverworldActivity() {
   }
 

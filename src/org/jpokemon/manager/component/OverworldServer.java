@@ -1,6 +1,6 @@
-package org.jpokemon.map;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.ActivityServer;
+import org.jpokemon.manager.JPokemonServer;
 import org.jpokemon.map.gps.Area;
 import org.jpokemon.map.gps.Border;
 import org.jpokemon.map.gps.Map;
@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OverworldServer extends ActivityServer {
+public class OverworldServer extends JPokemonServer {
   public OverworldServer(Player player) {
     super(player);
 

@@ -1,24 +1,21 @@
-package org.jpokemon.map;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.ActivityService;
-import org.jpokemon.activity.ActivityTracker;
-import org.jpokemon.battle.BattleActivity;
+import org.jpokemon.manager.JPokemonService;
+import org.jpokemon.manager.LoadException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
 import org.jpokemon.map.gps.Area;
 import org.jpokemon.map.gps.Border;
 import org.jpokemon.map.gps.Map;
 import org.jpokemon.map.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.service.JPokemonService;
-import org.jpokemon.service.LoadException;
-import org.jpokemon.service.ServiceException;
 import org.jpokemon.trainer.Player;
-import org.jpokemon.trainer.PlayerFactory;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.WildTrainer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OverworldService extends JPokemonService implements ActivityService {
+public class OverworldService extends JPokemonService {
   private static final String NPC_NUMBER_KEY = "number", NPC_OPTION_KEY = "npc_option";
 
   private OverworldService() {
@@ -85,7 +82,7 @@ public class OverworldService extends JPokemonService implements ActivityService
     trainer.add(pokemon);
 
     try {
-      ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+      PlayerManager.setActivity(player, new BattleActivity(player, trainer));
     } catch (LoadException e) {
       throw new ServiceException(e);
     }
@@ -94,7 +91,7 @@ public class OverworldService extends JPokemonService implements ActivityService
   private void handleSaveRequest(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
 
-    PlayerFactory.save(player);
+    PlayerManager.savePlayer(player);
   }
 
   private Area getArea(JSONObject request) throws ServiceException {

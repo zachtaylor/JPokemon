@@ -1,6 +1,6 @@
 package org.jpokemon.action.performer;
 
-import org.jpokemon.service.PlayerService;
+import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.trainer.Player;
 
 public class SpeechActionPerformer extends AbstractActionPerformer {
@@ -9,6 +9,6 @@ public class SpeechActionPerformer extends AbstractActionPerformer {
   }
 
   public void execute(Player player) {
-    PlayerService.addToMessageQueue(player, getData());
+    PlayerManager.addMessageToQueue(player, getData());
   }
 }

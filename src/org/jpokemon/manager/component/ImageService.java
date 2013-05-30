@@ -1,4 +1,4 @@
-package org.jpokemon.service;
+package org.jpokemon.manager.component;
 
 import javax.swing.ImageIcon;
 

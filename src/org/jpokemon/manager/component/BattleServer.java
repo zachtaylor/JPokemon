@@ -1,14 +1,15 @@
-package org.jpokemon.battle;
+package org.jpokemon.manager.component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.ActivityServer;
-import org.jpokemon.activity.ActivityTracker;
+import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
+import org.jpokemon.manager.Activity;
+import org.jpokemon.manager.JPokemonServer;
+import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
@@ -18,7 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BattleServer extends ActivityServer {
+public class BattleServer extends JPokemonServer {
   public BattleServer(Player player) {
     super(player);
 
@@ -46,7 +47,7 @@ public class BattleServer extends ActivityServer {
     super.visit(player);
 
     if (current_slot == null) {
-      Activity activity = ActivityTracker.getActivity(player);
+      Activity activity = PlayerManager.getActivity(player);
       visit_battle(((BattleActivity) activity).getBattle());
     }
   }

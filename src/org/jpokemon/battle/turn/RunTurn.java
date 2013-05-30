@@ -1,10 +1,9 @@
 package org.jpokemon.battle.turn;
 
-import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.battle.Battle;
-import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
-import org.jpokemon.service.PlayerService;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.component.BattleActivity;
 import org.jpokemon.trainer.Player;
 
 public class RunTurn extends Turn {
@@ -14,7 +13,7 @@ public class RunTurn extends Turn {
 
   @Override
   protected void doExecute() {
-    Battle battle = ((BattleActivity) ActivityTracker.getActivity(slot().trainer())).getBattle();
+    Battle battle = ((BattleActivity) PlayerManager.getActivity(slot().trainer())).getBattle();
     double chance = 100;
 
     for (Slot s : battle) {
@@ -26,7 +25,7 @@ public class RunTurn extends Turn {
 
     if ((chance / 250.0) > Math.random()) {
       addMessage("Got away successfully!");
-      PlayerService.addToMessageQueue((Player) slot().trainer(), "Got away safely!");
+      PlayerManager.addMessageToQueue((Player) slot().trainer(), "Got away safely!");
       battle.remove(slot());
     }
     else

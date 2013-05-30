@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.activity.ActivityTracker;
-import org.jpokemon.battle.BattleActivity;
-import org.jpokemon.service.LoadException;
+import org.jpokemon.manager.LoadException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.component.BattleActivity;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
 import org.zachtaylor.jnodalxml.XMLNode;
@@ -33,7 +33,7 @@ public class BattleActionPerformer extends AbstractActionPerformer {
     trainer.loadXML(trainerData);
 
     if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES) {
-      ActivityTracker.setActivity(player, new BattleActivity(player, trainer));
+      PlayerManager.setActivity(player, new BattleActivity(player, trainer));
     }
   }
 }

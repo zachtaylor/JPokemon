@@ -1,7 +1,8 @@
-package org.jpokemon.battle;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.service.LoadException;
+import org.jpokemon.battle.Battle;
+import org.jpokemon.manager.Activity;
+import org.jpokemon.manager.LoadException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 

@@ -1,9 +1,6 @@
-package org.jpokemon.service;
+package org.jpokemon.manager;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.trainer.Player;
-import org.jpokemon.trainer.PlayerFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +17,7 @@ public abstract class JPokemonService {
       throw new ServiceException("Player key not found");
     }
 
-    player = PlayerFactory.get(playerID);
+    player = PlayerManager.getPlayer(playerID);
 
     if (player == null)
       throw new ServiceException("PlayerID " + playerID + " not found");
@@ -31,7 +28,7 @@ public abstract class JPokemonService {
   protected static Activity getActivity(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
 
-    return ActivityTracker.getActivity(player);
+    return PlayerManager.getActivity(player);
   }
 
   protected static String getOption(JSONObject request) throws ServiceException {
@@ -45,4 +42,8 @@ public abstract class JPokemonService {
 
     return option;
   }
+
+  public abstract void handleRequest(JSONObject request) throws ServiceException;
+
+  public abstract void handleRequestOption(String option, JSONObject request) throws ServiceException;
 }

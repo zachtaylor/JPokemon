@@ -1,16 +1,18 @@
-package org.jpokemon.map.store;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.ActivityServer;
-import org.jpokemon.activity.ActivityTracker;
 import org.jpokemon.item.Item;
+import org.jpokemon.manager.Activity;
+import org.jpokemon.manager.JPokemonServer;
+import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.map.gps.Map;
+import org.jpokemon.map.store.Inventory;
+import org.jpokemon.map.store.Store;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class StoreServer extends ActivityServer {
+public class StoreServer extends JPokemonServer {
   public StoreServer(Player player) {
     super(player);
 
@@ -18,7 +20,7 @@ public class StoreServer extends ActivityServer {
   }
 
   public void visit(Player player) {
-    Activity activity = ActivityTracker.getActivity(player);
+    Activity activity = PlayerManager.getActivity(player);
 
     Store store = ((StoreActivity) activity).getStore();
 

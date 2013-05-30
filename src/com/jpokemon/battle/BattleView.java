@@ -15,9 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.jpokemon.service.ImageService;
-import org.jpokemon.service.PlayerService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
+import org.jpokemon.manager.component.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -280,7 +280,7 @@ public class BattleView extends JPokemonView {
 
   private void submitTurn(JSONObject request) {
     try {
-      PlayerService.activity(request);
+      PlayerManager.activityRequest(request);
       refresh();
     } catch (ServiceException e) {
       e.printStackTrace();

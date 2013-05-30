@@ -6,9 +6,9 @@ import java.util.List;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.manager.LoadException;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.service.LoadException;
 import org.jpokemon.trainer.Player;
 
 public class Reward {

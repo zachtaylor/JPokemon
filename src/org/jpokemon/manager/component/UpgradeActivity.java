@@ -1,6 +1,6 @@
-package org.jpokemon.upgrade;
+package org.jpokemon.manager.component;
 
-import org.jpokemon.activity.Activity;
+import org.jpokemon.manager.Activity;
 import org.jpokemon.trainer.Player;
 
 public class UpgradeActivity implements Activity {

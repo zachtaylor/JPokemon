@@ -5,14 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.exception.ConfigurationException;
 import org.zachtaylor.jnodalxml.XMLException;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class MoveBlock implements Iterable<Move> {
   public static final String XML_NODE_NAME = "moves";
 
-  public MoveBlock(int pokemonNumber) throws ConfigurationException {
+  public MoveBlock(int pokemonNumber) {
     _pokemon = pokemonNumber;
     _data = new Move[JPokemonConstants.KNOWN_MOVE_COUNT];
 
@@ -24,10 +23,8 @@ public class MoveBlock implements Iterable<Move> {
         add(map.getMove_number());
     } catch (IllegalStateException e) {
       e.printStackTrace();
-      throw new ConfigurationException("Excessive default moves: " + _pokemon);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
-      throw new ConfigurationException(e.getMessage());
     }
   }
 
