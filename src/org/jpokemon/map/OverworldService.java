@@ -61,12 +61,15 @@ public class OverworldService extends JPokemonService implements ActivityService
     Player player = getPlayer(request);
     Border border = getBorder(request);
 
-    if (border.performAction(player)) {
-      player.area(border.getNext());
+    try {
+      if (border.performAction(player)) {
+        player.area(border.getNext());
+      }
+    } catch (LoadException e) {
+      throw new ServiceException(e);
     }
-    else {
-      throw new ServiceException("You cannot go that way");
-    }
+
+    throw new ServiceException("You cannot go that way");
   }
 
   private void handleGrassRequest(JSONObject request) throws ServiceException {

@@ -17,6 +17,7 @@ import com.jpokemon.mapeditor.widget.selector.AreaSelector;
 import com.jpokemon.mapeditor.widget.selector.EventSelector;
 import com.jpokemon.mapeditor.widget.selector.ItemSelector;
 import com.jpokemon.mapeditor.widget.selector.PokemonInfoSelector;
+import com.jpokemon.mapeditor.widget.selector.StoreSelector;
 
 public class ActionPanel extends JPanel {
   public ActionPanel(MapEditComponent mec, Action a) {
@@ -45,6 +46,9 @@ public class ActionPanel extends JPanel {
     case POKEMON:
       addPokemonStuff();
     break;
+    case STORE:
+      addStoreStuff();
+      break;
     default:
       addDefaultStuff();
     break;
@@ -169,6 +173,20 @@ public class ActionPanel extends JPanel {
     add(invertSelection);
   }
 
+  private void addStoreStuff() {
+    storeSelector.reload();
+    try {
+      storeSelector.setSelectedIndex(Integer.parseInt(action.getData()) - 1);
+    } catch (NumberFormatException e) {
+    }
+    storeSelector.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        onStoreSelect();
+      }
+    });
+    add(storeSelector);
+  }
+  
   private void addDefaultStuff() {
     dataExplanationLabel = new JLabel("data: ");
     add(dataExplanationLabel);
@@ -225,6 +243,11 @@ public class ActionPanel extends JPanel {
     onTextFieldEnter();
   }
 
+  private void onStoreSelect() {
+    dataField.setText(storeSelector.getCurrentElement().getNumber() + "");
+    onTextFieldEnter();
+  }
+
   private void onTextFieldEnter() {
     action.commitDataChange(dataField.getText());
 
@@ -240,6 +263,7 @@ public class ActionPanel extends JPanel {
   private ItemSelector itemSelector = new ItemSelector();
   private AreaSelector areaSelector = new AreaSelector();
   private EventSelector eventSelector = new EventSelector();
+  private StoreSelector storeSelector = new StoreSelector();
   private PokemonInfoSelector pokemonSelector = new PokemonInfoSelector();
   private ActionTypeSelector actionTypeSelector = new ActionTypeSelector();
 

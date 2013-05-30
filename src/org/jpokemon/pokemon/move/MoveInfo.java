@@ -51,6 +51,10 @@ public class MoveInfo {
     return cache.get(number);
   }
 
+  public String toString() {
+    return "Move#" + getNumber() + " " + getName();
+  }
+
   //@preformat
   public int getNumber() {return number;} public void setNumber(int n) {number = n;}
   public String getName() {return name;} public void setName(String s) {name = s;}

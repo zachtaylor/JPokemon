@@ -26,6 +26,7 @@ public class NPCRequirement extends AbstractRequirement {
     return new ArrayList<NPCRequirement>();
   }
 
+  @Override
   public void commitDataChange(int newData) {
     int oldData = getData();
     setData(newData);
@@ -37,6 +38,7 @@ public class NPCRequirement extends AbstractRequirement {
     }
   }
 
+  @Override
   public void commitTypeChange(int newType) {
     int oldType = getType();
     setType(newType);

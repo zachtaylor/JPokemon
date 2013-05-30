@@ -23,6 +23,9 @@ public class Map {
       return;
 
     for (Border b : Border.get(number)) {
+      for (BorderAction borderAction : BorderAction.get(b.getArea(), b.getNext())) {
+        b.addAction(borderAction);
+      }
       for (BorderRequirement borderRequirement : BorderRequirement.get(b.getArea(), b.getNext())) {
         b.addRequirement(borderRequirement);
       }

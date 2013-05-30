@@ -27,13 +27,31 @@ public class RewardAction extends AbstractAction {
   }
 
   @Override
-  public void commitTypeChange(int t) {
-    // TODO Auto-generated method stub
+  public void commitDataChange(String newData) {
+    String oldData = getData();
+    setData(newData);
+
+    try {
+      if (oldData == null) {
+        oldData = "";
+      }
+
+      SqlStatement.update(this).where("trainerid").eq(trainerid).and("type").eq(getType()).and("data").eq(oldData).execute();
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
-  public void commitDataChange(String newData) {
-    // TODO Auto-generated method stub
+  public void commitTypeChange(int newType) {
+    int oldType = getType();
+    setType(newType);
+
+    try {
+      SqlStatement.update(this).where("trainerid").eq(trainerid).and("type").eq(oldType).and("data").eq(getData()).execute();
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
   }
 
   //@preformat

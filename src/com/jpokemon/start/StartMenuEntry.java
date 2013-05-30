@@ -29,10 +29,6 @@ public class StartMenuEntry extends JPokemonMenuEntry {
 
   public void action() {
     switch (_value) {
-    case POKEMON:
-      // TODO
-      parent().refresh();
-    break;
     case SAVE:
       try {
         PlayerService.activity(_savePlz);

@@ -26,6 +26,7 @@ public class NPCAction extends AbstractAction {
     return null;
   }
 
+  @Override
   public void commitDataChange(String newData) {
     String oldData = getData();
     setData(newData);
@@ -37,6 +38,7 @@ public class NPCAction extends AbstractAction {
     }
   }
 
+  @Override
   public void commitTypeChange(int newType) {
     int oldType = getType();
     setType(newType);
