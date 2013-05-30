@@ -1,4 +1,4 @@
-package org.jpokemon.map.gps;
+package org.jpokemon.overworld.map;
 
 import java.util.List;
 

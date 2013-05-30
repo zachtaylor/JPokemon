@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.jpokemon.manager.component.ImageService;
-import org.jpokemon.map.npc.NPCType;
+import org.jpokemon.overworld.npc.NPCType;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class NPCTypeEditor implements MapEditComponent {

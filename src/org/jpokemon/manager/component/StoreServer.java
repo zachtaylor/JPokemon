@@ -1,12 +1,12 @@
 package org.jpokemon.manager.component;
 
+import org.jpokemon.item.Inventory;
 import org.jpokemon.item.Item;
+import org.jpokemon.item.Store;
 import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.JPokemonServer;
 import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.map.gps.Map;
-import org.jpokemon.map.store.Inventory;
-import org.jpokemon.map.store.Store;
+import org.jpokemon.overworld.map.Map;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;

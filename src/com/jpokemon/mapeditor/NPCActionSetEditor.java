@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.npc.NPCAction;
-import org.jpokemon.map.npc.NPCActionSetMap;
-import org.jpokemon.map.npc.NPCRequirement;
+import org.jpokemon.overworld.npc.NPCAction;
+import org.jpokemon.overworld.npc.NPCActionSetMap;
+import org.jpokemon.overworld.npc.NPCRequirement;
 
 import com.jpokemon.mapeditor.widget.panel.ActionPanel;
 import com.jpokemon.mapeditor.widget.panel.RequirementPanel;

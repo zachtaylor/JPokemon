@@ -1,10 +1,10 @@
 package org.jpokemon.manager.component;
 
 import org.jpokemon.manager.JPokemonServer;
-import org.jpokemon.map.gps.Area;
-import org.jpokemon.map.gps.Border;
-import org.jpokemon.map.gps.Map;
-import org.jpokemon.map.npc.NPC;
+import org.jpokemon.overworld.map.Area;
+import org.jpokemon.overworld.map.Border;
+import org.jpokemon.overworld.map.Map;
+import org.jpokemon.overworld.npc.NPC;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;

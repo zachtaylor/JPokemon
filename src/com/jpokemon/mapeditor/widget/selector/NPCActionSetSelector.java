@@ -3,7 +3,7 @@ package com.jpokemon.mapeditor.widget.selector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.map.npc.NPCActionSetMap;
+import org.jpokemon.overworld.npc.NPCActionSetMap;
 
 public class NPCActionSetSelector extends JPokemonSelector<NPCActionSetMap> {
   public NPCActionSetSelector(int n) {

@@ -11,7 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import org.jpokemon.map.npc.NPCActionSetMap;
+import org.jpokemon.overworld.npc.NPCActionSetMap;
 
 import com.jpokemon.mapeditor.widget.selector.AreaSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;

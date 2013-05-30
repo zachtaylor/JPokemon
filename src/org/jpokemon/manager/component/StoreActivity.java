@@ -1,8 +1,8 @@
 package org.jpokemon.manager.component;
 
+import org.jpokemon.item.Store;
 import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.JPokemonService;
-import org.jpokemon.map.store.Store;
 import org.jpokemon.trainer.Player;
 
 public class StoreActivity implements Activity {

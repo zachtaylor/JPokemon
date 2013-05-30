@@ -1,12 +1,11 @@
-package org.jpokemon.map.gps;
+package org.jpokemon.overworld.map;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.map.WildPokemon;
-import org.jpokemon.map.npc.NPC;
+import org.jpokemon.overworld.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
 
 import com.njkremer.Sqlite.DataConnectionException;

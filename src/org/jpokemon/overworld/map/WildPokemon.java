@@ -1,4 +1,4 @@
-package org.jpokemon.map;
+package org.jpokemon.overworld.map;
 
 import java.util.List;
 import org.jpokemon.JPokemonConstants;

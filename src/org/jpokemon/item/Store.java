@@ -1,4 +1,4 @@
-package org.jpokemon.map.store;
+package org.jpokemon.item;
 
 import java.util.List;
 import java.util.Iterator;

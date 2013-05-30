@@ -1,10 +1,11 @@
 package org.jpokemon.manager.component;
 
+import org.jpokemon.item.Inventory;
+import org.jpokemon.item.Store;
+import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.JPokemonService;
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.ServiceException;
-import org.jpokemon.map.store.Inventory;
-import org.jpokemon.map.store.Store;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +22,8 @@ public class StoreService extends JPokemonService {
   @Override
   public void handleRequest(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
-    Store store = ((StoreActivity) getActivity(request)).getStore();
+    Activity activity = PlayerManager.getActivity(player);
+    Store store = ((StoreActivity) activity).getStore();
 
     try {
       JSONArray itemChanges = request.getJSONArray("items");

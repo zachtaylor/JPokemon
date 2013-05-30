@@ -10,8 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jpokemon.map.gps.BorderAction;
-import org.jpokemon.map.gps.BorderRequirement;
+import org.jpokemon.overworld.map.BorderAction;
+import org.jpokemon.overworld.map.BorderRequirement;
 
 import com.jpokemon.mapeditor.widget.panel.ActionPanel;
 import com.jpokemon.mapeditor.widget.panel.RequirementPanel;

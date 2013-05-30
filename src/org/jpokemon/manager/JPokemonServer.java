@@ -15,19 +15,19 @@ public abstract class JPokemonServer extends AbstractJPokemonVisitor {
     return calling_player;
   }
 
-  @Override
   public JSONObject data() {
-    return (JSONObject) super.data();
+    return (JSONObject) data;
   }
 
   public void setData(Object object) {
     if (object instanceof JSONObject) {
-      super.setData(object);
+      data = object;
     }
     else {
       throw new IllegalArgumentException("Data must be of type JSONObject");
     }
   }
 
+  private Object data;
   private Player calling_player;
 }

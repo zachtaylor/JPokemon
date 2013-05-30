@@ -1,6 +1,6 @@
 package com.jpokemon.mapeditor.widget.selector;
 
-import org.jpokemon.map.npc.NPCType;
+import org.jpokemon.overworld.npc.NPCType;
 
 public class NPCTypeSelector extends JPokemonSelector<NPCType> {
   @Override

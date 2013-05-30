@@ -4,8 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 
-import org.jpokemon.map.gps.Area;
-import org.jpokemon.map.gps.Border;
+import org.jpokemon.overworld.map.Area;
+import org.jpokemon.overworld.map.Border;
 
 public class BorderSelector extends JPokemonSelector<Border> {
   public BorderSelector(int a) {

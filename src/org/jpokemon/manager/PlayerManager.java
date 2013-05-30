@@ -20,17 +20,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XMLParser;
 
-public class PlayerManager  {
+public class PlayerManager {
   public static JSONObject getDataRequest(JSONObject request) throws ServiceException {
-    Player p = JPokemonService.getPlayer(request);
-    Activity a = JPokemonService.getActivity(request);
+    Player player = JPokemonService.getPlayer(request);
+    Activity activity = getActivity(player);
 
     JSONObject response = new JSONObject();
 
     try {
-      response.put("state", a.getName());
-      response.put("messages", loadMessagesForPlayer(p));
-      response.put(a.getName(), a.getServer(p).data());
+      response.put("state", activity.getName());
+      response.put("messages", loadMessagesForPlayer(player));
+      response.put(activity.getName(), activity.getServer(player).data());
 
     } catch (JSONException e) {
       e.printStackTrace();
@@ -40,12 +40,16 @@ public class PlayerManager  {
   }
 
   public static void activityRequest(JSONObject request) throws ServiceException {
-    Activity activity = JPokemonService.getActivity(request);
+    Player player = JPokemonService.getPlayer(request);
+    Activity activity = getActivity(player);
 
     JPokemonService service = activity.getHandler();
 
     if (request.has("option")) {
-      service.handleRequestOption(JPokemonService.getOption(request), request);
+      try {
+        service.handleRequestOption(request.getString(OPTION_KEY), request);
+      } catch (JSONException e) {
+      }
     }
     else {
       service.handleRequest(request);
@@ -158,4 +162,6 @@ public class PlayerManager  {
   private static Map<String, Player> players = new HashMap<String, Player>();
   private static Map<Player, Activity> activities = new HashMap<Player, Activity>();
   private static Map<Player, Queue<String>> messageQueues = new HashMap<Player, Queue<String>>();
+
+  private static final String OPTION_KEY = "option";
 }

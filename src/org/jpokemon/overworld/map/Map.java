@@ -1,10 +1,9 @@
-package org.jpokemon.map.gps;
+package org.jpokemon.overworld.map;
 
 import java.util.HashMap;
 
-import org.jpokemon.map.WildPokemon;
-import org.jpokemon.map.npc.NPC;
-import org.jpokemon.map.npc.NPCFactory;
+import org.jpokemon.overworld.npc.NPC;
+import org.jpokemon.overworld.npc.NPCFactory;
 
 public class Map {
   private static HashMap<Integer, Area> map = new HashMap<Integer, Area>();

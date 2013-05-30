@@ -1,4 +1,4 @@
-package org.jpokemon.map.npc;
+package org.jpokemon.overworld.npc;
 
 import java.util.Collection;
 import java.util.HashMap;
