@@ -17,7 +17,7 @@ public class Player implements PokemonTrainer {
     _area = 1;
 
     _bag = new Bag();
-    _record = new Record();
+    _record = new Record(this);
     _pokedex = new Pokedex();
     _storage = new PokemonStorageBlock();
   }

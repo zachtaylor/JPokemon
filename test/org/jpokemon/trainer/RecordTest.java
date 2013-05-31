@@ -6,7 +6,7 @@ public class RecordTest extends TestCase {
   private Record record;
 
   public void setUp() {
-    record = new Record();
+    record = new Record(null);
   }
 
   public void testGetPutEvent() {

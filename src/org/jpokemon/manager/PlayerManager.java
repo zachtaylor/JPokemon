@@ -129,7 +129,7 @@ public class PlayerManager {
 
   public static void addMessageToQueue(Player p, String message) {
     Queue<String> q = messageQueues.get(p);
-    q.add(p.record().replaceMacros(message, p.name()));
+    q.add(p.record().replaceMacros(message));
   }
 
   private static JSONArray loadMessagesForPlayer(Player p) {

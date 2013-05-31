@@ -12,6 +12,10 @@ import org.zachtaylor.jnodalxml.XMLNode;
 public class Record {
   public static final String XML_NODE_NAME = "record";
 
+  public Record(Player p) {
+    player = p;
+  }
+
   public void setRivalName(String rivalName) {
     _rivalName = rivalName;
   }
@@ -77,12 +81,12 @@ public class Record {
     return _trainers.contains(id);
   }
 
-  public String replaceMacros(String s, String playerName) {
+  public String replaceMacros(String s) {
     if (_rivalName != null)
       s = s.replaceAll("\\{rival\\}", _rivalName);
 
-    if (playerName != null)
-      s = s.replaceAll("\\{player\\}", playerName);
+    if (player != null)
+      s = s.replaceAll("\\{player\\}", player.name());
 
     if (_pokemon != null)
       s = s.replaceAll("\\{starter\\}", _pokemon);
@@ -139,6 +143,7 @@ public class Record {
     }
   }
 
+  private Player player;
   private String _rivalName, _pokemon;
   private List<Integer> _events = new ArrayList<Integer>();
   private List<String> _trainers = new ArrayList<String>();

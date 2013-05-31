@@ -62,11 +62,13 @@ public class OverworldService extends JPokemonService {
       if (border.performAction(player)) {
         player.area(border.getNext());
       }
+      else {
+        throw new ServiceException("You cannot go that way");
+      }
     } catch (LoadException e) {
       throw new ServiceException(e);
     }
 
-    throw new ServiceException("You cannot go that way");
   }
 
   private void handleGrassRequest(JSONObject request) throws ServiceException {
