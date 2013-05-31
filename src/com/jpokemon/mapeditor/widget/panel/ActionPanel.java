@@ -248,7 +248,11 @@ public class ActionPanel extends JPanel {
 
   private void onPokemonSelect() {
     String newData = pokemonSelector.getCurrentElement().getNumber() + " ";
-    newData += Math.abs(Integer.parseInt(extraTextField.getText())) + " ";
+    try {
+      newData += Math.abs(Integer.parseInt(extraTextField.getText())) + " ";
+    } catch (NumberFormatException e) {
+      newData += '0';
+    }
     newData += dataField.getText();
 
     if (invertSelection.isSelected()) {
