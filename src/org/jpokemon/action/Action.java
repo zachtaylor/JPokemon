@@ -1,25 +1,19 @@
 package org.jpokemon.action;
 
-import org.jpokemon.service.LoadException;
-import org.jpokemon.trainer.Player;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.jpokemon.action.performer.ActionPerformer;
 
-public abstract class Action {
-  public static final String XML_NODE_NAME = "action";
+public interface Action {
+  public ActionPerformer getPerformer();
 
-  public Action(String data) {
-    _data = data;
-  }
+  public String getType();
 
-  public abstract void execute(Player player) throws LoadException;
+  public void setType(String t);
 
-  public String data() {
-    return _data;
-  }
+  public void commitTypeChange(String t);
 
-  public XMLNode toXML() {
-    return ActionFactory.toXML(this);
-  }
+  public String getData();
 
-  private String _data;
+  public void setData(String d);
+
+  public void commitDataChange(String newData);
 }

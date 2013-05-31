@@ -3,7 +3,7 @@ package com.jpokemon.party;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
-import org.jpokemon.service.ImageService;
+import org.jpokemon.manager.component.ImageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 

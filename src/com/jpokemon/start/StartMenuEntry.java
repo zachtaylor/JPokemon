@@ -2,8 +2,8 @@ package com.jpokemon.start;
 
 import javax.swing.JLabel;
 
-import org.jpokemon.service.PlayerService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,13 +29,9 @@ public class StartMenuEntry extends JPokemonMenuEntry {
 
   public void action() {
     switch (_value) {
-    case POKEMON:
-      // TODO
-      parent().refresh();
-    break;
     case SAVE:
       try {
-        PlayerService.activity(_savePlz);
+        PlayerManager.activityRequest(_savePlz);
         parent().refresh();
       } catch (ServiceException e) {
         e.printStackTrace();

@@ -15,8 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jpokemon.service.PlayerService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,7 +138,7 @@ public class StoreView extends JPokemonView {
       request.put("id", parent().playerID());
       request.put("items", items);
 
-      PlayerService.activity(request);
+      PlayerManager.activityRequest(request);
     } catch (JSONException e) {
     } catch (ServiceException e) {
       e.printStackTrace();

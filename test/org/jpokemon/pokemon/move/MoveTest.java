@@ -5,7 +5,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.exception.ConfigurationException;
 import org.jpokemon.pokemon.Type;
 import org.junit.Test;
 
@@ -20,15 +19,6 @@ public class MoveTest extends TestCase {
     number = 1 + (int) (Math.random() * moveRange);
     move = new Move(number);
     answers = MoveInfo.get(number);
-  }
-
-  public void testMoveRange() {
-    try {
-      move = new Move(0);
-      fail("Move out of range should throw IllegalArgumentException");
-    } catch (Exception e) {
-      assertTrue(e instanceof ConfigurationException);
-    }
   }
 
   @Test

@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.store.Inventory;
+import org.jpokemon.item.Inventory;
 
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.mapeditor.widget.selector.ItemSelector;

@@ -16,9 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.jpokemon.service.ImageService;
-import org.jpokemon.service.PlayerService;
-import org.jpokemon.service.ServiceException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
+import org.jpokemon.manager.component.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,7 +130,7 @@ public class OverworldView extends JPokemonView {
       request.put("option", "npc");
       request.put("npc_option", option);
 
-      PlayerService.activity(request);
+      PlayerManager.activityRequest(request);
       refresh();
 
     } catch (JSONException e) {
@@ -157,7 +157,7 @@ public class OverworldView extends JPokemonView {
       request.put("border", border);
       request.put("option", "border");
 
-      PlayerService.activity(request);
+      PlayerManager.activityRequest(request);
       refresh();
     } catch (JSONException e) {
       e.printStackTrace();
@@ -173,7 +173,7 @@ public class OverworldView extends JPokemonView {
       request.put("id", parent().playerID());
       request.put("option", "grass");
 
-      PlayerService.activity(request);
+      PlayerManager.activityRequest(request);
     } catch (JSONException e) {
     } catch (ServiceException e) {
       e.printStackTrace();

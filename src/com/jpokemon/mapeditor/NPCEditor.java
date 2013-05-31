@@ -12,8 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.map.npc.NPC;
-import org.jpokemon.service.ImageService;
+import org.jpokemon.manager.component.ImageService;
+import org.jpokemon.overworld.npc.NPC;
 
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;

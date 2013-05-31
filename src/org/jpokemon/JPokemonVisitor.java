@@ -12,8 +12,6 @@ import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Record;
 
 public interface JPokemonVisitor {
-  public Object data();
-
   public void visit(Player player);
 
   public void visit(Record record);

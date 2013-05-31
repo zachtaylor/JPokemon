@@ -1,6 +1,6 @@
 package com.jpokemon.mapeditor.widget.selector;
 
-import org.jpokemon.map.store.Store;
+import org.jpokemon.item.Store;
 
 public class StoreSelector extends JPokemonSelector<Store> {
   @Override

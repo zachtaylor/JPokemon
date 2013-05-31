@@ -192,6 +192,10 @@ public class Pokemon {
     return _moves.count();
   }
 
+  public void removeAllMoves() {
+    _moves.removeAll();
+  }
+
   /**
    * Takes a specified amount of damage. If damage is greater than available
    * health, the Pokemon is knocked out.

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jpokemon.JPokemonConstants;
-import org.jpokemon.exception.ConfigurationException;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
@@ -29,18 +30,14 @@ public class MoveInfo {
   public static MoveInfo get(int number) {
     DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
 
-    if (number < 1)
-      throw new ConfigurationException(number + " is outside move range.");
-
     if (cache.get(number) == null) {
       try {
-        List<MoveInfo> moves = SqlStatement.select(MoveInfo.class)
-            .where("number").eq(number).getList();
-//        List<MoveEffect> effects = SqlStatement.select(MoveEffect.class)
-//            .where("move_number").eq(number).getList();
+        List<MoveInfo> moves = SqlStatement.select(MoveInfo.class).where("number").eq(number).getList();
+        // List<MoveEffect> effects = SqlStatement.select(MoveEffect.class)
+        // .where("move_number").eq(number).getList();
 
         if (!moves.isEmpty()) {
-//          moves.get(0).setEffects(effects);
+          // moves.get(0).setEffects(effects);
           cache.put(number, moves.get(0));
         }
       } catch (DataConnectionException e) {
@@ -49,6 +46,10 @@ public class MoveInfo {
     }
 
     return cache.get(number);
+  }
+
+  public String toString() {
+    return "Move#" + getNumber() + " " + getName();
   }
 
   //@preformat

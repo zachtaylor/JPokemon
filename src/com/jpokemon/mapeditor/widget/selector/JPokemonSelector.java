@@ -5,10 +5,11 @@ import java.awt.Component;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 
-@SuppressWarnings("unchecked")
-public abstract class JPokemonSelector<E> extends JComboBox<E> {
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public abstract class JPokemonSelector<E> extends JComboBox {
   public JPokemonSelector() {
     setModel(model);
     setRenderer(new JPokemonCellRenderer());
@@ -38,22 +39,35 @@ public abstract class JPokemonSelector<E> extends JComboBox<E> {
     model.addElement(element);
   }
 
+  protected void renderElement(Component c, E element) {
+    ((JLabel) c).setText(element.toString());
+  }
+
   private class JPokemonCellRenderer extends DefaultListCellRenderer {
     @Override
-    @SuppressWarnings("rawtypes")
-    public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected,
+        boolean cellHasFocus) {
+      Component c = super.getListCellRendererComponent(list, o, index, isSelected, cellHasFocus);
+
+      E element;
       if (index >= 0) {
-        E element = model.getElementAt(index);
-        setText(element.toString());
+        element = (E) model.getElementAt(index);
+      }
+      else {
+        element = (E) model.getSelectedItem();
       }
 
-      return super.getListCellRendererComponent(list, o, index, isSelected, cellHasFocus);
+      if (element != null) {
+        renderElement(c, element);
+      }
+
+      return c;
     }
 
     private static final long serialVersionUID = 1L;
   }
 
-  private DefaultComboBoxModel<E> model = new DefaultComboBoxModel<E>();
+  private DefaultComboBoxModel model = new DefaultComboBoxModel();
 
   private static final long serialVersionUID = 1L;
 }

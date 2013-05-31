@@ -2,11 +2,11 @@ package org.jpokemon.trainer;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
+import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
-import org.jpokemon.service.PlayerService;
 import org.zachtaylor.jnodalxml.XMLNode;
 
 public class Player implements PokemonTrainer {
@@ -96,7 +96,7 @@ public class Player implements PokemonTrainer {
 
   public void notify(String... messages) {
     for (String message : messages) {
-      PlayerService.addToMessageQueue(this, message);
+      PlayerManager.addMessageToQueue(this, message);
     }
   }
 
