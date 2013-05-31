@@ -99,6 +99,7 @@ public class BorderEditor implements MapEditComponent {
       }
     }
 
+    editorPanel.validate();
     return editorPanel;
   }
 

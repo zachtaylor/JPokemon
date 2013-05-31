@@ -98,7 +98,13 @@ public class RequirementPanel extends JPanel {
   }
 
   private void onPokedexSelect() {
-    String newData = Math.abs(Integer.parseInt(dataField.getText())) + "";
+    String newData;
+
+    try {
+      newData = Math.abs(Integer.parseInt(dataField.getText())) + "";
+    } catch (NumberFormatException e) {
+      return;
+    }
 
     if (invertSelection.isSelected()) {
       newData = "-" + newData;

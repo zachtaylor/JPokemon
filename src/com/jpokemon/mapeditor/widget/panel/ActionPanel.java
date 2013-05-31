@@ -52,6 +52,8 @@ public class ActionPanel extends JPanel {
     case STORE:
       addStoreStuff();
     break;
+    case UPGRADE:
+    break;
     default:
       addDefaultStuff();
     break;
@@ -77,6 +79,7 @@ public class ActionPanel extends JPanel {
     try {
       dataField.setText(Math.abs(Integer.parseInt(pieces[1])) + "");
     } catch (NumberFormatException e) {
+    } catch (ArrayIndexOutOfBoundsException e) {
     }
     dataField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
@@ -89,6 +92,7 @@ public class ActionPanel extends JPanel {
     try {
       invertSelection.setSelected(Integer.parseInt(pieces[1]) < 0);
     } catch (NumberFormatException e) {
+    } catch (ArrayIndexOutOfBoundsException e) {
     }
     invertSelection.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
@@ -144,6 +148,7 @@ public class ActionPanel extends JPanel {
 
     extraTextField = new JTextField();
     extraTextField.setPreferredSize(new Dimension(40, 20));
+    extraTextField.addActionListener(pokemonSelectCaller);
     if (pieces.length > 1) {
       extraTextField.setText(pieces[1]);
     }
@@ -152,6 +157,7 @@ public class ActionPanel extends JPanel {
     }
 
     dataField.setPreferredSize(new Dimension(100, 20));
+    dataField.addActionListener(pokemonSelectCaller);
     if (pieces.length > 1) {
       dataField.setText(action.getData().replaceAll(pieces[0], "").replace(pieces[1], "").trim());
     }
@@ -161,16 +167,19 @@ public class ActionPanel extends JPanel {
 
     try {
       if (Integer.parseInt(pieces[0]) > 0) {
-        extraTextField.addActionListener(pokemonSelectCaller);
+        add(new JLabel("Level"));
         add(extraTextField);
-        dataField.addActionListener(pokemonSelectCaller);
+        add(new JLabel("Params"));
         add(dataField);
       }
       else {
         invertSelection.setSelected(true);
       }
     } catch (NumberFormatException e) {
-      e.printStackTrace();
+      add(new JLabel("Level"));
+      add(extraTextField);
+      add(new JLabel("Params"));
+      add(dataField);
     }
 
     add(invertSelection);
@@ -217,7 +226,11 @@ public class ActionPanel extends JPanel {
       newData += "-";
     }
 
-    newData += Math.abs(Integer.parseInt(dataField.getText()));
+    try {
+      newData += Math.abs(Integer.parseInt(dataField.getText()));
+    } catch (NumberFormatException e) {
+      newData += '0';
+    }
 
     dataField.setText(newData);
     onTextFieldEnter();
