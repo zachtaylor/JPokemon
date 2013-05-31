@@ -33,7 +33,6 @@ public abstract class AbstractAction implements Action {
       return new StoreActionPerformer(getData());
     case HEAL:
       return new HealActionPerformer();
-      break;
     }
 
     return null;
