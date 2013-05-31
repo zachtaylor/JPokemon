@@ -53,6 +53,7 @@ public class ActionPanel extends JPanel {
       addStoreStuff();
     break;
     case UPGRADE:
+    case HEAL:
     break;
     default:
       addDefaultStuff();
