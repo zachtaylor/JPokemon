@@ -4,14 +4,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Message {
-  public Message(String t, String m, MessageLevel l) {
-    type = t;
+  public Message(String s, String m, MessageLevel l) {
+    source = s;
     message = m;
     level = l;
   }
 
   public String getType() {
-    return type;
+    return source;
   }
 
   public MessageLevel getLevel() {
@@ -22,7 +22,7 @@ public class Message {
     JSONObject data = new JSONObject();
 
     try {
-      data.put("type", type);
+      data.put("type", source);
       data.put("message", message);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -32,5 +32,5 @@ public class Message {
   }
 
   private MessageLevel level;
-  private String type, message;
+  private String source, message;
 }

@@ -7,6 +7,9 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.manager.LoadException;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.message.Message;
+import org.jpokemon.manager.message.MessageLevel;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
@@ -14,7 +17,7 @@ import org.jpokemon.trainer.Player;
 public class Reward {
   public Reward(Slot s) {
     _pokemon = s.leader();
-    _faintMessage = _pokemon.name() + " fainted!";
+    _faintMessage = new Message("BATTLE", _pokemon.name() + " fainted!", MessageLevel.MESSAGE);
 
     double xp = s.trainer().xpFactor();
     xp *= _pokemon.xpYield();
@@ -28,7 +31,7 @@ public class Reward {
     }
 
     if (s.party().awake() == 0) {
-      _defeatMessage = " defeated " + s.trainer().name();
+      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().name(), MessageLevel.MESSAGE);
 
       for (RewardAction rewardAction : RewardAction.get(s.trainer().id())) {
         _actions.addAction(rewardAction);
@@ -61,12 +64,14 @@ public class Reward {
   }
 
   public void apply(Slot s) {
-    s.trainer().notify(_faintMessage);
-
     applyXP(s);
 
-    if (_defeatMessage != null && s.trainer() instanceof Player) {
-      applyDefeat(s);
+    if (s.trainer() instanceof Player) {
+      PlayerManager.addMessageToQueue((Player) s.trainer(), _faintMessage);
+
+      if (_defeatMessage != null) {
+        applyDefeat((Player) s.trainer());
+      }
     }
   }
 
@@ -75,12 +80,14 @@ public class Reward {
 
     int xpEach = Math.max(xp() / hitList.size(), 1);
 
-    /* TODO s is the number of Pokemon that participated in the battle and have
+    /*
+     * TODO s is the number of Pokemon that participated in the battle and have
      * not fainted. If any Pokemon in the party is holding an Exp. Share, s is
      * equal to 2, and for the rest of the Pokemon, s is equal to twice the
      * number of Pokemon that participated instead. If more than one Pokemon is
      * holding an Exp. Share, s is equal to twice the number of Pokemon holding
-     * the Exp. Share for each Pokemon holding one. */
+     * the Exp. Share for each Pokemon holding one.
+     */
 
     for (Pokemon earner : hitList) {
       if (earner.hasOriginalTrainer())
@@ -89,22 +96,28 @@ public class Reward {
         earner.xp((int) (earner.xp() + xpEach * JPokemonConstants.NOT_ORIGINAL_TRAINER_EXPERIENCE_MODIFIER));
 
       earner.addEV(effortValues());
-      s.trainer().notify(earner.name() + " received " + xpEach + " experience!");
+
+      if (s.trainer() instanceof Player) {
+        Message xpMessage = new Message("BATTLE", earner.name() + " received " + xpEach + " experience!", MessageLevel.MESSAGE);
+        PlayerManager.addMessageToQueue((Player) s.trainer(), xpMessage);
+      }
+
+      s.trainer().notify();
     }
   }
 
-  private void applyDefeat(Slot s) {
-    s.trainer().notify(s.trainer().name() + _defeatMessage);
+  private void applyDefeat(Player player) {
+    PlayerManager.addMessageToQueue(player, _defeatMessage);
 
     try {
-      _actions.execute((Player) s.trainer());
+      _actions.execute(player);
     } catch (LoadException e) {
     }
   }
 
   private int _xp;
   private Pokemon _pokemon;
-  private String _faintMessage, _defeatMessage;
+  private Message _faintMessage, _defeatMessage;
   private ActionSet _actions = new ActionSet();
   private List<EffortValue> _evs = new ArrayList<EffortValue>();
 }

@@ -15,6 +15,4 @@ public interface PokemonTrainer {
   public PokemonStorageUnit party();
 
   public boolean add(Pokemon p);
-
-  public void notify(String... message);
 }
