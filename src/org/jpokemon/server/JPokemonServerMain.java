@@ -24,7 +24,8 @@ public class JPokemonServerMain {
         root.setContextPath("/");
 //        root.addFilter(RequestVerifier.class, "/*", EnumSet.allOf(DispatcherType.class));
 //        root.addServlet(new ServletHolder(new ResourceServlet()), "/*");
-        root.addServlet(new ServletHolder(new PlayerServlet()),  "/player/*");
+        root.addServlet(new ServletHolder(new PlayerServlet()),  PlayerServlet.URL_PATH);
+        root.addServlet(new ServletHolder(new LoginServlet()), LoginServlet.URL_PATH);
 
         // Instantiate the server on the specified port
         logger.info("Server starting on port " + JPokemonConstants.SERVER_PORT);
