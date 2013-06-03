@@ -18,7 +18,7 @@ public class BattleActionPerformer extends AbstractActionPerformer {
   }
 
   public void execute(Player player) throws LoadException {
-    String fileName = player.record().replaceMacros(getData(), player.name());
+    String fileName = player.record().replaceMacros(getData());
     String filePath = JPokemonConstants.TRAINER_PATH + fileName + ".jpkmn";
 
     XMLNode trainerData;

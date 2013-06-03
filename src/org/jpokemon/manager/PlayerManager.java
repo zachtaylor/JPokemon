@@ -13,6 +13,7 @@ import java.util.Queue;
 
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.manager.component.OverworldActivity;
+import org.jpokemon.manager.message.Message;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONArray;
@@ -79,7 +80,7 @@ public class PlayerManager {
     } catch (FileNotFoundException e) {
     }
 
-    messageQueues.put(player, new LinkedList<String>());
+    messageQueues.put(player, new LinkedList<Message>());
     setActivity(player, OverworldActivity.getInstance());
     return player.id();
   }
@@ -88,7 +89,7 @@ public class PlayerManager {
     Player player = newPlayer(name = getUniquePlayerName(name));
     player.name(name);
     player.record().setRivalName(rivalName);
-    messageQueues.put(player, new LinkedList<String>());
+    messageQueues.put(player, new LinkedList<Message>());
     setActivity(player, OverworldActivity.getInstance());
     return player.id();
   }
@@ -127,16 +128,17 @@ public class PlayerManager {
     }
   }
 
-  public static void addMessageToQueue(Player p, String message) {
-    Queue<String> q = messageQueues.get(p);
-    q.add(p.record().replaceMacros(message, p.name()));
+  public static void addMessageToQueue(Player p, Message message) {
+    Queue<Message> q = messageQueues.get(p);
+    q.add(message);
   }
 
   private static JSONArray loadMessagesForPlayer(Player p) {
     JSONArray array = new JSONArray();
 
-    while (!messageQueues.get(p).isEmpty())
-      array.put(messageQueues.get(p).remove());
+    while (!messageQueues.get(p).isEmpty()) {
+      array.put(messageQueues.get(p).remove().toJSON());
+    }
 
     return array;
   }
@@ -161,7 +163,7 @@ public class PlayerManager {
 
   private static Map<String, Player> players = new HashMap<String, Player>();
   private static Map<Player, Activity> activities = new HashMap<Player, Activity>();
-  private static Map<Player, Queue<String>> messageQueues = new HashMap<Player, Queue<String>>();
+  private static Map<Player, Queue<Message>> messageQueues = new HashMap<Player, Queue<Message>>();
 
   private static final String OPTION_KEY = "option";
 }

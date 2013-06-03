@@ -2,7 +2,6 @@ package org.jpokemon.trainer;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
-import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
@@ -17,7 +16,7 @@ public class Player implements PokemonTrainer {
     _area = 1;
 
     _bag = new Bag();
-    _record = new Record();
+    _record = new Record(this);
     _pokedex = new Pokedex();
     _storage = new PokemonStorageBlock();
   }
@@ -92,12 +91,6 @@ public class Player implements PokemonTrainer {
     }
 
     return false;
-  }
-
-  public void notify(String... messages) {
-    for (String message : messages) {
-      PlayerManager.addMessageToQueue(this, message);
-    }
   }
 
   public Pokedex pokedex() {

@@ -4,6 +4,8 @@ import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.component.BattleActivity;
+import org.jpokemon.manager.message.Message;
+import org.jpokemon.manager.message.MessageLevel;
 import org.jpokemon.trainer.Player;
 
 public class RunTurn extends Turn {
@@ -24,8 +26,8 @@ public class RunTurn extends Turn {
     }
 
     if ((chance / 250.0) > Math.random()) {
-      addMessage("Got away successfully!");
-      PlayerManager.addMessageToQueue((Player) slot().trainer(), "Got away safely!");
+      Message message = new Message("SPEECH", "Got away safely!", MessageLevel.MESSAGE);
+      PlayerManager.addMessageToQueue((Player) slot().trainer(), message);
       battle.remove(slot());
     }
     else

@@ -1,6 +1,8 @@
 package org.jpokemon.action.performer;
 
 import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.message.Message;
+import org.jpokemon.manager.message.MessageLevel;
 import org.jpokemon.trainer.Player;
 
 public class SpeechActionPerformer extends AbstractActionPerformer {
@@ -9,6 +11,7 @@ public class SpeechActionPerformer extends AbstractActionPerformer {
   }
 
   public void execute(Player player) {
-    PlayerManager.addMessageToQueue(player, getData());
+    Message message = new Message("SPEECH", getData(), MessageLevel.MESSAGE);
+    PlayerManager.addMessageToQueue(player, message);
   }
 }

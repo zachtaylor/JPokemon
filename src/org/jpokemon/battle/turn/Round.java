@@ -8,6 +8,10 @@ import java.util.Queue;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.Reward;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.message.Message;
+import org.jpokemon.manager.message.MessageLevel;
+import org.jpokemon.trainer.Player;
 
 public class Round {
   public Round(Battle b) {
@@ -98,9 +102,15 @@ public class Round {
     }
   }
 
-  private void notifyAllTrainers(String[] message) {
-    for (Slot s : _battle)
-      s.trainer().notify(message);
+  private void notifyAllTrainers(String[] things) {
+    for (Slot s : _battle) {
+      for (String thing : things) {
+        if (s.trainer() instanceof Player) {
+          Message message = new Message("BATTLE", thing, MessageLevel.MESSAGE);
+          PlayerManager.addMessageToQueue((Player) s.trainer(), message);
+        }
+      }
+    }
   }
 
   private void rewardFrom(Slot slot) {

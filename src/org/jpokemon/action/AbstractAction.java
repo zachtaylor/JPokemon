@@ -3,6 +3,7 @@ package org.jpokemon.action;
 import org.jpokemon.action.performer.ActionPerformer;
 import org.jpokemon.action.performer.BattleActionPerformer;
 import org.jpokemon.action.performer.EventActionPerformer;
+import org.jpokemon.action.performer.HealActionPerformer;
 import org.jpokemon.action.performer.ItemActionPerformer;
 import org.jpokemon.action.performer.PokemonActionPerformer;
 import org.jpokemon.action.performer.SpeechActionPerformer;
@@ -30,6 +31,8 @@ public abstract class AbstractAction implements Action {
       return new UpgradeActionPerformer();
     case STORE:
       return new StoreActionPerformer(getData());
+    case HEAL:
+      return new HealActionPerformer();
     }
 
     return null;

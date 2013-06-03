@@ -38,9 +38,6 @@ public class Trainer implements PokemonTrainer {
     return party().add(p);
   }
 
-  public void notify(String... message) {
-  }
-
   public XMLNode toXML() {
     XMLNode node = new XMLNode(XML_NODE_NAME);
 
