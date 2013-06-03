@@ -1,14 +1,16 @@
 package org.jpokemon.server;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
+import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.ServiceException;
 import org.jpokemon.pokemon.PokemonInfo;
-import org.jpokemon.service.PlayerService;
-import org.jpokemon.service.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +28,7 @@ public class PlayerServlet extends HttpServlet {
 
         if (zachsId == null) {
             try {
-                zachsId = PlayerService.load("Zach");
+                zachsId = PlayerManager.loadPlayer("Zach");
             }
             catch (ServiceException e) {
                 // TODO Auto-generated catch block
@@ -38,7 +40,7 @@ public class PlayerServlet extends HttpServlet {
 
         JSONObject resp = null;
         try {
-            resp = PlayerService.pull(new JSONObject("{id:\"" + zachsId + "\"}"));
+            resp = PlayerManager.getDataRequest(new JSONObject("{id:\"" + zachsId + "\"}"));
         }
         catch (ServiceException e) {
             // TODO Auto-generated catch block
