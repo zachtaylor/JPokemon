@@ -6,12 +6,23 @@ import java.util.Iterator;
 import org.jpokemon.pokemon.Pokemon;
 import org.zachtaylor.jnodalxml.XmlException;
 import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.myna.Myna;
 
 /**
  * A unit of storage for Pokemon.
  */
 public class PokemonStorageUnit implements Iterable<Pokemon> {
   public static final String XML_NODE_NAME = "pokemonbox";
+
+  public static int partysize = 6;
+
+  static {
+    Myna.configure(PokemonStorageUnit.class, "org.jpokemon.player");
+  }
+
+  public PokemonStorageUnit() {
+    this(partysize);
+  }
 
   public PokemonStorageUnit(int size) {
     _size = size;

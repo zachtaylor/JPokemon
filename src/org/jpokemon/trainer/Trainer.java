@@ -1,6 +1,5 @@
 package org.jpokemon.trainer;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.zachtaylor.jnodalxml.XmlNode;
@@ -70,5 +69,5 @@ public class Trainer implements PokemonTrainer {
 
   private boolean _isGym = false;
   private String _name = null, _id = null;
-  private PokemonStorageUnit _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
+  private PokemonStorageUnit _party = new PokemonStorageUnit();
 }

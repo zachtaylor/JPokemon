@@ -21,7 +21,16 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
 
     visit(player.bag());
 
-    visit(player.getAllPokemon());
+    for (int i = 0; i < PokemonStorageBlock.boxcount; i++) {
+      lastUnit = player.box(i);
+
+      if (i < 1) {
+        visit_party(lastUnit);
+      }
+      else {
+        visit(lastUnit);
+      }
+    }
   }
 
   @Override
@@ -45,22 +54,6 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
 
   protected Item last_visited_item() {
     return lastItem;
-  }
-
-  @Override
-  public void visit(PokemonStorageBlock block) {
-    PokemonStorageUnit unit;
-
-    for (int i = 0; i < JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++) {
-      unit = lastUnit = block.get(i);
-
-      if (i < 1) {
-        visit_party(unit);
-      }
-      else {
-        visit(unit);
-      }
-    }
   }
 
   @Override

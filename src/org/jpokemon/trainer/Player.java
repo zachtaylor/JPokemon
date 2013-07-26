@@ -66,7 +66,11 @@ public class Player implements PokemonTrainer {
   }
 
   public PokemonStorageUnit party() {
-    return _storage.get(0);
+    return box(0);
+  }
+
+  public PokemonStorageUnit box(int box) {
+    return _storage.get(box);
   }
 
   public PokemonStorageBlock getAllPokemon() {

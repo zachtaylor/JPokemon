@@ -2,9 +2,9 @@ package org.jpokemon.trainer;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokedex.PokedexStatus;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
 public class PlayerTest extends TestCase {
   static int range = 25;
@@ -48,7 +48,7 @@ public class PlayerTest extends TestCase {
     while (player.party().add(new Pokemon(i)))
       i++;
 
-    assertEquals(JPokemonConstants.TRAINER_PARTY_SIZE, player.party().size());
+    assertEquals(PokemonStorageUnit.partysize, player.party().size());
     assertFalse(player.party().add(new Pokemon(i)));
     assertTrue(player.add(new Pokemon(i)));
   }

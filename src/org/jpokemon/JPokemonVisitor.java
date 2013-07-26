@@ -6,7 +6,6 @@ import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.stat.Stat;
-import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Record;
@@ -21,8 +20,6 @@ public interface JPokemonVisitor {
   public void visit(Bag bag);
 
   public void visit(Item item);
-
-  public void visit(PokemonStorageBlock block);
 
   public void visit_party(PokemonStorageUnit unit);
 

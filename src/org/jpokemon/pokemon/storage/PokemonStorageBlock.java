@@ -2,9 +2,9 @@ package org.jpokemon.pokemon.storage;
 
 import java.util.Iterator;
 
-import org.jpokemon.JPokemonConstants;
 import org.zachtaylor.jnodalxml.XmlException;
 import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.myna.Myna;
 
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
@@ -15,16 +15,24 @@ import org.zachtaylor.jnodalxml.XmlNode;
 public class PokemonStorageBlock implements Iterable<PokemonStorageUnit> {
   public static final String XML_NODE_NAME = "pokemonstorage";
 
-  public PokemonStorageBlock() {
-    _data = new PokemonStorageUnit[JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT + 1];
+  public static int boxsize = 20;
 
-    _data[0] = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
-    for (int i = 1; i <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT; i++)
-      _data[i] = new PokemonStorageUnit(JPokemonConstants.PLAYER_STORAGE_UNIT_SIZE);
+  public static int boxcount = 8;
+  
+  static {
+    Myna.configure(PokemonStorageBlock.class, "org.jpokemon.player");
+  }
+
+  public PokemonStorageBlock() {
+    _data = new PokemonStorageUnit[boxcount + 1];
+
+    _data[0] = new PokemonStorageUnit();
+    for (int i = 1; i <= boxcount; i++)
+      _data[i] = new PokemonStorageUnit(boxsize);
   }
 
   public PokemonStorageUnit get(int box) {
-    if (box < 0 || box > JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT)
+    if (box < 0 || box > boxcount)
       throw new IllegalArgumentException("Invalid box number: " + box);
 
     return _data[box];
@@ -58,7 +66,7 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit> {
   private class PokemonStorageBlockIterator implements Iterator<PokemonStorageUnit> {
     @Override
     public boolean hasNext() {
-      return index <= JPokemonConstants.PLAYER_STORAGE_UNIT_COUNT;
+      return index <= boxcount;
     }
 
     @Override

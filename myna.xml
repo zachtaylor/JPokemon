@@ -1,12 +1,17 @@
 <org.jpokemon>
   <server>
-    <port> 9005 </port>
+    <port> 9001 </port>
     <webdir> web </webdir>
     <cache> no-store,no-cache,must-revalidate </cache>
     <time>
       <timespeed> 1 </timespeed>
     </time>
   </server>
+  <player>
+    <partysize> 6 </partysize>
+    <boxsize> 20 </boxsize>
+    <boxcount> 8 </boxcount>
+  </player>
   <pokemon>
     <stat>
       <ivmax> 32 </ivmax>

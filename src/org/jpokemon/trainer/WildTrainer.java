@@ -1,6 +1,5 @@
 package org.jpokemon.trainer;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 
@@ -27,5 +26,5 @@ public class WildTrainer implements PokemonTrainer {
   public void notify(String... message) {
   }
 
-  private PokemonStorageUnit _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
+  private PokemonStorageUnit _party = new PokemonStorageUnit();
 }
