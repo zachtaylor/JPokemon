@@ -12,12 +12,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.manager.component.ImageService;
 import org.jpokemon.overworld.npc.NPC;
 
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.mapeditor.widget.selector.NPCSelector;
 import com.jpokemon.mapeditor.widget.selector.NPCTypeSelector;
+import com.jpokemon.ui.ImageLoader;
 
 public class NPCEditor implements MapEditComponent {
   public static final String BUTTON_NAME = "NPCs";
@@ -98,7 +98,7 @@ public class NPCEditor implements MapEditComponent {
     npcSelector.reload();
     npcTypeSelector.reload();
 
-    iconLabel.setIcon(ImageService.npc(npcSelector.getCurrentElement().getIcon()));
+    iconLabel.setIcon(ImageLoader.npc(npcSelector.getCurrentElement().getIcon()));
 
     if (npcSelector.getCurrentElement().getName().contains("{typename} ")) {
       useTypePrefix.setSelected(true);

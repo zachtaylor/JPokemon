@@ -1,4 +1,4 @@
-package com.jpokemon.mapeditor.widget.selector;
+package com.jpokemon.ui;
 
 import java.awt.Component;
 

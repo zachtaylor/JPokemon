@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.ServiceException;
-import org.jpokemon.manager.component.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +23,7 @@ import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 import com.jpokemon.party.PartyMenu;
+import com.jpokemon.ui.ImageLoader;
 
 public class UpgradeView extends JPokemonView {
   public UpgradeView(GameWindow g) {
@@ -136,7 +136,7 @@ public class UpgradeView extends JPokemonView {
     try {
       _pokemon = _data.getJSONObject(_partyIndex);
 
-      _icon.setIcon(ImageService.pokemon(_pokemon.getInt("number") + ""));
+      _icon.setIcon(ImageLoader.pokemon(_pokemon.getInt("number") + ""));
 
       _name.setText(_pokemon.getString("name"));
       _points.setText("Available points: " + _pokemon.getInt("points"));

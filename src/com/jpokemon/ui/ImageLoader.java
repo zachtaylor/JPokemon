@@ -1,10 +1,10 @@
-package org.jpokemon.manager.component;
+package com.jpokemon.ui;
 
 import javax.swing.ImageIcon;
 
 import org.jpokemon.JPokemonConstants;
 
-public class ImageService {
+public class ImageLoader {
   public static ImageIcon find(String name) {
     String path = JPokemonConstants.IMAGE_PATH + name + ".png";
 

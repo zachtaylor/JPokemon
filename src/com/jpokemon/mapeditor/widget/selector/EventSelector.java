@@ -2,6 +2,8 @@ package com.jpokemon.mapeditor.widget.selector;
 
 import org.jpokemon.trainer.Event;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class EventSelector extends JPokemonSelector<Event> {
   @Override
   protected void reloadItems() {

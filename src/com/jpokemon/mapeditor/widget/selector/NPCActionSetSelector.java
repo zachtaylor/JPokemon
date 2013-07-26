@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.jpokemon.overworld.npc.NPCActionSetMap;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class NPCActionSetSelector extends JPokemonSelector<NPCActionSetMap> {
   public NPCActionSetSelector(int n) {
     npcNumber = n;

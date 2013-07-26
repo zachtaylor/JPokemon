@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.ServiceException;
-import org.jpokemon.manager.component.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +27,7 @@ import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 import com.jpokemon.start.StartMenu;
+import com.jpokemon.ui.ImageLoader;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class OverworldView extends JPokemonView {
@@ -43,7 +43,7 @@ public class OverworldView extends JPokemonView {
     JPanel borderMenuAndLabel = new JPanel();
     borderSelection = new JComboBox();
 
-    grassButton = new JPokemonButton(ImageService.find("grass"));
+    grassButton = new JPokemonButton(ImageLoader.find("grass"));
     grassButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onClickGrassButton();
@@ -185,7 +185,7 @@ public class OverworldView extends JPokemonView {
   private class NPCButton extends JPokemonButton implements ActionListener {
 
     public NPCButton(JSONObject obj) throws JSONException {
-      super(ImageService.npc(obj.getString("icon")));
+      super(ImageLoader.npc(obj.getString("icon")));
 
       addActionListener(this);
 

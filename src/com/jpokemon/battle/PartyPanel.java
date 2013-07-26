@@ -11,10 +11,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import org.jpokemon.manager.component.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.jpokemon.ui.ImageLoader;
 
 public class PartyPanel extends JPanel {
   public PartyPanel(final BattleView view, JSONObject data) {
@@ -68,14 +69,14 @@ public class PartyPanel extends JPanel {
 
     for (int iconIndex = 0; iconIndex < partyIcons.size(); iconIndex++) {
       if (iconIndex % 2 == 0) {
-        partyIconsEastPanel.add(new JLabel(ImageService.find(partyIcons.get(iconIndex))));
+        partyIconsEastPanel.add(new JLabel(ImageLoader.find(partyIcons.get(iconIndex))));
       }
       else {
-        partyIconsWestPanel.add(new JLabel(ImageService.find(partyIcons.get(iconIndex))));
+        partyIconsWestPanel.add(new JLabel(ImageLoader.find(partyIcons.get(iconIndex))));
       }
     }
 
-    add(new JLabel(ImageService.pokemon(number + "")), BorderLayout.CENTER);
+    add(new JLabel(ImageLoader.pokemon(number + "")), BorderLayout.CENTER);
 
     JPanel info = new JPanel();
     info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));

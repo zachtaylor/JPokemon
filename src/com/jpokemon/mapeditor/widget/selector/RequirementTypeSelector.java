@@ -2,6 +2,8 @@ package com.jpokemon.mapeditor.widget.selector;
 
 import org.jpokemon.action.RequirementType;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class RequirementTypeSelector extends JPokemonSelector<RequirementType> {
   @Override
   protected void reloadItems() {

@@ -2,6 +2,8 @@ package com.jpokemon.mapeditor.widget.selector;
 
 import org.jpokemon.pokemon.move.MoveInfo;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class MoveInfoSelector extends JPokemonSelector<MoveInfo> {
   @Override
   protected void reloadItems() {

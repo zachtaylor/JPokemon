@@ -2,6 +2,8 @@ package com.jpokemon.mapeditor.widget.selector;
 
 import org.jpokemon.action.ActionType;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class ActionTypeSelector extends JPokemonSelector<ActionType> {
   @Override
   protected void reloadItems() {

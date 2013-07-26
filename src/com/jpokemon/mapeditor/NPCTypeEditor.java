@@ -14,8 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.manager.component.ImageService;
 import org.jpokemon.overworld.npc.NPCType;
+
+import com.jpokemon.ui.ImageLoader;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class NPCTypeEditor implements MapEditComponent {
@@ -89,7 +90,7 @@ public class NPCTypeEditor implements MapEditComponent {
       currentNPCType = allNPCTypes.get(currentTypeIndex);
 
       npcTypes.setSelectedIndex(currentTypeIndex);
-      icon.setIcon(ImageService.npc(currentNPCType.getIcon()));
+      icon.setIcon(ImageLoader.npc(currentNPCType.getIcon()));
       nameField.setText(currentNPCType.getName());
       iconNameField.setText(currentNPCType.getIcon());
     }

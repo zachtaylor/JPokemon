@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import org.jpokemon.overworld.map.Area;
 import org.jpokemon.overworld.map.Border;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class BorderSelector extends JPokemonSelector<Border> {
   public BorderSelector(int a) {
     area = a;

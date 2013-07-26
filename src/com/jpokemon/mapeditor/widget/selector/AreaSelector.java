@@ -2,6 +2,8 @@ package com.jpokemon.mapeditor.widget.selector;
 
 import org.jpokemon.overworld.map.Area;
 
+import com.jpokemon.ui.JPokemonSelector;
+
 public class AreaSelector extends JPokemonSelector<Area> {
   @Override
   protected void reloadItems() {
