@@ -3,7 +3,7 @@ package org.jpokemon.trainer;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Trainer implements PokemonTrainer {
   public static String XML_NODE_NAME = "trainer";
@@ -24,9 +24,12 @@ public class Trainer implements PokemonTrainer {
     _name = name;
   }
 
-  public double xpFactor() {
-    // TODO : do something useful here...
-    return JPokemonConstants.TRAINER_EXPERIENCE_MODIFIER;
+  public boolean isGym() {
+    return _isGym;
+  }
+
+  public void setGym(boolean isGym) {
+    _isGym = isGym;
   }
 
   public PokemonStorageUnit party() {
@@ -38,21 +41,21 @@ public class Trainer implements PokemonTrainer {
     return party().add(p);
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setAttribute("name", _name);
-    node.setAttribute("use_gym_xp_factor", _useGymXPFactor);
-    node.addChild(_party.toXML());
+    node.setAttribute("gym", _isGym);
+    node.addChild(_party.toXml());
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     _name = node.getAttribute("name");
-    _useGymXPFactor = node.getBoolAttribute("use_gym_xp_factor");
+    _isGym = node.getBoolAttribute("gym");
 
-    _party.loadXML(node.getChildren(PokemonStorageUnit.XML_NODE_NAME).get(0));
+    _party.loadXml(node.getChildren(PokemonStorageUnit.XML_NODE_NAME).get(0));
   }
 
   public boolean equals(Object o) {
@@ -65,7 +68,7 @@ public class Trainer implements PokemonTrainer {
     return _id.hashCode();
   }
 
+  private boolean _isGym = false;
   private String _name = null, _id = null;
-  private boolean _useGymXPFactor = false;
   private PokemonStorageUnit _party = new PokemonStorageUnit(JPokemonConstants.TRAINER_PARTY_SIZE);
 }

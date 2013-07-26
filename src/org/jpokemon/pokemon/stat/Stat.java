@@ -1,16 +1,25 @@
 package org.jpokemon.pokemon.stat;
 
 import org.jpokemon.JPokemonConstants;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.myna.Myna;
 
 public class Stat {
   public static final String XML_NODE_NAME = "stat";
 
+  public static int ivmax = 32;
+
+  public static int delta = 6;
+
+  static {
+    Myna.configure(Stat.class, "org.jpokemon.pokemon.stat");
+  }
+
   public Stat() {
     _level = 1;
     _modifier = 1;
-    _iv = (int) (Math.random() * JPokemonConstants.INDIVIDUAL_VALUE_RANGE_CAP);
+    _iv = (int) (Math.random() * ivmax);
   }
 
   public int cur() {
@@ -81,8 +90,9 @@ public class Stat {
   public void effect(int power) {
     _delta += power;
 
-    if (Math.abs(_delta) > JPokemonConstants.STAT_CHANGE_MAX_DELTA)
-      _delta = (int) Math.copySign(JPokemonConstants.STAT_CHANGE_MAX_DELTA, _delta);
+    if (Math.abs(_delta) > delta) {
+      _delta = (int) Math.copySign(delta, _delta);
+    }
 
     computeCur();
   }
@@ -94,8 +104,8 @@ public class Stat {
     computeCur();
   }
 
-  public XMLNode toXML() {
-    XMLNode myNode = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode myNode = new XmlNode(XML_NODE_NAME);
 
     myNode.setAttribute("cur", _cur);
     myNode.setAttribute("max", _max);
@@ -108,9 +118,9 @@ public class Stat {
     return myNode;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     _cur = node.getIntAttribute("cur");
     _max = node.getIntAttribute("max");

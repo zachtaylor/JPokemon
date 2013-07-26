@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 /**
  * A representation of the progress a Player has made
@@ -53,17 +53,17 @@ public class Progress {
     return data;
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXML() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setValue(_events.toString());
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXML(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     for (String value : node.getValue().replace('[', ' ').replace(']', ' ').trim().split(",")) {
       if (value.isEmpty())

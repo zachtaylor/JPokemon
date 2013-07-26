@@ -3,8 +3,8 @@ package org.jpokemon.pokemon.storage;
 import java.util.Iterator;
 
 import org.jpokemon.JPokemonConstants;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 /**
  * A representation of all the PokemonStorageUnits allocated to a Player. <br>
@@ -30,23 +30,23 @@ public class PokemonStorageBlock implements Iterable<PokemonStorageUnit> {
     return _data[box];
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     for (PokemonStorageUnit psu : _data) {
-      node.addChild(psu.toXML());
+      node.addChild(psu.toXml());
     }
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     int i = 0;
-    for (XMLNode child : node.getChildren(PokemonStorageUnit.XML_NODE_NAME)) {
-      get(i++).loadXML(child);
+    for (XmlNode child : node.getChildren(PokemonStorageUnit.XML_NODE_NAME)) {
+      get(i++).loadXml(child);
     }
   }
 

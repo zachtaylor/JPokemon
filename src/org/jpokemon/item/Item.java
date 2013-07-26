@@ -2,7 +2,7 @@ package org.jpokemon.item;
 
 import org.jpokemon.battle.Target;
 import org.jpokemon.pokemon.Pokemon;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Item {
   public static final String XML_NODE_NAME = "item";
@@ -59,8 +59,8 @@ public class Item {
     return result;
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setAttribute("number", _info.getNumber());
     node.setAttribute("quantity", _quantity);

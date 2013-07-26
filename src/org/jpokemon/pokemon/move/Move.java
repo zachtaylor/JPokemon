@@ -4,8 +4,8 @@ import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Move {
   public static final String XML_NODE_NAME = "move";
@@ -128,23 +128,6 @@ public class Move {
   }
 
   /**
-   * Tells this Move's effectiveness against the Pokemon specified
-   * 
-   * @param p Pokemon targeted by this Move
-   * @return Modifier for the strength of the Move due to Type
-   */
-  public double effectiveness(Pokemon p) {
-    double answer = 1.0;
-
-    if (p.type1() != null)
-      answer *= _type.effectiveness(p.type1());
-    if (p.type2() != null)
-      answer *= _type.effectiveness(p.type2());
-
-    return answer;
-  }
-
-  /**
    * Restores the PP of this Move to the maximum value, and removes any
    * disabling effects
    */
@@ -249,8 +232,8 @@ public class Move {
     return false;
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setAttribute("number", number());
     node.setAttribute("pp", _pp);
@@ -261,9 +244,9 @@ public class Move {
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     setNumber(Integer.parseInt(node.getAttribute("number")));
     _ppMax = node.getIntAttribute("ppmax");

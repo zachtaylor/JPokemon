@@ -6,7 +6,7 @@ import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
@@ -65,10 +65,6 @@ public class Player implements PokemonTrainer {
     return _bag.get(itemID);
   }
 
-  public double xpFactor() {
-    return 0;
-  }
-
   public PokemonStorageUnit party() {
     return _storage.get(0);
   }
@@ -101,32 +97,32 @@ public class Player implements PokemonTrainer {
     return _record;
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setAttribute("name", _name);
     node.setAttribute("cash", _cash);
     node.setAttribute("badge", _badge);
     node.setAttribute("area", _area);
 
-    node.addChild(_bag.toXML());
-    node.addChild(_record.toXML());
-    node.addChild(_pokedex.toXML());
-    node.addChild(_storage.toXML());
+    node.addChild(_bag.toXml());
+    node.addChild(_record.toXml());
+    node.addChild(_pokedex.toXml());
+    node.addChild(_storage.toXml());
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXML(XmlNode node) {
     _name = node.getAttribute("name");
     _cash = node.getIntAttribute("cash");
     _badge = node.getIntAttribute("badge");
     _area = node.getIntAttribute("area");
 
-    _bag.loadXML(node.getChildren(Bag.XML_NODE_NAME).get(0));
-    _record.loadXML(node.getChildren(Record.XML_NODE_NAME).get(0));
-    _pokedex.loadXML(node.getChildren(Pokedex.XML_NODE_NAME).get(0));
-    _storage.loadXML(node.getChildren(PokemonStorageBlock.XML_NODE_NAME).get(0));
+    _bag.loadXml(node.getChildren(Bag.XML_NODE_NAME).get(0));
+    _record.loadXml(node.getChildren(Record.XML_NODE_NAME).get(0));
+    _pokedex.loadXml(node.getChildren(Pokedex.XML_NODE_NAME).get(0));
+    _storage.loadXml(node.getChildren(PokemonStorageBlock.XML_NODE_NAME).get(0));
   }
 
   @Override

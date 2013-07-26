@@ -16,10 +16,6 @@ public class WildTrainer implements PokemonTrainer {
   public void name(String s) {
   }
 
-  public double xpFactor() {
-    return 0;
-  }
-
   public PokemonStorageUnit party() {
     return _party;
   }

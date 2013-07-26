@@ -1,7 +1,5 @@
 package org.jpokemon.pokemon;
 
-import org.jpokemon.JPokemonConstants;
-
 public enum Type {
   NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHTING, POISON, GROUND, FLYING,
   PSYCHIC, BUG, ROCK, GHOST, DRAGON;
@@ -20,132 +18,136 @@ public enum Type {
    * @return A modifier for move of this type's strength
    */
   @SuppressWarnings("incomplete-switch")
-  public double effectiveness(Type t) {
+  public Effectiveness effectiveness(Type t) {
     switch (this) {
     case NORMAL:
       switch (t) {
       case ROCK:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       case GHOST:
-        return 0;
+        return Effectiveness.IMMUNE;
       }
       break;
     case FIRE:
       switch (t) {
       case GRASS: case ICE: case BUG:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case FIRE: case WATER: case ROCK: case DRAGON:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case WATER:
       switch (t) {
       case FIRE: case GROUND: case ROCK:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case WATER: case GRASS: case DRAGON:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case ELECTRIC:
       switch (t) {
       case WATER: case FLYING:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case ELECTRIC: case GRASS: case DRAGON:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       case GROUND:
-        return 0;
+        return Effectiveness.IMMUNE;
       }
       break;
     case GRASS:
       switch (t) {
       case WATER: case GROUND: case ROCK:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case FIRE: case GRASS: case POISON: case FLYING: case BUG: case DRAGON:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case ICE:
       switch (t) {
       case GRASS: case GROUND: case FLYING: case DRAGON:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case FIRE: case WATER: case ICE:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case FIGHTING:
       switch (t) {
       case NORMAL: case ICE: case ROCK:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case POISON: case FLYING: case PSYCHIC: case BUG:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       case GHOST:
-        return 0;
+        return Effectiveness.IMMUNE;
       }
       break;
     case POISON:
       switch (t) {
       case GRASS:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case POISON: case GROUND: case ROCK: case GHOST:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case GROUND:
       switch (t) {
       case FIRE: case ELECTRIC: case POISON: case ROCK:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case GRASS: case BUG:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       case FLYING:
-        return 0;
+        return Effectiveness.IMMUNE;
       }
       break;
     case FLYING:
       switch (t) {
       case GRASS: case FIGHTING: case BUG:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case ELECTRIC: case ROCK:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case PSYCHIC:
       switch (t) {
       case FIGHTING: case POISON:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case PSYCHIC:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case BUG:
       switch (t) {
       case GRASS: case PSYCHIC:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case FIRE: case FIGHTING: case POISON: case FLYING: case GHOST:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case ROCK:
       switch (t) {
       case FIRE: case ICE: case FLYING: case BUG:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case FIGHTING: case GROUND:
-        return JPokemonConstants.TYPE_DISADVANTAGE_MODIFIER;
+        return Effectiveness.NOT_VERY;
       }
       break;
     case GHOST:
       switch (t) {
       case PSYCHIC: case GHOST:
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       case NORMAL:
-        return 0;
+        return Effectiveness.IMMUNE;
       }
       break;
     case DRAGON:
       if (t == DRAGON)
-        return JPokemonConstants.TYPE_ADVANTAGE_MODIFIER;
+        return Effectiveness.SUPER;
       break;
     }
 
-    return 1.0;
+    return Effectiveness.NORMAL;
+  }
+
+  public enum Effectiveness {
+    IMMUNE, NOT_VERY, NORMAL, SUPER;
   }
 }

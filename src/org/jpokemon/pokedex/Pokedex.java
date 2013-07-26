@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 /**
  * A gadget which helps keep track of which Pokemon have been seen or caught in
@@ -68,8 +68,8 @@ public class Pokedex {
     return _data.size();
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     List<Integer> seen = new ArrayList<Integer>(), owned = new ArrayList<Integer>();
 
@@ -80,25 +80,25 @@ public class Pokedex {
         seen.add(pokedexEntry.getKey());
     }
 
-    XMLNode seenNode = new XMLNode("seen");
+    XmlNode seenNode = new XmlNode("seen");
     seenNode.setValue(seen.toString());
     node.addChild(seenNode);
 
-    XMLNode ownedNode = new XMLNode("owned");
+    XmlNode ownedNode = new XmlNode("owned");
     ownedNode.setValue(owned.toString());
     node.addChild(ownedNode);
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     String[] dataPieces;
     String seenData, ownedData;
-    XMLNode seen = node.getChildren("seen").get(0);
-    XMLNode owned = node.getChildren("owned").get(0);
+    XmlNode seen = node.getChildren("seen").get(0);
+    XmlNode owned = node.getChildren("owned").get(0);
 
     seenData = seen.getValue().replace('[', ' ').replace(']', ' ').trim();
     if (!seenData.isEmpty()) {

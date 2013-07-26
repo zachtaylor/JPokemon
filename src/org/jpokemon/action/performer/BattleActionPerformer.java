@@ -9,8 +9,8 @@ import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.component.BattleActivity;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
-import org.zachtaylor.jnodalxml.XMLNode;
-import org.zachtaylor.jnodalxml.XMLParser;
+import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.jnodalxml.XmlParser;
 
 public class BattleActionPerformer extends AbstractActionPerformer {
   public BattleActionPerformer(String data) {
@@ -21,16 +21,16 @@ public class BattleActionPerformer extends AbstractActionPerformer {
     String fileName = player.record().replaceMacros(getData());
     String filePath = JPokemonConstants.TRAINER_PATH + fileName + ".jpkmn";
 
-    XMLNode trainerData;
+    XmlNode trainerData;
 
     try {
-      trainerData = XMLParser.parse(new File(filePath)).get(0);
+      trainerData = XmlParser.parse(new File(filePath)).get(0);
     } catch (FileNotFoundException e) {
       throw new LoadException("Trainer file not found: " + getData());
     }
 
     Trainer trainer = new Trainer(getData());
-    trainer.loadXML(trainerData);
+    trainer.loadXml(trainerData);
 
     if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES) {
       PlayerManager.setActivity(player, new BattleActivity(player, trainer));

@@ -10,8 +10,6 @@ public interface PokemonTrainer {
 
   public void name(String s);
 
-  public double xpFactor();
-
   public PokemonStorageUnit party();
 
   public boolean add(Pokemon p);

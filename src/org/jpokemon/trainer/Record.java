@@ -3,8 +3,8 @@ package org.jpokemon.trainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 /**
  * Stores a player's history and useful things about what they have done
@@ -94,8 +94,8 @@ public class Record {
     return s;
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     if (_rivalName != null) {
       node.setAttribute("rival", _rivalName);
@@ -105,20 +105,20 @@ public class Record {
       node.setAttribute("starter", _pokemon);
     }
 
-    XMLNode eventNode = new XMLNode("events");
+    XmlNode eventNode = new XmlNode("events");
     eventNode.setValue(_events.toString());
     node.addChild(eventNode);
 
-    XMLNode trainerNode = new XMLNode("trainers");
+    XmlNode trainerNode = new XmlNode("trainers");
     trainerNode.setValue(_trainers.toString());
     node.addChild(trainerNode);
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     if (node.hasAttribute("rival")) {
       _rivalName = node.getAttribute("rival");

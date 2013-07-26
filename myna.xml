@@ -1,0 +1,31 @@
+<org.jpokemon>
+  <server>
+    <port> 9005 </port>
+    <webdir> web </webdir>
+    <cache> no-store,no-cache,must-revalidate </cache>
+    <time>
+      <timespeed> 1 </timespeed>
+    </time>
+  </server>
+  <pokemon>
+    <stat>
+      <ivmax> 32 </ivmax>
+      <evmax> 255 </evmax>
+      <totalev> 510 </totalev>
+      <delta> 6 </delta>
+    </stat>
+  </pokemon>
+  <battle>
+    <stab> 1.5 </stab>
+    <typeadvantage> 2.0 </typeadvantage>
+    <typedisadvantage> 0.5 </typedisadvantage>
+    <reward>
+      <wildxprate> 1.0 </wildxprate>
+      <npcxprate> 1.3 </npcxprate>
+      <gymxprate> 1.6 </gymxprate>
+      <playerxprate> 0.0 </playerxprate>
+      <otxprate> 1.0 </otxprate>
+      <nototxprate> 1.5 </nototxprate>
+    </reward>
+  </battle>
+</org.jpokemon>

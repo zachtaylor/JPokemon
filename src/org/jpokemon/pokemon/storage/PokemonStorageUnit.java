@@ -4,8 +4,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import org.jpokemon.pokemon.Pokemon;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 /**
  * A unit of storage for Pokemon.
@@ -91,26 +91,26 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     return answer;
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     for (Pokemon p : this) {
-      node.addChild(p.toXML());
+      node.addChild(p.toXml());
     }
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     while (_amount > 0)
       remove(0);
 
-    for (XMLNode child : node.getChildren(Pokemon.XML_NODE_NAME)) {
+    for (XmlNode child : node.getChildren(Pokemon.XML_NODE_NAME)) {
       Pokemon p = new Pokemon(1);
-      p.loadXML(child);
+      p.loadXml(child);
       add(p);
     }
   }

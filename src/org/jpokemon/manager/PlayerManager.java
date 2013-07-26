@@ -19,7 +19,7 @@ import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.zachtaylor.jnodalxml.XMLParser;
+import org.zachtaylor.jnodalxml.XmlParser;
 
 public class PlayerManager {
   public static JSONObject getDataRequest(JSONObject request) throws ServiceException {
@@ -76,7 +76,7 @@ public class PlayerManager {
     Player player = newPlayer(name);
 
     try {
-      player.loadXML(XMLParser.parse(file).get(0));
+      player.loadXML(XmlParser.parse(file).get(0));
     } catch (FileNotFoundException e) {
     }
 
@@ -99,7 +99,7 @@ public class PlayerManager {
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(player.toXML().toString());
+      writer.write(player.toXml().toString());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();

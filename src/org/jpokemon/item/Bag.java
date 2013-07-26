@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Bag implements Iterable<Item> {
   public static final String XML_NODE_NAME = "bag";
@@ -24,21 +24,21 @@ public class Bag implements Iterable<Item> {
     return new BagIterator();
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     for (Map.Entry<Integer, Item> itemEntry : _items.entrySet()) {
-      node.addChild(itemEntry.getValue().toXML());
+      node.addChild(itemEntry.getValue().toXml());
     }
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
-    for (XMLNode itemNode : node.getChildren(Item.XML_NODE_NAME)) {
+    for (XmlNode itemNode : node.getChildren(Item.XML_NODE_NAME)) {
       Item i = get(itemNode.getIntAttribute("number"));
       i.amount(itemNode.getIntAttribute("quantity"));
     }

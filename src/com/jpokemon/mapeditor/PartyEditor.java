@@ -21,8 +21,8 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.RewardAction;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Trainer;
-import org.zachtaylor.jnodalxml.XMLNode;
-import org.zachtaylor.jnodalxml.XMLParser;
+import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.jnodalxml.XmlParser;
 
 import com.jpokemon.mapeditor.widget.panel.ActionPanel;
 import com.jpokemon.mapeditor.widget.selector.MoveInfoSelector;
@@ -115,8 +115,8 @@ public class PartyEditor implements MapEditComponent {
 
     try {
       String filePath = JPokemonConstants.TRAINER_PATH + fileName.getText() + ".jpkmn";
-      XMLNode trainerData = XMLParser.parse(new File(filePath)).get(0);
-      trainer.loadXML(trainerData);
+      XmlNode trainerData = XmlParser.parse(new File(filePath)).get(0);
+      trainer.loadXml(trainerData);
     } catch (FileNotFoundException e) {
     }
 
@@ -160,7 +160,7 @@ public class PartyEditor implements MapEditComponent {
     try {
       String filePath = JPokemonConstants.TRAINER_PATH + trainer.id() + ".jpkmn";
       writer = new BufferedWriter(new FileWriter(new File(filePath)));
-      writer.write(trainer.toXML().toString());
+      writer.write(trainer.toXml().toString());
     } catch (IOException e) {
       e.printStackTrace();
     }

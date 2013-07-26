@@ -3,7 +3,7 @@ package org.jpokemon.pokemon;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Condition {
   public static final String XML_NODE_NAME = "condition";
@@ -96,8 +96,8 @@ public class Condition {
     return _lastMessage.toArray(new String[_lastMessage.size()]);
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setValue(toString());
 

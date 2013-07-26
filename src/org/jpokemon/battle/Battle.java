@@ -10,6 +10,7 @@ import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 import org.jpokemon.trainer.Player;
@@ -17,8 +18,19 @@ import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.zachtaylor.myna.Myna;
 
 public class Battle implements Iterable<Slot> {
+  public static double stab = 1.5;
+
+  public static double typeadvantage = 2.0;
+
+  public static double typedisadvantage = .5;
+
+  static {
+    Myna.configure(Battle.class, "org.jpokemon.battle");
+  }
+
   public static Battle create(PokemonTrainer... trainers) {
     Battle b = new Battle();
 
@@ -175,8 +187,7 @@ public class Battle implements Iterable<Slot> {
            A = 1.0,
            P = move.power(),
            D = 0,
-           STAB = move.STAB(user),
-           E = move.effectiveness(victim), 
+           E = computeEffectiveness(move, user, victim), 
            R = Math.random() * .15 + .85,
            reps = move.reps(); // repetitions
     //@format
@@ -198,12 +209,56 @@ public class Battle implements Iterable<Slot> {
       D = Math.max(victim.defense(), victim.specdefense());
     }
 
-    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R * reps;
+    damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * E * R * reps;
 
     if (damage < 1 && E != 0)
       damage = 1;
 
     return (int) damage;
+  }
+
+  /**
+   * Calculates effectiveness modifications for a Move from a user to a victim.
+   * Includes Same-Type-Attack-Bonus for user and {@link Type} modifications
+   * between the move and victim.
+   * 
+   * @param move Move to calculate with
+   * @param user Pokemon using the move
+   * @param victim Pokemon getting hit by the move
+   * @return A modifier for the power of the move with respect to Types
+   */
+  private static double computeEffectiveness(Move move, Pokemon user, Pokemon victim) {
+    double answer = 1.0;
+
+    if (move.type() == user.type1() || move.type() == user.type2()) {
+      answer *= stab;
+    }
+    if (victim.type1() != null) {
+      switch (move.type().effectiveness(victim.type1())) {
+      case SUPER:
+        answer *= typeadvantage;
+      case NORMAL:
+        answer *= 1;
+      case NOT_VERY:
+        answer *= typedisadvantage;
+      case IMMUNE:
+        answer *= 0;
+      }
+    }
+    if (victim.type2() != null) {
+      switch (move.type().effectiveness(victim.type1())) {
+      case SUPER:
+        answer *= typeadvantage;
+      case NORMAL:
+        answer *= 1;
+      case NOT_VERY:
+        answer *= typedisadvantage;
+      case IMMUNE:
+        answer *= 0;
+      }
+    }
+
+    return answer;
   }
 
   /**

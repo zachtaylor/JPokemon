@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jpokemon.JPokemonConstants;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class MoveBlock implements Iterable<Move> {
   public static final String XML_NODE_NAME = "moves";
@@ -102,24 +102,24 @@ public class MoveBlock implements Iterable<Move> {
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     for (Move m : this) {
-      node.addChild(m.toXML());
+      node.addChild(m.toXml());
     }
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     removeAll();
 
-    for (XMLNode childNode : node.getChildren(Move.XML_NODE_NAME)) {
-      _data[_count].loadXML(childNode);
+    for (XmlNode childNode : node.getChildren(Move.XML_NODE_NAME)) {
+      _data[_count].loadXml(childNode);
       _count++;
     }
   }

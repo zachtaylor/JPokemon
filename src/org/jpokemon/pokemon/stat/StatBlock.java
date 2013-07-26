@@ -6,11 +6,19 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.PokemonInfo;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.myna.Myna;
 
 public class StatBlock {
   public static final String XML_NODE_NAME = "stats";
+
+  public static int evmax = 255;
+  public static int totalev = 510;
+
+  static {
+    Myna.configure(StatBlock.class, "org.jpokemon.pokemon.stat");
+  }
 
   public StatBlock(PokemonInfo info) {
     _data = new Stat[StatType.values().length];
@@ -102,11 +110,11 @@ public class StatBlock {
       Stat stat = get(StatType.valueOf(ev.getStat()));
       int consumable = ev.getAmount();
 
-      if (_evTotal + ev.getAmount() > JPokemonConstants.EFFORT_VALUE_UNIVERSAL_MAX) {
-        consumable = JPokemonConstants.EFFORT_VALUE_UNIVERSAL_MAX - _evTotal;
+      if (_evTotal + ev.getAmount() > totalev) {
+        consumable = totalev - _evTotal;
       }
-      else if (stat.ev() + ev.getAmount() > JPokemonConstants.EFFORT_VALUE_INDIVIDUAL_MAX) {
-        consumable = JPokemonConstants.EFFORT_VALUE_INDIVIDUAL_MAX - stat.ev();
+      if (stat.ev() + consumable > evmax) {
+        consumable = evmax - stat.ev();
       }
 
       _evTotal += consumable;
@@ -148,14 +156,14 @@ public class StatBlock {
     }
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     node.setAttribute("points", _points);
     node.setAttribute("evtotal", _evTotal);
 
     for (StatType st : StatType.values()) {
-      XMLNode child = get(st).toXML();
+      XmlNode child = get(st).toXml();
       child.setAttribute("type", st.toString());
       node.addChild(child);
     }
@@ -163,16 +171,16 @@ public class StatBlock {
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     _points = node.getIntAttribute("points");
     _evTotal = node.getIntAttribute("evtotal");
 
-    for (XMLNode childNode : node.getChildren(Stat.XML_NODE_NAME)) {
+    for (XmlNode childNode : node.getChildren(Stat.XML_NODE_NAME)) {
       Stat s = get(StatType.valueOf(childNode.getAttribute("type")));
-      s.loadXML(childNode);
+      s.loadXml(childNode);
     }
   }
 

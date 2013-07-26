@@ -8,8 +8,8 @@ import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.stat.StatBlock;
 import org.jpokemon.pokemon.stat.StatType;
-import org.zachtaylor.jnodalxml.XMLException;
-import org.zachtaylor.jnodalxml.XMLNode;
+import org.zachtaylor.jnodalxml.XmlException;
+import org.zachtaylor.jnodalxml.XmlNode;
 
 public class Pokemon {
   public static final String XML_NODE_NAME = "pokemon";
@@ -276,8 +276,8 @@ public class Pokemon {
     checkNewMoves();
   }
 
-  public XMLNode toXML() {
-    XMLNode node = new XMLNode(XML_NODE_NAME);
+  public XmlNode toXml() {
+    XmlNode node = new XmlNode(XML_NODE_NAME);
 
     if (_name != null) {
       node.setAttribute("name", _name);
@@ -289,16 +289,16 @@ public class Pokemon {
     node.setAttribute("ot", _ot);
     node.setAttribute("has_original_trainer", _hasOriginalTrainer);
 
-    node.addChild(_condition.toXML());
-    node.addChild(_stats.toXML());
-    node.addChild(_moves.toXML());
+    node.addChild(_condition.toXml());
+    node.addChild(_stats.toXml());
+    node.addChild(_moves.toXml());
 
     return node;
   }
 
-  public void loadXML(XMLNode node) {
+  public void loadXml(XmlNode node) {
     if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XMLException("Cannot read node");
+      throw new XmlException("Cannot read node");
 
     _name = node.getAttribute("name");
     _number = node.getIntAttribute("number");
@@ -315,8 +315,8 @@ public class Pokemon {
 
     _hasOriginalTrainer = node.getBoolAttribute("has_original_trainer");
 
-    _moves.loadXML(node.getChildren(MoveBlock.XML_NODE_NAME).get(0));
-    _stats.loadXML(node.getChildren(StatBlock.XML_NODE_NAME).get(0));
+    _moves.loadXml(node.getChildren(MoveBlock.XML_NODE_NAME).get(0));
+    _stats.loadXml(node.getChildren(StatBlock.XML_NODE_NAME).get(0));
 
     _condition.reset();
     String conditionString = node.getChildren(Condition.XML_NODE_NAME).get(0).getValue();
