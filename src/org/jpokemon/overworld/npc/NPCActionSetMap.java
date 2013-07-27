@@ -1,7 +1,9 @@
 package org.jpokemon.overworld.npc;
 
 import java.util.List;
-import org.jpokemon.JPokemonConstants;
+
+import org.jpokemon.server.JPokemonServer;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
@@ -11,7 +13,7 @@ public class NPCActionSetMap {
   private String option;
 
   public static List<NPCActionSetMap> get(int area) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(NPCActionSetMap.class).where("area").eq(area).getList();
@@ -24,7 +26,7 @@ public class NPCActionSetMap {
   }
 
   public static List<NPCActionSetMap> getByNPCNumber(int npcNumber) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(NPCActionSetMap.class).where("number").eq(npcNumber).getList();

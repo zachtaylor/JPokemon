@@ -2,7 +2,6 @@ package org.jpokemon.pokemon;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.stat.Stat;

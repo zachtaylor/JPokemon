@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.effect.MoveEffect;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -28,7 +28,7 @@ public class MoveInfo {
   private static Map<Integer, MoveInfo> cache = new HashMap<Integer, MoveInfo>();
 
   public static MoveInfo get(int number) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     if (cache.get(number) == null) {
       try {

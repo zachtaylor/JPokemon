@@ -14,11 +14,19 @@ import org.zachtaylor.myna.Myna;
  * 
  * @author Graham
  */
-public class JPokemonServerMain {
+public class JPokemonServer {
   public static int port = 9001;
 
+  public static String savepath = "data/save";
+
+  public static String imagepath = "data/image";
+
+  public static String scriptedbattlepath = "data/trainer";
+
+  public static String databasepath = "data/Pokemon.db";
+
   static {
-    Myna.configure(JPokemonServerMain.class, "org.jpokemon.server");
+    Myna.configure(JPokemonServer.class, "org.jpokemon.server");
   }
 
   public static void main(String[] args) throws Exception {
@@ -39,5 +47,5 @@ public class JPokemonServerMain {
     server.join();
   }
 
-  private static Logger logger = Logger.getLogger(JPokemonServerMain.class);
+  private static Logger logger = Logger.getLogger(JPokemonServer.class);
 }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.overworld.npc.NPC;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -30,7 +30,7 @@ public class Area {
   }
 
   public static Area get(int number) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       List<Area> query = SqlStatement.select(Area.class).where("number").eq(number).getList();

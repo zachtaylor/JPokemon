@@ -3,8 +3,8 @@ package org.jpokemon.overworld.npc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.ActionSet;
+import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Player;
 
 import com.njkremer.Sqlite.DataConnectionException;
@@ -30,7 +30,7 @@ public class NPC {
   }
 
   public static NPC get(int number) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       List<NPC> query = SqlStatement.select(NPC.class).where("number").eq(number).getList();

@@ -3,8 +3,8 @@ package org.jpokemon.overworld.npc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.AbstractRequirement;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -14,7 +14,7 @@ public class NPCRequirement extends AbstractRequirement {
   private int number, actionset, type, data;
 
   public static List<NPCRequirement> get(int number, int set) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(NPCRequirement.class).where("number").eq(number).and("actionset").eq(set).getList();

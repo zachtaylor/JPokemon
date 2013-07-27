@@ -2,8 +2,8 @@ package org.jpokemon.overworld.npc;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.AbstractAction;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -14,7 +14,7 @@ public class NPCAction extends AbstractAction {
   private String type, data;
 
   public static List<NPCAction> get(int number, int actionset) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(NPCAction.class).where("number").eq(number).and("actionset").eq(actionset).getList();

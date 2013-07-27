@@ -2,11 +2,11 @@ package org.jpokemon.manager.component;
 
 import javax.swing.ImageIcon;
 
-import org.jpokemon.JPokemonConstants;
+import org.jpokemon.server.JPokemonServer;
 
 public class ImageService {
   public static ImageIcon find(String name) {
-    String path = JPokemonConstants.IMAGE_PATH + name + ".png";
+    String path = JPokemonServer.imagepath + name + ".png";
 
     ImageIcon icon = new ImageIcon(path);
 
@@ -14,7 +14,7 @@ public class ImageService {
   }
 
   public static ImageIcon pokemon(String number) {
-    String path = JPokemonConstants.IMAGE_PATH + "pokemon/" + number + ".png";
+    String path = JPokemonServer.imagepath + "pokemon/" + number + ".png";
 
     ImageIcon icon = new ImageIcon(path);
 
@@ -22,7 +22,7 @@ public class ImageService {
   }
 
   public static ImageIcon item(String type, String name) {
-    String path = JPokemonConstants.IMAGE_PATH + "item/" + type.toLowerCase();
+    String path = JPokemonServer.imagepath + "item/" + type.toLowerCase();
 
     if (type.equalsIgnoreCase("ball") || type.equalsIgnoreCase("potion") || type.equals("stone"))
       path += "/" + name.substring(0, 1).toLowerCase();
@@ -34,7 +34,7 @@ public class ImageService {
   }
 
   public static ImageIcon npc(String type) {
-    String path = JPokemonConstants.IMAGE_PATH + "npc/" + type.toLowerCase() + ".png";
+    String path = JPokemonServer.imagepath + "npc/" + type.toLowerCase() + ".png";
 
     ImageIcon icon = new ImageIcon(path);
 

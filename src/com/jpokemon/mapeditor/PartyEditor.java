@@ -17,10 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.RewardAction;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.MoveBlock;
+import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Trainer;
 import org.zachtaylor.jnodalxml.XmlNode;
 import org.zachtaylor.jnodalxml.XmlParser;
@@ -115,7 +115,7 @@ public class PartyEditor implements MapEditComponent {
     trainer = new Trainer(fileName.getText());
 
     try {
-      String filePath = JPokemonConstants.TRAINER_PATH + fileName.getText() + ".jpkmn";
+      String filePath = JPokemonServer.savepath + fileName.getText() + ".jpkmn";
       XmlNode trainerData = XmlParser.parse(new File(filePath)).get(0);
       trainer.loadXml(trainerData);
     } catch (FileNotFoundException e) {
@@ -159,7 +159,7 @@ public class PartyEditor implements MapEditComponent {
     Writer writer = null;
 
     try {
-      String filePath = JPokemonConstants.TRAINER_PATH + trainer.id() + ".jpkmn";
+      String filePath = JPokemonServer.scriptedbattlepath + trainer.id() + ".jpkmn";
       writer = new BufferedWriter(new FileWriter(new File(filePath)));
       writer.write(trainer.toXml().toString());
     } catch (IOException e) {

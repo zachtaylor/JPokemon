@@ -2,11 +2,11 @@ package org.jpokemon.overworld.map;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.Action;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.action.Requirement;
 import org.jpokemon.manager.LoadException;
+import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Player;
 
 import com.njkremer.Sqlite.DataConnectionException;
@@ -52,7 +52,7 @@ public class Border {
   }
 
   public static List<Border> get(int area) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(Border.class).where("area").eq(area).getList();

@@ -2,8 +2,8 @@ package org.jpokemon.overworld.map;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.AbstractRequirement;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -13,7 +13,7 @@ public class BorderRequirement extends AbstractRequirement {
   private int area, next, type, data;
 
   public static List<BorderRequirement> get(int area, int next) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(BorderRequirement.class).where("area").eq(area).and("next").eq(next).getList();

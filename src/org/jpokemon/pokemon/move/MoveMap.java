@@ -3,7 +3,9 @@ package org.jpokemon.pokemon.move;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jpokemon.JPokemonConstants;
+
+import org.jpokemon.server.JPokemonServer;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
@@ -14,7 +16,7 @@ public class MoveMap {
   private static Map<Integer, Map<Integer, List<MoveMap>>> cache = new HashMap<Integer, Map<Integer, List<MoveMap>>>();
 
   public static List<MoveMap> get(int number, int level) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     ensureCacheExists(number);
     if (cache.get(number).get(level) == null) {

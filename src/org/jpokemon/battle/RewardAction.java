@@ -2,8 +2,8 @@ package org.jpokemon.battle;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.action.AbstractAction;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -13,7 +13,7 @@ public class RewardAction extends AbstractAction {
   private String trainerid, type, data;
 
   public static List<RewardAction> get(String trainerID) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(RewardAction.class).where("trainerid").eq(trainerID).getList();

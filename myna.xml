@@ -3,6 +3,10 @@
     <port> 9001 </port>
     <webdir> web </webdir>
     <cache> no-store,no-cache,must-revalidate </cache>
+    <savepath> data/save </savepath>
+    <imagepath> data/image </imagepath>
+    <scriptedbattlepath> data/trainer </scriptedbattlepath>
+    <databasepath> data/Pokemon.db </databasepath>
     <time>
       <timespeed> 1 </timespeed>
     </time>

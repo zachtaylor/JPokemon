@@ -7,6 +7,7 @@ import org.jpokemon.JPokemonConstants;
 import org.jpokemon.manager.LoadException;
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.component.BattleActivity;
+import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
 import org.zachtaylor.jnodalxml.XmlNode;
@@ -19,7 +20,7 @@ public class BattleActionPerformer extends AbstractActionPerformer {
 
   public void execute(Player player) throws LoadException {
     String fileName = player.record().replaceMacros(getData());
-    String filePath = JPokemonConstants.TRAINER_PATH + fileName + ".jpkmn";
+    String filePath = JPokemonServer.scriptedbattlepath + fileName + ".jpkmn";
 
     XmlNode trainerData;
 

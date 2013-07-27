@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.JPokemonConstants;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -24,7 +24,7 @@ public class PokemonInfo {
   private static Map<Integer, PokemonInfo> cache = new HashMap<Integer, PokemonInfo>();
 
   public static PokemonInfo get(int num) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     if (cache.get(num) == null) {
       try {

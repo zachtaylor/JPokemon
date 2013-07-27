@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import org.jpokemon.JPokemonConstants;
+import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.manager.component.OverworldActivity;
 import org.jpokemon.manager.message.Message;
 import org.jpokemon.trainer.Player;
@@ -68,7 +68,7 @@ public class PlayerManager {
     if (players.keySet().contains(name))
       throw new ServiceException("File already loaded");
 
-    File file = new File(JPokemonConstants.SAVE_PATH + name + ".jpkmn");
+    File file = new File(JPokemonServer.savepath, name + ".jpkmn");
 
     if (!file.exists())
       throw new ServiceException("Save file not found");
@@ -95,7 +95,7 @@ public class PlayerManager {
   }
 
   public static void savePlayer(Player player) {
-    String path = JPokemonConstants.SAVE_PATH + player.id() + ".jpkmn";
+    String path = JPokemonServer.savepath + player.id() + ".jpkmn";
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
@@ -151,11 +151,11 @@ public class PlayerManager {
   }
 
   private static String getUniquePlayerName(String attempt) {
-    if (!players.containsKey(attempt) && !new File(JPokemonConstants.SAVE_PATH + attempt + ".jpkmn").exists())
+    if (!players.containsKey(attempt) && !new File(JPokemonServer.savepath, attempt + ".jpkmn").exists())
       return attempt;
 
     int n = 0;
-    for (; players.containsKey(attempt + n) || new File(JPokemonConstants.SAVE_PATH + attempt + n + ".jpkmn").exists(); n++)
+    for (; players.containsKey(attempt + n) || new File(JPokemonServer.savepath, attempt + n + ".jpkmn").exists(); n++)
       ;
 
     return attempt + n;

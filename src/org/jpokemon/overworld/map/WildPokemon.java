@@ -1,8 +1,10 @@
 package org.jpokemon.overworld.map;
 
 import java.util.List;
-import org.jpokemon.JPokemonConstants;
+
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.server.JPokemonServer;
+
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
@@ -17,7 +19,7 @@ public class WildPokemon {
   }
 
   public static List<WildPokemon> get(int number) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(WildPokemon.class).where("area").eq(number).getList();

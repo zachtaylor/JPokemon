@@ -2,7 +2,7 @@ package org.jpokemon.item;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
+import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
@@ -12,7 +12,7 @@ public class Inventory {
   private int store, item, price, purchaseprice, denomination, available;
 
   public static List<Inventory> get(int store) {
-    DataConnectionManager.init(JPokemonConstants.DATABASE_PATH);
+    DataConnectionManager.init(JPokemonServer.databasepath);
 
     try {
       return SqlStatement.select(Inventory.class).where("store").eq(store).getList();
