@@ -1,6 +1,5 @@
 package org.jpokemon.battle.slot;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
@@ -11,7 +10,7 @@ public class SlotEffect {
     _target = target;
 
     if (_type.hasFiniteDuration())
-      _time = JPokemonConstants.SHIELD_ROUND_DURATION;
+      _time = SlotEffectType.shieldturns;
     else
       _time = 0;
   }
@@ -24,11 +23,11 @@ public class SlotEffect {
     MoveStyle style = m.style();
 
     if (_type == SlotEffectType.INVULERNABLE)
-      return (1 - JPokemonConstants.SHIELD_REDUCTION_MODIFIER);
+      return 0;
     if (style == MoveStyle.PHYSICAL && _type == SlotEffectType.PHYSICAL_SHIELD)
-      return (1 - JPokemonConstants.SHIELD_REDUCTION_MODIFIER);
+      return 0;
     if (style == MoveStyle.SPECIAL && _type == SlotEffectType.SPECIAL_SHIELD)
-      return (1 - JPokemonConstants.SHIELD_REDUCTION_MODIFIER);
+      return 0;
 
     return 1;
   }
@@ -39,8 +38,7 @@ public class SlotEffect {
       int d = Math.max(1, _target.leader().maxHealth() / 12);
       _target.takeDamage(d);
       _user.leader().healDamage(d);
-      return _user.leader().name() + " healed " + d + " from leeching "
-          + _target.leader().name();
+      return _user.leader().name() + " healed " + d + " from leeching " + _target.leader().name();
     default:
       return null;
     }

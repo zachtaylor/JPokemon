@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
@@ -174,9 +173,8 @@ public class Battle implements Iterable<Slot> {
 
       p = (Player) s.trainer();
 
-      // If the player has the record, IllegalArgumentException will fire
-      if (!p.record().getTrainer(id) || !JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES)
-        p.record().putTrainer(id);
+      // If the trainer is already recorded, IllegalArgumentException will fire
+      p.record().putTrainer(id);
     }
   }
 

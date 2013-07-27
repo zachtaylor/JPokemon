@@ -3,7 +3,6 @@ package org.jpokemon.action.performer;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.manager.LoadException;
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.component.BattleActivity;
@@ -33,7 +32,7 @@ public class BattleActionPerformer extends AbstractActionPerformer {
     Trainer trainer = new Trainer(getData());
     trainer.loadXml(trainerData);
 
-    if (!player.record().getTrainer(trainer.id()) || JPokemonConstants.ALLOW_REPEAT_TRAINER_BATTLES) {
+    if (!player.record().getTrainer(trainer.id())) {
       PlayerManager.setActivity(player, new BattleActivity(player, trainer));
     }
   }

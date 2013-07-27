@@ -35,6 +35,7 @@
     <stab> 1.5 </stab>
     <typeadvantage> 2.0 </typeadvantage>
     <typedisadvantage> 0.5 </typedisadvantage>
+    <shieldturns> 5 </shieldturns>
     <reward>
       <wildxprate> 1.0 </wildxprate>
       <npcxprate> 1.3 </npcxprate>
