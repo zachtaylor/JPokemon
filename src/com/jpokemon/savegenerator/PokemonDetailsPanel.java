@@ -65,8 +65,11 @@ public class PokemonDetailsPanel extends JPanel {
 
     detailsPanel.add(new JPanel());
 
+    JPanel southPanel = new JPanel();
+    add(southPanel, BorderLayout.SOUTH);
+
     deletePokemon.addMouseListener(new DeletePokemonHandler());
-    add(deletePokemon, BorderLayout.SOUTH);
+    southPanel.add(deletePokemon);
   }
 
   public void show(Pokemon p) {
@@ -76,10 +79,20 @@ public class PokemonDetailsPanel extends JPanel {
     levelField.setText(pokemon.level() + "");
 
     movePanel.removeAll();
+
+    AvailableMoveSelector ams;
+    MoveInfo amsValue;
+
     for (int i = 0; i < JPokemonConstants.KNOWN_MOVE_COUNT; i++) {
-      AvailableMoveSelector ams = new AvailableMoveSelector();
+      ams = new AvailableMoveSelector();
       ams.reload();
-      ams.setSelectedItem(null);
+
+      amsValue = null;
+      if (i < pokemon.moveCount()) {
+        amsValue = MoveInfo.get(pokemon.move(i).number());
+      }
+      ams.setSelectedItem(amsValue);
+
       ams.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent arg0) {
           setMoves();
@@ -118,7 +131,24 @@ public class PokemonDetailsPanel extends JPanel {
   }
 
   private void setMoves() {
-    System.out.println("Hello world!");
+    pokemon.removeAllMoves();
+
+    MoveInfo mi;
+    AvailableMoveSelector ams;
+
+    for (Component c : movePanel.getComponents()) {
+      if (!(c instanceof AvailableMoveSelector)) {
+        continue;
+      }
+      ams = (AvailableMoveSelector) c;
+      mi = ams.getCurrentElement();
+
+      if (mi == null) {
+        continue;
+      }
+
+      pokemon.addMove(mi.getNumber());
+    }
   }
 
   private Pokemon pokemon;
@@ -135,19 +165,18 @@ public class PokemonDetailsPanel extends JPanel {
     }
   }
 
-  private class AvailableMoveSelector extends JPokemonSelector<MoveMap> {
+  private class AvailableMoveSelector extends JPokemonSelector<MoveInfo> {
     @Override
     protected void reloadItems() {
       removeAllItems();
 
       for (MoveMap movemap : MoveMap.get(pokemon.number())) {
-        addElementToModel(movemap);
+        addElementToModel(MoveInfo.get(movemap.getMove_number()));
       }
     }
 
-    protected void renderElement(Component c, MoveMap element) {
-      MoveInfo mi = MoveInfo.get(element.getMove_number());
-      ((JLabel) c).setText(mi.getName());
+    protected void renderElement(Component c, MoveInfo element) {
+      ((JLabel) c).setText(element.getName());
     }
 
     private static final long serialVersionUID = 1L;

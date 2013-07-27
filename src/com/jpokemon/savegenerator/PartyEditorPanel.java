@@ -22,8 +22,11 @@ public class PartyEditorPanel extends JPanel {
     partyPanel.setLayout(new BoxLayout(partyPanel, BoxLayout.Y_AXIS));
     add(partyPanel, BorderLayout.CENTER);
 
+    JPanel southPanel = new JPanel();
+    add(southPanel, BorderLayout.SOUTH);
+
     showAddPokemon.addMouseListener(new AddPokemonHandler());
-    add(showAddPokemon, BorderLayout.SOUTH);
+    southPanel.add(showAddPokemon);
   }
 
   public void addPokemon(Pokemon p) {
@@ -37,7 +40,7 @@ public class PartyEditorPanel extends JPanel {
   public void removePokemon(Pokemon p) {
     pokemon.remove(p);
   }
-  
+
   public void reload() {
     partyPanel.removeAll();
     for (Pokemon poke : pokemon) {
@@ -54,7 +57,7 @@ public class PartyEditorPanel extends JPanel {
 
   private class AddPokemonHandler extends MouseAdapter {
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
       parent.showAddPokemon();
     }
   }
