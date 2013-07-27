@@ -14,14 +14,6 @@ public class JPokemonConstants {
   public static final int STARTER_POKEMON_LEVEL = 5;
 
   // Pokemon config
-  public static final int KNOWN_MOVE_COUNT = 4;
-  public static final int STAT_POINTS_PER_LEVEL = 1;
-  public static final int STAT_POINTS_PER_EVOLUTION = 0;
-  public static final int STAT_POINTS_INDIVIDUAL_MAX = 100;
-  public static final double STAT_MAX_VALUE_WEIGHT_IV = 1.0;
-  public static final double STAT_MAX_VALUE_WEIGHT_EV = 0.25;
-  public static final double STAT_MAX_VALUE_WEIGHT_BASE = 2.0;
-  public static final double STAT_MAX_VALUE_WEIGHT_POINTS = 0.5;
   public static final boolean MEASURE_EFFORT_VALUE_REALTIME = false;
 
   // Battle config

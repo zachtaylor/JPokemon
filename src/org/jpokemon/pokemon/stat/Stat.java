@@ -12,6 +12,14 @@ public class Stat {
 
   public static int delta = 6;
 
+  public static double baseweight = 2.0;
+
+  public static double evweight = 0.25;
+
+  public static double ivweight = 1.0;
+
+  public static double bonusweight = 1.0;
+
   static {
     Myna.configure(Stat.class, "org.jpokemon.pokemon.stat");
   }
@@ -131,10 +139,10 @@ public class Stat {
   }
 
   private void computeMax() {
-    double val = (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_BASE * _base);
-    val += (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_IV * _iv);
-    val += (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_EV * _ev);
-    val += (JPokemonConstants.STAT_MAX_VALUE_WEIGHT_POINTS * _pts);
+    double val = (baseweight * _base);
+    val += (ivweight * _iv);
+    val += (evweight * _ev);
+    val += (bonusweight * _pts);
     val += 100;
     val /= 100;
     val *= _level;

@@ -14,11 +14,18 @@
   </player>
   <pokemon>
     <stat>
-      <ivmax> 32 </ivmax>
-      <evmax> 255 </evmax>
-      <totalev> 510 </totalev>
       <delta> 6 </delta>
+      <ivmax> 32 </ivmax>
+      <ivweight> 1.0 </ivweight>
+      <evmax> 255 </evmax>
+      <evweight> .25 </evweight>
+      <totalevmax> 510 </totalevmax>
+      <bonusmax> 15 </bonusmax>
+      <baseweight> 2.0 </baseweight>
     </stat>
+    <move>
+      <movecount> 4 </movecount>
+    </move>
   </pokemon>
   <battle>
     <stab> 1.5 </stab>

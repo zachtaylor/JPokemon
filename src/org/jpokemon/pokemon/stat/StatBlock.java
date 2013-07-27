@@ -2,7 +2,6 @@ package org.jpokemon.pokemon.stat;
 
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.PokemonInfo;
@@ -14,7 +13,12 @@ public class StatBlock {
   public static final String XML_NODE_NAME = "stats";
 
   public static int evmax = 255;
-  public static int totalev = 510;
+
+  public static int totalevmax = 510;
+
+  public static int bonusmax = 15;
+
+  public static double bonuslevelrate = 1.0;
 
   static {
     Myna.configure(StatBlock.class, "org.jpokemon.pokemon.stat");
@@ -81,7 +85,7 @@ public class StatBlock {
       throw new IllegalStateException("No points available");
 
     Stat stat = get(st);
-    int consumable = Math.min(JPokemonConstants.STAT_POINTS_INDIVIDUAL_MAX - stat.points(), amount);
+    int consumable = Math.min(bonusmax - stat.points(), amount);
     if (consumable <= 0)
       return;
 
@@ -110,8 +114,8 @@ public class StatBlock {
       Stat stat = get(StatType.valueOf(ev.getStat()));
       int consumable = ev.getAmount();
 
-      if (_evTotal + ev.getAmount() > totalev) {
-        consumable = totalev - _evTotal;
+      if (_evTotal + ev.getAmount() > totalevmax) {
+        consumable = totalevmax - _evTotal;
       }
       if (stat.ev() + consumable > evmax) {
         consumable = evmax - stat.ev();

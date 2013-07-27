@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jpokemon.JPokemonConstants;
 import org.zachtaylor.jnodalxml.XmlException;
 import org.zachtaylor.jnodalxml.XmlNode;
+import org.zachtaylor.myna.Myna;
 
 public class MoveBlock implements Iterable<Move> {
   public static final String XML_NODE_NAME = "moves";
 
+  public static int movecount = 4;
+
+  static {
+    Myna.configure(MoveBlock.class, "org.jpokemon.pokemon.move");
+  }
+
   public MoveBlock(int pokemonNumber) {
     _pokemon = pokemonNumber;
-    _data = new Move[JPokemonConstants.KNOWN_MOVE_COUNT];
+    _data = new Move[movecount];
 
-    for (int i = 0; i < JPokemonConstants.KNOWN_MOVE_COUNT; i++)
+    for (int i = 0; i < movecount; i++)
       _data[i] = new Move(-1);
 
     try {
@@ -46,7 +52,7 @@ public class MoveBlock implements Iterable<Move> {
   public void add(int number) {
     if (number <= 0)
       throw new IllegalArgumentException("Move number out of bounds");
-    if (_count == JPokemonConstants.KNOWN_MOVE_COUNT)
+    if (_count == movecount)
       throw new IllegalStateException("MoveBlock is full");
 
     add(number, _count);
@@ -98,7 +104,7 @@ public class MoveBlock implements Iterable<Move> {
       return;
 
     removeAll();
-    while (!possible.isEmpty() && _count < JPokemonConstants.KNOWN_MOVE_COUNT)
+    while (!possible.isEmpty() && _count < movecount)
       add(possible.remove((int) (Math.random() * possible.size())));
   }
 

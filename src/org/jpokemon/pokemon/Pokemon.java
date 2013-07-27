@@ -61,15 +61,26 @@ public class Pokemon {
   }
 
   public void level(int l) {
-    if (_level + 1 == l)
-      _stats.points(_stats.points() + JPokemonConstants.STAT_POINTS_PER_LEVEL);
-
     _level = l;
     _stats.level(l);
 
     checkNewMoves();
 
     _condition.reset();
+  }
+
+  public void incLevel() {
+    // Truncate to tell if the next one crosses the whole number
+    int thisLevelIncrement = (int) (level() / StatBlock.bonuslevelrate);
+    int nextLevelIncrement = (int) (level() + 1 / StatBlock.bonuslevelrate);
+
+    // Loop in case the difference is greater than 1
+    while (nextLevelIncrement > thisLevelIncrement) {
+      _stats.points(_stats.points() + 1);
+      nextLevelIncrement--;
+    }
+
+    level(level() + 1);
   }
 
   public Type type1() {
@@ -112,9 +123,9 @@ public class Pokemon {
 
     _xp += amount;
 
-    if (_xp >= xpNeededAtLevel) {
+    while (_xp >= xpNeededAtLevel) {
       _xp -= xpNeededAtLevel;
-      level(level() + 1);
+      incLevel();
     }
   }
 
@@ -261,8 +272,6 @@ public class Pokemon {
    * Eevee into Flareon).
    */
   public void evolve(int... num) {
-    _stats.points(_stats.points() + JPokemonConstants.STAT_POINTS_PER_EVOLUTION);
-
     if (num.length != 0)
       _number = num[0]; // special value
     else

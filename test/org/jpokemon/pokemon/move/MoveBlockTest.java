@@ -2,7 +2,6 @@ package org.jpokemon.pokemon.move;
 
 import junit.framework.TestCase;
 
-import org.jpokemon.JPokemonConstants;
 import org.junit.Test;
 
 public class MoveBlockTest extends TestCase {
@@ -25,7 +24,7 @@ public class MoveBlockTest extends TestCase {
   }
 
   public void testAdd() {
-    while (block.count() == JPokemonConstants.KNOWN_MOVE_COUNT)
+    while (block.count() == MoveBlock.movecount)
       setUp();
 
     int count = block.count();
@@ -44,7 +43,7 @@ public class MoveBlockTest extends TestCase {
     assertEquals(count + 1, block.count());
 
     int number;
-    for (number = 14; block.count() < JPokemonConstants.KNOWN_MOVE_COUNT; number++) {
+    for (number = 14; block.count() < MoveBlock.movecount; number++) {
       try {
         block.add(number);
       } catch (IllegalArgumentException e) { // Duplicate move exception is ok
@@ -52,7 +51,7 @@ public class MoveBlockTest extends TestCase {
     }
 
     try {
-      for (; block.count() < JPokemonConstants.KNOWN_MOVE_COUNT; number++) {
+      for (; block.count() < MoveBlock.movecount; number++) {
         try {
           block.add(number);
         } catch (IllegalArgumentException e) { // Duplicate move exception is ok
@@ -83,7 +82,7 @@ public class MoveBlockTest extends TestCase {
 
     assertEquals(new Move(moveNumber), block.get(0));
 
-    while (block.count() >= JPokemonConstants.KNOWN_MOVE_COUNT - 1)
+    while (block.count() >= MoveBlock.movecount - 1)
       setUp();
 
     int count = block.count();

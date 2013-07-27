@@ -1,9 +1,9 @@
 package org.jpokemon.pokemon;
 
-import org.jpokemon.JPokemonConstants;
-import org.jpokemon.pokemon.stat.StatType;
-
 import junit.framework.TestCase;
+
+import org.jpokemon.pokemon.stat.StatBlock;
+import org.jpokemon.pokemon.stat.StatType;
 
 public class PokemonTest extends TestCase {
   static int number, level;
@@ -52,7 +52,7 @@ public class PokemonTest extends TestCase {
   }
 
   public void testStatLookup() {
-    
+
     assertEquals(pokemon.attack(), pokemon.getStat(StatType.ATTACK).cur());
     assertEquals(pokemon.specattack(), pokemon.getStat(StatType.SPECATTACK).cur());
     assertEquals(pokemon.defense(), pokemon.getStat(StatType.DEFENSE).cur());
@@ -69,11 +69,12 @@ public class PokemonTest extends TestCase {
     }
 
     assertEquals(0, pokemon.getStat(StatType.ATTACK).points());
+    StatBlock.bonuslevelrate = 1.0;
 
     level++;
     pokemon.level(level);
     pokemon.statPoints(StatType.ATTACK, 1);
-    assertEquals(JPokemonConstants.STAT_POINTS_PER_LEVEL, pokemon.getStat(StatType.ATTACK).points());
+    assertEquals(1.0, pokemon.getStat(StatType.ATTACK).points());
 
     try {
       pokemon.statPoints(StatType.ATTACK, 1);
@@ -82,7 +83,7 @@ public class PokemonTest extends TestCase {
       assertTrue(e instanceof IllegalStateException);
     }
 
-    assertEquals(JPokemonConstants.STAT_POINTS_PER_LEVEL, pokemon.getStat(StatType.ATTACK).points());
+    assertEquals((int) StatBlock.bonuslevelrate, pokemon.getStat(StatType.ATTACK).points());
   }
 
   public void testDamageAndHealth() {

@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import org.jpokemon.JPokemonConstants;
 import org.jpokemon.battle.RewardAction;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.trainer.Trainer;
 import org.zachtaylor.jnodalxml.XmlNode;
 import org.zachtaylor.jnodalxml.XmlParser;
@@ -207,7 +208,7 @@ public class PartyEditor implements MapEditComponent {
           onMoveSelect();
         }
       };
-      for (int i = 0; i < JPokemonConstants.KNOWN_MOVE_COUNT; i++) {
+      for (int i = 0; i < MoveBlock.movecount; i++) {
         moveSelectors[i] = new MoveInfoSelector();
         moveSelectors[i].reload();
 
@@ -259,7 +260,7 @@ public class PartyEditor implements MapEditComponent {
     private Pokemon pokemon;
     private JTextField pokemonLevel = new JTextField();
     private PokemonInfoSelector pokemonSelector = new PokemonInfoSelector();
-    private MoveInfoSelector[] moveSelectors = new MoveInfoSelector[JPokemonConstants.KNOWN_MOVE_COUNT];
+    private MoveInfoSelector[] moveSelectors = new MoveInfoSelector[MoveBlock.movecount];
 
     private static final long serialVersionUID = 1L;
   }
