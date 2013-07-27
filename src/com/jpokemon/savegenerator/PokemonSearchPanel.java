@@ -19,11 +19,11 @@ import org.jpokemon.pokemon.Type;
 
 import com.jpokemon.ui.TypeSelector;
 
-public class PokemonSelectorPanel extends JPanel {
+public class PokemonSearchPanel extends JPanel {
   private static final String nameFieldDefault = "[Search by name]";
 
-  public PokemonSelectorPanel(SaveGeneratorWindow sgw) {
-    parent = sgw;
+  public PokemonSearchPanel(PartyEditorPanel pep) {
+    parent = pep;
     setPreferredSize(new Dimension(250, 300));
     setLayout(new BorderLayout());
     setFocusable(true);
@@ -59,7 +59,6 @@ public class PokemonSelectorPanel extends JPanel {
 
     searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.Y_AXIS));
     JScrollPane scrollPane = new JScrollPane(searchResultsPanel);
-    scrollPane.setFocusable(true);
     add(scrollPane, BorderLayout.CENTER);
   }
 
@@ -114,7 +113,7 @@ public class PokemonSelectorPanel extends JPanel {
     parent.repaint();
   }
 
-  private SaveGeneratorWindow parent;
+  private PartyEditorPanel parent;
   private JPanel searchFieldPanel = new JPanel();
   private JPanel searchResultsPanel = new JPanel();
   private JTextField nameField = new JTextField(nameFieldDefault);

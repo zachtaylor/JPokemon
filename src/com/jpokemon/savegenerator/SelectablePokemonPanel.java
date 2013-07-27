@@ -12,7 +12,7 @@ import org.jpokemon.pokemon.PokemonInfo;
 import com.jpokemon.ui.ImageLoader;
 
 public class SelectablePokemonPanel extends JPanel {
-  public SelectablePokemonPanel(PokemonSelectorPanel psp, PokemonInfo pi) {
+  public SelectablePokemonPanel(PokemonSearchPanel psp, PokemonInfo pi) {
     parent = psp;
     pokemonInfo = pi;
 
@@ -27,7 +27,7 @@ public class SelectablePokemonPanel extends JPanel {
   }
 
   private PokemonInfo pokemonInfo;
-  private PokemonSelectorPanel parent;
+  private PokemonSearchPanel parent;
   private JLabel addButton = new JLabel(ImageLoader.find("ui/plus"));
 
   private static final long serialVersionUID = 1L;

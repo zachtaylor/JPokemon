@@ -1,62 +1,81 @@
 package com.jpokemon.savegenerator;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 import javax.swing.JFrame;
 
-import org.jpokemon.pokemon.Pokemon;
-import org.jpokemon.pokemon.PokemonInfo;
+import org.jpokemon.trainer.Player;
 
 public class SaveGeneratorWindow extends JFrame {
   public SaveGeneratorWindow() {
     setLayout(new BorderLayout());
 
-    add(partyEditorPanel, BorderLayout.WEST);
+    add(playerDetailsPanel, BorderLayout.CENTER);
 
     setVisible(true);
-    setSize(500, 400);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+    refresh();
   }
 
-  public void addPokemon(PokemonInfo pi) {
-    Pokemon pokemon = new Pokemon(pi.getNumber());
-    partyEditorPanel.addPokemon(pokemon);
-    reloadParty();
+  public Player getPlayer() {
+    return player;
   }
 
-  public void removePokemon(Pokemon p) {
-    partyEditorPanel.removePokemon(p);
-    reloadParty();
-    remove(pokemonDetailsPanel);
+  public void toggleEditParty() {
+    boolean containsEditorPanel = false;
+
+    remove(playerEditorPanel);
+    for (Component c : getContentPane().getComponents()) {
+      if (c == partyEditorPanel) {
+        containsEditorPanel = true;
+        break;
+      }
+    }
+
+    if (containsEditorPanel) {
+      remove(partyEditorPanel);
+    }
+    else {
+      add(partyEditorPanel, BorderLayout.EAST);
+    }
+
+    refresh();
   }
 
-  public void showAddPokemon() {
-    remove(pokemonDetailsPanel);
-    add(pokemonSelectorPanel, BorderLayout.EAST);
+  public void toggleEditPlayer() {
+    boolean containsEditorPanel = false;
 
-    validate();
+    remove(partyEditorPanel);
+    for (Component c : getContentPane().getComponents()) {
+      if (c == playerEditorPanel) {
+        containsEditorPanel = true;
+        break;
+      }
+    }
+
+    if (containsEditorPanel) {
+      remove(playerEditorPanel);
+    }
+    else {
+      add(playerEditorPanel, BorderLayout.EAST);
+    }
+
+    refresh();
+  }
+
+  public void refresh() {
+    playerDetailsPanel.refresh();
+    partyEditorPanel.refresh();
+
+    pack();
     repaint();
   }
 
-  public void showEditPokemon(Pokemon p) {
-    remove(pokemonSelectorPanel);
-    add(pokemonDetailsPanel, BorderLayout.EAST);
-    pokemonDetailsPanel.show(p);
-
-    validate();
-    repaint();
-  }
-
-  public void reloadParty() {
-    partyEditorPanel.reload();
-
-    validate();
-    repaint();
-  }
-
+  private Player player = new Player("undefined");
+  private PlayerDetailsPanel playerDetailsPanel = new PlayerDetailsPanel(this);
   private PartyEditorPanel partyEditorPanel = new PartyEditorPanel(this);
-  private PokemonDetailsPanel pokemonDetailsPanel = new PokemonDetailsPanel(this);
-  private PokemonSelectorPanel pokemonSelectorPanel = new PokemonSelectorPanel(this);
+  private PlayerEditorPanel playerEditorPanel = new PlayerEditorPanel(this);
 
   public static final long serialVersionUID = 1L;
 }

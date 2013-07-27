@@ -28,14 +28,14 @@ public class OwnedPokemonPanel extends JPanel {
 
   private Pokemon pokemon;
   private PartyEditorPanel parent;
-  private JLabel editButton = new JLabel(ImageLoader.find("ui/right_arrow"));
+  private JLabel editButton = new JLabel(ImageLoader.find("ui/arrow_right"));
 
   private static final long serialVersionUID = 1L;
 
   private class EditHandler extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
-      parent.editPokemon(pokemon);
+      parent.showEditPokemon(pokemon);
     }
   }
 }

@@ -22,8 +22,8 @@ import com.jpokemon.ui.ImageLoader;
 import com.jpokemon.ui.JPokemonSelector;
 
 public class PokemonDetailsPanel extends JPanel {
-  public PokemonDetailsPanel(SaveGeneratorWindow sgw) {
-    parent = sgw;
+  public PokemonDetailsPanel(PartyEditorPanel pep) {
+    parent = pep;
     setLayout(new BorderLayout());
 
     JPanel detailsPanel = new JPanel();
@@ -113,7 +113,7 @@ public class PokemonDetailsPanel extends JPanel {
     }
     pokemon.name(name);
 
-    parent.reloadParty();
+    parent.callParentRefresh();
   }
 
   private void setLevel() {
@@ -127,7 +127,7 @@ public class PokemonDetailsPanel extends JPanel {
     }
     pokemon.level(Integer.parseInt(level));
 
-    parent.reloadParty();
+    parent.callParentRefresh();
   }
 
   private void setMoves() {
@@ -147,12 +147,16 @@ public class PokemonDetailsPanel extends JPanel {
         continue;
       }
 
-      pokemon.addMove(mi.getNumber());
+      try {
+        pokemon.addMove(mi.getNumber());
+      } catch (IllegalArgumentException e) {
+        ams.setSelectedItem(null);
+      }
     }
   }
 
   private Pokemon pokemon;
-  private SaveGeneratorWindow parent;
+  private PartyEditorPanel parent;
   private JPanel movePanel = new JPanel();
   private JTextField nameField = new JTextField();
   private JTextField levelField = new JTextField();
