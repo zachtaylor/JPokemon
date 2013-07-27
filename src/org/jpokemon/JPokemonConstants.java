@@ -13,9 +13,6 @@ public class JPokemonConstants {
   // Player config
   public static final int STARTER_POKEMON_LEVEL = 5;
 
-  // Pokemon config
-  public static final boolean MEASURE_EFFORT_VALUE_REALTIME = false;
-
   // Battle config
   public static final int SHIELD_ROUND_DURATION = 5;
   public static final double SHIELD_REDUCTION_MODIFIER = 1.0;

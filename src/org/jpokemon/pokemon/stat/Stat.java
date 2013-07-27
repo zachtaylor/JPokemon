@@ -1,6 +1,5 @@
 package org.jpokemon.pokemon.stat;
 
-import org.jpokemon.JPokemonConstants;
 import org.zachtaylor.jnodalxml.XmlException;
 import org.zachtaylor.jnodalxml.XmlNode;
 import org.zachtaylor.myna.Myna;
@@ -39,18 +38,13 @@ public class Stat {
   }
 
   public int ev() {
-    return _ev + _evPending;
+    return _ev;
   }
 
   public void ev(int val) {
-    if (!JPokemonConstants.MEASURE_EFFORT_VALUE_REALTIME) {
-      _evPending += val;
-    }
-    else {
-      _ev += val;
-      computeMax();
-      computeCur();
-    }
+    _ev += val;
+    computeMax();
+    computeCur();
   }
 
   public int iv() {
@@ -75,11 +69,6 @@ public class Stat {
 
   public void level(int l) {
     _level = l;
-
-    if (!JPokemonConstants.MEASURE_EFFORT_VALUE_REALTIME) {
-      _ev += _evPending;
-      _evPending = 0;
-    }
 
     reset();
   }
@@ -120,7 +109,6 @@ public class Stat {
     myNode.setAttribute("points", _pts);
     myNode.setAttribute("ev", _ev);
     myNode.setAttribute("iv", _iv);
-    myNode.setAttribute("ev_pending", _evPending);
     myNode.setSelfClosing(true);
 
     return myNode;
@@ -135,7 +123,6 @@ public class Stat {
     _pts = node.getIntAttribute("points");
     _ev = node.getIntAttribute("ev");
     _iv = node.getIntAttribute("iv");
-    _evPending = node.getIntAttribute("ev_pending");
   }
 
   private void computeMax() {
@@ -163,5 +150,5 @@ public class Stat {
   }
 
   protected double _modifier;
-  protected int _delta, _cur, _max, _base, _pts, _level, _ev, _evPending, _iv;
+  protected int _delta, _cur, _max, _base, _pts, _level, _ev, _iv;
 }
