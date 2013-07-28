@@ -9,9 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jpokemon.manager.component.ImageService;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.jpokemon.util.ui.ImageLoader;
 
 public class InventoryItemPanel extends JPanel {
   public InventoryItemPanel(StoreView view, JSONObject data) throws JSONException {
@@ -32,7 +33,7 @@ public class InventoryItemPanel extends JPanel {
     iconAndInfoPanel.setLayout(new BoxLayout(iconAndInfoPanel, BoxLayout.X_AXIS));
     add(iconAndInfoPanel);
 
-    iconAndInfoPanel.add(new JLabel(ImageService.item(itemType, itemName)));
+    iconAndInfoPanel.add(new JLabel(ImageLoader.item(itemType, itemName)));
 
     iconAndInfoPanel.add(new JLabel(itemName + " x" + denomination));
     iconAndInfoPanel.add(new JPanel());

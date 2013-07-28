@@ -1,5 +1,6 @@
 package org.jpokemon.pokemon.move;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,7 @@ public class MoveMap {
     ensureCacheExists(number);
     if (cache.get(number).get(level) == null) {
       try {
-        List<MoveMap> maps = SqlStatement.select(MoveMap.class)
-            .where("pokemon_number").eq(number).and("pokemon_level").eq(level)
-            .getList();
+        List<MoveMap> maps = SqlStatement.select(MoveMap.class).where("pokemon_number").eq(number).and("pokemon_level").eq(level).getList();
 
         cache.get(number).put(level, maps);
       } catch (DataConnectionException e) {
@@ -31,6 +30,20 @@ public class MoveMap {
       }
     }
     return cache.get(number).get(level);
+  }
+
+  public static List<MoveMap> get(int number) {
+    DataConnectionManager.init(JPokemonServer.databasepath);
+
+    try {
+      List<MoveMap> maps = SqlStatement.select(MoveMap.class).where("pokemon_number").eq(number).getList();
+
+      return maps;
+    } catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return new ArrayList<MoveMap>();
   }
 
   private static void ensureCacheExists(int number) {

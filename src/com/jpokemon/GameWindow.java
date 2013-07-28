@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.ServiceException;
-import org.jpokemon.manager.component.ImageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +16,7 @@ import com.jpokemon.battle.BattleView;
 import com.jpokemon.overworld.OverworldView;
 import com.jpokemon.store.StoreView;
 import com.jpokemon.upgrade.UpgradeView;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class GameWindow extends JFrame implements KeyListener {
   public GameWindow(String playerID) {
@@ -32,7 +32,7 @@ public class GameWindow extends JFrame implements KeyListener {
     // setResizable(false);
     setLayout(new BorderLayout());
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-    setIconImage(ImageService.find("main-icon").getImage());
+    setIconImage(ImageLoader.find("main-icon").getImage());
 
     _active = _upgrade;
 

@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 
 import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.ServiceException;
-import org.jpokemon.manager.component.ImageService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +25,7 @@ import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class BattleView extends JPokemonView {
   public BattleView(GameWindow parent) {
@@ -304,7 +304,7 @@ public class BattleView extends JPokemonView {
       JSONArray moves = leader.getJSONArray("moves");
 
       prompt = "Select a move for " + leader.getString("name");
-      image = ImageService.find("pkmn/" + leader.getInt("number"));
+      image = ImageLoader.find("pkmn/" + leader.getInt("number"));
       for (int i = 0; i < moves.length(); i++)
         move_names.add(moves.getJSONObject(i).getString("name"));
     } catch (JSONException e) {
@@ -322,7 +322,7 @@ public class BattleView extends JPokemonView {
     List<String> slotIds = new ArrayList<String>();
 
     try {
-      image = ImageService.find("pkmn/" + _trainerData.getJSONObject("leader").getInt("number"));
+      image = ImageLoader.find("pkmn/" + _trainerData.getJSONObject("leader").getInt("number"));
 
       for (int i = 0; i < _enemyTeams.length(); i++) {
         for (int j = 0; j < _enemyTeams.getJSONArray(i).length(); j++) {
@@ -349,7 +349,7 @@ public class BattleView extends JPokemonView {
       JSONObject leader = _trainerData.getJSONObject("leader");
       JSONArray party = _data.getJSONArray("pokemon");
 
-      image = ImageService.find("pkmn/" + leader.getInt("number"));
+      image = ImageLoader.find("pkmn/" + leader.getInt("number"));
       for (int i = 1; i < party.length(); i++) {
         names.add(party.getJSONObject(i).getString("name"));
       }
@@ -392,7 +392,7 @@ public class BattleView extends JPokemonView {
       String itemName = itemJSON.getString("name");
       String itemType = itemJSON.getString("type");
 
-      itemIconsInType.add(ImageService.item(itemType, itemName));
+      itemIconsInType.add(ImageLoader.item(itemType, itemName));
     }
 
     int itemChoice = JOptionPane.showOptionDialog(parent(), "Select an item to use", "ITEM CHOICE", 0, JOptionPane.QUESTION_MESSAGE, null, itemIconsInType.toArray(), null);
