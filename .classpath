@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="lib/jetty/servlet-api-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/org.zachtaylor.myna-0.0.x.jar"/>
 	<classpathentry kind="lib" path="lib/jnodalxml-0.0.x.jar"/>
+	<classpathentry kind="lib" path="lib/jetty/jetty-websocket-8.1.12.v20130726.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

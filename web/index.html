@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      var ws = new WebSocket('ws://' + document.location.hostname + ':' + document.location.port + '/socket');
+      ws.onmessage = function(message) {
+        var json = JSON.parse(message.data);
+
+        if (json.action === 'log') {
+          console.log(json.message);
+        }
+      }
+    </script>
+  <head>
+  <body>
+    <h1> JPokemon loaded successfully I think</h1>
+  </body>
+</html>

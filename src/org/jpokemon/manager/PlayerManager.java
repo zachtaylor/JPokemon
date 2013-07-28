@@ -11,9 +11,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.manager.component.OverworldActivity;
 import org.jpokemon.manager.message.Message;
+import org.jpokemon.server.JPokemonServer;
+import org.jpokemon.server.JPokemonWebSocket;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONArray;
@@ -54,6 +55,24 @@ public class PlayerManager {
     }
     else {
       service.handleRequest(request);
+    }
+  }
+
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
+    Player player = connections.get(socket);
+    String action = request.getString("action");
+
+    // TODO : Refactor all of this shit
+    if (action.equals("login")) {
+      String name = loadPlayer(request.getString("name"));
+      socket.sendLog("Loaded with name: " + name);
+    }
+    else if (action.equals("create")) {
+      String name = createPlayer(request.getString("name"), request.getString("rival"));
+      socket.sendLog("Loaded with name: " + name);
+    }
+    else {
+      // TODO : do stuff with the player
     }
   }
 
@@ -162,6 +181,7 @@ public class PlayerManager {
   }
 
   private static Map<String, Player> players = new HashMap<String, Player>();
+  private static Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
   private static Map<Player, Activity> activities = new HashMap<Player, Activity>();
   private static Map<Player, Queue<Message>> messageQueues = new HashMap<Player, Queue<Message>>();
 
