@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.jpokemon.ui.ImageLoader;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class InventoryItemPanel extends JPanel {
   public InventoryItemPanel(StoreView view, JSONObject data) throws JSONException {

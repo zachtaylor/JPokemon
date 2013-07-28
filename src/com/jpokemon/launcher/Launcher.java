@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 
-import com.jpokemon.ui.ImageLoader;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class Launcher extends JFrame {
   public Launcher() {

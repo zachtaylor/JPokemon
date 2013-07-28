@@ -23,7 +23,7 @@ import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 import com.jpokemon.party.PartyMenu;
-import com.jpokemon.ui.ImageLoader;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class UpgradeView extends JPokemonView {
   public UpgradeView(GameWindow g) {

@@ -27,7 +27,7 @@ import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 import com.jpokemon.start.StartMenu;
-import com.jpokemon.ui.ImageLoader;
+import com.jpokemon.util.ui.ImageLoader;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class OverworldView extends JPokemonView {

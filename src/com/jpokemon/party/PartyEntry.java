@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jpokemon.JPokemonMenuEntry;
-import com.jpokemon.ui.ImageLoader;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class PartyEntry extends JPokemonMenuEntry {
   public PartyEntry(PartyMenu parent, JSONObject data) throws JSONException {

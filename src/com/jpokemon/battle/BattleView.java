@@ -25,7 +25,7 @@ import com.jpokemon.GameWindow;
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
-import com.jpokemon.ui.ImageLoader;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class BattleView extends JPokemonView {
   public BattleView(GameWindow parent) {

@@ -15,8 +15,8 @@ import org.json.JSONObject;
 import com.jpokemon.battle.BattleView;
 import com.jpokemon.overworld.OverworldView;
 import com.jpokemon.store.StoreView;
-import com.jpokemon.ui.ImageLoader;
 import com.jpokemon.upgrade.UpgradeView;
+import com.jpokemon.util.ui.ImageLoader;
 
 public class GameWindow extends JFrame implements KeyListener {
   public GameWindow(String playerID) {
