@@ -3,7 +3,7 @@ package org.jpokemon.action.performer;
 import org.jpokemon.item.Store;
 import org.jpokemon.manager.LoadException;
 import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.component.StoreActivity;
+import org.jpokemon.manager.activity.StoreActivity;
 import org.jpokemon.trainer.Player;
 
 public class StoreActionPerformer extends AbstractActionPerformer {

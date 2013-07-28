@@ -10,6 +10,7 @@ import org.jpokemon.item.Item;
 import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.JPokemonServer;
 import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.activity.BattleActivity;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;

@@ -7,113 +7,52 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
+import java.util.Stack;
 
-import org.jpokemon.manager.component.OverworldActivity;
-import org.jpokemon.manager.message.Message;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.JPokemonWebSocket;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XmlParser;
 
 public class PlayerManager {
-  public static JSONObject getDataRequest(JSONObject request) throws ServiceException {
-    Player player = JPokemonService.getPlayer(request);
-    Activity activity = getActivity(player);
-
-    JSONObject response = new JSONObject();
-
-    try {
-      response.put("state", activity.getName());
-      response.put("messages", loadMessagesForPlayer(player));
-      response.put(activity.getName(), activity.getServer(player).data());
-
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-
-    return response;
-  }
-
-  public static void activityRequest(JSONObject request) throws ServiceException {
-    Player player = JPokemonService.getPlayer(request);
-    Activity activity = getActivity(player);
-
-    JPokemonService service = activity.getHandler();
-
-    if (request.has("option")) {
-      try {
-        service.handleRequestOption(request.getString(OPTION_KEY), request);
-      } catch (JSONException e) {
-      }
-    }
-    else {
-      service.handleRequest(request);
-    }
-  }
-
   public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
     Player player = connections.get(socket);
-    String action = request.getString("action");
 
-    // TODO : Refactor all of this shit
-    if (action.equals("login")) {
-      String name = loadPlayer(request.getString("name"));
-      socket.sendLog("Loaded with name: " + name);
-    }
-    else if (action.equals("create")) {
-      String name = createPlayer(request.getString("name"), request.getString("rival"));
-      socket.sendLog("Loaded with name: " + name);
+    if (player == null) {
+      String action = request.getString("action");
+
+      if (action.equals("login")) {
+        player = PlayerManager.login(request.getString("name"));
+      }
+      else if (action.equals("create")) {
+        player = PlayerManager.create(request.getString("name"), request.getString("rival"));
+      }
+
+      connections.put(socket, player);
     }
     else {
-      // TODO : do stuff with the player
+      getActivity(player).handleRequest(player, request);
     }
   }
 
-  public static Player getPlayer(String id) {
-    if (players.get(id) == null)
-      throw new IllegalArgumentException("Could not retrieve PlayerID: " + id);
-
-    return players.get(id);
+  public static Activity getActivity(Player player) {
+    Stack<Activity> stack = activities.get(player);
+    return stack.peek();
   }
 
-  public static String loadPlayer(String name) throws ServiceException {
-    if (players.keySet().contains(name))
-      throw new ServiceException("File already loaded");
-
-    File file = new File(JPokemonServer.savepath, name + ".jpkmn");
-
-    if (!file.exists())
-      throw new ServiceException("Save file not found");
-
-    Player player = newPlayer(name);
-
-    try {
-      player.loadXML(XmlParser.parse(file).get(0));
-    } catch (FileNotFoundException e) {
-    }
-
-    messageQueues.put(player, new LinkedList<Message>());
-    setActivity(player, OverworldActivity.getInstance());
-    return player.id();
+  public static void addActivity(Player player, Activity a) {
+    // TODO
   }
 
-  public static String createPlayer(String name, String rivalName) {
-    Player player = newPlayer(name = getUniquePlayerName(name));
-    player.setName(name);
-    player.record().setRivalName(rivalName);
-    messageQueues.put(player, new LinkedList<Message>());
-    setActivity(player, OverworldActivity.getInstance());
-    return player.id();
+  public static void popActivity(PokemonTrainer trainer) {
+    // TODO
   }
 
-  public static void savePlayer(Player player) {
+  public static void save(Player player) {
     String path = JPokemonServer.savepath + player.id() + ".jpkmn";
 
     try {
@@ -125,41 +64,32 @@ public class PlayerManager {
     }
   }
 
-  public static Activity getActivity(PokemonTrainer trainer) {
-    if (trainer instanceof Player) {
-      return activities.get((Player) trainer);
+  private static Player login(String name) throws ServiceException {
+    if (players.keySet().contains(name)) {
+      throw new ServiceException("File already loaded");
     }
 
-    return null;
-  }
+    File file = new File(JPokemonServer.savepath, name + ".jpkmn");
 
-  public static void setActivity(PokemonTrainer trainer, Activity a) {
-    // TODO : validation
-
-    if (trainer instanceof Player) {
-      activities.put((Player) trainer, a);
-    }
-  }
-
-  public static void clearActivity(PokemonTrainer trainer) {
-    if (trainer instanceof Player) {
-      setActivity(trainer, OverworldActivity.getInstance());
-    }
-  }
-
-  public static void addMessageToQueue(Player p, Message message) {
-    Queue<Message> q = messageQueues.get(p);
-    q.add(message);
-  }
-
-  private static JSONArray loadMessagesForPlayer(Player p) {
-    JSONArray array = new JSONArray();
-
-    while (!messageQueues.get(p).isEmpty()) {
-      array.put(messageQueues.get(p).remove().toJSON());
+    if (!file.exists()) {
+      throw new ServiceException("Save file not found");
     }
 
-    return array;
+    Player player = newPlayer(name);
+
+    try {
+      player.loadXML(XmlParser.parse(file).get(0));
+    } catch (FileNotFoundException e) {
+    }
+
+    return player;
+  }
+
+  private static Player create(String name, String rivalName) {
+    Player player = newPlayer(name = getUniquePlayerName(name));
+    player.setName(name);
+    player.record().setRivalName(rivalName);
+    return player;
   }
 
   private static Player newPlayer(String id) {
@@ -182,8 +112,5 @@ public class PlayerManager {
 
   private static Map<String, Player> players = new HashMap<String, Player>();
   private static Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
-  private static Map<Player, Activity> activities = new HashMap<Player, Activity>();
-  private static Map<Player, Queue<Message>> messageQueues = new HashMap<Player, Queue<Message>>();
-
-  private static final String OPTION_KEY = "option";
+  private static Map<Player, Stack<Activity>> activities = new HashMap<Player, Stack<Activity>>();
 }

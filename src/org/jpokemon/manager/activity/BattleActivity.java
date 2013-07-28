@@ -1,35 +1,29 @@
-package org.jpokemon.manager.component;
+package org.jpokemon.manager.activity;
 
 import org.jpokemon.battle.Battle;
 import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.LoadException;
+import org.jpokemon.manager.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class BattleActivity implements Activity {
   public BattleActivity(PokemonTrainer... trainers) throws LoadException {
     validate(trainers);
 
-    _battle = Battle.create(trainers);
-    _battle.start();
-  }
-
-  public String getName() {
-    return "battle";
-  }
-
-  @Override
-  public BattleService getHandler() {
-    return BattleService.getInstance();
-  }
-
-  @Override
-  public BattleServer getServer(Player player) {
-    return new BattleServer(player);
+    battle = Battle.create(trainers);
+    battle.start();
   }
 
   public Battle getBattle() {
-    return _battle;
+    return battle;
+  }
+
+  @Override
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+    battle.createTurn(request);
   }
 
   private static void validate(PokemonTrainer... trainers) throws LoadException {
@@ -40,5 +34,5 @@ public class BattleActivity implements Activity {
     }
   }
 
-  private Battle _battle;
+  private Battle battle;
 }

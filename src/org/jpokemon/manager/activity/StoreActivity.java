@@ -1,30 +1,23 @@
-package org.jpokemon.manager.component;
+package org.jpokemon.manager.activity;
 
 import org.jpokemon.item.Inventory;
 import org.jpokemon.item.Store;
 import org.jpokemon.manager.Activity;
-import org.jpokemon.manager.JPokemonService;
-import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.manager.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class StoreService extends JPokemonService {
-  private StoreService() {
-  }
+public class StoreActivity implements Activity {
+  private Store store;
 
-  public static StoreService getInstance() {
-    return instance;
+  public StoreActivity(Store s) {
+    store = s;
   }
 
   @Override
-  public void handleRequest(JSONObject request) throws ServiceException {
-    Player player = getPlayer(request);
-    Activity activity = PlayerManager.getActivity(player);
-    Store store = ((StoreActivity) activity).getStore();
-
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     try {
       JSONArray itemChanges = request.getJSONArray("items");
 
@@ -37,7 +30,7 @@ public class StoreService extends JPokemonService {
         int change = itemChange.getInt("change");
         int denomination = itemChange.getInt("denomination");
 
-        Inventory inventory = findInventory(store, itemID, denomination);
+        Inventory inventory = findInventory(itemID, denomination);
 
         if (inventory == null) {
           throw new ServiceException("Invalid sale request item:" + itemID + " denomination:" + denomination);
@@ -67,7 +60,7 @@ public class StoreService extends JPokemonService {
         int change = itemChange.getInt("change");
         int denomination = itemChange.getInt("denomination");
 
-        Inventory inventory = findInventory(store, itemID, denomination);
+        Inventory inventory = findInventory(itemID, denomination);
 
         player.item(itemID).add(change);
 
@@ -80,17 +73,12 @@ public class StoreService extends JPokemonService {
         }
       }
 
-      PlayerManager.clearActivity(player);
+      // PlayerManager.clearActivity(player);
     } catch (JSONException e) {
     }
   }
 
-  @Override
-  public void handleRequestOption(String option, JSONObject request) throws ServiceException {
-    throw new ServiceException("Stores have no options");
-  }
-
-  private Inventory findInventory(Store store, int itemID, int denomination) {
+  private Inventory findInventory(int itemID, int denomination) {
     for (Inventory inventory : store) {
       if (inventory.getItem() == itemID && inventory.getDenomination() == denomination) {
         return inventory;
@@ -99,6 +87,4 @@ public class StoreService extends JPokemonService {
 
     return null;
   }
-
-  private static StoreService instance = new StoreService();
 }

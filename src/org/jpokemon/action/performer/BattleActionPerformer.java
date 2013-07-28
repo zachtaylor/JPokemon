@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 
 import org.jpokemon.manager.LoadException;
 import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.component.BattleActivity;
+import org.jpokemon.manager.activity.BattleActivity;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;

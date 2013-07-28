@@ -3,7 +3,7 @@ package org.jpokemon.battle.turn;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.component.BattleActivity;
+import org.jpokemon.manager.activity.BattleActivity;
 import org.jpokemon.manager.message.Message;
 import org.jpokemon.manager.message.MessageLevel;
 import org.jpokemon.trainer.Player;

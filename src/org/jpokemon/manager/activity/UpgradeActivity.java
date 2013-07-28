@@ -1,7 +1,6 @@
-package org.jpokemon.manager.component;
+package org.jpokemon.manager.activity;
 
-import org.jpokemon.manager.JPokemonService;
-import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.ServiceException;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;
@@ -10,19 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UpgradeService extends JPokemonService {
-  private static final String POKEMON_INDEX_KEY = "pokemon_index";
-
-  private UpgradeService() {
-  }
-
-  public static UpgradeService getInstance() {
-    return instance;
-  }
-
+public class UpgradeActivity implements Activity {
   @Override
-  public void handleRequest(JSONObject request) throws ServiceException {
-    Player player = getPlayer(request);
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     Pokemon pokemon = getPokemon(player, request);
 
     try {
@@ -34,12 +23,7 @@ public class UpgradeService extends JPokemonService {
     } catch (JSONException e) {
     }
 
-    PlayerManager.clearActivity(player);
-  }
-
-  @Override
-  public void handleRequestOption(String option, JSONObject request) throws ServiceException {
-    throw new ServiceException("Upgrades have no options");
+    // PlayerManager.clearActivity(player);
   }
 
   private static Pokemon getPokemon(Player player, JSONObject request) throws ServiceException {
@@ -47,7 +31,7 @@ public class UpgradeService extends JPokemonService {
     Pokemon pokemon = null;
 
     try {
-      pokemonIndex = request.getInt(POKEMON_INDEX_KEY);
+      pokemonIndex = request.getInt("pokemon");
     } catch (JSONException e) {
       throw new ServiceException("Pokemon index not provided");
     }
@@ -60,6 +44,4 @@ public class UpgradeService extends JPokemonService {
 
     return pokemon;
   }
-
-  private static UpgradeService instance = new UpgradeService();
 }

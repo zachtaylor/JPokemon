@@ -6,6 +6,7 @@ import org.jpokemon.item.Store;
 import org.jpokemon.manager.Activity;
 import org.jpokemon.manager.JPokemonServer;
 import org.jpokemon.manager.PlayerManager;
+import org.jpokemon.manager.activity.StoreActivity;
 import org.jpokemon.overworld.map.Map;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
