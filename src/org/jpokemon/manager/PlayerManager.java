@@ -87,7 +87,7 @@ public class PlayerManager {
 
   public static String createPlayer(String name, String rivalName) {
     Player player = newPlayer(name = getUniquePlayerName(name));
-    player.name(name);
+    player.setName(name);
     player.record().setRivalName(rivalName);
     messageQueues.put(player, new LinkedList<Message>());
     setActivity(player, OverworldActivity.getInstance());

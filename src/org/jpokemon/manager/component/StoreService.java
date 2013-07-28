@@ -28,7 +28,7 @@ public class StoreService extends JPokemonService {
     try {
       JSONArray itemChanges = request.getJSONArray("items");
 
-      int runningTotalCash = player.cash();
+      int runningTotalCash = player.getCash();
 
       for (int index = 0; index < itemChanges.length(); index++) {
         JSONObject itemChange = itemChanges.getJSONObject(index);
@@ -72,11 +72,11 @@ public class StoreService extends JPokemonService {
         player.item(itemID).add(change);
 
         if (change > 0) {
-          player.cash(player.cash() - change * inventory.getPrice());
+          player.setCash(player.getCash() - change * inventory.getPrice());
         }
         else {
           // Change is negative. Double negative causes addition of money
-          player.cash(player.cash() - change * inventory.getPurchaseprice());
+          player.setCash(player.getCash() - change * inventory.getPurchaseprice());
         }
       }
 

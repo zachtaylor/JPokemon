@@ -86,7 +86,7 @@ public class Record {
       s = s.replaceAll("\\{rival\\}", _rivalName);
 
     if (player != null)
-      s = s.replaceAll("\\{player\\}", player.name());
+      s = s.replaceAll("\\{player\\}", player.getName());
 
     if (_pokemon != null)
       s = s.replaceAll("\\{starter\\}", _pokemon);

@@ -19,7 +19,7 @@ public class OverworldServer extends JPokemonServer {
 
   @Override
   public void visit(Player player) {
-    Area area = Map.area(player.area());
+    Area area = Map.area(player.getArea());
 
     npcs_json = new JSONArray();
     for (NPC npc : area.npcs()) {

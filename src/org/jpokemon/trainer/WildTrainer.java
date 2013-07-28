@@ -8,11 +8,11 @@ public class WildTrainer implements PokemonTrainer {
     return "wild_pokemon";
   }
 
-  public String name() {
+  public String getName() {
     return "Wild Pokemon";
   }
 
-  public void name(String s) {
+  public void setName(String s) {
   }
 
   public PokemonStorageUnit party() {

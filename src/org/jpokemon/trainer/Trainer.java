@@ -15,11 +15,11 @@ public class Trainer implements PokemonTrainer {
     return _id;
   }
 
-  public String name() {
+  public String getName() {
     return _name;
   }
 
-  public void name(String name) {
+  public void setName(String name) {
     _name = name;
   }
 
@@ -36,7 +36,7 @@ public class Trainer implements PokemonTrainer {
   }
 
   public boolean add(Pokemon p) {
-    p.setTrainerName(name());
+    p.setTrainerName(getName());
     return party().add(p);
   }
 

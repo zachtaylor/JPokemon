@@ -12,7 +12,7 @@ public class SwapTurn extends Turn {
   public void doExecute() {
     slot().party().swap(0, _swapIndex);
 
-    String trainerName = slot().trainer().name();
+    String trainerName = slot().trainer().getName();
     String leaderName = slot().leader().name();
     addMessage(trainerName + " sent out " + leaderName);
   }

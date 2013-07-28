@@ -1,5 +1,8 @@
 package org.jpokemon.trainer;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
 import org.jpokemon.pokedex.Pokedex;
@@ -11,53 +14,136 @@ import org.zachtaylor.jnodalxml.XmlNode;
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
 
+  private Bag _bag = new Bag();
+  private String _name, _id, _avatar;
+  private Pokedex _pokedex = new Pokedex();
+  private Record _record = new Record(this);
+  private int _area = 1, _badge, _cash, _x, _y, _xp, _level;
+  private List<String> _unlockedAvatars, _friends, _blocked;
+  private PokemonStorageBlock _storage = new PokemonStorageBlock();
+
   public Player(String id) {
     _id = id;
-    _area = 1;
-
-    _bag = new Bag();
-    _record = new Record(this);
-    _pokedex = new Pokedex();
-    _storage = new PokemonStorageBlock();
   }
 
   public String id() {
     return _id;
   }
 
-  public String name() {
+  public String getName() {
     return _name;
   }
 
-  public void name(String name) {
+  public void setName(String name) {
     _name = name;
   }
 
-  public int area() {
-    return _area;
-  }
-
-  public void area(int area) {
-    _area = area;
-  }
-
-  public int badge() {
-    return _badge;
-  }
-
-  public void badge(int badge) {
-    _badge = badge;
-  }
-
-  public int cash() {
+  public int getCash() {
     return _cash;
   }
 
-  public void cash(int cash) {
+  public void setCash(int cash) {
     _cash = cash;
   }
 
-  public Bag bag() {
+  public int getExperience() {
+    return _xp;
+  }
+
+  public void setExperience(int xp) {
+    _xp = xp;
+  }
+
+  public String getAvatar() {
+    return _avatar;
+  }
+
+  public void setAvatar(String name) {
+    if (!_unlockedAvatars.contains(name)) {
+      return;
+    }
+    _avatar = name;
+  }
+
+  public List<String> getAvatars() {
+    return Collections.unmodifiableList(_unlockedAvatars);
+  }
+
+  public void addAvatar(String name) {
+    _unlockedAvatars.add(name);
+  }
+
+  public void removeAvatar(String name) {
+    _unlockedAvatars.remove(name);
+  }
+
+  public int getLevel() {
+    return _level;
+  }
+
+  public void setLevel(int level) {
+    _level = level;
+  }
+
+  public int getArea() {
+    return _area;
+  }
+
+  public void setArea(int area) {
+    _area = area;
+  }
+
+  public int getX() {
+    return _x;
+  }
+
+  public void setX(int x) {
+    _x = x;
+  }
+
+  public int getY() {
+    return _y;
+  }
+
+  public void setY(int y) {
+    _y = y;
+  }
+
+  public List<String> getFriends() {
+    return Collections.unmodifiableList(_friends);
+  }
+
+  public void addFriend(String name) {
+    _friends.add(name);
+    removeBlocked(name);
+  }
+
+  public void removeFriend(String name) {
+    _friends.remove(name);
+  }
+
+  public List<String> getBlocked() {
+    return Collections.unmodifiableList(_blocked);
+  }
+
+  public void addBlocked(String name) {
+    _blocked.add(name);
+    removeFriend(name);
+  }
+
+  public void removeBlocked(String name) {
+    _blocked.remove(name);
+  }
+
+  public int getBadgeCount() {
+    return _badge;
+  }
+
+  public void setBadgeCount(int badge) {
+    _badge = badge;
+  }
+
+  public Bag getBag() {
     return _bag;
   }
 
@@ -85,7 +171,7 @@ public class Player implements PokemonTrainer {
     for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p)) {
         _pokedex.own(p.number());
-        p.setTrainerName(name());
+        p.setTrainerName(getName());
         return true;
       }
     }
@@ -141,10 +227,4 @@ public class Player implements PokemonTrainer {
     return _id.hashCode();
   }
 
-  private Bag _bag;
-  private Record _record;
-  private Pokedex _pokedex;
-  private String _name, _id;
-  private int _area, _badge, _cash;
-  private PokemonStorageBlock _storage;
 }

@@ -45,7 +45,7 @@ public class Reward {
     }
 
     if (s.party().awake() == 0) {
-      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().name(), MessageLevel.MESSAGE);
+      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), MessageLevel.MESSAGE);
 
       for (RewardAction rewardAction : RewardAction.get(s.trainer().id())) {
         _actions.addAction(rewardAction);

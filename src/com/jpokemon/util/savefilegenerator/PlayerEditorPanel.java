@@ -61,7 +61,7 @@ public class PlayerEditorPanel extends JPanel {
   private class SetCashHandler implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
-      parent.getPlayer().cash(Integer.parseInt(cashField.getText()));
+      parent.getPlayer().setCash(Integer.parseInt(cashField.getText()));
       parent.refresh();
     }
   }
@@ -69,7 +69,7 @@ public class PlayerEditorPanel extends JPanel {
   private class SetBadgeHandler implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
-      parent.getPlayer().badge(Integer.parseInt(badgeField.getText()));
+      parent.getPlayer().setBadgeCount(Integer.parseInt(badgeField.getText()));
       parent.refresh();
     }
   }

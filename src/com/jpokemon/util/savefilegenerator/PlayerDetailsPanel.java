@@ -43,9 +43,9 @@ public class PlayerDetailsPanel extends JPanel {
   }
 
   public void refresh() {
-    usernameLabel.setText("name: " + parent.getPlayer().name());
-    cashLabel.setText("cash: " + parent.getPlayer().cash());
-    badgeLabel.setText("badges: " + parent.getPlayer().badge());
+    usernameLabel.setText("name: " + parent.getPlayer().getName());
+    cashLabel.setText("cash: " + parent.getPlayer().getCash());
+    badgeLabel.setText("badges: " + parent.getPlayer().getBadgeCount());
   }
 
   private SaveGeneratorWindow parent;

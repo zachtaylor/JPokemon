@@ -15,7 +15,7 @@ public class BattleService extends JPokemonService {
     Activity activity = PlayerManager.getActivity(player);
 
     if (!(activity instanceof BattleActivity))
-      throw new ServiceException("Current activity for " + player.name() + " is not a battle");
+      throw new ServiceException("Current activity for " + player.getName() + " is not a battle");
 
     Battle battle = ((BattleActivity) activity).getBattle();
 

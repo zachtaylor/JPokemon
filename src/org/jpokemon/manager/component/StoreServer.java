@@ -25,8 +25,8 @@ public class StoreServer extends JPokemonServer {
     Store store = ((StoreActivity) activity).getStore();
 
     try {
-      data().put("area_name", Map.area(player.area()).getName());
-      data().put("cash", player.cash());
+      data().put("area_name", Map.area(player.getArea()).getName());
+      data().put("cash", player.getCash());
       data().put("inventory", inventoryItems = new JSONArray());
     } catch (JSONException e) {
     }

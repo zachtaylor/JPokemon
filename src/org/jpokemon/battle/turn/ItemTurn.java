@@ -13,7 +13,7 @@ public class ItemTurn extends Turn {
     _targetIndex = targetIndex;
     _item = item;
 
-    addMessage(slot().trainer().name() + " used " + item.name());
+    addMessage(slot().trainer().getName() + " used " + item.name());
   }
 
   @Override

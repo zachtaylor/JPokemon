@@ -9,7 +9,7 @@ public class TransportActionPerformer extends AbstractActionPerformer {
 
   public void execute(Player player) {
     String[] areaAndLocation = getData().split(" ");
-    player.area(Integer.parseInt(areaAndLocation[0]));
+    player.setArea(Integer.parseInt(areaAndLocation[0]));
 
     if (areaAndLocation.length > 1)
       ; // When doing coordinates, do that here

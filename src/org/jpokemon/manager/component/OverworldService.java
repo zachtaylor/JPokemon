@@ -60,7 +60,7 @@ public class OverworldService extends JPokemonService {
 
     try {
       if (border.performAction(player)) {
-        player.area(border.getNext());
+        player.setArea(border.getNext());
       }
       else {
         throw new ServiceException("You cannot go that way");
@@ -98,10 +98,10 @@ public class OverworldService extends JPokemonService {
 
   private Area getArea(JSONObject request) throws ServiceException {
     Player player = getPlayer(request);
-    Area area = Map.area(player.area());
+    Area area = Map.area(player.getArea());
 
     if (area == null)
-      throw new ServiceException("Area number " + player.area() + " not found");
+      throw new ServiceException("Area number " + player.getArea() + " not found");
 
     return area;
   }

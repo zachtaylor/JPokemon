@@ -17,30 +17,30 @@ public class PlayerTest extends TestCase {
 
   public void testName() {
     String name = "hello world";
-    player.name(name);
+    player.setName(name);
 
-    assertEquals(name, player.name());
+    assertEquals(name, player.getName());
   }
 
   public void testArea() {
     int area = 80;
-    player.area(area);
+    player.setArea(area);
 
-    assertEquals(area, player.area());
+    assertEquals(area, player.getArea());
   }
 
   public void testBadge() {
     int badge = 2;
-    player.badge(badge);
+    player.setBadgeCount(badge);
 
-    assertEquals(badge, player.badge());
+    assertEquals(badge, player.getBadgeCount());
   }
 
   public void testCash() {
     int cash = 200;
-    player.cash(cash);
+    player.setCash(cash);
 
-    assertEquals(cash, player.cash());
+    assertEquals(cash, player.getCash());
   }
 
   public void testAddUsesStorage() {

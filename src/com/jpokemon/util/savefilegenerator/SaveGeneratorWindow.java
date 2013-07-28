@@ -40,12 +40,12 @@ public class SaveGeneratorWindow extends JFrame {
       }
     }
     else {
-      player.name(name);
+      player.setName(name);
     }
   }
 
   public void savePlayer() {
-    File file = new File(".", player.name() + ".jpkmn");
+    File file = new File(".", player.getName() + ".jpkmn");
 
     try {
       Writer writer = new BufferedWriter(new PrintWriter(file));

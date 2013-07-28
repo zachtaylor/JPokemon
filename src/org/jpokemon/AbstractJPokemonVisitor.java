@@ -19,7 +19,7 @@ public abstract class AbstractJPokemonVisitor implements JPokemonVisitor {
 
     visit(player.pokedex());
 
-    visit(player.bag());
+    visit(player.getBag());
 
     for (int i = 0; i < PokemonStorageBlock.boxcount; i++) {
       lastUnit = player.box(i);

@@ -97,7 +97,7 @@ public abstract class Turn implements Comparable<Turn> {
 
     _user.party().swap(0, swapIndex);
 
-    String trainerName = slot().trainer().name();
+    String trainerName = slot().trainer().getName();
     String leaderName = slot().leader().name();
     addMessage(trainerName + " sent out " + leaderName);
   }
