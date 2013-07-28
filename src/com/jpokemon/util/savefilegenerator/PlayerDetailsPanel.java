@@ -3,11 +3,6 @@ package com.jpokemon.util.savefilegenerator;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -47,18 +42,6 @@ public class PlayerDetailsPanel extends JPanel {
     refresh();
   }
 
-  public void savePlayer() {
-    File file = new File(".", parent.getPlayer().name() + ".jpkmn");
-
-    try {
-      Writer writer = new BufferedWriter(new PrintWriter(file));
-      writer.write(parent.getPlayer().toXML().toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   public void refresh() {
     usernameLabel.setText("name: " + parent.getPlayer().name());
     cashLabel.setText("cash: " + parent.getPlayer().cash());
@@ -92,7 +75,7 @@ public class PlayerDetailsPanel extends JPanel {
   private class SaveHandler extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
-      savePlayer();
+      parent.savePlayer();
     }
   }
 }

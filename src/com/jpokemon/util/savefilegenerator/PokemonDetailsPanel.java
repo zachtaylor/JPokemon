@@ -13,8 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.JPokemonConstants;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.pokemon.move.MoveBlock;
 import org.jpokemon.pokemon.move.MoveInfo;
 import org.jpokemon.pokemon.move.MoveMap;
 
@@ -83,7 +83,7 @@ public class PokemonDetailsPanel extends JPanel {
     AvailableMoveSelector ams;
     MoveInfo amsValue;
 
-    for (int i = 0; i < JPokemonConstants.KNOWN_MOVE_COUNT; i++) {
+    for (int i = 0; i < MoveBlock.movecount; i++) {
       ams = new AvailableMoveSelector();
       ams.reload();
 

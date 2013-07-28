@@ -53,7 +53,7 @@ public class PlayerEditorPanel extends JPanel {
   private class SetNameHandler implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
-      parent.getPlayer().name(nameField.getText());
+      parent.loadOrSetName(nameField.getText());
       parent.refresh();
     }
   }

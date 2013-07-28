@@ -2,10 +2,17 @@ package com.jpokemon.util.savefilegenerator;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 import javax.swing.JFrame;
 
 import org.jpokemon.trainer.Player;
+import org.zachtaylor.jnodalxml.XmlParser;
 
 public class SaveGeneratorWindow extends JFrame {
   public SaveGeneratorWindow() {
@@ -20,6 +27,33 @@ public class SaveGeneratorWindow extends JFrame {
 
   public Player getPlayer() {
     return player;
+  }
+
+  public void loadOrSetName(String name) {
+    File file = new File(".", name + ".jpkmn");
+
+    if (file.exists()) {
+      player = new Player("undefined");
+      try {
+        player.loadXML(XmlParser.parse(file).get(0));
+      } catch (FileNotFoundException e) {
+      }
+    }
+    else {
+      player.name(name);
+    }
+  }
+
+  public void savePlayer() {
+    File file = new File(".", player.name() + ".jpkmn");
+
+    try {
+      Writer writer = new BufferedWriter(new PrintWriter(file));
+      writer.write(player.toXml().printToString(0, "  "));
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void toggleEditParty() {
