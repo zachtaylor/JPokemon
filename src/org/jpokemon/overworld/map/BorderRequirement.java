@@ -2,14 +2,14 @@ package org.jpokemon.overworld.map;
 
 import java.util.List;
 
-import org.jpokemon.action.AbstractRequirement;
+import org.jpokemon.action.requirement.Requirement;
 import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class BorderRequirement extends AbstractRequirement {
+public class BorderRequirement extends Requirement {
   private int area, next, type, data;
 
   public static List<BorderRequirement> get(int area, int next) {

@@ -3,14 +3,14 @@ package org.jpokemon.overworld.npc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.action.AbstractRequirement;
+import org.jpokemon.action.requirement.Requirement;
 import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class NPCRequirement extends AbstractRequirement {
+public class NPCRequirement extends Requirement {
   private int number, actionset, type, data;
 
   public static List<NPCRequirement> get(int number, int set) {

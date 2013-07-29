@@ -1,6 +1,6 @@
 package com.jpokemon.util.ui.selector;
 
-import org.jpokemon.action.RequirementType;
+import org.jpokemon.action.requirement.RequirementType;
 
 import com.jpokemon.util.ui.JPokemonSelector;
 

@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.ServiceException;
+import org.jpokemon.activity.PlayerManager;
+import org.jpokemon.activity.ServiceException;
 
 import com.jpokemon.GameWindow;
 
@@ -36,7 +36,7 @@ public class PlayButton extends JButton implements ActionListener {
     String id = null;
     
     try {
-      id = PlayerManager.loadPlayer(name);
+      id = PlayerManager.login(name).id();
     } catch (ServiceException e) {
       JOptionPane.showMessageDialog(_launcher, e.toString(), "LOGIN ERROR", JOptionPane.ERROR_MESSAGE);
 
@@ -44,7 +44,7 @@ public class PlayButton extends JButton implements ActionListener {
         String rivalName = JOptionPane.showInputDialog("What is your rival's name, again?", null);
         
         if (rivalName != null && !rivalName.isEmpty())
-          id = PlayerManager.createPlayer(name, rivalName);
+          id = PlayerManager.create(name, rivalName).id();
         else
           return;
       }

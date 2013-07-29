@@ -3,7 +3,9 @@ package org.jpokemon.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.manager.LoadException;
+import org.jpokemon.action.requirement.Requirement;
+import org.jpokemon.action.requirement.RequirementSet;
+import org.jpokemon.activity.ServiceException;
 import org.jpokemon.trainer.Player;
 
 public class ActionSet {
@@ -25,12 +27,14 @@ public class ActionSet {
     return _actions;
   }
 
-  public void execute(Player p) throws LoadException {
-    if (!isOkay(p))
+  public void execute(Player p) throws ServiceException {
+    if (!isOkay(p)) {
       return;
+    }
 
-    for (Action action : _actions)
-      action.getPerformer().execute(p);
+    for (Action action : _actions) {
+      action.execute(p);
+    }
   }
 
   public void addRequirement(Requirement requirement) {

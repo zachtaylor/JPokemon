@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.action.ActionSet;
+import org.jpokemon.activity.PlayerManager;
+import org.jpokemon.activity.ServiceException;
 import org.jpokemon.battle.slot.Slot;
-import org.jpokemon.manager.LoadException;
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.message.Message;
-import org.jpokemon.manager.message.MessageLevel;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.server.Message;
+import org.jpokemon.server.MessageLevel;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
@@ -47,8 +47,8 @@ public class Reward {
     if (s.party().awake() == 0) {
       _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), MessageLevel.MESSAGE);
 
-      for (RewardAction rewardAction : RewardAction.get(s.trainer().id())) {
-        _actions.addAction(rewardAction);
+      for (RewardAction actionBinding : RewardAction.get(s.trainer().id())) {
+        _actions.addAction(actionBinding.getAction());
       }
     }
   }
@@ -81,7 +81,7 @@ public class Reward {
     applyXP(s);
 
     if (s.trainer() instanceof Player) {
-      PlayerManager.addMessageToQueue((Player) s.trainer(), _faintMessage);
+      PlayerManager.pushMessage((Player) s.trainer(), _faintMessage);
 
       if (_defeatMessage != null) {
         applyDefeat((Player) s.trainer());
@@ -113,7 +113,7 @@ public class Reward {
 
       if (s.trainer() instanceof Player) {
         Message xpMessage = new Message("BATTLE", earner.name() + " received " + xpEach + " experience!", MessageLevel.MESSAGE);
-        PlayerManager.addMessageToQueue((Player) s.trainer(), xpMessage);
+        PlayerManager.pushMessage((Player) s.trainer(), xpMessage);
       }
 
       s.trainer().notify();
@@ -121,11 +121,11 @@ public class Reward {
   }
 
   private void applyDefeat(Player player) {
-    PlayerManager.addMessageToQueue(player, _defeatMessage);
+    PlayerManager.pushMessage(player, _defeatMessage);
 
     try {
       _actions.execute(player);
-    } catch (LoadException e) {
+    } catch (ServiceException e) {
     }
   }
 

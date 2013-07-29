@@ -3,8 +3,8 @@ package org.jpokemon.server;
 import java.io.IOException;
 
 import org.eclipse.jetty.websocket.WebSocket;
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.ServiceException;
+import org.jpokemon.activity.PlayerManager;
+import org.jpokemon.activity.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +13,7 @@ public class JPokemonWebSocket implements WebSocket.OnTextMessage {
 
   @Override
   public void onClose(int arg0, String arg1) {
+    PlayerManager.close(this);
   }
 
   @Override
@@ -39,15 +40,7 @@ public class JPokemonWebSocket implements WebSocket.OnTextMessage {
     }
   }
 
-  public void sendLog(String message) {
-    JSONObject json = new JSONObject();
-
-    try {
-      json.put("action", "log");
-      json.put("message", message);
-    } catch (JSONException e) {
-    }
-
-    sendJson(json);
+  public void sendMessage(Message message) {
+    sendJson(message.toJson());
   }
 }

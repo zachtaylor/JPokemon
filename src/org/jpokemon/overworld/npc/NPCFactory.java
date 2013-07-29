@@ -30,8 +30,8 @@ public class NPCFactory {
 
     as.setOption(info.getOption());
 
-    for (NPCAction action : NPCAction.get(info.getNumber(), info.getActionset())) {
-      as.addAction(action);
+    for (NPCAction actionBinding : NPCAction.get(info.getNumber(), info.getActionset())) {
+      as.addAction(actionBinding.getAction());
     }
     for (NPCRequirement npcRequirement : NPCRequirement.get(info.getNumber(), info.getActionset())) {
       as.addRequirement(npcRequirement);

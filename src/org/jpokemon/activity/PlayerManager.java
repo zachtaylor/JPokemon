@@ -1,4 +1,4 @@
-package org.jpokemon.manager;
+package org.jpokemon.activity;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,14 +12,55 @@ import java.util.Stack;
 
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.JPokemonWebSocket;
+import org.jpokemon.server.Message;
 import org.jpokemon.trainer.Player;
-import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XmlParser;
 
 public class PlayerManager {
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
+  public static Activity getActivity(Player player) {
+    Stack<Activity> stack = activities.get(player);
+    return stack.peek();
+  }
+
+  public static void addActivity(Player player, Activity a) {
+    activities.get(player).add(a);
+    a.onAdd(player);
+  }
+
+  public static void popActivity(Player player, Activity a) {
+    if (activities.get(player).peek() == a) {
+      activities.get(player).pop().onRemove(player);
+    }
+    else {
+      throw new IllegalStateException("Popped activity is not most recent");
+    }
+  }
+
+  public static void pushMessage(Player player, Message message) {
+    // TODO
+  }
+
+  public static void close(JPokemonWebSocket socket) {
+    Player player = connections.get(socket);
+    String path = JPokemonServer.savepath + player.id() + ".jpkmn";
+
+    try {
+      Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
+      writer.write(player.toXml().toString());
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    connections.remove(socket);
+    players.remove(player.id());
+    activities.remove(player);
+  }
+
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException,
+      ServiceException {
     Player player = connections.get(socket);
 
     if (player == null) {
@@ -31,36 +72,18 @@ public class PlayerManager {
       else if (action.equals("create")) {
         player = PlayerManager.create(request.getString("name"), request.getString("rival"));
       }
+      else {
+        throw new ServiceException("Expected player login or creation");
+      }
+
+      Stack<Activity> activityStack = new Stack<Activity>();
+      activityStack.add(OverworldActivity.getInstance());
 
       connections.put(socket, player);
+      activities.put(player, activityStack);
     }
     else {
       getActivity(player).handleRequest(player, request);
-    }
-  }
-
-  public static Activity getActivity(Player player) {
-    Stack<Activity> stack = activities.get(player);
-    return stack.peek();
-  }
-
-  public static void addActivity(Player player, Activity a) {
-    // TODO
-  }
-
-  public static void popActivity(PokemonTrainer trainer) {
-    // TODO
-  }
-
-  public static void save(Player player) {
-    String path = JPokemonServer.savepath + player.id() + ".jpkmn";
-
-    try {
-      Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(player.toXml().toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 

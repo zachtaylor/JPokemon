@@ -7,8 +7,8 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.ServiceException;
+import org.jpokemon.activity.PlayerManager;
+import org.jpokemon.activity.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 

@@ -2,14 +2,14 @@ package org.jpokemon.battle;
 
 import java.util.List;
 
-import org.jpokemon.action.AbstractAction;
+import org.jpokemon.action.SqliteActionBinding;
 import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class RewardAction extends AbstractAction {
+public class RewardAction extends SqliteActionBinding {
   private String trainerid, type, data;
 
   public static List<RewardAction> get(String trainerID) {

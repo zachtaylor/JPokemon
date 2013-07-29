@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.jpokemon.action.Action;
 import org.jpokemon.action.ActionSet;
-import org.jpokemon.action.Requirement;
-import org.jpokemon.manager.LoadException;
+import org.jpokemon.action.requirement.Requirement;
+import org.jpokemon.activity.ServiceException;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Player;
 
@@ -38,7 +38,7 @@ public class Border {
     actionSet.addRequirement(requirement);
   }
 
-  public boolean performAction(Player player) throws LoadException {
+  public boolean performAction(Player player) throws ServiceException {
     if (isOkay(player)) {
       actionSet.execute(player);
       return true;

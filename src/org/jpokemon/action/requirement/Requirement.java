@@ -1,8 +1,8 @@
-package org.jpokemon.action;
+package org.jpokemon.action.requirement;
 
 import org.jpokemon.trainer.Player;
 
-public abstract class AbstractRequirement implements Requirement {
+public abstract class Requirement {
   public boolean isOkay(Player p) {
     switch (RequirementType.valueOf(getType())) {
     case EVENT:
@@ -12,4 +12,16 @@ public abstract class AbstractRequirement implements Requirement {
     }
     return false;
   }
+
+  public abstract int getType();
+
+  public abstract void setType(int t);
+
+  public abstract void commitTypeChange(int newType);
+
+  public abstract int getData();
+
+  public abstract void setData(int d);
+
+  public abstract void commitDataChange(int newData);
 }

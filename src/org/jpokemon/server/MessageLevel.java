@@ -1,4 +1,4 @@
-package org.jpokemon.manager.message;
+package org.jpokemon.server;
 
 public enum MessageLevel {
   LOG, MESSAGE, NOTIFICATION;

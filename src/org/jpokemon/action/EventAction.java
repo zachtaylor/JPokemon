@@ -1,10 +1,10 @@
-package org.jpokemon.action.performer;
+package org.jpokemon.action;
 
 import org.jpokemon.trainer.Event;
 import org.jpokemon.trainer.Player;
 
-public class EventActionPerformer extends AbstractActionPerformer {
-  public EventActionPerformer(String data) {
+public class EventAction extends Action {
+  public EventAction(String data) {
     super(data);
   }
 

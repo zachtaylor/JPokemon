@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
-import org.jpokemon.manager.PlayerManager;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
@@ -30,16 +30,12 @@ public class Battle implements Iterable<Slot> {
     Myna.configure(Battle.class, "org.jpokemon.battle");
   }
 
-  public static Battle create(PokemonTrainer... trainers) {
-    Battle b = new Battle();
-
+  public Battle(PokemonTrainer... trainers) {
     PokemonTrainer trainer;
     for (int i = 0; i < trainers.length; i++) {
       trainer = trainers[i];
-      b.addTrainer(trainer, i);
+      addTrainer(trainer, i);
     }
-
-    return b;
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
@@ -53,10 +49,10 @@ public class Battle implements Iterable<Slot> {
     PokemonTrainer trainer = slot.trainer();
 
     _slots.remove(trainer.id());
-    PlayerManager.clearActivity(trainer);
 
     if (slot.party().awake() == 0) {
       if (slot.trainer() instanceof Player) {
+        BattleActivity.removePlayer(this, (Player) trainer);
         // TODO : Punish player
       }
       else if (slot.trainer() instanceof Trainer) {
@@ -69,6 +65,10 @@ public class Battle implements Iterable<Slot> {
 
   public boolean contains(PokemonTrainer trainer) {
     return _slots.get(trainer.id()) != null;
+  }
+
+  public int getPlayerCount() {
+    return _slots.size();
   }
 
   public void addTurn(Turn turn) {
@@ -159,7 +159,10 @@ public class Battle implements Iterable<Slot> {
       while (!_slots.isEmpty()) {
         String slotKey = (String) _slots.keySet().toArray()[0];
         Slot slot = _slots.remove(slotKey);
-        PlayerManager.clearActivity(slot.trainer());
+
+        if (slot.trainer() instanceof Player) {
+          BattleActivity.removePlayer(this, (Player) slot.trainer());
+        }
       }
     }
   }

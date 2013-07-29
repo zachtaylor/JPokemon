@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.Reward;
 import org.jpokemon.battle.slot.Slot;
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.message.Message;
-import org.jpokemon.manager.message.MessageLevel;
+import org.jpokemon.server.Message;
+import org.jpokemon.server.MessageLevel;
 import org.jpokemon.trainer.Player;
 
 public class Round {
@@ -107,7 +107,7 @@ public class Round {
       for (String thing : things) {
         if (s.trainer() instanceof Player) {
           Message message = new Message("BATTLE", thing, MessageLevel.MESSAGE);
-          PlayerManager.addMessageToQueue((Player) s.trainer(), message);
+          PlayerManager.pushMessage((Player) s.trainer(), message);
         }
       }
     }

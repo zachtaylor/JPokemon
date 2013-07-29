@@ -1,4 +1,4 @@
-package org.jpokemon.action;
+package org.jpokemon.action.requirement;
 
 import java.util.ArrayList;
 import java.util.Iterator;

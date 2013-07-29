@@ -1,7 +1,5 @@
-package org.jpokemon.manager.activity;
+package org.jpokemon.activity;
 
-import org.jpokemon.manager.Activity;
-import org.jpokemon.manager.ServiceException;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.StatType;
 import org.jpokemon.trainer.Player;
@@ -10,6 +8,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UpgradeActivity implements Activity {
+  private static UpgradeActivity instance = new UpgradeActivity();
+
+  private UpgradeActivity() {
+  }
+
+  public static UpgradeActivity getInstance() {
+    return instance;
+  }
+
+  @Override
+  public void onAdd(Player player) {
+    // TODO : Verify location, maybe
+  }
+
+  @Override
+  public void onRemove(Player player) { // Nothing
+  }
+
   @Override
   public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     Pokemon pokemon = getPokemon(player, request);

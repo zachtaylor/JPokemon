@@ -1,9 +1,9 @@
-package org.jpokemon.action.performer;
+package org.jpokemon.action;
 
 import org.jpokemon.trainer.Player;
 
-public class TransportActionPerformer extends AbstractActionPerformer {
-  public TransportActionPerformer(String data) {
+public class TransportAction extends Action {
+  public TransportAction(String data) {
     super(data);
   }
 

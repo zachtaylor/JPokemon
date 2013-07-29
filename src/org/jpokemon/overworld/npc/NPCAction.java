@@ -2,14 +2,14 @@ package org.jpokemon.overworld.npc;
 
 import java.util.List;
 
-import org.jpokemon.action.AbstractAction;
+import org.jpokemon.action.SqliteActionBinding;
 import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class NPCAction extends AbstractAction {
+public class NPCAction extends SqliteActionBinding {
   private int number, actionset;
   private String type, data;
 

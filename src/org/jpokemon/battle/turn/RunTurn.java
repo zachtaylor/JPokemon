@@ -1,11 +1,11 @@
 package org.jpokemon.battle.turn;
 
+import org.jpokemon.activity.BattleActivity;
+import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.activity.BattleActivity;
-import org.jpokemon.manager.message.Message;
-import org.jpokemon.manager.message.MessageLevel;
+import org.jpokemon.server.Message;
+import org.jpokemon.server.MessageLevel;
 import org.jpokemon.trainer.Player;
 
 public class RunTurn extends Turn {
@@ -15,7 +15,7 @@ public class RunTurn extends Turn {
 
   @Override
   protected void doExecute() {
-    Battle battle = ((BattleActivity) PlayerManager.getActivity(slot().trainer())).getBattle();
+    Battle battle = ((BattleActivity) PlayerManager.getActivity((Player) slot().trainer())).getBattle();
     double chance = 100;
 
     for (Slot s : battle) {
@@ -27,7 +27,7 @@ public class RunTurn extends Turn {
 
     if ((chance / 250.0) > Math.random()) {
       Message message = new Message("SPEECH", "Got away safely!", MessageLevel.MESSAGE);
-      PlayerManager.addMessageToQueue((Player) slot().trainer(), message);
+      PlayerManager.pushMessage((Player) slot().trainer(), message);
       battle.remove(slot());
     }
     else

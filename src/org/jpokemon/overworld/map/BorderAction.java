@@ -2,14 +2,14 @@ package org.jpokemon.overworld.map;
 
 import java.util.List;
 
-import org.jpokemon.action.AbstractAction;
+import org.jpokemon.action.SqliteActionBinding;
 import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
 
-public class BorderAction extends AbstractAction {
+public class BorderAction extends SqliteActionBinding {
   private int area, next;
   private String type, data;
 

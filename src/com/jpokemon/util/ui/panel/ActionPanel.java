@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.action.Action;
+import org.jpokemon.action.SqliteActionBinding;
 import org.jpokemon.action.ActionType;
 
 import com.jpokemon.util.mapeditor.MapEditComponent;
@@ -21,7 +21,7 @@ import com.jpokemon.util.ui.selector.PokemonInfoSelector;
 import com.jpokemon.util.ui.selector.StoreSelector;
 
 public class ActionPanel extends JPanel {
-  public ActionPanel(MapEditComponent mec, Action a) {
+  public ActionPanel(MapEditComponent mec, SqliteActionBinding a) {
     parent = mec;
     action = a;
 
@@ -275,7 +275,7 @@ public class ActionPanel extends JPanel {
     parent.getEditor();
   }
 
-  private Action action;
+  private SqliteActionBinding action;
   private MapEditComponent parent;
   private JTextField extraTextField;
   private JCheckBox invertSelection;

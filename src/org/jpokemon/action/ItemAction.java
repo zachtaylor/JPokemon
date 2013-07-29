@@ -1,9 +1,9 @@
-package org.jpokemon.action.performer;
+package org.jpokemon.action;
 
 import org.jpokemon.trainer.Player;
 
-public class ItemActionPerformer extends AbstractActionPerformer {
-  public ItemActionPerformer(String data) {
+public class ItemAction extends Action {
+  public ItemAction(String data) {
     super(data);
   }
 

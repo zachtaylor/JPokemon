@@ -1,13 +1,9 @@
-package org.jpokemon.action.performer;
+package org.jpokemon.action;
 
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.trainer.Player;
 
-public class PokemonActionPerformer extends AbstractActionPerformer {
-  public PokemonActionPerformer(String data) {
-    super(data);
-  }
-
+public class PokemonAction extends Action {
   public void execute(Player player) {
     Pokemon pokemon = null;
     String[] parameters = getData().split(" ");

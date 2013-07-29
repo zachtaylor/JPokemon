@@ -1,9 +1,5 @@
-package org.jpokemon.manager.activity;
+package org.jpokemon.activity;
 
-import org.jpokemon.manager.Activity;
-import org.jpokemon.manager.LoadException;
-import org.jpokemon.manager.PlayerManager;
-import org.jpokemon.manager.ServiceException;
 import org.jpokemon.overworld.map.Area;
 import org.jpokemon.overworld.map.Border;
 import org.jpokemon.overworld.map.Map;
@@ -26,6 +22,14 @@ public class OverworldActivity implements Activity {
   }
 
   @Override
+  public void onAdd(Player player) { // Useful hook for issue#69
+  }
+
+  @Override
+  public void onRemove(Player player) { // Useful hook for issue#69
+  }
+
+  @Override
   public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     String option = request.getString("option");
 
@@ -38,34 +42,23 @@ public class OverworldActivity implements Activity {
     else if (option.equals("grass")) {
       handleGrassRequest(player, request);
     }
-    else if (option.equals("save")) {
-      handleSaveRequest(player, request);
-    }
   }
 
   private void handleNPCRequest(Player player, JSONObject request) throws ServiceException {
     NPC npc = getNpc(player, request);
     String option = getNPCOption(request);
 
-    try {
-      npc.actionset(option).execute(player);
-    } catch (LoadException e) {
-      throw new ServiceException(e);
-    }
+    npc.actionset(option).execute(player);
   }
 
   private void handleBorderRequest(Player player, JSONObject request) throws ServiceException {
     Border border = getBorder(player, request);
 
-    try {
-      if (border.performAction(player)) {
-        player.setArea(border.getNext());
-      }
-      else {
-        throw new ServiceException("You cannot go that way");
-      }
-    } catch (LoadException e) {
-      throw new ServiceException(e);
+    if (border.performAction(player)) {
+      player.setArea(border.getNext());
+    }
+    else {
+      throw new ServiceException("You cannot go that way");
     }
   }
 
@@ -81,15 +74,7 @@ public class OverworldActivity implements Activity {
     PokemonTrainer trainer = new WildTrainer();
     trainer.add(pokemon);
 
-    try {
-      PlayerManager.addActivity(player, new BattleActivity(player, trainer));
-    } catch (LoadException e) {
-      throw new ServiceException(e);
-    }
-  }
-
-  private void handleSaveRequest(Player player, JSONObject request) throws ServiceException {
-    PlayerManager.save(player);
+    PlayerManager.addActivity(player, new BattleActivity(player, trainer));
   }
 
   private NPC getNpc(Player player, JSONObject request) throws ServiceException {

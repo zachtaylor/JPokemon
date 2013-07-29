@@ -1,19 +1,22 @@
 package org.jpokemon.action;
 
-import org.jpokemon.action.performer.ActionPerformer;
+import org.jpokemon.activity.ServiceException;
+import org.jpokemon.trainer.Player;
 
-public interface Action {
-  public ActionPerformer getPerformer();
+public abstract class Action {
+  public Action() {
 
-  public String getType();
+  }
 
-  public void setType(String t);
+  public Action(String s) {
+    data = s;
+  }
 
-  public void commitTypeChange(String t);
+  public abstract void execute(Player player) throws ServiceException;
 
-  public String getData();
+  protected String getData() {
+    return data;
+  }
 
-  public void setData(String d);
-
-  public void commitDataChange(String newData);
+  private String data;
 }

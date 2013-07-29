@@ -5,8 +5,10 @@
       ws.onmessage = function(message) {
         var json = JSON.parse(message.data);
 
-        if (json.action === 'log') {
-          console.log(json.message);
+        if (json.action === 'message') {
+          // Dispatch the message based on type
+          // For now, just console log all the things
+          console.log(json.level + ": " + json.message);
         }
       }
     </script>
