@@ -5,23 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.battle.turn.Turn;
-import org.jpokemon.battle.turn.TurnFactory;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
-import org.json.JSONObject;
 
 public class Slot {
   public Slot(PokemonTrainer trainer, int team) {
     _trainer = trainer;
     _team = team;
-
-    _turnFactory = new TurnFactory(this);
-    _slotEffects = new ArrayList<SlotEffect>();
-    _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
   }
 
   public PokemonTrainer trainer() {
@@ -74,10 +67,6 @@ public class Slot {
 
     _slotEffects = nextEffects;
     return messages;
-  }
-
-  public Turn turn(JSONObject json, Slot target) {
-    return _turnFactory.create(json, target);
   }
 
   public void takeDamage(int damage) {
@@ -137,7 +126,6 @@ public class Slot {
 
   private int _team;
   private PokemonTrainer _trainer;
-  private TurnFactory _turnFactory;
-  private List<SlotEffect> _slotEffects;
-  private Map<Pokemon, List<Pokemon>> _rivalsLists;
+  private List<SlotEffect> _slotEffects = new ArrayList<SlotEffect>();
+  private Map<Pokemon, List<Pokemon>> _rivalsLists = new HashMap<Pokemon, List<Pokemon>>();
 }

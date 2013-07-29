@@ -8,11 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TurnFactory {
-  public TurnFactory(Slot s) {
-    _slot = s;
-  }
-
-  public Turn create(JSONObject json, Slot target) {
+  public static Turn create(JSONObject json, Slot user, Slot target) {
     String turn;
 
     try {
@@ -23,18 +19,18 @@ public class TurnFactory {
     }
 
     if (turn.equals("ATTACK"))
-      return doCreateAttack(json, target);
+      return doCreateAttack(json, user, target);
     else if (turn.equals("SWAP"))
-      return doCreateSwap(json, target);
+      return doCreateSwap(json, user, target);
     else if (turn.equals("ITEM"))
-      return doCreateItem(json, target);
+      return doCreateItem(json, user, target);
     else if (turn.equals("RUN"))
-      return doCreateRun(json, target);
+      return doCreateRun(json, user, target);
 
     return null;
   }
 
-  private Turn doCreateAttack(JSONObject json, Slot target) {
+  private static Turn doCreateAttack(JSONObject json, Slot user, Slot target) {
     int moveIndex;
 
     try {
@@ -44,12 +40,12 @@ public class TurnFactory {
       return null;
     }
 
-    Move move = _slot.leader().move(moveIndex);
+    Move move = user.leader().move(moveIndex);
 
-    return new AttackTurn(_slot, target, move);
+    return new AttackTurn(user, target, move);
   }
 
-  private Turn doCreateSwap(JSONObject json, Slot target) {
+  private static Turn doCreateSwap(JSONObject json, Slot user, Slot target) {
     int swapIndex;
 
     try {
@@ -59,10 +55,10 @@ public class TurnFactory {
       return null;
     }
 
-    return new SwapTurn(_slot, target, swapIndex);
+    return new SwapTurn(user, target, swapIndex);
   }
 
-  private Turn doCreateItem(JSONObject json, Slot target) {
+  private static Turn doCreateItem(JSONObject json, Slot user, Slot target) {
     int targetIndex, itemID;
 
     try {
@@ -73,14 +69,12 @@ public class TurnFactory {
       return null;
     }
 
-    Item item = ((Player) _slot.trainer()).item(itemID);
+    Item item = ((Player) user.trainer()).item(itemID);
 
-    return new ItemTurn(_slot, target, item, targetIndex);
+    return new ItemTurn(user, target, item, targetIndex);
   }
 
-  private Turn doCreateRun(JSONObject json, Slot target) {
-    return new RunTurn(_slot, target);
+  private static Turn doCreateRun(JSONObject json, Slot user, Slot target) {
+    return new RunTurn(user, target);
   }
-
-  private Slot _slot;
 }

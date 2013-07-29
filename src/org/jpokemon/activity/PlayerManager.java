@@ -39,7 +39,15 @@ public class PlayerManager {
   }
 
   public static void pushMessage(Player player, Message message) {
-    // TODO
+    JPokemonWebSocket webSocket = reverseConnections.get(player);
+
+    webSocket.sendMessage(message);
+  }
+
+  public static void pushJson(Player player, JSONObject json) {
+    JPokemonWebSocket webSocket = reverseConnections.get(player);
+
+    webSocket.sendJson(json);
   }
 
   public static void close(JPokemonWebSocket socket) {
@@ -55,6 +63,7 @@ public class PlayerManager {
     }
 
     connections.remove(socket);
+    reverseConnections.remove(player);
     players.remove(player.id());
     activities.remove(player);
   }
@@ -80,6 +89,7 @@ public class PlayerManager {
       activityStack.add(OverworldActivity.getInstance());
 
       connections.put(socket, player);
+      reverseConnections.put(player, socket);
       activities.put(player, activityStack);
     }
     else {
@@ -135,5 +145,6 @@ public class PlayerManager {
 
   private static Map<String, Player> players = new HashMap<String, Player>();
   private static Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
+  private static Map<Player, JPokemonWebSocket> reverseConnections = new HashMap<Player, JPokemonWebSocket>();
   private static Map<Player, Stack<Activity>> activities = new HashMap<Player, Stack<Activity>>();
 }

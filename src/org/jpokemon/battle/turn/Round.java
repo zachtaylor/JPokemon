@@ -18,12 +18,16 @@ public class Round {
     _battle = b;
   }
 
-  public int size() {
+  public void setTurn(Slot slot, Turn t) {
+    _turns.put(slot, t);
+  }
+
+  public int turnCount() {
     return _turns.size();
   }
 
-  public void add(Turn t) {
-    _turns.put(t.slot(), t);
+  public Turn getTurn(Slot slot) {
+    return _turns.get(slot);
   }
 
   public void execute() {
@@ -79,7 +83,7 @@ public class Round {
       rewardFrom(slotWithNoPokemon);
 
       _turns.remove(slotWithNoPokemon);
-      _battle.remove(slotWithNoPokemon);
+      _battle.remove(slotWithNoPokemon.trainer());
     }
     else if (slotWithFaintedLeader != null) {
       rewardFrom(slotWithFaintedLeader);

@@ -8,6 +8,7 @@ import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
+import org.jpokemon.battle.turn.TurnFactory;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
@@ -21,21 +22,25 @@ import org.zachtaylor.myna.Myna;
 
 public class Battle implements Iterable<Slot> {
   public static double stab = 1.5;
-
   public static double typeadvantage = 2.0;
-
   public static double typedisadvantage = .5;
 
   static {
     Myna.configure(Battle.class, "org.jpokemon.battle");
   }
 
+  private Round _round = new Round(this);
+  private Map<String, Slot> _slots = new HashMap<String, Slot>();
+
   public Battle(PokemonTrainer... trainers) {
     PokemonTrainer trainer;
+
     for (int i = 0; i < trainers.length; i++) {
       trainer = trainers[i];
       addTrainer(trainer, i);
     }
+
+    doTrainerAttacks();
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
@@ -45,10 +50,20 @@ public class Battle implements Iterable<Slot> {
     _slots.put(trainer.id(), new Slot(trainer, team));
   }
 
-  public void remove(Slot slot) {
-    PokemonTrainer trainer = slot.trainer();
+  public int getPlayerCount() {
+    return _slots.size();
+  }
 
-    _slots.remove(trainer.id());
+  public Slot getSlot(String id) {
+    return _slots.get(id);
+  }
+
+  public boolean contains(PokemonTrainer trainer) {
+    return _slots.get(trainer.id()) != null;
+  }
+
+  public void remove(PokemonTrainer trainer) {
+    Slot slot = _slots.remove(trainer.id());
 
     if (slot.party().awake() == 0) {
       if (slot.trainer() instanceof Player) {
@@ -63,46 +78,21 @@ public class Battle implements Iterable<Slot> {
     verifyTeamCount();
   }
 
-  public boolean contains(PokemonTrainer trainer) {
-    return _slots.get(trainer.id()) != null;
-  }
-
-  public int getPlayerCount() {
-    return _slots.size();
-  }
-
   public void addTurn(Turn turn) {
-    _round.add(turn);
+    _round.setTurn(turn.slot(), turn);
 
-    if (_round.size() == _slots.size()) {
+    if (_round.turnCount() == _slots.size()) {
       executeRound();
     }
-  }
-
-  public void start() {
-    doTrainerAttacks();
-  }
-
-  public void createTurn(JSONObject turn) {
-    String trainerID, targetID;
-
-    try {
-      trainerID = turn.getString("id");
-      targetID = turn.getString("target");
-    } catch (JSONException e) {
-      e.printStackTrace();
-      return;
-    }
-
-    Slot slot = _slots.get(trainerID);
-    Slot target = _slots.get(targetID);
-
-    addTurn(slot.turn(turn, target));
   }
 
   @Override
   public Iterator<Slot> iterator() {
     return _slots.values().iterator();
+  }
+
+  public Turn getTurn(Slot slot) {
+    return _round.getTurn(slot);
   }
 
   private void executeRound() {
@@ -138,7 +128,7 @@ public class Battle implements Iterable<Slot> {
         return;
       }
 
-      addTurn(slot.turn(json, randomSlot));
+      addTurn(TurnFactory.create(json, slot, randomSlot));
     }
   }
 
@@ -283,6 +273,4 @@ public class Battle implements Iterable<Slot> {
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
 
-  private Round _round = new Round(this);
-  private Map<String, Slot> _slots = new HashMap<String, Slot>();
 }

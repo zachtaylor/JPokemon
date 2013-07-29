@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.battle.turn.Turn;
+import org.jpokemon.battle.turn.TurnFactory;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONException;
@@ -19,7 +22,6 @@ public class BattleActivity implements Activity {
     battles.put(battle, this);
 
     battle = new Battle(trainers);
-    battle.start();
   }
 
   public Battle getBattle() {
@@ -45,7 +47,47 @@ public class BattleActivity implements Activity {
 
   @Override
   public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
-    battle.createTurn(request);
+    String trainerID = request.getString("id");
+    String targetID = request.getString("target");
+
+    Slot slot = battle.getSlot(trainerID);
+    Slot target = battle.getSlot(targetID);
+
+    Turn turn = TurnFactory.create(request, slot, target);
+    battle.addTurn(turn);
+
+    pushState();
+  }
+
+  public void pushState() throws JSONException, ServiceException {
+    Turn turn;
+    Player player;
+    JSONObject json;
+    JSONObject turns = new JSONObject();
+
+    for (Slot slot : battle) {
+      turn = battle.getTurn(slot);
+
+      if (turn == null) {
+        turns.put(slot.trainer().id(), "missing");
+      }
+      else {
+        turns.put(slot.trainer().id(), "submitted");
+      }
+    }
+
+    for (Slot slot : battle) {
+      if (!(slot.trainer() instanceof Player)) {
+        continue;
+      }
+      player = (Player) slot.trainer();
+
+      json = BattleDataGenerator.generate(player);
+      json.put("view", "battle");
+      json.put("turns", turns);
+
+      PlayerManager.pushJson(player, json);
+    }
   }
 
   private static void validate(PokemonTrainer... trainers) throws ServiceException {
