@@ -29,11 +29,21 @@ public class BattleActivity implements Activity {
   }
 
   @Override
-  public void onAdd(Player player) { // Battle is too complicated for this
+  public boolean onAdd(Player player) {
+    int foundBattles = 0;
+
+    for (Battle b : battles.keySet()) {
+      if (b.contains(player)) {
+        foundBattles++;
+      }
+    }
+
+    return foundBattles == 1;
   }
 
   @Override
-  public void onRemove(Player player) { // Battle is too complicated for this
+  public boolean onRemove(Player player) {
+    return true;
   }
 
   public static void removePlayer(Battle battle, Player player) {

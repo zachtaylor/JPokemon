@@ -25,12 +25,13 @@ public class PlayerManager {
   }
 
   public static void addActivity(Player player, Activity a) {
-    activities.get(player).add(a);
-    a.onAdd(player);
+    if (a.onAdd(player)) {
+      activities.get(player).add(a);
+    }
   }
 
   public static void popActivity(Player player, Activity a) {
-    if (activities.get(player).peek() == a) {
+    if (activities.get(player).peek() == a && a.onRemove(player)) {
       activities.get(player).pop().onRemove(player);
     }
     else {
