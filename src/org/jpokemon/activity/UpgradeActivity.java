@@ -18,12 +18,14 @@ public class UpgradeActivity implements Activity {
   }
 
   @Override
-  public void onAdd(Player player) {
+  public boolean onAdd(Player player) {
     // TODO : Verify location, maybe
+    return true;
   }
 
   @Override
-  public void onRemove(Player player) { // Nothing
+  public boolean onRemove(Player player) {
+    return true;
   }
 
   @Override

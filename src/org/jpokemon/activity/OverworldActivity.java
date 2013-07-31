@@ -22,11 +22,13 @@ public class OverworldActivity implements Activity {
   }
 
   @Override
-  public void onAdd(Player player) { // Useful hook for issue#69
+  public boolean onAdd(Player player) { // Useful hook for issue#69
+    return true;
   }
 
   @Override
-  public void onRemove(Player player) { // Useful hook for issue#69
+  public boolean onRemove(Player player) { // Useful hook for issue#69
+    return false;
   }
 
   @Override

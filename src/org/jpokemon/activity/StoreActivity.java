@@ -15,11 +15,13 @@ public class StoreActivity implements Activity {
   }
 
   @Override
-  public void onAdd(Player player) { // Store is too complicated for this
+  public boolean onAdd(Player player) {
+    return true;
   }
 
   @Override
-  public void onRemove(Player player) { // Store is too complicated for this
+  public boolean onRemove(Player player) {
+    return true;
   }
 
   @Override
