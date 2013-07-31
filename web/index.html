@@ -1,19 +1,50 @@
 <html>
   <head>
-    <script type="text/javascript">
-      var ws = new WebSocket('ws://' + document.location.hostname + ':' + document.location.port + '/socket');
-      ws.onmessage = function(message) {
-        var json = JSON.parse(message.data);
+    <script type="text/javascript" src="js/melonJS-0.9.8.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
+    <script type="text/javascript" src="js/entities.js"></script>
+    <script type="text/javascript" src="js/screens.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+    <script type="text/javascript" src="js/resources.js"></script>
+    <script type="text/javascript" src="js/menus.js"></script>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
 
-        if (json.action === 'message') {
-          // Dispatch the message based on type
-          // For now, just console log all the things
-          console.log(json.level + ": " + json.message);
+    <!-- Bootstrap & Mobile optimization tricks -->
+    <script type="text/javascript">
+      window.onReady(function onReady() {
+        game.onload();
+
+        // Mobile browser hacks
+        if (me.sys.isMobile && !navigator.isCocoonJS) {
+          // Prevent the webview from moving on a swipe
+          window.document.addEventListener("touchmove", function (e) {
+            e.preventDefault();
+            window.scroll(0, 0);
+            return false;
+          }, false);
+
+          // Scroll away mobile GUI
+          (function () {
+            window.scrollTo(0, 1);
+          }).defer();
+
+          me.event.subscribe(me.event.WINDOW_ONRESIZE, function (e) {
+            window.scrollTo(0, 1);
+          });
+
+          // Retina viewport settings
+          if (window.devicePixelRatio > 1) {
+            document.getElementById("viewport").setAttribute(
+              "content",
+              "width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0"
+            );
+          }
         }
-      }
+      });
     </script>
   <head>
+    <div id="screen" width="500" height="500"></div>
   <body>
-    <h1> JPokemon loaded successfully I think</h1>
   </body>
 </html>
