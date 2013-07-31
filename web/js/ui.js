@@ -317,8 +317,8 @@
 
     // Override for this.rect.containsPoint to be able to hear when 
     // this.rect DOES NOT contain the point!
-    _containsPoint : function(v) {
-      var containsPoint = me.Rect.prototype.containsPoint.call(this.rect, v);
+    _containsPoint : function(x, y) {
+      var containsPoint = me.Rect.prototype.containsPoint.call(this.rect, x, y);
       var focusChange = false;
 
       if (containsPoint) {
