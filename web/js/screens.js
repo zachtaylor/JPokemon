@@ -1,53 +1,62 @@
-game.LoginScreen = me.ScreenObject.extend({
-  onResetEvent: function() {
-      var loginScreen = new me.ui.Panel({
-        width : 512,
-        height : 512,
-        color : 'blue',
-        xlayout : 'center',
-        ylayout : 'relative'
-      });
+me.screen = me.screen || {};
 
-      var namePanel = new me.ui.Panel({
-        y : 100,
-        xlayout : 'fit'
-      });
-      loginScreen.add(namePanel);
-
-      namePanel.add(new me.ui.Label({
-        text : 'Name :',
-      }));
-
-      namePanel.add(this.nameBox = new me.ui.InputBox({
-        width : 250
-      }));
-
-      var loginButton = new me.ui.Button({
-        y : 150,
-        color : 'white',
-        opacity : .5,
-        text : 'Login',
-        onClick : this._loadGame.bind(this)
-      });
-      loginScreen.add(loginButton);
-
-      loginScreen.show();
-  },
-
-  _loadGame : function() {
-    // TODO : send login request
-  },
-  
-  onDestroyEvent: function() {
-  }
-});
-
-game.PlayScreen = me.ScreenObject.extend({
+me.screen.LoginScreen = me.ScreenObject.extend({
   onResetEvent: function(config) {
-    // TODO add the things
+    var loginPanel = new me.ui.Panel({
+      width : 512,
+      height : 512,
+      color : 'blue',
+      xlayout : 'center',
+      ylayout : 'relative'
+    });
+
+    var namePanel = new me.ui.Panel({
+      y : 100,
+      xlayout : 'fit'
+    });
+    loginPanel.add(namePanel);
+
+    namePanel.add(new me.ui.Label({
+      text : 'Name :',
+    }));
+
+    namePanel.add(this.nameBox = new me.ui.InputBox({
+      width : 250
+    }));
+
+    var sendLoginRequest = function() {
+      game.send({
+        action: 'login',
+        name: this.nameBox.getText()
+      });
+      me.state.change(me.state.PLAY);
+    };
+
+    loginPanel.add(new me.ui.Button({
+      y : 150,
+      color : 'white',
+      opacity : .5,
+      text : 'Login',
+      onClick : sendLoginRequest.bind(this)
+    }));
+
+    loginPanel.show();
   },
   
   onDestroyEvent: function() {
-    // TODO Make leaving request to server
   }
 });
+
+me.screen.PlayScreen = me.ScreenObject.extend({
+  dispatch: function(json) {
+    // TODO : other loading things for the overworld screen
+    me.levelDirector.loadLevel(json.map);
+  },
+
+  onResetEvent: function(config) {
+  },
+  
+  onDestroyEvent: function() {
+  }
+});
+game.subscribe('overworld', me.screen.PlayScreen);

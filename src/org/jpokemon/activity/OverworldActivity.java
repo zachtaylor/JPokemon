@@ -22,7 +22,16 @@ public class OverworldActivity implements Activity {
   }
 
   @Override
-  public boolean onAdd(Player player) { // Useful hook for issue#69
+  public boolean onAdd(Player player) {
+    JSONObject json = new JSONObject();
+
+    try {
+      json.put("action", "overworld");
+      json.put("map", "myarea");
+    } catch (JSONException e) {
+    }
+
+    PlayerManager.pushJson(player, json);
     return true;
   }
 

@@ -349,7 +349,6 @@
       this.GUID = 'inputbox' + me.utils.createGUID();
 
       this.add(this.label = new me.ui.Label({
-        text : ' ',
         fontSize : config.height - 2 * ~~config.padding,
         padding : config.padding
       }));

@@ -15,12 +15,12 @@
 			<pokemon ot="Zach" level="5" xp="58" number="4" has_original_trainer="true">
 				<condition>  </condition>
 				<stats points="0" evtotal="1">
-					<stat ev="0" max="19" iv="17" cur="1" points="0" type="HEALTH" ev_pending="0" />
-					<stat ev="0" max="21" iv="26" cur="21" points="0" type="ATTACK" ev_pending="0" />
-					<stat ev="0" max="22" iv="20" cur="22" points="0" type="SPECATTACK" ev_pending="0" />
-					<stat ev="0" max="19" iv="10" cur="9" points="0" type="DEFENSE" ev_pending="1" />
-					<stat ev="0" max="21" iv="21" cur="21" points="0" type="SPECDEFENSE" ev_pending="0" />
-					<stat ev="0" max="22" iv="16" cur="22" points="0" type="SPEED" ev_pending="0" />
+					<stat ev="0" max="19" iv="17" cur="1" points="0" type="HEALTH" />
+					<stat ev="0" max="21" iv="26" cur="21" points="0" type="ATTACK" />
+					<stat ev="0" max="22" iv="20" cur="22" points="0" type="SPECATTACK" />
+					<stat ev="0" max="19" iv="10" cur="9" points="0" type="DEFENSE" />
+					<stat ev="0" max="21" iv="21" cur="21" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="22" iv="16" cur="22" points="0" type="SPEED" />
 				</stats>
 				<moves>
 					<move enabled="true" ppmax="35" number="112" pp="30" />

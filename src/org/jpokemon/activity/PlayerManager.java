@@ -32,7 +32,7 @@ public class PlayerManager {
 
   public static void popActivity(Player player, Activity a) {
     if (activities.get(player).peek() == a && a.onRemove(player)) {
-      activities.get(player).pop().onRemove(player);
+      activities.get(player).pop();
     }
     else {
       throw new IllegalStateException("Popped activity is not most recent");
@@ -53,11 +53,16 @@ public class PlayerManager {
 
   public static void close(JPokemonWebSocket socket) {
     Player player = connections.get(socket);
-    String path = JPokemonServer.savepath + player.id() + ".jpkmn";
+
+    if (player == null) {
+      return;
+    }
+
+    File file = new File(JPokemonServer.savepath, player.id() + ".jpkmn");
 
     try {
-      Writer writer = new BufferedWriter(new PrintWriter(new File(path)));
-      writer.write(player.toXml().toString());
+      Writer writer = new BufferedWriter(new PrintWriter(file));
+      writer.write(player.toXml().printToString(0, "\t"));
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -69,8 +74,7 @@ public class PlayerManager {
     activities.remove(player);
   }
 
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException,
-      ServiceException {
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
     Player player = connections.get(socket);
 
     if (player == null) {
@@ -87,11 +91,12 @@ public class PlayerManager {
       }
 
       Stack<Activity> activityStack = new Stack<Activity>();
-      activityStack.add(OverworldActivity.getInstance());
 
       connections.put(socket, player);
       reverseConnections.put(player, socket);
       activities.put(player, activityStack);
+
+      addActivity(player, OverworldActivity.getInstance());
     }
     else {
       getActivity(player).handleRequest(player, request);
