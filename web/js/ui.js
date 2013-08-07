@@ -77,10 +77,10 @@
   var layouts = {
     x : {
       fit : function() {
-        var currentX = this.padding;
+        var currentX = this.rect.left + this.padding;
 
         this._forEachChild(function(child) {
-          child.rect.pos = new me.Vector2d(this.rect.left + currentX, child.rect.top);
+          child.rect.pos = new me.Vector2d(child.config.x + currentX, child.rect.top);
           currentX += child.rect.width + this.padding;
         });
 
@@ -101,10 +101,10 @@
     },
     y : {
       fit : function() {
-        var currentY = this.padding;
+        var currentY = this.rect.top + this.padding;
 
         this._forEachChild(function(child) {
-          child.rect.pos = new me.Vector2d(child.rect.left, child.rect.top + currentY);
+          child.rect.pos = new me.Vector2d(child.rect.left, child.config.y + currentY);
           currentY = child.rect.top + child.rect.height + this.padding;
         });
 
@@ -284,7 +284,7 @@
       this.parent(config);
       this.GUID = "scrollable" + me.utils.createGUID();
 
-      me.input.registerMouseEvent('mousewheel', this.rect, (function(e) {
+      me.input.registerPointerEvent('mousewheel', this.rect, (function(e) {
         var evt = window.event || e;
         var delta = evt.detail ? -evt.detail : (evt.wheelDelta / 120);
         this.scroll(delta);

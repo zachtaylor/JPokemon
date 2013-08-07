@@ -23,5 +23,5 @@ public interface Activity {
    */
   public boolean onRemove(Player player);
 
-  public void handleRequest(Player player, JSONObject data) throws JSONException, ServiceException;
+  public boolean handleRequest(Player player, JSONObject data) throws JSONException, ServiceException;
 }

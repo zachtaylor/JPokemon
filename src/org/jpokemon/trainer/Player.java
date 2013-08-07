@@ -1,5 +1,6 @@
 package org.jpokemon.trainer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +20,9 @@ public class Player implements PokemonTrainer {
   private Pokedex _pokedex = new Pokedex();
   private Record _record = new Record(this);
   private int _area = 1, _badge, _cash, _x, _y, _xp, _level;
-  private List<String> _unlockedAvatars, _friends, _blocked;
+  private List<String> _friends = new ArrayList<String>();
+  private List<String> _blocked = new ArrayList<String>();
+  private List<String> _unlockedAvatars = new ArrayList<String>();
   private PokemonStorageBlock _storage = new PokemonStorageBlock();
 
   public Player(String id) {

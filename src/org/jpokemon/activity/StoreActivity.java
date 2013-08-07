@@ -25,7 +25,7 @@ public class StoreActivity implements Activity {
   }
 
   @Override
-  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     JSONArray itemChanges = request.getJSONArray("items");
 
     int runningTotalCash = player.getCash();
@@ -82,6 +82,7 @@ public class StoreActivity implements Activity {
 
     // PlayerManager.clearActivity(player);
 
+    return true;
   }
 
   private Inventory findInventory(int itemID, int denomination) {

@@ -80,10 +80,10 @@ public class PlayerManager {
     if (player == null) {
       String action = request.getString("action");
 
-      if (action.equals("login")) {
+      if ("login".equals(action)) {
         player = PlayerManager.login(request.getString("name"));
       }
-      else if (action.equals("create")) {
+      else if ("create".equals(action)) {
         player = PlayerManager.create(request.getString("name"), request.getString("rival"));
       }
       else {

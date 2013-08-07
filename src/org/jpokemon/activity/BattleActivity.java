@@ -56,7 +56,7 @@ public class BattleActivity implements Activity {
   }
 
   @Override
-  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     String trainerID = request.getString("id");
     String targetID = request.getString("target");
 
@@ -67,6 +67,8 @@ public class BattleActivity implements Activity {
     battle.addTurn(turn);
 
     pushState();
+
+    return true;
   }
 
   public void pushState() throws JSONException, ServiceException {

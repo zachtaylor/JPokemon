@@ -41,7 +41,7 @@ public class OverworldActivity implements Activity {
   }
 
   @Override
-  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     String option = request.getString("option");
 
     if (option.equals("npc")) {
@@ -53,6 +53,11 @@ public class OverworldActivity implements Activity {
     else if (option.equals("grass")) {
       handleGrassRequest(player, request);
     }
+    else {
+      return false;
+    }
+
+    return true;
   }
 
   private void handleNPCRequest(Player player, JSONObject request) throws ServiceException {
