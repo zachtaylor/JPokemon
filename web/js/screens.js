@@ -20,10 +20,6 @@ me.screen.LoginScreen = me.ScreenObject.extend({
       text : 'Name :',
     }));
 
-    namePanel.add(this.nameBox = new me.ui.InputBox({
-      width : 250
-    }));
-
     var sendLoginRequest = function() {
       game.send({
         action: 'login',
@@ -31,6 +27,11 @@ me.screen.LoginScreen = me.ScreenObject.extend({
       });
       me.state.change(me.state.PLAY);
     };
+
+    namePanel.add(this.nameBox = new me.ui.InputBox({
+      width : 250,
+      onEnter : sendLoginRequest.bind(this)
+    }));
 
     loginPanel.add(new me.ui.Button({
       y : 150,

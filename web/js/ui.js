@@ -22,7 +22,7 @@
       this.config.height = ~~this.config.height;
       this.opacity = this.config.opacity !== undefined ? this.config.opacity : 1;
       this.color = this.config.color || false;
-      this.borderColor = this.config.borderColor || false;
+      this.border = this.config.border || false;
 
       this.rect = new me.Rect(new me.Vector2d(this.config.x, this.config.y), this.config.width, this.config.height);
       this.GUID = 'component' + me.utils.createGUID();
@@ -60,9 +60,9 @@
         context.fillRect(this.rect.left, this.rect.top, this.rect.width, this.rect.height);
       }
 
-      if (this.borderColor) {
+      if (this.border) {
         context.lineWidth = 1;
-        context.strokeStyle = this.borderColor;
+        context.strokeStyle = this.border;
         context.strokeRect(this.rect.left, this.rect.top, this.rect.width, this.rect.height);
       }
 
@@ -187,14 +187,14 @@
 
   ///////////////////////////////////////////////
   // me.ui.Icon
+  //
+  // image : URL of the image to draw
   ///////////////////////////////////////////////
 
   me.ui.Icon = me.ui.Component.extend({
     init : function(config) {
       this.parent(config);
       this.GUID = 'label' + me.utils.createGUID();
-
-      this.padding = this.config.padding !== undefined ? this.config.padding : 4;
 
       this.setImage(this.config.image);
     },
@@ -217,6 +217,12 @@
 
   ///////////////////////////////////////////////
   // me.ui.Label
+  //
+  // text : Text to display
+  // padding : Pixels between the text and component edge
+  // fontName : Name of the font to use
+  // fontSize : Size of the font to use
+  // fontColor : Color to draw the font
   ///////////////////////////////////////////////
 
   me.ui.Label = me.ui.Component.extend({
@@ -228,7 +234,7 @@
       this.fontName = this.config.fontName || 'courier';
       this.fontSize = this.config.fontSize || 12;
       this.fontColor = this.config.fontColor || 'white';
-      this.font = this.config.font || new me.Font(this.fontName, this.fontSize, this.fontColor);
+      this.font = new me.Font(this.fontName, this.fontSize, this.fontColor);
 
       this.setText(this.config.text || '');
     },
@@ -259,6 +265,8 @@
 
   ///////////////////////////////////////////////
   // me.ui.Button
+  //
+  // onClick : Callback function for click
   ///////////////////////////////////////////////
 
   me.ui.Button = me.ui.Label.extend({
@@ -284,63 +292,122 @@
       this.parent(config);
       this.GUID = "scrollable" + me.utils.createGUID();
 
-      me.input.registerPointerEvent('mousewheel', this.rect, (function(e) {
-        var evt = window.event || e;
-        var delta = evt.detail ? -evt.detail : (evt.wheelDelta / 120);
-        this.scroll(delta);
-      }).bind(this), true);
+      this.selectedIndex = 0;
+      this.drawnItems = [];
+
+      me.input.registerPointerEvent('mousewheel', this.rect, this.scroll.bind(this), true);
     },
 
-    scroll : function(delta) {
+    scroll : function(e) {
+      var evt = window.event || e;
+      var delta = evt.detail ? -evt.detail : (evt.wheelDelta / 120);
+
+      if (delta > 1 && this.selectedIndex < this.children.length) {
+        this.selectedIndex++;
+        this._calculateDrawnChildren();
+      }
+      else if (delta < 0 && this.selectedIndex > 0) {
+        this.selectedIndex--;
+        this._calculateDrawnChildren();
+      }
+    },
+
+    show : function() {
+      this.parent();
+
+      this._calculateDrawnChildren();
+    },
+
+    draw : function(context) {
+      me.ui.Component.draw.apply(this, context); // grandparent
+
+      this._forEachChild(function(child) {
+        child.draw(context);
+      });
+    },
+
+    _calculateDrawnChildren : function() {
+      var currentHeight = 0;
+      this.drawnItems = [];
+
+      for (var i = this.selectedIndex; i < this.children.length; i++) {
+        if (currentHeight + this.children[i].height <= this.height) {
+          this.children[i].rect.top = currentHeight;
+          this.drawnItems.push(this.children[i]);
+          currentHeight += this.padding + this.children[i].height;
+        }
+        else {
+          break;
+        }
+      }
     }
   });
 
-  ///////////////////////////////////////////////
+  ///////////////////////////////////////////////////
   // me.ui.Focusable
-  ///////////////////////////////////////////////
+  //
+  // focus : If this component is currently focused
+  // focusStyle : Style to use when focusing this component
+  // onFocusChange : Callback function when focus changes
+  // focusColor : Color to use when focus
+  // unfocusColor : Color to use when unfocus
+  ///////////////////////////////////////////////////
+
+  var focusStyles = {
+    select : function(containsPoint) {
+      return containsPoint;
+    },
+
+    toggle : function(containsPoint) {
+      if (containsPoint) {
+        return !this.focus;
+      }
+      return this.focus;
+    }
+  };
 
   me.ui.Focusable = me.ui.Panel.extend({
     init : function(config) {
       this.parent(config);
       this.GUID = "focusable" + me.utils.createGUID();
 
-      this.focus = false;
-      this.focusEvent = this.config.focusEvent || 'mousedown';
-      this.focusOnColor = this.config.focusOnColor || 'gray';
-      this.focusOffColor = this.config.focusOffColor || 'black';
-      this.color = this.focusOffColor;
+      this.focus = this.config.focus || false;
+      this.focusStyle = this.config.focusStyle || 'select';
+      this.focusColor = this.config.focusColor || 'gray';
+      this.color = this.unfocusColor = this.config.unfocusColor || 'black';
 
       // Crazy stuff for checking focus
       this.rect.containsPoint = this._containsPoint.bind(this);
-      me.input.registerPointerEvent(this.focusEvent, this.rect, function() {}, true);
+      me.input.registerPointerEvent('mousedown', this.rect, function() {}, true);
+
+      this.onFocusChange = config.onFocusChange || me.ui.Focusable.prototype.onFocusChange;
     },
 
     // Override for this.rect.containsPoint to be able to hear when 
     // this.rect DOES NOT contain the point!
     _containsPoint : function(x, y) {
       var containsPoint = me.Rect.prototype.containsPoint.call(this.rect, x, y);
-      var focusChange = false;
-
-      if (containsPoint) {
-        focusChange = this.focus === false;
-        this.focus = true;
-      }
-      else {
-        focusChange = this.focus === true;
-        this.focus = false;
-      }
+      var oldFocus = this.focus;
+      this.focus = focusStyles[this.focusStyle].call(this, containsPoint);
+      var focusChange = this.focus !== oldFocus;
 
       if (focusChange) {
         me.game.repaint();
-        this.color = this.focus ? this.focusOnColor : this.focusOffColor;
+        this.color = this.focus ? this.focusColor : this.unfocusColor;
+        this.onFocusChange(this.focus);
       }
 
       return containsPoint;
+    },
+
+    onFocusChange : function(focus) {
     }
   });
 
   ///////////////////////////////////////////////
   // me.ui.InputBox
+  //
+  // onEnter : Callback function for pressing enter
   ///////////////////////////////////////////////
 
   me.ui.InputBox = me.ui.Focusable.extend({
