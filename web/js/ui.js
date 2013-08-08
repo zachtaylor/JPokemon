@@ -132,7 +132,7 @@
 
       this.children = [];
       this.padding = config.padding !== undefined ? config.padding : 4;
-      
+
       this.xlayout = config.xlayout || 'relative';
       this.ylayout = config.ylayout || 'relative';
     },
@@ -344,63 +344,63 @@
   });
 
   ///////////////////////////////////////////////////
-  // me.ui.Focusable
+  // me.ui.Toggle
   //
-  // focus : If this component is currently focused
-  // focusStyle : Style to use when focusing this component
-  // onFocusChange : Callback function when focus changes
-  // focusColor : Color to use when focus
-  // unfocusColor : Color to use when unfocus
+  // toggle : If this component is currently toggled
+  // toggleStyle : Style to use when toggling this component
+  // onFocusChange : Callback function when toggle changes
+  // toggleColor : Color to use when toggled
+  // untoggleColor : Color to use when untoggle
   ///////////////////////////////////////////////////
 
-  var focusStyles = {
+  var toggleStyles = {
     select : function(containsPoint) {
       return containsPoint;
     },
 
     toggle : function(containsPoint) {
       if (containsPoint) {
-        return !this.focus;
+        return !this.toggle;
       }
-      return this.focus;
+      return this.toggle;
     }
   };
 
-  me.ui.Focusable = me.ui.Panel.extend({
+  me.ui.Toggle = me.ui.Panel.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = "focusable" + me.utils.createGUID();
+      this.GUID = "toggle" + me.utils.createGUID();
 
-      this.focus = this.config.focus || false;
-      this.focusStyle = this.config.focusStyle || 'select';
-      this.focusColor = this.config.focusColor || 'gray';
-      this.color = this.unfocusColor = this.config.unfocusColor || 'black';
+      this.toggle = this.config.toggle || false;
+      this.toggleStyle = this.config.toggleStyle || 'select';
+      this.toggleColor = this.config.toggleColor || 'gray';
+      this.color = this.untoggleColor = this.config.untoggleColor || 'black';
 
-      // Crazy stuff for checking focus
       this.rect.containsPoint = this._containsPoint.bind(this);
-      me.input.registerPointerEvent('mousedown', this.rect, function() {}, true);
+      this.onToggleChange = config.onToggleChange || me.ui.Toggle.prototype.onToggleChange;
 
-      this.onFocusChange = config.onFocusChange || me.ui.Focusable.prototype.onFocusChange;
+      // Crazy stuff for checking toggle
+      me.input.registerPointerEvent('mousedown', this.rect, function() {}, true);
     },
 
     // Override for this.rect.containsPoint to be able to hear when 
     // this.rect DOES NOT contain the point!
     _containsPoint : function(x, y) {
       var containsPoint = me.Rect.prototype.containsPoint.call(this.rect, x, y);
-      var oldFocus = this.focus;
-      this.focus = focusStyles[this.focusStyle].call(this, containsPoint);
-      var focusChange = this.focus !== oldFocus;
+      var oldToggle = this.toggle;
+      this.toggle = toggleStyles[this.toggleStyle].call(this, containsPoint);
+      var toggleChange = this.toggle !== oldToggle;
 
-      if (focusChange) {
+      if (toggleChange) {
         me.game.repaint();
-        this.color = this.focus ? this.focusColor : this.unfocusColor;
-        this.onFocusChange(this.focus);
+        this.color = this.toggle ? this.toggleColor : this.untoggleColor;
+        this.onToggleChange(this.toggle);
       }
 
       return containsPoint;
     },
 
-    onFocusChange : function(focus) {
+    onToggleChange : function(toggle) {
     }
   });
 
@@ -410,7 +410,7 @@
   // onEnter : Callback function for pressing enter
   ///////////////////////////////////////////////
 
-  me.ui.InputBox = me.ui.Focusable.extend({
+  me.ui.InputBox = me.ui.Toggle.extend({
     init : function(config) {
       this.parent(config);
       this.GUID = 'inputbox' + me.utils.createGUID();
@@ -438,7 +438,7 @@
     },
 
     onKeyPress : function(e)  {
-      if (!this.focus) {
+      if (!this.toggle) {
         return;
       }
 
@@ -449,7 +449,7 @@
     },
     
     onKeyDown : function(e)  {
-      if (!this.focus) {
+      if (!this.toggle) {
         return;
       }
 
