@@ -1,9 +1,11 @@
-package org.jpokemon.activity;
+package org.jpokemon.provider;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jpokemon.JPokemonVisitor;
+import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.BattleActivity;
+import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.item.Bag;
@@ -17,18 +19,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BattleDataGenerator extends JPokemonVisitor {
+public class BattleDataProvider extends JPokemonVisitor {
   private Slot current_slot;
   private Player player_context;
   private JSONObject trainer_json, data = new JSONObject();
   private JSONArray bag_json, party_json, move_json;
   private Map<Integer, JSONArray> team_json_by_team = new HashMap<Integer, JSONArray>();
 
-  private BattleDataGenerator() {
+  private BattleDataProvider() {
   }
 
   public static JSONObject generate(Player player) throws JSONException {
-    BattleDataGenerator bdg = new BattleDataGenerator();
+    BattleDataProvider bdg = new BattleDataProvider();
     bdg.visit(bdg.player_context = player);
     return bdg.data;
   }

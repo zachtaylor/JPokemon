@@ -10,7 +10,6 @@ import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.Reward;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.server.Message;
-import org.jpokemon.server.MessageLevel;
 import org.jpokemon.trainer.Player;
 
 public class Round {
@@ -110,7 +109,7 @@ public class Round {
     for (Slot s : _battle) {
       for (String thing : things) {
         if (s.trainer() instanceof Player) {
-          Message message = new Message("BATTLE", thing, MessageLevel.MESSAGE);
+          Message message = new Message("BATTLE", thing, Message.Level.MESSAGE);
           PlayerManager.pushMessage((Player) s.trainer(), message);
         }
       }

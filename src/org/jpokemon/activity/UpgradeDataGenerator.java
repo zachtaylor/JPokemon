@@ -1,9 +1,9 @@
 package org.jpokemon.activity;
 
-import org.jpokemon.JPokemonVisitor;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.stat.Stat;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.jpokemon.provider.JPokemonVisitor;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;

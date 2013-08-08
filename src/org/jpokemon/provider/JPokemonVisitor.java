@@ -1,4 +1,4 @@
-package org.jpokemon;
+package org.jpokemon.provider;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;

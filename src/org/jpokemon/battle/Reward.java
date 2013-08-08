@@ -10,7 +10,6 @@ import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.server.Message;
-import org.jpokemon.server.MessageLevel;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
@@ -36,7 +35,7 @@ public class Reward {
 
   public Reward(Slot s) {
     _pokemon = s.leader();
-    _faintMessage = new Message("BATTLE", _pokemon.name() + " fainted!", MessageLevel.MESSAGE);
+    _faintMessage = new Message("BATTLE", _pokemon.name() + " fainted!", Message.Level.MESSAGE);
 
     _xp = computeXp(s.trainer(), _pokemon);
 
@@ -45,7 +44,7 @@ public class Reward {
     }
 
     if (s.party().awake() == 0) {
-      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), MessageLevel.MESSAGE);
+      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), Message.Level.MESSAGE);
 
       for (RewardAction actionBinding : RewardAction.get(s.trainer().id())) {
         _actions.addAction(actionBinding.getAction());
@@ -112,7 +111,7 @@ public class Reward {
       earner.addEV(effortValues());
 
       if (s.trainer() instanceof Player) {
-        Message xpMessage = new Message("BATTLE", earner.name() + " received " + xpEach + " experience!", MessageLevel.MESSAGE);
+        Message xpMessage = new Message("BATTLE", earner.name() + " received " + xpEach + " experience!", Message.Level.MESSAGE);
         PlayerManager.pushMessage((Player) s.trainer(), xpMessage);
       }
 

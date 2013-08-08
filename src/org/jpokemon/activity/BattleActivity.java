@@ -7,6 +7,7 @@ import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.battle.turn.TurnFactory;
+import org.jpokemon.provider.BattleDataProvider;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONException;
@@ -94,7 +95,7 @@ public class BattleActivity implements Activity {
       }
       player = (Player) slot.trainer();
 
-      json = BattleDataGenerator.generate(player);
+      json = BattleDataProvider.generate(player);
       json.put("view", "battle");
       json.put("turns", turns);
 

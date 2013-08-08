@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Message {
-  public Message(String s, String m, MessageLevel l) {
+  public Message(String s, String m, Message.Level l) {
     source = s;
     message = m;
     level = l;
@@ -14,7 +14,7 @@ public class Message {
     return source;
   }
 
-  public MessageLevel getLevel() {
+  public Message.Level getLevel() {
     return level;
   }
 
@@ -33,6 +33,10 @@ public class Message {
     return data;
   }
 
-  private MessageLevel level;
+  private Message.Level level;
   private String source, message;
+
+  public enum Level {
+    LOG, MESSAGE, NOTIFICATION;
+  }
 }
