@@ -29,9 +29,14 @@ public class BattleDataProvider extends JPokemonVisitor {
   private BattleDataProvider() {
   }
 
-  public static JSONObject generate(Player player) throws JSONException {
+  public static JSONObject generate(Player player) {
     BattleDataProvider bdg = new BattleDataProvider();
-    bdg.visit(bdg.player_context = player);
+
+    try {
+      bdg.visit(bdg.player_context = player);
+    } catch (JSONException e) {
+    }
+
     return bdg.data;
   }
 

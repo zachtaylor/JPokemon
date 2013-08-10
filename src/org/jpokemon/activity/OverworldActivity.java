@@ -23,15 +23,7 @@ public class OverworldActivity implements Activity {
 
   @Override
   public boolean onAdd(Player player) {
-    JSONObject json = new JSONObject();
-
-    try {
-      json.put("action", "overworld");
-      json.put("map", "myarea");
-    } catch (JSONException e) {
-    }
-
-    PlayerManager.pushJson(player, json);
+    PlayerManager.pushJson(player, "overworld");
     return true;
   }
 
@@ -41,23 +33,13 @@ public class OverworldActivity implements Activity {
   }
 
   @Override
-  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
-    String option = request.getString("option");
-
-    if (option.equals("npc")) {
-      handleNPCRequest(player, request);
-    }
-    else if (option.equals("border")) {
-      handleBorderRequest(player, request);
-    }
-    else if (option.equals("grass")) {
-      handleGrassRequest(player, request);
-    }
-    else {
-      return false;
-    }
-
+  public boolean supportsAction(String action) {
     return true;
+  }
+
+  @Override
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+    // TODO
   }
 
   private void handleNPCRequest(Player player, JSONObject request) throws ServiceException {
@@ -83,9 +65,7 @@ public class OverworldActivity implements Activity {
 
     Pokemon pokemon = area.pokemon();
 
-    if (pokemon == null) {
-      throw new ServiceException("No wild pokemon in this area");
-    }
+    if (pokemon == null) { throw new ServiceException("No wild pokemon in this area"); }
 
     PokemonTrainer trainer = new WildTrainer();
     trainer.add(pokemon);
@@ -129,9 +109,7 @@ public class OverworldActivity implements Activity {
   private Area getArea(Player player, JSONObject request) throws ServiceException {
     Area area = Map.area(player.getArea());
 
-    if (area == null) {
-      throw new ServiceException("Area number " + player.getArea() + " not found");
-    }
+    if (area == null) { throw new ServiceException("Area number " + player.getArea() + " not found"); }
 
     return area;
   }
@@ -151,9 +129,7 @@ public class OverworldActivity implements Activity {
 
     border = area.getBorder(borderChoice);
 
-    if (border == null) {
-      throw new ServiceException("Border not found in area");
-    }
+    if (border == null) { throw new ServiceException("Border not found in area"); }
 
     return border;
   }

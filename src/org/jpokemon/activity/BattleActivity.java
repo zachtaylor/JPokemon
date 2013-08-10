@@ -47,6 +47,10 @@ public class BattleActivity implements Activity {
     return true;
   }
 
+  public boolean supportsAction(String action) {
+    return false;
+  }
+
   public static void removePlayer(Battle battle, Player player) {
     BattleActivity activity = battles.get(battle);
     PlayerManager.popActivity(player, activity);
@@ -57,7 +61,7 @@ public class BattleActivity implements Activity {
   }
 
   @Override
-  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     String trainerID = request.getString("id");
     String targetID = request.getString("target");
 
@@ -68,8 +72,6 @@ public class BattleActivity implements Activity {
     battle.addTurn(turn);
 
     pushState();
-
-    return true;
   }
 
   public void pushState() throws JSONException, ServiceException {
@@ -99,15 +101,13 @@ public class BattleActivity implements Activity {
       json.put("view", "battle");
       json.put("turns", turns);
 
-      PlayerManager.pushJson(player, json);
+      PlayerManager.pushJson(player, "battle");
     }
   }
 
   private static void validate(PokemonTrainer... trainers) throws ServiceException {
     for (PokemonTrainer trainer : trainers) {
-      if (trainer.party().awake() == 0) {
-        throw new ServiceException("PokemonTrainer has no usable pokemon: " + trainer.toString());
-      }
+      if (trainer.party().awake() == 0) { throw new ServiceException("PokemonTrainer has no usable pokemon: " + trainer.toString()); }
     }
   }
 }

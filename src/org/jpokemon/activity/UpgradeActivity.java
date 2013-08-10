@@ -29,7 +29,12 @@ public class UpgradeActivity implements Activity {
   }
 
   @Override
-  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public boolean supportsAction(String action) {
+    return false;
+  }
+
+  @Override
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     Pokemon pokemon = getPokemon(player, request);
 
     try {
@@ -42,8 +47,6 @@ public class UpgradeActivity implements Activity {
     }
 
     // PlayerManager.clearActivity(player);
-
-    return true;
   }
 
   private static Pokemon getPokemon(Player player, JSONObject request) throws ServiceException {

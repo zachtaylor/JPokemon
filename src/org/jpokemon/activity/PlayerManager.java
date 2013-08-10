@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.jpokemon.action.FriendsAction;
+import org.jpokemon.provider.BattleDataProvider;
+import org.jpokemon.provider.FriendsDataProvider;
+import org.jpokemon.provider.OverworldDataProvider;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.JPokemonWebSocket;
 import org.jpokemon.server.Message;
@@ -45,18 +49,64 @@ public class PlayerManager {
     webSocket.sendMessage(message);
   }
 
-  public static void pushJson(Player player, JSONObject json) {
+  public static void pushJson(Player player, String dataProviderRef) {
     JPokemonWebSocket webSocket = reverseConnections.get(player);
 
+    JSONObject json = null;
+
+    if ("friends".equals(dataProviderRef)) {
+      json = FriendsDataProvider.generate(player);
+    }
+    else if ("battle".equals(dataProviderRef)) {
+      json = BattleDataProvider.generate(player);
+    }
+    else if ("overworld".equals(dataProviderRef)) {
+      json = OverworldDataProvider.generate(player);
+    }
+    else {
+      throw new IllegalArgumentException("No data provider with reference :" + dataProviderRef);
+    }
+
     webSocket.sendJson(json);
+  }
+
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException,
+      ServiceException {
+    Player player = connections.get(socket);
+
+    if (player == null) {
+      if (request.has("login")) {
+        login(socket, request);
+      }
+      else {
+        throw new ServiceException("Missing credentials");
+      }
+    }
+    else if (request.has("load")) {
+      String dataRef = request.getString("load");
+      pushJson(player, dataRef);
+    }
+    else if (request.has("action")) {
+      String action = request.getString("action");
+
+      if (!getActivity(player).supportsAction(action)) { return; }
+
+      if ("friends".equals(action)) {
+        new FriendsAction(request).execute(player);
+      }
+      else {
+        throw new ServiceException("Unidentified action: " + action);
+      }
+    }
+    else {
+      getActivity(player).handleRequest(player, request);
+    }
   }
 
   public static void close(JPokemonWebSocket socket) {
     Player player = connections.get(socket);
 
-    if (player == null) {
-      return;
-    }
+    if (player == null) { return; }
 
     File file = new File(JPokemonServer.savepath, player.id() + ".jpkmn");
 
@@ -74,79 +124,30 @@ public class PlayerManager {
     activities.remove(player);
   }
 
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
-    Player player = connections.get(socket);
+  private static void login(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
+    String name = request.getString("login");
 
-    if (player == null) {
-      String action = request.getString("action");
-
-      if ("login".equals(action)) {
-        player = PlayerManager.login(request.getString("name"));
-      }
-      else if ("create".equals(action)) {
-        player = PlayerManager.create(request.getString("name"), request.getString("rival"));
-      }
-      else {
-        throw new ServiceException("Expected player login or creation");
-      }
-
-      Stack<Activity> activityStack = new Stack<Activity>();
-
-      connections.put(socket, player);
-      reverseConnections.put(player, socket);
-      activities.put(player, activityStack);
-
-      addActivity(player, OverworldActivity.getInstance());
-    }
-    else {
-      getActivity(player).handleRequest(player, request);
-    }
-  }
-
-  private static Player login(String name) throws ServiceException {
-    if (players.keySet().contains(name)) {
-      throw new ServiceException("File already loaded");
-    }
+    if (players.keySet().contains(name)) { throw new ServiceException("File already loaded"); }
 
     File file = new File(JPokemonServer.savepath, name + ".jpkmn");
 
-    if (!file.exists()) {
-      throw new ServiceException("Save file not found");
-    }
+    if (!file.exists()) { throw new ServiceException("Save file not found"); }
 
-    Player player = newPlayer(name);
+    Player player = new Player(name);
+    players.put(name, player);
 
     try {
       player.loadXML(XmlParser.parse(file).get(0));
     } catch (FileNotFoundException e) {
     }
 
-    return player;
-  }
+    Stack<Activity> activityStack = new Stack<Activity>();
 
-  private static Player create(String name, String rivalName) {
-    Player player = newPlayer(name = getUniquePlayerName(name));
-    player.setName(name);
-    player.record().setRivalName(rivalName);
-    return player;
-  }
+    connections.put(socket, player);
+    reverseConnections.put(player, socket);
+    activities.put(player, activityStack);
 
-  private static Player newPlayer(String id) {
-    Player player = new Player(id);
-    players.put(id, player);
-
-    return player;
-  }
-
-  private static String getUniquePlayerName(String attempt) {
-    if (!players.containsKey(attempt) && !new File(JPokemonServer.savepath, attempt + ".jpkmn").exists())
-      return attempt;
-
-    int n = 0;
-    for (; players.containsKey(attempt + n) || new File(JPokemonServer.savepath, attempt + n + ".jpkmn").exists(); n++)
-      ;
-
-    return attempt + n;
+    addActivity(player, OverworldActivity.getInstance());
   }
 
   private static Map<String, Player> players = new HashMap<String, Player>();

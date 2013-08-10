@@ -25,7 +25,12 @@ public class StoreActivity implements Activity {
   }
 
   @Override
-  public boolean handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public boolean supportsAction(String action) {
+    return true;
+  }
+
+  @Override
+  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
     JSONArray itemChanges = request.getJSONArray("items");
 
     int runningTotalCash = player.getCash();
@@ -39,9 +44,8 @@ public class StoreActivity implements Activity {
 
       Inventory inventory = findInventory(itemID, denomination);
 
-      if (inventory == null) {
-        throw new ServiceException("Invalid sale request item:" + itemID + " denomination:" + denomination);
-      }
+      if (inventory == null) { throw new ServiceException("Invalid sale request item:" + itemID + " denomination:"
+          + denomination); }
 
       if (change > 0) {
         runningTotalCash -= change * inventory.getPrice();
@@ -50,15 +54,12 @@ public class StoreActivity implements Activity {
         runningTotalCash += change * inventory.getPurchaseprice();
 
         // The player does not have enough of that item to sell
-        if (player.item(itemID).amount() >= -change) {
-          throw new ServiceException("Insufficent quantity item : " + player.item(itemID).name());
-        }
+        if (player.item(itemID).amount() >= -change) { throw new ServiceException("Insufficent quantity item : "
+            + player.item(itemID).name()); }
       }
     }
 
-    if (!(runningTotalCash >= 0)) {
-      throw new ServiceException("Not enough cash to complete order");
-    }
+    if (!(runningTotalCash >= 0)) { throw new ServiceException("Not enough cash to complete order"); }
 
     for (int index = 0; index < itemChanges.length(); index++) {
       JSONObject itemChange = itemChanges.getJSONObject(index);
@@ -81,15 +82,11 @@ public class StoreActivity implements Activity {
     }
 
     // PlayerManager.clearActivity(player);
-
-    return true;
   }
 
   private Inventory findInventory(int itemID, int denomination) {
     for (Inventory inventory : store) {
-      if (inventory.getItem() == itemID && inventory.getDenomination() == denomination) {
-        return inventory;
-      }
+      if (inventory.getItem() == itemID && inventory.getDenomination() == denomination) { return inventory; }
     }
 
     return null;

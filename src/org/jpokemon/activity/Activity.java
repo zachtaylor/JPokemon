@@ -19,9 +19,18 @@ public interface Activity {
    * be removed, for whatever reason, "false" return will terminate the removal.
    * 
    * @param player
-   * @return
+   * @return If this Activity can be removed
    */
   public boolean onRemove(Player player);
 
-  public boolean handleRequest(Player player, JSONObject data) throws JSONException, ServiceException;
+  /**
+   * Tells whether this Activity supports the indicated action. This hook is
+   * provided for client-launched actions, and should be handled carefully.
+   * 
+   * @param action The action requested
+   * @return If the activity permits this action to be executed
+   */
+  public boolean supportsAction(String action);
+
+  public void handleRequest(Player player, JSONObject data) throws JSONException, ServiceException;
 }

@@ -22,8 +22,7 @@ me.screen.LoginScreen = me.ScreenObject.extend({
 
     var sendLoginRequest = function() {
       game.send({
-        action: 'login',
-        name: this.nameBox.getText()
+        login: this.nameBox.getText()
       });
       me.state.change(me.state.PLAY);
     };
@@ -52,6 +51,7 @@ me.screen.PlayScreen = me.ScreenObject.extend({
   dispatch: function(json) {
     // TODO : other loading things for the overworld screen
     me.levelDirector.loadLevel(json.map);
+    new me.menu.FriendsLauncher().show();
   },
 
   onResetEvent: function(config) {

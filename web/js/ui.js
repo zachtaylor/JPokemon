@@ -3,18 +3,27 @@
 
   ///////////////////////////////////////////////
   // me.ui.Component
+  //
+  // opacity : the alpha with which to draw this component
+  // color : background color of this component
+  // border : border color of this component
+  // onShow : callback function when this becomes visible
+  // onHide : callback function when this becomes invisible
   ///////////////////////////////////////////////
 
   me.ui.Component = me.plugin.Base.extend({
     GUID : null,
     version : "0.9.5",
-    z : 100,
+    z : 10,
+    isEntity : true,
     floating : true,
     visible : false,
 
     init : function(config) {
       this.parent();
       this.config = config || {};
+      this.GUID = me.utils.createGUID();
+      this.needsUpdate = false;
 
       this.config.x = ~~this.config.x;
       this.config.y = ~~this.config.y;
@@ -23,9 +32,20 @@
       this.opacity = this.config.opacity !== undefined ? this.config.opacity : 1;
       this.color = this.config.color || false;
       this.border = this.config.border || false;
+      this.onShow = this.config.onShow || this.onShow;
+      this.onHide = this.config.onHide || this.onHide;
 
       this.rect = new me.Rect(new me.Vector2d(this.config.x, this.config.y), this.config.width, this.config.height);
-      this.GUID = 'component' + me.utils.createGUID();
+    },
+
+    setLeft : function(left) {
+      this.needsUpdate = this.rect.left != left;
+      this.rect.pos.x = left;
+    },
+
+    setTop : function(top) {
+      this.needsUpdate = this.rect.top != top;
+      this.rect.pos.y = top;
     },
 
     show : function() {
@@ -36,18 +56,32 @@
         }
 
         this.visible = true;
+        this.onShow();
         me.game.repaint();
       }
+    },
+
+    onShow : function() {
     },
   
     hide : function() {
       if (this.visible) {
         this.visible = false;
+        this.onHide();
         me.game.repaint();
       }
     },
 
+    onHide : function() {
+    },
+
     update : function() {
+      if (this.needsUpdate) {
+        this.needsUpdate = false;
+        return true;
+      }
+
+      return false;
     },
 
     draw : function(context) {
@@ -80,23 +114,31 @@
         var currentX = this.rect.left + this.padding;
 
         this._forEachChild(function(child) {
-          child.rect.pos = new me.Vector2d(child.config.x + currentX, child.rect.top);
-          currentX += child.rect.width + this.padding;
+          child.setLeft(currentX);
+          currentX = child.rect.left + child.rect.width + this.padding;
         });
 
-        this.rect.width = currentX;
+        this.rect.width = currentX - this.rect.left;
       },
       center : function() {
         var centerX = this.rect.left + (this.rect.width / 2);
 
         this._forEachChild(function(child) {
-          child.rect.pos = new me.Vector2d(centerX - (child.rect.width / 2), child.rect.top);
+          child.setLeft(centerX - (child.rect.width / 2));
         });
       },
       relative : function() {
-        this._forEachChild((function(child) {
-          child.rect.pos = new me.Vector2d(this.rect.left + child.config.x + this.padding, child.rect.top);
-        }).bind(this));
+        var largestX = this.rect.width;
+
+        this._forEachChild(function(child) {
+          if (child.rect.width + 2 * this.padding > largestX) {
+            largestX = child.rect.width + 2 * this.padding;
+          }
+
+          child.setLeft(this.rect.left + child.config.x + this.padding);
+        });
+
+        this.rect.width = largestX;
       }
     },
     y : {
@@ -104,23 +146,31 @@
         var currentY = this.rect.top + this.padding;
 
         this._forEachChild(function(child) {
-          child.rect.pos = new me.Vector2d(child.rect.left, child.config.y + currentY);
+          child.setTop(currentY);
           currentY = child.rect.top + child.rect.height + this.padding;
         });
 
-        this.rect.height = currentY;
+        this.rect.height = currentY - this.rect.top;
       },
       center : function() {
         var centerY = this.rect.top + (this.rect.height / 2);
 
         this._forEachChild(function(child) {
-          child.rect.pos = new me.Vector2d(child.rect.left, centerY - (child.rect.top / 2));
+          child.setTop(centerY - (child.rect.height / 2));
         });
       },
       relative : function() {
-        this._forEachChild((function(child) {
-          child.rect.pos = new me.Vector2d(child.rect.left, this.rect.top + child.config.y + this.padding);
-        }).bind(this));
+        var largestY = this.rect.height;
+
+        this._forEachChild(function(child) {
+          if (child.rect.height  + 2 * this.padding > largestY) {
+            largestY = child.rect.height + 2 * this.padding;
+          }
+
+          child.setTop(this.rect.top + child.config.y + this.padding);
+        });
+
+        this.rect.height = largestY;
       }
     }
   };
@@ -128,7 +178,6 @@
   me.ui.Panel = me.ui.Component.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = "panel" + me.utils.createGUID();
 
       this.children = [];
       this.padding = config.padding !== undefined ? config.padding : 4;
@@ -139,18 +188,52 @@
 
     add : function(child) {
       this.children.push(child);
+      this.needsUpdate = true;
       return this;
     },
 
-    show : function() {
-      this.doLayout();
-      this.parent();
+    setLeft : function(left) {
+      var delta = left - this.rect.left;
+      this.parent(left);
+
+      this._forEachChild(function (child) {
+        child.setLeft(child.rect.left + delta);
+      });
+    },
+
+    setTop : function(top) {
+      var delta = top - this.rect.top;
+      this.parent(top);
+
+      this._forEachChild(function (child) {
+        child.setTop(child.rect.top + delta);
+      });
+    },
+
+    onShow : function() {
+      this._forEachChild(function(child) {
+        child.visible = true;
+        child.onShow();
+      });
+    },
+
+    onHide : function() {
+      this._forEachChild(function(child) {
+        child.visible = false;
+        child.onHide();
+      });
     },
 
     update : function() {
       this._forEachChild(function(child) {
-        child.update();
+        this.needsUpdate = child.update() || this.needsUpdate;
       });
+
+      if (this.needsUpdate) {
+        this.doLayout();
+      }
+
+      return this.parent();
     },
 
     draw : function(context) {
@@ -170,12 +253,6 @@
 
       layouts.x[this.xlayout].call(this);
       layouts.y[this.ylayout].call(this);
-
-      this._forEachChild(function(child) {
-        if (child.doLayout) {
-          child.doLayout();
-        }
-      });
     },
 
     _forEachChild : function(fn) {
@@ -194,7 +271,6 @@
   me.ui.Icon = me.ui.Component.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = 'label' + me.utils.createGUID();
 
       this.setImage(this.config.image);
     },
@@ -228,7 +304,6 @@
   me.ui.Label = me.ui.Component.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = 'label' + me.utils.createGUID();
 
       this.padding = this.config.padding !== undefined ? this.config.padding : 4;
       this.fontName = this.config.fontName || 'courier';
@@ -244,11 +319,18 @@
     },
 
     setText : function(text) {
+      this.needsUpdate = this.text !== text;
       this.text = text;
+    },
 
-      var textSize = this.font.measureText(me.video.getScreenContext(), this.text);
-      this.rect.height = textSize.height + 2 * this.padding - 4;
-      this.rect.width = textSize.width + 2 * this.padding;
+    update : function() {
+      if (this.needsUpdate) {
+        var textSize = this.font.measureText(me.video.getScreenContext(), this.text);
+        this.rect.height = textSize.height + 2 * this.padding - 4;
+        this.rect.width = textSize.width + 2 * this.padding;
+      }
+
+      return this.parent();
     },
 
     draw : function(context) {
@@ -272,10 +354,16 @@
   me.ui.Button = me.ui.Label.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = "button" + me.utils.createGUID();
 
       this.onClick = this.config.onClick || function() {};
+    },
+
+    onShow : function() {
       me.input.registerPointerEvent('mousedown', this.rect, this._clickPropogator.bind(this), true);
+    },
+
+    onHide : function() {
+      me.input.releasePointerEvent('mousedown', this.rect);
     },
 
     _clickPropogator : function() {
@@ -290,12 +378,9 @@
   me.ui.Scrollable = me.ui.Panel.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = "scrollable" + me.utils.createGUID();
 
       this.selectedIndex = 0;
       this.drawnItems = [];
-
-      me.input.registerPointerEvent('mousewheel', this.rect, this.scroll.bind(this), true);
     },
 
     scroll : function(e) {
@@ -304,37 +389,43 @@
 
       if (delta > 1 && this.selectedIndex < this.children.length) {
         this.selectedIndex++;
-        this._calculateDrawnChildren();
+        this.needsUpdate = true;
       }
-      else if (delta < 0 && this.selectedIndex > 0) {
+      else if (delta < -1 && this.selectedIndex > 0) {
         this.selectedIndex--;
-        this._calculateDrawnChildren();
+        this.needsUpdate = true;
       }
     },
 
-    show : function() {
+    onShow : function() {
+      me.input.registerPointerEvent('mousewheel', this.rect, this.scroll.bind(this), true);
       this.parent();
+    },
 
-      this._calculateDrawnChildren();
+    onHide : function() {
+      me.input.releasePointerEvent('mousewheel', this.rect);
+      this.parent();
     },
 
     draw : function(context) {
-      me.ui.Component.draw.apply(this, context); // grandparent
+      me.ui.Component.prototype.draw.call(this, context); // grandparent
 
-      this._forEachChild(function(child) {
-        child.draw(context);
-      });
+      for (var i = 0; i < this.drawnItems.length; i++) {
+        this.drawnItems[i].draw(context);
+      }
     },
 
-    _calculateDrawnChildren : function() {
+    doLayout : function() {
       var currentHeight = 0;
       this.drawnItems = [];
 
       for (var i = this.selectedIndex; i < this.children.length; i++) {
-        if (currentHeight + this.children[i].height <= this.height) {
-          this.children[i].rect.top = currentHeight;
+        if (currentHeight + this.children[i].rect.height <= this.rect.height) {
+          this.children[i].setTop(this.rect.top + currentHeight);
           this.drawnItems.push(this.children[i]);
-          currentHeight += this.padding + this.children[i].height;
+          currentHeight += this.padding + this.children[i].rect.height;
+
+          if (this.children[i].doLayout) this.children[i].doLayout();
         }
         else {
           break;
@@ -348,7 +439,7 @@
   //
   // toggle : If this component is currently toggled
   // toggleStyle : Style to use when toggling this component
-  // onFocusChange : Callback function when toggle changes
+  // onToggleChange : Callback function when toggle changes
   // toggleColor : Color to use when toggled
   // untoggleColor : Color to use when untoggle
   ///////////////////////////////////////////////////
@@ -369,7 +460,6 @@
   me.ui.Toggle = me.ui.Panel.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = "toggle" + me.utils.createGUID();
 
       this.toggle = this.config.toggle || false;
       this.toggleStyle = this.config.toggleStyle || 'select';
@@ -377,10 +467,7 @@
       this.color = this.untoggleColor = this.config.untoggleColor || 'black';
 
       this.rect.containsPoint = this._containsPoint.bind(this);
-      this.onToggleChange = config.onToggleChange || me.ui.Toggle.prototype.onToggleChange;
-
-      // Crazy stuff for checking toggle
-      me.input.registerPointerEvent('mousedown', this.rect, function() {}, true);
+      this.onToggleChange = config.onToggleChange || this.onToggleChange;
     },
 
     // Override for this.rect.containsPoint to be able to hear when 
@@ -392,12 +479,30 @@
       var toggleChange = this.toggle !== oldToggle;
 
       if (toggleChange) {
-        me.game.repaint();
-        this.color = this.toggle ? this.toggleColor : this.untoggleColor;
+        this.needsUpdate = this.visible;
         this.onToggleChange(this.toggle);
       }
 
       return containsPoint;
+    },
+
+    onShow : function() {
+      // Crazy stuff for checking toggle
+      me.input.registerPointerEvent('mousedown', this.rect, function() {}, true);
+      this.parent();
+    },
+
+    onHide : function() {
+      me.input.releasePointerEvent('mousedown', this.rect);
+      this.parent();
+    },
+
+    update : function() {
+      if (this.needsUpdate) {
+        this.color = this.toggle ? this.toggleColor : this.untoggleColor;
+      }
+
+      return this.parent();
     },
 
     onToggleChange : function(toggle) {
@@ -413,7 +518,6 @@
   me.ui.InputBox = me.ui.Toggle.extend({
     init : function(config) {
       this.parent(config);
-      this.GUID = 'inputbox' + me.utils.createGUID();
 
       this.add(this.label = new me.ui.Label({
         fontSize : config.height - 2 * ~~config.padding,
@@ -421,12 +525,11 @@
       }));
 
       this.padding = 0;
-      this.rect.height = this.label.rect.height;
       
       window.addEventListener('keypress', this.onKeyPress.bind(this));
       window.addEventListener('keydown', this.onKeyDown.bind(this));
 
-      this.onEnter = config.onEnter || me.ui.InputBox.prototype.onEnter;
+      this.onEnter = config.onEnter || this.onEnter;
     },
 
     getText : function() {
@@ -435,6 +538,7 @@
 
     setText : function(text) {
       this.label.setText(text);
+      this.needsUpdate = this.label.needsUpdate;
     },
 
     onKeyPress : function(e)  {
@@ -468,6 +572,14 @@
       }
 
       me.game.repaint();
+    },
+
+    update : function() {
+      if (this.needsUpdate) {
+        this.rect.height = this.label.rect.height;
+      }
+
+      return this.parent();
     },
 
     onEnter : function() {
