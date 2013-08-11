@@ -1,6 +1,30 @@
 (function($) {
   me.menu = me.menu || {};
 
+  me.menu.Window = me.ui.Panel.extend({
+    init : function() {
+      this.parent({
+        x : 10,
+        y : 10,
+        xlayout : 'fill',
+        ylayout : 'fit',
+        color : 'black',
+        border : 'white',
+        opacity : .7
+      });
+
+      this.frame = new me.ui.Panel({ padding : 0, xlayout : 'fit', ylayout : 'center' });
+      this.icon = new me.ui.Icon();
+      this.frame.add(this.icon);
+      this.title = new me.ui.Label({ fontSize : 12, fontName : 'verdana' });
+      this.frame.add(this.title);
+      this.add(this.frame);
+
+      this.pane = new me.ui.Panel({ padding : 0, ylayout : 'fit' });
+      this.add(this.pane);
+    },
+  });
+
   me.menu.FriendsLauncher = me.ui.Toggle.extend({
     init : function() {
       this.parent({
@@ -15,7 +39,7 @@
 
       this.friendsWindow = new me.menu.FriendsWindow();
 
-      game.subscribe('friends', this);
+      game.subscribe('friends', this.friendsWindow);
     },
 
     onToggleChange : function(visible) {
@@ -26,75 +50,53 @@
       else {
         this.friendsWindow.hide();
       }
-    },
-
-    dispatch : function(json) {
-      this.friendsWindow.dispatch(json)
     }
   });
 
-  me.menu.FriendsWindow = me.ui.Panel.extend({
+  me.menu.FriendsWindow = me.menu.Window.extend({
     init : function() {
-      this.parent({
-        x : 20,
-        y : 20,
-        xlayout : 'fill',
-        ylayout : 'fit',
-        border : 'white',
-        color : 'black',
-        opacity : .7,
-      });
+      this.parent();
 
-      var headerPanel = new me.ui.Panel({ padding : 0, xlayout : 'fit', ylayout : 'center' });
-      this.currentListImage = new me.ui.Icon({ image : 'circle_green', onClick : this.showChooseList.bind(this) });
-      headerPanel.add(this.currentListImage);
-      this.title = new me.ui.Label({ text : 'Friends List', fontSize : 12, fontName : 'verdana' });
-      headerPanel.add(this.title);
-      headerPanel.add(new me.ui.Icon({ image : 'plus_gray', onClick : this.showInputWindow.bind(this) }));
-      headerPanel.add(new me.ui.Icon({ image : 'refresh_gray', onClick : this.sendLoadRequest }));
-      this.add(headerPanel);
+      this.icon.onClick = this.showChooseList.bind(this);
+      this.frame.add(new me.ui.Icon({ image : 'plus_gray', onClick : this.showInputWindow.bind(this) }));
+      this.frame.add(new me.ui.Icon({ image : 'refresh_gray', onClick : this.sendLoadRequest }));
+      this.scrollers = {};
+      this.stateButtons = {};
 
-      this.friendsList = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
-      this.add(this.friendsList);
+      this.scrollers.friends = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
+      this.stateButtons.friends =  new me.ui.Toggle({
+        xlayout : 'fit', ylayout : 'center',
+        toggleColor : false, untoggleColor : false,
+        padding : 0, onToggleChange : this.showFriends.bind(this)
+      });
+      this.stateButtons.friends.add(new me.ui.Icon({ image : 'circle_green' }));
+      this.stateButtons.friends.add(new me.ui.Label({ text : 'Friends' }));
 
-      this.showFriendsButton =  new me.ui.Toggle({
-        xlayout : 'fit',
-        ylayout : 'center',
-        padding : 0,
-        toggleColor : false,
-        untoggleColor : false,
-        onToggleChange : this.showFriends.bind(this)
+      this.scrollers.blocked = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
+      this.stateButtons.blocked =  new me.ui.Toggle({
+        xlayout : 'fit', ylayout : 'center',
+        toggleColor : false, untoggleColor : false,
+        padding : 0, onToggleChange : this.showBlocked.bind(this)
       });
-      this.showFriendsButton.add(new me.ui.Icon({ image : 'circle_green' }));
-      this.showFriendsButton.add(new me.ui.Label({ text : 'Friends' }));
-      this.showBlockedButton =  new me.ui.Toggle({
-        xlayout : 'fit',
-        ylayout : 'center',
-        padding : 0,
-        toggleColor : false,
-        untoggleColor : false,
-        onToggleChange : this.showBlocked.bind(this)
+      this.stateButtons.blocked.add(new me.ui.Icon({ image : 'circle_red' }));
+      this.stateButtons.blocked.add(new me.ui.Label({ text : 'Blocked' }));
+
+      this.scrollers.pending = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
+      this.stateButtons.pending =  new me.ui.Toggle({
+        xlayout : 'fit', ylayout : 'center',
+        toggleColor : false, untoggleColor : false,
+        padding : 0, onToggleChange : this.showPending.bind(this)
       });
-      this.showBlockedButton.add(new me.ui.Icon({ image : 'circle_red' }));
-      this.showBlockedButton.add(new me.ui.Label({ text : 'Blocked' }));
-      this.showPendingButton =  new me.ui.Toggle({
-        xlayout : 'fit',
-        ylayout : 'center',
-        padding : 0,
-        toggleColor : false,
-        untoggleColor : false,
-        onToggleChange : this.showPending.bind(this)
-      });
-      this.showPendingButton.add(new me.ui.Icon({ image : 'circle_blue' }));
-      this.showPendingButton.add(new me.ui.Label({ text : 'Pending' }));
+      this.stateButtons.pending.add(new me.ui.Icon({ image : 'circle_blue' }));
+      this.stateButtons.pending.add(new me.ui.Label({ text : 'Pending' }));
 
       this.inputWindow = new me.ui.Panel({ x : 200, y : 200, ylayout : 'fit', border : 'white', color : 'black', opacity : .7 });
       this.inputWindowLabel = new me.ui.Label({ text : 'Add Friend' });
       this.inputWindow.add(this.inputWindowLabel);
-      this.inputWindowInputBox = new me.ui.InputBox({ width : 100, onEnter : (function () { this[this.list + 'Request'] }).bind(this) });
+      this.inputWindowInputBox = new me.ui.InputBox({ width : 100, onEnter : this.onInputWindowEnter.bind(this) });
       this.inputWindow.add(this.inputWindowInputBox);
 
-      this.list = 'friends';
+      this.showFriends(true);
     },
 
     hide : function() {
@@ -112,30 +114,10 @@
       }
       this.list = 'friends';
 
-      this.currentListImage.setImage('circle_green');
+      this.icon.setImage('circle_green');
       this.title.setText('Friends List');
-
-      this.reload();
-    },
-
-    friendsRequest : function() {
-      var friendName = this.inputWindowInputBox.getText();
-        
-      if (friendName) {
-        game.send({
-          action:'friends',
-          add:friendName
-        });
-        this.inputWindowInputBox.setText('');
-      }
-
-      this.inputWindow.hide();
-    },
-
-    friendsNamePanel : function(name) {
-      var namePanel = new me.ui.Panel({ opacity:0, padding:0, xlayout:'fill' });
-      namePanel.add(new me.ui.Label({ text : name }));
-      return namePanel;
+      this.pane.clear();
+      this.pane.add(this.scrollers.friends);
     },
 
     showBlocked : function(selected) {
@@ -144,16 +126,10 @@
       }
       this.list = 'blocked';
 
-      this.currentListImage.setImage('circle_red');
+      this.icon.setImage('circle_red');
       this.title.setText('Blocked List');
-
-      this.reload();
-    },
-
-    blockedNamePanel : function(name) {
-      var namePanel = new me.ui.Panel({ opacity:0, padding:0, xlayout:'fill' });
-      namePanel.add(new me.ui.Label({ text : name }));
-      return namePanel;
+      this.pane.clear();
+      this.pane.add(this.scrollers.blocked);
     },
 
     showPending : function(selected) {
@@ -162,30 +138,10 @@
       }
       this.list = 'pending';
 
-      this.currentListImage.setImage('circle_blue');
+      this.icon.setImage('circle_blue');
       this.title.setText('Pending List');
-
-      this.reload();
-    },
-
-    pendingNamePanel : function(name) {
-      var namePanel = new me.ui.Panel({ opacity:0, padding:0, xlayout:'fit', ylayout : 'center' });
-
-      var acceptButton = new me.ui.Icon({ image : 'plus_green', onClick : this.pendingRequest(name).bind(this) });
-      namePanel.add(acceptButton);
-
-      namePanel.add(new me.ui.Label({ text : name }));
-
-      return namePanel;
-    },
-
-    pendingRequest : function(name) {
-      return function() {
-        game.send({
-          action:'friends',
-          accept : name
-        });
-      }
+      this.pane.clear();
+      this.pane.add(this.scrollers.pending);
     },
 
     showChooseList : function() {
@@ -193,18 +149,36 @@
         return;
       }
       this.list = 'choose';
-
-      this.children.splice(1);
-      this.friendsList.onHide();
-      this.add(this.showFriendsButton);
-      this.showFriendsButton.onShow();
-      this.add(this.showBlockedButton);
-      this.showBlockedButton.onShow();
-      this.add(this.showPendingButton);
-      this.showPendingButton.onShow();
       
-      this.currentListImage.setImage('circle_gray');
-      this.title.setText('Select List');
+      this.icon.setImage('circle_gray');
+      this.title.setText('Choose List');
+      this.pane.clear();
+      this.pane.add(this.stateButtons.friends);
+      this.pane.add(this.stateButtons.blocked);
+      this.pane.add(this.stateButtons.pending);
+    },
+
+    friendsNamePanel : function(name) {
+      var namePanel = new me.ui.Panel({ opacity : 0, padding : 0, xlayout:'fill' });
+      namePanel.add(new me.ui.Label({ text : name }));
+      return namePanel;
+    },
+
+    blockedNamePanel : function(name) {
+      var namePanel = new me.ui.Panel({ opacity : 0, padding : 0, xlayout:'fill' });
+      namePanel.add(new me.ui.Label({ text : name }));
+      return namePanel;
+    },
+
+    pendingNamePanel : function(name) {
+      var namePanel = new me.ui.Panel({ opacity : 0, padding : 0, xlayout:'fit', ylayout : 'center' });
+
+      var acceptButton = new me.ui.Icon({ image : 'plus_green', onClick : this.acceptPendingRequest(name).bind(this) });
+      namePanel.add(acceptButton);
+
+      namePanel.add(new me.ui.Label({ text : name }));
+
+      return namePanel;
     },
 
     sendLoadRequest : function() {
@@ -213,30 +187,45 @@
       });
     },
 
-    dispatch : function(json) {
-      this.data = json;
-      this.reload();
+    onInputWindowEnter : function() {
+      var friendName = this.inputWindowInputBox.getText();
+      
+      if (friendName) {
+        game.send({
+          action : 'friends',
+          add : friendName
+        });
+        this.inputWindowInputBox.setText('');
+      }
+
+      this.inputWindow.hide();
     },
 
-    reload : function() {
-      if (this.list === 'choose') {
-        return;
+    acceptPendingRequest : function(name) {
+      return function() {
+        game.send({
+          action : 'friends',
+          accept : name
+        });
       }
-      this.children.splice(1);
-      this.showFriendsButton.onHide();
-      this.showBlockedButton.onHide();
-      this.showPendingButton.onHide();
-      this.add(this.friendsList);
-      this.friendsList.onShow();
+    },
 
-      this.friendsList.children = [];
+    dispatch : function(json) {
+      this.data = json;
+      
+      this.scrollers.friends.clear();
+      for (var i = 0; i < this.data.friends.length; i++) {
+        this.scrollers.friends.add(this.friendsNamePanel(this.data.friends[i]));
+      }
 
-      var namePanel;
-      for (var i = 0; i < this.data[this.list].length; i++) {
-        // Function pointers, man
-        namePanel = this[this.list + 'NamePanel'](this.data[this.list][i]);
-        this.friendsList.add(namePanel);
-        namePanel.onShow();
+      this.scrollers.blocked.clear();
+      for (var i = 0; i < this.data.blocked.length; i++) {
+        this.scrollers.blocked.add(this.blockedNamePanel(this.data.blocked[i]));
+      }
+
+      this.scrollers.pending.clear();
+      for (var i = 0; i < this.data.pending.length; i++) {
+        this.scrollers.pending.add(this.pendingNamePanel(this.data.pending[i]));
       }
     }
   });

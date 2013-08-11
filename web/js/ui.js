@@ -55,24 +55,24 @@
           me.game.sort();
         }
 
-        this.visible = true;
         this.onShow();
         me.game.repaint();
       }
     },
 
     onShow : function() {
+      this.visible = true;
     },
   
     hide : function() {
       if (this.visible) {
-        this.visible = false;
         this.onHide();
         me.game.repaint();
       }
     },
 
     onHide : function() {
+      this.visible = false;
     },
 
     update : function() {
@@ -219,16 +219,32 @@
       this.parent(config);
 
       this.children = [];
-      this.padding = config.padding !== undefined ? config.padding : 4;
+      this.padding = this.config.padding !== undefined ? this.config.padding : 4;
 
-      this.xlayout = config.xlayout || 'relative';
-      this.ylayout = config.ylayout || 'relative';
+      this.xlayout = this.config.xlayout || 'relative';
+      this.ylayout = this.config.ylayout || 'relative';
     },
 
     add : function(child) {
       this.children.push(child);
       this.needsUpdate = true;
+
+      if (this.visible) {
+        child.onShow();
+      }
+
       return this;
+    },
+
+    clear : function() {
+      if (this.visible) {
+        this._forEachChild(function(child) {
+          child.onHide();
+        });
+      }
+
+      this.children = [];
+      this.needsUpdate = true;
     },
 
     setLeft : function(left) {
@@ -250,15 +266,17 @@
     },
 
     onShow : function() {
+      this.parent();
+
       this._forEachChild(function(child) {
-        child.visible = true;
         child.onShow();
       });
     },
 
     onHide : function() {
+      this.parent();
+      
       this._forEachChild(function(child) {
-        child.visible = false;
         child.onHide();
       });
     },
@@ -315,10 +333,12 @@
     },
 
     onShow : function() {
+      this.parent();
       me.input.registerPointerEvent('mousedown', this.rect, this._clickPropogator.bind(this), true);
     },
 
     onHide : function() {
+      this.parent();
       me.input.releasePointerEvent('mousedown', this.rect);
     },
 
@@ -341,16 +361,14 @@
 
       this.padding = this.config.padding !== undefined ? this.config.padding : 4;
 
-      this.setImage(this.config.image);
+      if (this.config.image) {
+        this.setImage(this.config.image);
+      }
     },
 
     setImage : function(src) {
       this.image = me.loader.getImage(src);
       this.needsUpdate = true;
-    },
-
-    onShow: function() {
-      this.parent();
     },
 
     update : function() {
