@@ -139,6 +139,22 @@
         });
 
         this.rect.width = largestX;
+      },
+      fill : function() {
+        var largestX = this.rect.width;
+
+        this._forEachChild(function(child) {
+          if (child.rect.width + 2 * this.padding > largestX) {
+            largestX = child.rect.width + 2 * this.padding;
+          }
+
+          child.setLeft(this.rect.left + this.padding);
+        });
+
+        this.rect.width = largestX;
+        this._forEachChild(function(child) {
+          child.rect.width = largestX - 2 * this.padding;
+        });
       }
     },
     y : {
@@ -153,11 +169,18 @@
         this.rect.height = currentY - this.rect.top;
       },
       center : function() {
+        var largestY = this.rect.height;
         var centerY = this.rect.top + (this.rect.height / 2);
 
         this._forEachChild(function(child) {
+          if (child.rect.height  + 2 * this.padding > largestY) {
+            largestY = child.rect.height + 2 * this.padding;
+          }
+
           child.setTop(centerY - (child.rect.height / 2));
         });
+
+        this.rect.height = largestY;
       },
       relative : function() {
         var largestY = this.rect.height;
@@ -171,6 +194,22 @@
         });
 
         this.rect.height = largestY;
+      },
+      fill : function() {
+        var largestY = this.rect.height;
+
+        this._forEachChild(function(child) {
+          if (child.rect.height  + 2 * this.padding > largestY) {
+            largestY = child.rect.height + 2 * this.padding;
+          }
+
+          child.setTop(this.rect.top + this.padding);
+        });
+
+        this.rect.height = largestY;
+        this._forEachChild(function(child) {
+          child.rect.height = largestY - 2 * this.padding;
+        });
       }
     }
   };
@@ -263,20 +302,64 @@
   });
 
   ///////////////////////////////////////////////
+  // me.ui.Clickable
+  //
+  // onClick : Callback function for clicking
+  ///////////////////////////////////////////////
+
+  me.ui.Clickable = me.ui.Component.extend({
+    init : function(config) {
+      this.parent(config);
+
+      this.onClick = this.config.onClick || false;
+    },
+
+    onShow : function() {
+      me.input.registerPointerEvent('mousedown', this.rect, this._clickPropogator.bind(this), true);
+    },
+
+    onHide : function() {
+      me.input.releasePointerEvent('mousedown', this.rect);
+    },
+
+    _clickPropogator : function() {
+      if (this.onClick) {
+        this.onClick();
+      }
+    }
+  });
+  
+  ///////////////////////////////////////////////
   // me.ui.Icon
   //
   // image : URL of the image to draw
   ///////////////////////////////////////////////
 
-  me.ui.Icon = me.ui.Component.extend({
+  me.ui.Icon = me.ui.Clickable.extend({
     init : function(config) {
       this.parent(config);
+
+      this.padding = this.config.padding !== undefined ? this.config.padding : 4;
 
       this.setImage(this.config.image);
     },
 
     setImage : function(src) {
       this.image = me.loader.getImage(src);
+      this.needsUpdate = true;
+    },
+
+    onShow: function() {
+      this.parent();
+    },
+
+    update : function() {
+      if (this.needsUpdate) {
+        this.rect.width = this.image.width + 2 * this.padding;
+        this.rect.height = this.image.height + 2 * this.padding;
+      }
+
+      return this.parent();
     },
 
     draw : function(context) {
@@ -285,7 +368,7 @@
       context.save();
 
       context.globalAlpha = 1.0;
-      context.drawImage(this.image, this.rect.left, this.rect.top);
+      context.drawImage(this.image, this.rect.left + this.padding, this.rect.top + this.padding);
 
       context.restore();
     }
@@ -301,7 +384,7 @@
   // fontColor : Color to draw the font
   ///////////////////////////////////////////////
 
-  me.ui.Label = me.ui.Component.extend({
+  me.ui.Label = me.ui.Clickable.extend({
     init : function(config) {
       this.parent(config);
 
@@ -346,32 +429,6 @@
   });
 
   ///////////////////////////////////////////////
-  // me.ui.Button
-  //
-  // onClick : Callback function for click
-  ///////////////////////////////////////////////
-
-  me.ui.Button = me.ui.Label.extend({
-    init : function(config) {
-      this.parent(config);
-
-      this.onClick = this.config.onClick || function() {};
-    },
-
-    onShow : function() {
-      me.input.registerPointerEvent('mousedown', this.rect, this._clickPropogator.bind(this), true);
-    },
-
-    onHide : function() {
-      me.input.releasePointerEvent('mousedown', this.rect);
-    },
-
-    _clickPropogator : function() {
-      this.onClick();
-    }
-  });
-
-  ///////////////////////////////////////////////
   // me.ui.Scrollable
   ///////////////////////////////////////////////
 
@@ -385,13 +442,13 @@
 
     scroll : function(e) {
       var evt = window.event || e;
-      var delta = evt.detail ? -evt.detail : (evt.wheelDelta / 120);
+      var delta = evt.detail ? -evt.detail : (evt.wheelDelta / -120);
 
-      if (delta > 1 && this.selectedIndex < this.children.length) {
+      if (delta > 0.4  && this.selectedIndex + 1 < this.children.length) {
         this.selectedIndex++;
         this.needsUpdate = true;
       }
-      else if (delta < -1 && this.selectedIndex > 0) {
+      else if (delta < -0.4 && this.selectedIndex > 0) {
         this.selectedIndex--;
         this.needsUpdate = true;
       }
@@ -422,6 +479,7 @@
       for (var i = this.selectedIndex; i < this.children.length; i++) {
         if (currentHeight + this.children[i].rect.height <= this.rect.height) {
           this.children[i].setTop(this.rect.top + currentHeight);
+          this.children[i].setLeft(this.rect.left + this.padding);
           this.drawnItems.push(this.children[i]);
           currentHeight += this.padding + this.children[i].rect.height;
 
@@ -463,8 +521,9 @@
 
       this.toggle = this.config.toggle || false;
       this.toggleStyle = this.config.toggleStyle || 'select';
-      this.toggleColor = this.config.toggleColor || 'gray';
-      this.color = this.untoggleColor = this.config.untoggleColor || 'black';
+      this.toggleColor = this.config.toggleColor !== undefined ? this.config.toggleColor : 'gray';
+      this.color = this.untoggleColor = this.config.untoggleColor !== undefined ? this.config.untoggleColor : 'black';
+      this.padding = config.padding !== undefined ? config.padding : 4;
 
       this.rect.containsPoint = this._containsPoint.bind(this);
       this.onToggleChange = config.onToggleChange || this.onToggleChange;
@@ -493,6 +552,7 @@
     },
 
     onHide : function() {
+      this.toggle = false;
       me.input.releasePointerEvent('mousedown', this.rect);
       this.parent();
     },

@@ -2,7 +2,9 @@ package org.jpokemon.trainer;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
@@ -20,8 +22,7 @@ public class Player implements PokemonTrainer {
   private Pokedex _pokedex = new Pokedex();
   private Record _record = new Record(this);
   private int _area = 1, _badge, _cash, _x, _y, _xp, _level;
-  private List<String> _friends = new ArrayList<String>();
-  private List<String> _blocked = new ArrayList<String>();
+  private Map<String, List<String>> _friends = new HashMap<String, List<String>>();
   private List<String> _unlockedAvatars = new ArrayList<String>();
   private PokemonStorageBlock _storage = new PokemonStorageBlock();
 
@@ -62,9 +63,7 @@ public class Player implements PokemonTrainer {
   }
 
   public void setAvatar(String name) {
-    if (!_unlockedAvatars.contains(name)) {
-      return;
-    }
+    if (!_unlockedAvatars.contains(name)) { return; }
     _avatar = name;
   }
 
@@ -113,29 +112,45 @@ public class Player implements PokemonTrainer {
   }
 
   public List<String> getFriends() {
-    return Collections.unmodifiableList(_friends);
+    if (_friends.get("friends") == null) { return new ArrayList<String>(); }
+
+    return Collections.unmodifiableList(_friends.get("friends"));
   }
 
   public void addFriend(String name) {
-    _friends.add(name);
+    if (_friends.get("friends") == null) {
+      _friends.put("friends", new ArrayList<String>());
+    }
+
+    _friends.get("friends").add(name);
     removeBlocked(name);
   }
 
   public void removeFriend(String name) {
-    _friends.remove(name);
+    if (_friends.get("friends") == null) { return; }
+
+    _friends.get("friends").remove(name);
   }
 
   public List<String> getBlocked() {
-    return Collections.unmodifiableList(_blocked);
+    if (_friends.get("blocked") == null) { return new ArrayList<String>(); }
+
+    return Collections.unmodifiableList(_friends.get("blocked"));
   }
 
   public void addBlocked(String name) {
-    _blocked.add(name);
+    if (_friends.get("blocked") == null) {
+      _friends.put("blocked", new ArrayList<String>());
+    }
+
+    _friends.get("blocked").add(name);
     removeFriend(name);
   }
 
   public void removeBlocked(String name) {
-    _blocked.remove(name);
+    if (_friends.get("blocked") == null) { return; }
+
+    _friends.get("blocked").remove(name);
   }
 
   public int getBadgeCount() {
@@ -203,6 +218,18 @@ public class Player implements PokemonTrainer {
     node.addChild(_pokedex.toXml());
     node.addChild(_storage.toXml());
 
+    XmlNode friends = new XmlNode("friends");
+    if (_friends.get("friends") != null) {
+      friends.setValue(_friends.get("friends").toString());
+    }
+    node.addChild(friends);
+
+    XmlNode blocked = new XmlNode("blocked");
+    if (_friends.get("blocked") != null) {
+      blocked.setValue(_friends.get("blocked").toString());
+    }
+    node.addChild(blocked);
+
     return node;
   }
 
@@ -216,6 +243,28 @@ public class Player implements PokemonTrainer {
     _record.loadXml(node.getChildren(Record.XML_NODE_NAME).get(0));
     _pokedex.loadXml(node.getChildren(Pokedex.XML_NODE_NAME).get(0));
     _storage.loadXml(node.getChildren(PokemonStorageBlock.XML_NODE_NAME).get(0));
+
+    String friendsString = node.getChildren("friends").get(0).getValue();
+    if (friendsString != null) {
+      for (String f : friendsString.replace('[', ' ').replace(']', ' ').trim().split(",")) {
+        if (f.isEmpty()) {
+          continue;
+        }
+
+        addFriend(f);
+      }
+    }
+
+    String blockedString = node.getChildren("blocked").get(0).getValue();
+    if (blockedString != null) {
+      for (String f : blockedString.replace('[', ' ').replace(']', ' ').trim().split(",")) {
+        if (f.isEmpty()) {
+          continue;
+        }
+
+        addBlocked(f);
+      }
+    }
   }
 
   @Override

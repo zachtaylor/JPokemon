@@ -1,4 +1,4 @@
-<player area="3" name="Zach" cash="0" badge="0">
+<player area="3" name="Foo" cash="0" badge="0">
 	<bag>
 		<item quantity="1" number="5" />
 	</bag>

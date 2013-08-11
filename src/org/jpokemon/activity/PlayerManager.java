@@ -23,6 +23,10 @@ import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XmlParser;
 
 public class PlayerManager {
+  public static Player getPlayer(String name) {
+    return players.get(name);
+  }
+
   public static Activity getActivity(Player player) {
     Stack<Activity> stack = activities.get(player);
     return stack.peek();
@@ -70,8 +74,7 @@ public class PlayerManager {
     webSocket.sendJson(json);
   }
 
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException,
-      ServiceException {
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
     Player player = connections.get(socket);
 
     if (player == null) {

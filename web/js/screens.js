@@ -32,7 +32,7 @@ me.screen.LoginScreen = me.ScreenObject.extend({
       onEnter : sendLoginRequest.bind(this)
     }));
 
-    loginPanel.add(new me.ui.Button({
+    loginPanel.add(new me.ui.Label({
       y : 150,
       color : 'white',
       opacity : .5,
