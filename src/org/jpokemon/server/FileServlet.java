@@ -22,7 +22,7 @@ public class FileServlet extends HttpServlet {
 
   public FileServlet() {
     resourceHandler = new ResourceHandler();
-    resourceHandler.setWelcomeFiles(new String[] { "login.html" });
+    resourceHandler.setWelcomeFiles(new String[] { "index.html" });
     resourceHandler.setDirectoriesListed(false);
     resourceHandler.setCacheControl(cache);
     resourceHandler.setResourceBase(webdir);

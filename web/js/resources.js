@@ -15,5 +15,5 @@ game.resources = [
   {name: "minus_red", type:'image', src:'resource/img/ui/minus_red.png'},
 
    // Maps
-   {name: "myarea", type: "tmx", src: "resource/map/myarea.tmx"}
+   {name: "myarea", type: "tmx", src: "map/myarea.tmx"}
 ];
