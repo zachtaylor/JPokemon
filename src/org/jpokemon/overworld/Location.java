@@ -1,7 +1,7 @@
 package org.jpokemon.overworld;
 
 public class Location {
-  private String area;
+  private Map map;
   private int[] coordinates;
   private Direction direction;
 
@@ -9,12 +9,12 @@ public class Location {
     coordinates = new int[4];
   }
 
-  public String getArea() {
-    return area;
+  public Map getMap() {
+    return map;
   }
 
-  public void setArea(String a) {
-    area = a;
+  public void setMap(Map map) {
+    this.map = map;
   }
 
   public Direction getDirection() {

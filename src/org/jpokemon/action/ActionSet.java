@@ -11,12 +11,12 @@ import org.jpokemon.trainer.Player;
 public class ActionSet {
   public static final String XML_NODE_NAME = "actionset";
 
-  public String getOption() {
-    return _option;
+  public String getOptionName() {
+    return _optionName;
   }
 
-  public void setOption(String o) {
-    _option = o;
+  public void setOptionName(String o) {
+    _optionName = o;
   }
 
   public void addAction(Action a) {
@@ -28,9 +28,7 @@ public class ActionSet {
   }
 
   public void execute(Player p) throws ServiceException {
-    if (!isOkay(p)) {
-      return;
-    }
+    if (!isOkay(p)) { return; }
 
     for (Action action : _actions) {
       action.execute(p);
@@ -45,7 +43,9 @@ public class ActionSet {
     return _requirements.isOkay(p);
   }
 
-  private String _option;
+  /* Indicates the name of this actionset as an option among others */
+  private String _optionName;
+
   private List<Action> _actions = new ArrayList<Action>();
   private RequirementSet _requirements = new RequirementSet();
 }

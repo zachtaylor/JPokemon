@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.overworld.map.WildPokemon;
+import org.jpokemon.overworld.WildPokemon;
 
 import com.jpokemon.JPokemonButton;
 import com.jpokemon.util.ui.selector.AreaSelector;
@@ -57,7 +57,7 @@ public class WildPokemonEditor implements MapEditComponent {
     areaSelector.reload();
 
     childContainer.removeAll();
-    for (WildPokemon wildPokemon : WildPokemon.get(areaSelector.getCurrentElement().getNumber())) {
+    for (WildPokemon wildPokemon : WildPokemon.get(areaSelector.getCurrentElement().getName())) {
       childContainer.add(new WildPokemonPanel(wildPokemon));
     }
 
@@ -83,11 +83,12 @@ public class WildPokemonEditor implements MapEditComponent {
       return;
 
     WildPokemon wildPokemon = new WildPokemon();
-    wildPokemon.setArea(areaSelector.getCurrentElement().getNumber());
+    wildPokemon.setMap(areaSelector.getCurrentElement().getName());
 
     try {
       SqlStatement.insert(wildPokemon).execute();
-    } catch (DataConnectionException e) {
+    }
+    catch (DataConnectionException e) {
       e.printStackTrace();
     }
 
@@ -145,8 +146,9 @@ public class WildPokemonEditor implements MapEditComponent {
       wildPokemon.setNumber(newNumber);
 
       try {
-        SqlStatement.update(wildPokemon).where("area").eq(wildPokemon.getArea()).and("number").eq(oldNumber).execute();
-      } catch (DataConnectionException e) {
+        SqlStatement.update(wildPokemon).where("map").eq(wildPokemon.getMap()).and("number").eq(oldNumber).execute();
+      }
+      catch (DataConnectionException e) {
         e.printStackTrace();
       }
 
@@ -159,8 +161,9 @@ public class WildPokemonEditor implements MapEditComponent {
       wildPokemon.setLevelmin(newLevelMin);
 
       try {
-        SqlStatement.update(wildPokemon).where("area").eq(wildPokemon.getArea()).and("number").eq(wildPokemon.getNumber()).execute();
-      } catch (DataConnectionException e) {
+        SqlStatement.update(wildPokemon).where("map").eq(wildPokemon.getMap()).and("number").eq(wildPokemon.getNumber()).execute();
+      }
+      catch (DataConnectionException e) {
         e.printStackTrace();
       }
 
@@ -173,8 +176,9 @@ public class WildPokemonEditor implements MapEditComponent {
       wildPokemon.setLevelmax(newLevelMax);
 
       try {
-        SqlStatement.update(wildPokemon).where("area").eq(wildPokemon.getArea()).and("number").eq(wildPokemon.getNumber()).execute();
-      } catch (DataConnectionException e) {
+        SqlStatement.update(wildPokemon).where("map").eq(wildPokemon.getMap()).and("number").eq(wildPokemon.getNumber()).execute();
+      }
+      catch (DataConnectionException e) {
         e.printStackTrace();
       }
 
@@ -187,8 +191,9 @@ public class WildPokemonEditor implements MapEditComponent {
       wildPokemon.setFlex(newFlex);
 
       try {
-        SqlStatement.update(wildPokemon).where("area").eq(wildPokemon.getArea()).and("number").eq(wildPokemon.getNumber()).execute();
-      } catch (DataConnectionException e) {
+        SqlStatement.update(wildPokemon).where("map").eq(wildPokemon.getMap()).and("number").eq(wildPokemon.getNumber()).execute();
+      }
+      catch (DataConnectionException e) {
         e.printStackTrace();
       }
 
