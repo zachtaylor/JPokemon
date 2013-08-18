@@ -1,14 +1,16 @@
 package org.jpokemon.overworld;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jpokemon.action.ActionSet;
 
 public class Entity {
   private String name;
-  private Location lineOfSight;
-  private Map<String, ActionSet> actionSets = new HashMap<String, ActionSet>();
+  private boolean solid;
+  private Map<String, List<ActionSet>> actionSets = new HashMap<String, List<ActionSet>>();
 
   public String getName() {
     return name;
@@ -18,19 +20,23 @@ public class Entity {
     this.name = name;
   }
 
-  public Location getLineOfSight() {
-    return lineOfSight;
+  public boolean isSolid() {
+    return solid;
   }
 
-  public void setLineOfSight(Location lineOfSight) {
-    this.lineOfSight = lineOfSight;
+  public void setSolid(boolean solid) {
+    this.solid = solid;
   }
 
-  public ActionSet getActionSet(String s) {
-    return actionSets.get(s);
+  public List<ActionSet> getActionSets(String trigger) {
+    return actionSets.get(trigger);
   }
 
-  public ActionSet putActionSet(String s, ActionSet actionSet) {
-    return actionSets.put(s, actionSet);
+  public void addActionSet(String trigger, ActionSet actionSet) {
+    if (actionSets.get(trigger) == null) {
+      actionSets.put(trigger, new ArrayList<ActionSet>());
+    }
+
+    actionSets.get(trigger).add(actionSet);
   }
 }

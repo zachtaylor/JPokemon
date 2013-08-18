@@ -2,12 +2,7 @@ package org.jpokemon.overworld;
 
 public class Location {
   private Map map;
-  private int[] coordinates;
-  private Direction direction;
-
-  public Location() {
-    coordinates = new int[4];
-  }
+  private int[] coordinates = new int[4];
 
   public Map getMap() {
     return map;
@@ -17,19 +12,35 @@ public class Location {
     this.map = map;
   }
 
-  public Direction getDirection() {
-    return direction;
+  public int getLeft() {
+    return coordinates[0];
   }
 
-  public void setDirection(Direction direction) {
-    this.direction = direction;
+  public int getTop() {
+    return coordinates[1];
   }
 
-  public void setRegion(int x0, int x1, int y0, int y1) {
-    coordinates[0] = x0;
-    coordinates[1] = y0;
-    coordinates[2] = x1;
-    coordinates[3] = y1;
+  public int getRight() {
+    return coordinates[2];
+  }
+
+  public int getBottom() {
+    return coordinates[3];
+  }
+
+  public int getWidth() {
+    return coordinates[2] - coordinates[0] + 1;
+  }
+
+  public int getHeight() {
+    return coordinates[3] - coordinates[1] + 1;
+  }
+
+  public void setBounds(int left, int right, int top, int bottom) {
+    coordinates[0] = left;
+    coordinates[1] = top;
+    coordinates[2] = right;
+    coordinates[3] = bottom;
   }
 
   public boolean contains(Location location) {

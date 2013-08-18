@@ -21,7 +21,7 @@ public class Map {
   private String name;
   private int width, height;
   private Entity[][] entities;
-  private List<Region> regions = new ArrayList<Region>();
+  private Entity solidPlaceholder = new Entity();
   private List<WildPokemon> wildPokemon = new ArrayList<WildPokemon>();
 
   // used internally to determine entity sizes
@@ -29,6 +29,7 @@ public class Map {
 
   public Map(String name) {
     this.name = name;
+    this.solidPlaceholder.setSolid(true);
 
     reloadFileData();
     reloadSqliteData();
@@ -48,10 +49,6 @@ public class Map {
 
   public Entity getEntityAt(int x, int y) {
     return entities[x][y];
-  }
-
-  public List<Region> getRegions() {
-    return regions;
   }
 
   public Pokemon getWildPokemon() {
@@ -99,14 +96,11 @@ public class Map {
       for (XmlNode object : objectgroup.getAllChildren()) {
         objectType = object.getAttribute("type");
 
-        if ("entity".equals(objectType)) {
-          parseEntity(object);
+        if ("solid".equals(objectType)) {
+          parseSolid(object);
         }
-        else if ("region".equals(objectType)) {
-          parseRegion(object);
-        }
-        else if ("border".equals(objectType)) {
-          // TODO
+        else if ("interact".equals(objectType)) {
+          parseInteract(object);
         }
       }
     }
@@ -119,111 +113,62 @@ public class Map {
     }
   }
 
-  private void parseEntity(XmlNode entityNode) {
-    String name = entityNode.getAttribute("name");
-    if (name == null) { return; }
+  private void parseSolid(XmlNode object) {
+    Location location = parseLocation(object);
 
-    Entity entity = new Entity();
-    entity.setName(name);
-
-    List<String> actionSets = new ArrayList<String>();
-    if (entityNode.hasAttribute("actionset")) {
-      actionSets.add(entityNode.getAttribute("actionset"));
-    }
-    else if (entityNode.hasAttribute("actionsets")) {
-      String actionSetArray = entityNode.getAttribute("actionsets");
-      for (String actionSet : actionSetArray.replace('[', ' ').replace(']', ' ').split(",")) {
-        actionSet = actionSet.trim();
-        if (!actionSet.isEmpty()) {
-          actionSets.add(actionSet);
-        }
+    for (int w = 0; w < location.getWidth(); w++) {
+      for (int h = 0; h < location.getHeight(); h++) {
+        entities[location.getLeft() + w][location.getTop() + h] = solidPlaceholder;
       }
-    }
-
-    for (String s : actionSets) {
-      ActionSet actionSet = null; // TODO
-      // if (actionSet == null) { log(something); continue; }
-      entity.putActionSet(s, actionSet);
-    }
-
-    // round down
-    int x = entityNode.getIntAttribute("x") / tilewidth;
-    int y = entityNode.getIntAttribute("y") / tileheight;
-    // round up edge as displayed if width is there
-    int w = 1, h = 1;
-    if (entityNode.hasAttribute("x")) {
-      w += (entityNode.getIntAttribute("x") - x) + entityNode.getIntAttribute("width") / tilewidth;
-    }
-    if (entityNode.hasAttribute("y")) {
-      h += (entityNode.getIntAttribute("y") - y) + entityNode.getIntAttribute("height") / tileheight;
-    }
-
-    for (int iw = 0; iw < w; iw++) {
-      for (int ih = 0; ih < h; ih++) {
-        if (entities[x + iw][y + ih] != null) {
-          // log("Multiple entities at " + (x + iw) + "," + (y + ih));
-        }
-
-        entities[x + iw][y + ih] = entity;
-      }
-    }
-
-    if (entity.getActionSet("sight") != null) {
-      Location lineOfSight = new Location();
-      lineOfSight.setDirection(Direction.SOUTH);
-      lineOfSight.setMap(this);
-      lineOfSight.setRegion(x, x + w, y, y + h);
-
-      Region region = new Region();
-      region.setTrigger("step");
-      region.getActionSets().add(entity.getActionSet("sight"));
-      region.setLocation(lineOfSight);
-      regions.add(region);
     }
   }
 
-  private void parseRegion(XmlNode regionNode) {
-    String name = regionNode.getAttribute("name");
-    if (name == null) { return; }
+  private void parseInteract(XmlNode object) {
+    
+  }
 
-    Region region = new Region();
-    region.setTrigger(name);
-
-    List<String> actionSets = new ArrayList<String>();
-    if (regionNode.hasAttribute("actionset")) {
-      actionSets.add(regionNode.getAttribute("actionset"));
-    }
-    else if (regionNode.hasAttribute("actionsets")) {
-      String actionSetArray = regionNode.getAttribute("actionsets");
-      for (String actionSet : actionSetArray.replace('[', ' ').replace(']', ' ').split(",")) {
-        actionSet = actionSet.trim();
-        if (!actionSet.isEmpty()) {
-          actionSets.add(actionSet);
-        }
-      }
-    }
-
-    for (String s : actionSets) {
-      ActionSet actionSet = null; // TODO
-      // if (actionSet == null) { log(something); continue; }
-      region.getActionSets().add(actionSet);
-    }
-
+  private Location parseLocation(XmlNode node) {
     // round down
-    int x = regionNode.getIntAttribute("x") / tilewidth;
-    int y = regionNode.getIntAttribute("y") / tileheight;
-    // round up edge as displayed
-    int w = (regionNode.getIntAttribute("x") - x) + regionNode.getIntAttribute("width") / tilewidth;
-    int h = (regionNode.getIntAttribute("y") - y) + regionNode.getIntAttribute("height") / tileheight;
+    int x = node.getIntAttribute("x") / tilewidth;
+    int y = node.getIntAttribute("y") / tileheight;
+    // round up edge as displayed if it's there
+    int w = 1, h = 1;
+    if (node.hasAttribute("width")) {
+      w += (node.getIntAttribute("x") - x * tilewidth) + node.getIntAttribute("width") / tilewidth;
+    }
+    if (node.hasAttribute("height")) {
+      h += (node.getIntAttribute("y") - y * tileheight) + node.getIntAttribute("height") / tileheight;
+    }
 
     Location location = new Location();
-    location.setRegion(x, x + w, y, y + h);
+    location.setBounds(x, x + w, y, y + h);
     location.setMap(this);
-    region.setLocation(location);
 
-    regions.add(region);
+    return location;
   }
 
-  private void parseBorder(XmlNode borderNode) { // TODO
+  private List<ActionSet> parseActionSets(XmlNode node) {
+    List<ActionSet> actionSets = new ArrayList<ActionSet>();
+
+    if (node.hasAttribute("actionset")) {
+      String actionSetId = node.getAttribute("actionset");
+      ActionSet actionSet = null; // TODO
+      actionSets.add(actionSet);
+    }
+    else if (node.hasAttribute("actionsets")) {
+      String actionSetArray = node.getAttribute("actionsets");
+
+      for (String actionSetId : actionSetArray.replace('[', ' ').replace(']', ' ').split(",")) {
+        actionSetId = actionSetId.trim();
+        if (actionSetId.isEmpty()) {
+          continue;
+        }
+
+        ActionSet actionSet = null; // TODO
+        actionSets.add(actionSet);
+      }
+    }
+
+    return actionSets;
   }
 }
