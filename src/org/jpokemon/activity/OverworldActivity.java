@@ -1,11 +1,22 @@
 package org.jpokemon.activity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.jpokemon.overworld.Entity;
+import org.jpokemon.overworld.Location;
+import org.jpokemon.overworld.Map;
+import org.jpokemon.provider.OverworldDataProvider;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class OverworldActivity implements Activity {
   public static OverworldActivity instance = new OverworldActivity();
+
+  private HashMap<String, Map> maps = new HashMap<String, Map>();
+  private HashMap<Map, List<Player>> players = new HashMap<Map, List<Player>>();
 
   private OverworldActivity() {
   }
@@ -16,12 +27,27 @@ public class OverworldActivity implements Activity {
 
   @Override
   public boolean onAdd(Player player) {
-    PlayerManager.pushJson(player, "overworld");
+    String mapId = player.getLocation().getMap();
+
+    if (mapId == null) {
+      player.getLocation().setMap(mapId = "house");
+    }
+    if (maps.get(mapId) == null) {
+      Map map = new Map(mapId);
+      maps.put(mapId, map);
+      players.put(map, new ArrayList<Player>());
+    }
+
+    players.get(mapId).add(player);
+    PlayerManager.pushJson(player, OverworldDataProvider.generate(player));
     return true;
   }
 
   @Override
-  public boolean onRemove(Player player) { // Useful hook for issue#69
+  public boolean onRemove(Player player) {
+    String mapId = player.getLocation().getMap();
+    players.get(mapId).remove(player);
+
     return false;
   }
 
@@ -32,58 +58,34 @@ public class OverworldActivity implements Activity {
 
   @Override
   public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
-    // TODO
-  }
+    Location location = player.getLocation();
+    Map map = maps.get(location.getMap());
 
-//  private void handleNPCRequest(Player player, JSONObject request) throws ServiceException {
-//    NPC npc = getNpc(player, request);
-//    String option = getNPCOption(request);
-//
-//    npc.actionset(option).execute(player);
-//  }
-//
-//  private void handleBorderRequest(Player player, JSONObject request) throws ServiceException {
-//    Border border = getBorder(player, request);
-//
-//    if (border.performAction(player)) {
-//      player.setArea(border.getNext());
-//    }
-//    else {
-//      throw new ServiceException("You cannot go that way");
-//    }
-//  }
-//
-//  private void handleGrassRequest(Player player, JSONObject request) throws ServiceException {
-//    Area area = getArea(player, request);
-//
-//    Pokemon pokemon = area.pokemon();
-//
-//    if (pokemon == null) { throw new ServiceException("No wild pokemon in this area"); }
-//
-//    PokemonTrainer trainer = new WildTrainer();
-//    trainer.add(pokemon);
-//
-//    PlayerManager.addActivity(player, new BattleActivity(player, trainer));
-//  }
-//
-//  private NPC getNpc(Player player, JSONObject request) throws ServiceException {
-//    int npcNumber = -1;
-//    NPC npc = null;
-//    Area area = null;
-//
-//    area = getArea(player, request);
-//
-//    try {
-//      npcNumber = request.getInt("npc");
-//    } catch (JSONException e) {
-//      throw new ServiceException("Npc number not found");
-//    }
-//
-//    npc = area.getNpc(npcNumber);
-//
-//    if (npc == null)
-//      throw new ServiceException("Npc number " + npcNumber + " not found");
-//
-//    return npc;
-//  }
+    if (request.has("move")) {
+      String direction = request.getString("move");
+
+      Location next = location.clone();
+      if ("left".equals(direction)) {
+        next.setBounds(next.getLeft() - 1, next.getWidth(), next.getTop(), next.getHeight());
+      }
+      else if ("right".equals(direction)) {
+        next.setBounds(next.getLeft() + 1, next.getWidth(), next.getTop(), next.getHeight());
+      }
+      else if ("up".equals(direction)) {
+        next.setBounds(next.getLeft(), next.getWidth(), next.getTop() - 1, next.getHeight());
+      }
+      else if ("down".equals(direction)) {
+        next.setBounds(next.getLeft(), next.getWidth(), next.getTop() + 1, next.getHeight());
+      }
+
+      Entity entityAtNext = map.getEntityAt(next.getLeft(), next.getTop());
+
+      if (entityAtNext != null && entityAtNext.isSolid()) { return; }
+      // TODO - handle regions
+
+      location.loadXml(next.toXml()); // this is kinda bad...
+      PlayerManager.pushJson(player, new JSONObject("{action:'overworld', move:'left', player:'" + player.getName()
+          + "', x:" + location.getLeft() + ", y:" + location.getTop() + "}"));
+    }
+  }
 }

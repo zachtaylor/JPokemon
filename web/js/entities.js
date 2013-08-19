@@ -184,19 +184,27 @@
       if (this.readyForInput() && this.readyToMove()) {
         if (me.input.isKeyPressed('left')) {
           this.lastInput = new Date().getTime();
-          game.socket.emit('move', 'left');
+          game.send({
+            'move': 'left'
+          });
         }
         else if (me.input.isKeyPressed('right')) {
           this.lastInput = new Date().getTime();
-          game.socket.emit('move', 'right');
+          game.send({
+            'move': 'right'
+          });
         }
         else if (me.input.isKeyPressed('up')) {
           this.lastInput = new Date().getTime();
-          game.socket.emit('move', 'up');
+          game.send({
+            'move': 'up'
+          });
         }
         else if (me.input.isKeyPressed('down')) {
           this.lastInput = new Date().getTime();
-          game.socket.emit('move', 'down');
+          game.send({
+            'move': 'down'
+          });
         }
       }
 

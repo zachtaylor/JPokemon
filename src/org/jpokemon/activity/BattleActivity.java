@@ -101,7 +101,7 @@ public class BattleActivity implements Activity {
       json.put("view", "battle");
       json.put("turns", turns);
 
-      PlayerManager.pushJson(player, "battle");
+      PlayerManager.pushJson(player, json);
     }
   }
 

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.activity.ServiceException;
+import org.jpokemon.provider.FriendsDataProvider;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +38,12 @@ public class FriendsAction extends Action {
       else if (data.has("block")) {
         blockFriend(player);
       }
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
       e.printStackTrace();
     }
 
-    PlayerManager.pushJson(player, "friends");
+    PlayerManager.pushJson(player, FriendsDataProvider.generate(player));
   }
 
   private void addFriend(Player player) throws JSONException {

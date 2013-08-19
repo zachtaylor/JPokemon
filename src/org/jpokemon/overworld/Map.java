@@ -3,8 +3,11 @@ package org.jpokemon.overworld;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.jpokemon.action.ActionFactory;
 import org.jpokemon.action.ActionSet;
 import org.jpokemon.pokemon.Pokemon;
 import org.zachtaylor.jnodalxml.XmlNode;
@@ -16,23 +19,22 @@ public class Map {
 
   static {
     Myna.configure(Map.class, "org.jpokemon.server");
+    (solidPlaceholder = new Entity()).setSolid(true);
   }
 
   private String name;
   private int width, height;
   private Entity[][] entities;
-  private Entity solidPlaceholder = new Entity();
   private List<WildPokemon> wildPokemon = new ArrayList<WildPokemon>();
-
   // used internally to determine entity sizes
   private int tilewidth, tileheight;
 
+  private static final Entity solidPlaceholder;
+
   public Map(String name) {
     this.name = name;
-    this.solidPlaceholder.setSolid(true);
 
-    reloadFileData();
-    reloadSqliteData();
+    reload();
   }
 
   public String getName() {
@@ -72,7 +74,7 @@ public class Map {
     return null;
   }
 
-  public void reloadFileData() {
+  public void reload() {
     File file = new File(mappath, name + ".tmx");
     if (!file.exists()) { throw new RuntimeException("Map does not exist: " + name); }
 
@@ -104,9 +106,7 @@ public class Map {
         }
       }
     }
-  }
 
-  public void reloadSqliteData() {
     wildPokemon.clear();
     for (WildPokemon wp : WildPokemon.get(name)) {
       wildPokemon.add(wp);
@@ -118,13 +118,41 @@ public class Map {
 
     for (int w = 0; w < location.getWidth(); w++) {
       for (int h = 0; h < location.getHeight(); h++) {
+        if (entities[location.getLeft() + w][location.getTop() + h] != null) {
+          continue;
+        }
+
         entities[location.getLeft() + w][location.getTop() + h] = solidPlaceholder;
       }
     }
   }
 
   private void parseInteract(XmlNode object) {
-    
+    String name = object.getAttribute("name");
+
+    Entity entity = new Entity();
+    entity.setName(name);
+    entity.setSolid(true);
+
+    List<Interaction> interactions = Interaction.get("global", name);
+    HashMap<Integer, ActionSet> actionSets = new HashMap<Integer, ActionSet>();
+    for (Interaction interaction : interactions) {
+      if (actionSets.get(interaction.getActiongroup()) == null) {
+        actionSets.put(interaction.getActiongroup(), new ActionSet());
+      }
+
+      actionSets.get(interaction.getActiongroup()).addAction(ActionFactory.get(interaction.getAction(), interaction.getDataref()));
+    }
+    for (Entry<Integer, ActionSet> mapEntry : actionSets.entrySet()) {
+      entity.addActionSet("interact", mapEntry.getValue());
+    }
+
+    Location location = parseLocation(object);
+    for (int w = 0; w < location.getWidth(); w++) {
+      for (int h = 0; h < location.getHeight(); h++) {
+        entities[location.getLeft() + w][location.getTop() + h] = entity;
+      }
+    }
   }
 
   private Location parseLocation(XmlNode node) {
@@ -134,41 +162,16 @@ public class Map {
     // round up edge as displayed if it's there
     int w = 1, h = 1;
     if (node.hasAttribute("width")) {
-      w += (node.getIntAttribute("x") - x * tilewidth) + node.getIntAttribute("width") / tilewidth;
+      w += ((node.getIntAttribute("x") - x * tilewidth) + node.getIntAttribute("width")) / tilewidth;
     }
     if (node.hasAttribute("height")) {
-      h += (node.getIntAttribute("y") - y * tileheight) + node.getIntAttribute("height") / tileheight;
+      h += ((node.getIntAttribute("y") - y * tileheight) + node.getIntAttribute("height")) / tileheight;
     }
 
     Location location = new Location();
-    location.setBounds(x, x + w, y, y + h);
-    location.setMap(this);
+    location.setBounds(x, w, y, h);
+    location.setMap(name);
 
     return location;
-  }
-
-  private List<ActionSet> parseActionSets(XmlNode node) {
-    List<ActionSet> actionSets = new ArrayList<ActionSet>();
-
-    if (node.hasAttribute("actionset")) {
-      String actionSetId = node.getAttribute("actionset");
-      ActionSet actionSet = null; // TODO
-      actionSets.add(actionSet);
-    }
-    else if (node.hasAttribute("actionsets")) {
-      String actionSetArray = node.getAttribute("actionsets");
-
-      for (String actionSetId : actionSetArray.replace('[', ' ').replace(']', ' ').split(",")) {
-        actionSetId = actionSetId.trim();
-        if (actionSetId.isEmpty()) {
-          continue;
-        }
-
-        ActionSet actionSet = null; // TODO
-        actionSets.add(actionSet);
-      }
-    }
-
-    return actionSets;
   }
 }

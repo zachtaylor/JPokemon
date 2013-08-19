@@ -42,7 +42,7 @@
   <object type="solid" x="260" y="198" width="23" height="20"/>
   <object type="solid" x="356" y="197" width="53" height="21"/>
   <object name="map" type="interact" x="293" y="198" width="51" height="18"/>
-  <object name="tv" type="interact" x="420" y="101" width="21" height="21"/>
+  <object name="tv" type="interact" x="420" y="101" width="51" height="20"/>
   <object name="window" type="interact" x="485" y="68" width="52" height="21"/>
  </objectgroup>
 </map>

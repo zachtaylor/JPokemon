@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
+import org.jpokemon.overworld.Location;
 import org.jpokemon.pokedex.Pokedex;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.storage.PokemonStorageBlock;
@@ -21,7 +22,8 @@ public class Player implements PokemonTrainer {
   private String _name, _id, _avatar;
   private Pokedex _pokedex = new Pokedex();
   private Record _record = new Record(this);
-  private int _area = 1, _badge, _cash, _x, _y, _xp, _level;
+  private Location location = new Location();
+  private int _badge, _cash, _x, _y, _xp, _level;
   private Map<String, List<String>> _friends = new HashMap<String, List<String>>();
   private List<String> _unlockedAvatars = new ArrayList<String>();
   private PokemonStorageBlock _storage = new PokemonStorageBlock();
@@ -87,12 +89,8 @@ public class Player implements PokemonTrainer {
     _level = level;
   }
 
-  public int getArea() {
-    return _area;
-  }
-
-  public void setArea(int area) {
-    _area = area;
+  public Location getLocation() {
+    return location;
   }
 
   public int getX() {
@@ -211,8 +209,8 @@ public class Player implements PokemonTrainer {
     node.setAttribute("name", _name);
     node.setAttribute("cash", _cash);
     node.setAttribute("badge", _badge);
-    node.setAttribute("area", _area);
 
+    node.addChild(location.toXml());
     node.addChild(_bag.toXml());
     node.addChild(_record.toXml());
     node.addChild(_pokedex.toXml());
@@ -237,8 +235,8 @@ public class Player implements PokemonTrainer {
     _name = node.getAttribute("name");
     _cash = node.getIntAttribute("cash");
     _badge = node.getIntAttribute("badge");
-    _area = node.getIntAttribute("area");
 
+    location.loadXml(node.getChildren(Location.XML_NODE_NAME).get(0));
     _bag.loadXml(node.getChildren(Bag.XML_NODE_NAME).get(0));
     _record.loadXml(node.getChildren(Record.XML_NODE_NAME).get(0));
     _pokedex.loadXml(node.getChildren(Pokedex.XML_NODE_NAME).get(0));

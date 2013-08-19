@@ -1,6 +1,5 @@
 game.resources = [
   // Images
-  {name: "grass_tiles", type:'image', src:'resource/img/grass_tiles.png'},
   {name: "male_protagonist", type:"image", src:"resource/img/male_protagonist.png"},
 	 
   // UI misc
@@ -15,5 +14,6 @@ game.resources = [
   {name: "minus_red", type:'image', src:'resource/img/ui/minus_red.png'},
 
    // Maps
-   {name: "myarea", type: "tmx", src: "map/myarea.tmx"}
+  {name: "indoor_free_tileset", type:'image', src:'resource/img/tile/indoor_free_tileset.png'},
+  {name: "house", type: "tmx", src: "map/house.tmx" }
 ];

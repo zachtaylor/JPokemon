@@ -53,23 +53,8 @@ public class PlayerManager {
     webSocket.sendMessage(message);
   }
 
-  public static void pushJson(Player player, String dataProviderRef) {
+  public static void pushJson(Player player, JSONObject json) {
     JPokemonWebSocket webSocket = reverseConnections.get(player);
-
-    JSONObject json = null;
-
-    if ("friends".equals(dataProviderRef)) {
-      json = FriendsDataProvider.generate(player);
-    }
-    else if ("battle".equals(dataProviderRef)) {
-      json = BattleDataProvider.generate(player);
-    }
-    else if ("overworld".equals(dataProviderRef)) {
-      json = OverworldDataProvider.generate(player);
-    }
-    else {
-      throw new IllegalArgumentException("No data provider with reference :" + dataProviderRef);
-    }
 
     webSocket.sendJson(json);
   }
@@ -87,7 +72,16 @@ public class PlayerManager {
     }
     else if (request.has("load")) {
       String dataRef = request.getString("load");
-      pushJson(player, dataRef);
+
+      if ("friends".equals(dataRef)) {
+        pushJson(player, FriendsDataProvider.generate(player));
+      }
+      else if ("battle".equals(dataRef)) {
+        pushJson(player, BattleDataProvider.generate(player));
+      }
+      else if ("overworld".equals(dataRef)) {
+        pushJson(player, OverworldDataProvider.generate(player));
+      }
     }
     else if (request.has("action")) {
       String action = request.getString("action");
@@ -117,7 +111,8 @@ public class PlayerManager {
       Writer writer = new BufferedWriter(new PrintWriter(file));
       writer.write(player.toXml().printToString(0, "\t"));
       writer.close();
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       e.printStackTrace();
     }
 
@@ -141,7 +136,8 @@ public class PlayerManager {
 
     try {
       player.loadXML(XmlParser.parse(file).get(0));
-    } catch (FileNotFoundException e) {
+    }
+    catch (FileNotFoundException e) {
     }
 
     Stack<Activity> activityStack = new Stack<Activity>();
