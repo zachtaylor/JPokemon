@@ -59,7 +59,7 @@ var game = (function() {
 
     // Add the entities
     me.entityPool.add('player', game.PlayerEntity);
-    me.entityPool.add('trainer', game.TrainerEntity);
+    me.entityPool.add('trainer', game.TrainerEntity, true);
 
     // enable the keyboard
     me.sys.gravity = 0;

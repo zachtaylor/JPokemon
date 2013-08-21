@@ -25,9 +25,11 @@ public class JPokemonWebSocket implements WebSocket.OnTextMessage {
   public void onMessage(String arg0) {
     try {
       PlayerManager.dispatchRequest(this, new JSONObject(arg0));
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
       e.printStackTrace();
-    } catch (ServiceException e) {
+    }
+    catch (ServiceException e) {
       e.printStackTrace();
     }
   }
@@ -35,12 +37,9 @@ public class JPokemonWebSocket implements WebSocket.OnTextMessage {
   public void sendJson(JSONObject json) {
     try {
       connection.sendMessage(json.toString());
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  public void sendMessage(Message message) {
-    sendJson(message.toJson());
   }
 }

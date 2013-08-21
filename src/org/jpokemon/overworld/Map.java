@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.jpokemon.action.ActionFactory;
 import org.jpokemon.action.ActionSet;
+import org.jpokemon.overworld.npc.Npc;
 import org.jpokemon.pokemon.Pokemon;
 import org.zachtaylor.jnodalxml.XmlNode;
 import org.zachtaylor.jnodalxml.XmlParser;
@@ -16,6 +17,8 @@ import org.zachtaylor.myna.Myna;
 
 public class Map {
   public static String mappath;
+
+  private static final Entity solidPlaceholder;
 
   static {
     Myna.configure(Map.class, "org.jpokemon.server");
@@ -28,8 +31,6 @@ public class Map {
   private List<WildPokemon> wildPokemon = new ArrayList<WildPokemon>();
   // used internally to determine entity sizes
   private int tilewidth, tileheight;
-
-  private static final Entity solidPlaceholder;
 
   public Map(String name) {
     this.name = name;
@@ -104,6 +105,9 @@ public class Map {
         else if ("interact".equals(objectType)) {
           parseInteract(object);
         }
+        else if ("npc".equals(objectType)) {
+          parseNpc(object);
+        }
       }
     }
 
@@ -114,17 +118,7 @@ public class Map {
   }
 
   private void parseSolid(XmlNode object) {
-    Location location = parseLocation(object);
-
-    for (int w = 0; w < location.getWidth(); w++) {
-      for (int h = 0; h < location.getHeight(); h++) {
-        if (entities[location.getLeft() + w][location.getTop() + h] != null) {
-          continue;
-        }
-
-        entities[location.getLeft() + w][location.getTop() + h] = solidPlaceholder;
-      }
-    }
+    placeEntity(solidPlaceholder, object);
   }
 
   private void parseInteract(XmlNode object) {
@@ -147,15 +141,31 @@ public class Map {
       entity.addActionSet("interact", mapEntry.getValue());
     }
 
-    Location location = parseLocation(object);
-    for (int w = 0; w < location.getWidth(); w++) {
-      for (int h = 0; h < location.getHeight(); h++) {
-        entities[location.getLeft() + w][location.getTop() + h] = entity;
-      }
-    }
+    placeEntity(entity, object);
   }
 
-  private Location parseLocation(XmlNode node) {
+  private void parseNpc(XmlNode object) {
+    String id = object.getAttribute("name");
+
+    Entity entity = Npc.get(id);
+
+    List<Interaction> interactions = Interaction.get(name, id);
+    HashMap<Integer, ActionSet> actionSets = new HashMap<Integer, ActionSet>();
+    for (Interaction interaction : interactions) {
+      if (actionSets.get(interaction.getActiongroup()) == null) {
+        actionSets.put(interaction.getActiongroup(), new ActionSet());
+      }
+
+      actionSets.get(interaction.getActiongroup()).addAction(ActionFactory.get(interaction.getAction(), interaction.getDataref()));
+    }
+    for (Entry<Integer, ActionSet> mapEntry : actionSets.entrySet()) {
+      entity.addActionSet("interact", mapEntry.getValue());
+    }
+
+    placeEntity(entity, object);
+  }
+
+  private void placeEntity(Entity entity, XmlNode node) {
     // round down
     int x = node.getIntAttribute("x") / tilewidth;
     int y = node.getIntAttribute("y") / tileheight;
@@ -172,6 +182,14 @@ public class Map {
     location.setBounds(x, w, y, h);
     location.setMap(name);
 
-    return location;
+    for (int i = 0; i < w; i++) {
+      for (int j = 0; j < h; j++) {
+        if (entities[x + i][y + j] != null) {
+          continue;
+        }
+
+        entities[x + i][y + j] = solidPlaceholder;
+      }
+    }
   }
 }

@@ -48,19 +48,26 @@ public class PlayerManager {
   }
 
   public static void pushMessage(Player player, Message message) {
-    JPokemonWebSocket webSocket = reverseConnections.get(player);
-
-    webSocket.sendMessage(message);
+    pushJson(player, message.toJson());
   }
 
   public static void pushJson(Player player, JSONObject json) {
-    JPokemonWebSocket webSocket = reverseConnections.get(player);
+    JPokemonWebSocket webSocket;
+
+    synchronized (players) {
+      webSocket = reverseConnections.get(player);
+    }
 
     webSocket.sendJson(json);
   }
 
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
-    Player player = connections.get(socket);
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException,
+      ServiceException {
+    Player player;
+
+    synchronized (players) {
+      player = connections.get(socket);
+    }
 
     if (player == null) {
       if (request.has("login")) {
@@ -101,25 +108,26 @@ public class PlayerManager {
   }
 
   public static void close(JPokemonWebSocket socket) {
-    Player player = connections.get(socket);
+    synchronized (players) {
+      Player player = connections.get(socket);
+      if (player == null) { return; }
 
-    if (player == null) { return; }
+      File file = new File(JPokemonServer.savepath, player.id() + ".jpkmn");
 
-    File file = new File(JPokemonServer.savepath, player.id() + ".jpkmn");
+      try {
+        Writer writer = new BufferedWriter(new PrintWriter(file));
+        writer.write(player.toXml().printToString(0, "\t"));
+        writer.close();
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
 
-    try {
-      Writer writer = new BufferedWriter(new PrintWriter(file));
-      writer.write(player.toXml().printToString(0, "\t"));
-      writer.close();
+      connections.remove(socket);
+      reverseConnections.remove(player);
+      players.remove(player.id());
+      activities.remove(player); // doesn't need synchronous but oh well :)
     }
-    catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    connections.remove(socket);
-    reverseConnections.remove(player);
-    players.remove(player.id());
-    activities.remove(player);
   }
 
   private static void login(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
@@ -137,20 +145,25 @@ public class PlayerManager {
     try {
       player.loadXML(XmlParser.parse(file).get(0));
     }
+    catch (IndexOutOfBoundsException e) {
+      e.printStackTrace();
+    }
     catch (FileNotFoundException e) {
     }
 
-    Stack<Activity> activityStack = new Stack<Activity>();
+    synchronized (players) {
+      connections.put(socket, player);
+      reverseConnections.put(player, socket);
+    }
 
-    connections.put(socket, player);
-    reverseConnections.put(player, socket);
-    activities.put(player, activityStack);
-
+    activities.put(player, new Stack<Activity>());
     addActivity(player, OverworldActivity.getInstance());
   }
 
+  /** Lock on players for players, connections, reverseConnections */
   private static Map<String, Player> players = new HashMap<String, Player>();
   private static Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
   private static Map<Player, JPokemonWebSocket> reverseConnections = new HashMap<Player, JPokemonWebSocket>();
+
   private static Map<Player, Stack<Activity>> activities = new HashMap<Player, Stack<Activity>>();
 }

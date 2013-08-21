@@ -32,14 +32,40 @@ public class OverworldActivity implements Activity {
     if (mapId == null) {
       player.getLocation().setMap(mapId = "house");
     }
+
+    Map map = null;
     if (maps.get(mapId) == null) {
-      Map map = new Map(mapId);
+      map = new Map(mapId);
       maps.put(mapId, map);
       players.put(map, new ArrayList<Player>());
     }
+    else {
+      map = maps.get(mapId);
+    }
 
-    players.get(mapId).add(player);
-    PlayerManager.pushJson(player, OverworldDataProvider.generate(player));
+    JSONObject json = new JSONObject();
+    try {
+      json.put("action", "overworld");
+      json.put("add", player.getName());
+      json.put("x", player.getLocation().getLeft());
+      json.put("y", player.getLocation().getTop());
+    }
+    catch (JSONException e) {
+    }
+    for (Player otherPlayer : players.get(map)) {
+      PlayerManager.pushJson(otherPlayer, json);
+    }
+
+    json.remove("add");
+    try {
+      json.put("login", player.getName());
+      json.put("map", "myarea");
+    }
+    catch (JSONException e) {
+    }
+    PlayerManager.pushJson(player, json);
+
+    players.get(map).add(player);
     return true;
   }
 
@@ -88,4 +114,5 @@ public class OverworldActivity implements Activity {
           + "', x:" + location.getLeft() + ", y:" + location.getTop() + "}"));
     }
   }
+
 }

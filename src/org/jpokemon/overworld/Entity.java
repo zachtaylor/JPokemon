@@ -8,9 +8,9 @@ import java.util.Map;
 import org.jpokemon.action.ActionSet;
 
 public class Entity {
-  private String name;
   private boolean solid;
-  private Map<String, List<ActionSet>> actionSets = new HashMap<String, List<ActionSet>>();
+  protected String name;
+  protected Map<String, List<ActionSet>> actionSets = new HashMap<String, List<ActionSet>>();
 
   public String getName() {
     return name;

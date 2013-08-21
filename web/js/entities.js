@@ -2,13 +2,13 @@
   game.TrainerEntity = me.ObjectEntity.extend({
     collidable: false,
 
-    init: function(x, y, settings) {
+    init: function(config) {
       // call the constructor
-      this.nextX = x;
-      this.nextY = y;
-      x = this._xTileCoordinateToPixel(x);
-      y = this._yTileCoordinateToPixel(y);
-      this.parent(x, y, settings);
+      this.nextX = config.x;
+      this.nextY = config.y;
+      config.x = this._xTileCoordinateToPixel(config.x);
+      config.y = this._yTileCoordinateToPixel(config.y);
+      this.parent(config.x, config.y, config.settings);
 
       this.moveQueue = [];
       this.walkSpeed = 2.45;
@@ -172,8 +172,8 @@
   game.PlayerEntity = game.TrainerEntity.extend({
     collidable: true,
 
-    init: function(x, y, settings) {
-      this.parent(x, y, settings);
+    init: function(config) {
+      this.parent(config);
 
       this.lastInput = new Date().getTime();
 
