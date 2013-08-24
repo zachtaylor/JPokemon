@@ -15,5 +15,5 @@ game.resources = [
 
    // Maps
   {name: "indoor_free_tileset", type:'image', src:'resource/img/tile/indoor_free_tileset.png'},
-  {name: "house", type: "tmx", src: "map/house.tmx" }
+  {name: "house", type: "tmx", src: "resource/map/house.tmx" }
 ];

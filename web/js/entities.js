@@ -8,8 +8,9 @@
       this.nextY = config.y;
       config.x = this._xTileCoordinateToPixel(config.x);
       config.y = this._yTileCoordinateToPixel(config.y);
-      this.parent(config.x, config.y, config.settings);
+      this.parent(config.x, config.y, config);
 
+      this.z = config.z;
       this.moveQueue = [];
       this.walkSpeed = 2.45;
       this.alwaysUpdate = true;
@@ -49,12 +50,7 @@
 
       this.updateMovement();
 
-      if (this.vel.x != 0 || this.vel.y != 0) {
-        this.parent();
-        return true;
-      }
-
-      return false;
+      return this.parent();
     },
 
     draw: function(context) {
@@ -185,25 +181,25 @@
         if (me.input.isKeyPressed('left')) {
           this.lastInput = new Date().getTime();
           game.send({
-            'move': 'left'
+            move: 'left'
           });
         }
         else if (me.input.isKeyPressed('right')) {
           this.lastInput = new Date().getTime();
           game.send({
-            'move': 'right'
+            move: 'right'
           });
         }
         else if (me.input.isKeyPressed('up')) {
           this.lastInput = new Date().getTime();
           game.send({
-            'move': 'up'
+            move: 'up'
           });
         }
         else if (me.input.isKeyPressed('down')) {
           this.lastInput = new Date().getTime();
           game.send({
-            'move': 'down'
+            move: 'down'
           });
         }
       }

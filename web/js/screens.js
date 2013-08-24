@@ -3,7 +3,7 @@
 
   me.screen.LoginScreen = me.ScreenObject.extend({
     onResetEvent: function(config) {
-      var loginPanel = new me.ui.Panel({
+      this.loginPanel = new me.ui.Panel({
         width : 512,
         height : 512,
         color : 'blue',
@@ -15,7 +15,7 @@
         y : 100,
         xlayout : 'fit'
       });
-      loginPanel.add(namePanel);
+      this.loginPanel.add(namePanel);
 
       namePanel.add(new me.ui.Label({
         text : 'Name :',
@@ -33,7 +33,7 @@
         onEnter : sendLoginRequest.bind(this)
       }));
 
-      loginPanel.add(new me.ui.Label({
+      this.loginPanel.add(new me.ui.Label({
         y : 150,
         color : 'white',
         opacity : .5,
@@ -41,14 +41,14 @@
         onClick : sendLoginRequest.bind(this)
       }));
 
-      loginPanel.show();
+      this.loginPanel.show();
     },
     
     onDestroyEvent: function() {
+      this.loginPanel.hide();
     }
   });
 
-  var player = null;
   var players = {};
 
   me.screen.PlayScreen = me.ScreenObject.extend({
@@ -57,14 +57,25 @@
 
     dispatch: function(json) {
       if (json.login) {
-        player = new me.entityPool.newInstanceOf('player', json);
         me.levelDirector.loadLevel(json.map);
 
+        players[json.login] = new me.entityPool.newInstanceOf('player', json);
+        players[json.login].setName(json.login);
+        me.game.add(players[json.login]);
         new me.menu.FriendsLauncher().show();
       }
       else if (json.add) {
         players[json.add] = me.entityPool.newInstanceOf('trainer', json);
+        players[json.add].setName(json.add);
+        me.game.add(players[json.add]);
         me.game.sort();
+      }
+      else if (json.move) {
+        players[json.name]['walk' + json.move](json.x, json.y);
+      }
+      else if (json.leave) {
+        me.game.remove(players[json.leave]);
+        me.entityPool.freeInstance(players[json.leave]);
       }
     },
 

@@ -126,6 +126,10 @@ public class PlayerManager {
       connections.remove(socket);
       reverseConnections.remove(player);
       players.remove(player.id());
+
+      while (!activities.get(player).isEmpty()) {
+        PlayerManager.popActivity(player, PlayerManager.getActivity(player));
+      }
       activities.remove(player); // doesn't need synchronous but oh well :)
     }
   }
@@ -134,13 +138,10 @@ public class PlayerManager {
     String name = request.getString("login");
 
     if (players.keySet().contains(name)) { throw new ServiceException("File already loaded"); }
-
     File file = new File(JPokemonServer.savepath, name + ".jpkmn");
-
     if (!file.exists()) { throw new ServiceException("Save file not found"); }
 
     Player player = new Player(name);
-    players.put(name, player);
 
     try {
       player.loadXML(XmlParser.parse(file).get(0));
@@ -152,6 +153,7 @@ public class PlayerManager {
     }
 
     synchronized (players) {
+      players.put(name, player);
       connections.put(socket, player);
       reverseConnections.put(player, socket);
     }
@@ -161,9 +163,9 @@ public class PlayerManager {
   }
 
   /** Lock on players for players, connections, reverseConnections */
-  private static Map<String, Player> players = new HashMap<String, Player>();
-  private static Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
-  private static Map<Player, JPokemonWebSocket> reverseConnections = new HashMap<Player, JPokemonWebSocket>();
+  private static volatile Map<String, Player> players = new HashMap<String, Player>();
+  private static volatile Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
+  private static volatile Map<Player, JPokemonWebSocket> reverseConnections = new HashMap<Player, JPokemonWebSocket>();
 
   private static Map<Player, Stack<Activity>> activities = new HashMap<Player, Stack<Activity>>();
 }

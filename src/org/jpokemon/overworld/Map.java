@@ -29,8 +29,8 @@ public class Map {
   private int width, height;
   private Entity[][] entities;
   private List<WildPokemon> wildPokemon = new ArrayList<WildPokemon>();
-  // used internally to determine entity sizes
-  private int tilewidth, tileheight;
+  // used internally
+  private int tilewidth, tileheight, entityz;
 
   public Map(String name) {
     this.name = name;
@@ -50,6 +50,10 @@ public class Map {
     return height;
   }
 
+  public int getEntityZ() {
+    return entityz;
+  }
+  
   public Entity getEntityAt(int x, int y) {
     return entities[x][y];
   }
@@ -95,7 +99,18 @@ public class Map {
     entities = new Entity[width][height];
 
     String objectType;
-    for (XmlNode objectgroup : data.getChildren("objectgroup")) {
+    XmlNode objectgroup;
+    XmlNode[] mapLayers = data.getAllChildren().toArray(new XmlNode[data.getAllChildren().size()]);
+    for (int i = 0; i < mapLayers.length; i++) {
+      objectgroup = mapLayers[i];
+
+      if (!"objectgroup".equals(objectgroup.getName())) {
+        continue;
+      }
+      else {
+        entityz = i;
+      }
+
       for (XmlNode object : objectgroup.getAllChildren()) {
         objectType = object.getAttribute("type");
 
