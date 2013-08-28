@@ -90,20 +90,20 @@ public class PlayerManager {
         pushJson(player, OverworldDataProvider.generate(player));
       }
     }
-    else if (request.has("action")) {
-      String action = request.getString("action");
+    else {
+      Activity activity = getActivity(player);
 
-      if (!getActivity(player).supportsAction(action)) { return; }
-
-      if ("friends".equals(action)) {
-        new FriendsAction(request).execute(player);
+      if (request.has("action") && activity.supportsAction(request.getString("action"))) {
+        if ("friends".equals(request.getString("action"))) {
+          new FriendsAction(request).execute(player);
+        }
+        else {
+          throw new ServiceException("Unidentified action: " + request.getString("action"));
+        }
       }
       else {
-        throw new ServiceException("Unidentified action: " + action);
+        activity.handleRequest(player, request);
       }
-    }
-    else {
-      getActivity(player).handleRequest(player, request);
     }
   }
 

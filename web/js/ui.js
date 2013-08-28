@@ -236,6 +236,16 @@
       return this;
     },
 
+    indexOf : function(child) {
+      for (var index = 0; index < this.children.length; index++) {
+        if (this.children[index] === child) {
+          return index;
+        }
+      }
+
+      return -1;
+    },
+
     clear : function() {
       if (this.visible) {
         this._forEachChild(function(child) {
@@ -318,36 +328,6 @@
       }
     }
   });
-
-  ///////////////////////////////////////////////
-  // me.ui.Clickable
-  //
-  // onClick : Callback function for clicking
-  ///////////////////////////////////////////////
-
-  me.ui.Clickable = me.ui.Component.extend({
-    init : function(config) {
-      this.parent(config);
-
-      this.onClick = this.config.onClick || false;
-    },
-
-    onShow : function() {
-      this.parent();
-      me.input.registerPointerEvent('mousedown', this.rect, this._clickPropogator.bind(this), true);
-    },
-
-    onHide : function() {
-      this.parent();
-      me.input.releasePointerEvent('mousedown', this.rect);
-    },
-
-    _clickPropogator : function() {
-      if (this.onClick) {
-        this.onClick();
-      }
-    }
-  });
   
   ///////////////////////////////////////////////
   // me.ui.Icon
@@ -355,7 +335,7 @@
   // image : URL of the image to draw
   ///////////////////////////////////////////////
 
-  me.ui.Icon = me.ui.Clickable.extend({
+  me.ui.Icon = me.ui.Component.extend({
     init : function(config) {
       this.parent(config);
 
@@ -402,7 +382,7 @@
   // fontColor : Color to draw the font
   ///////////////////////////////////////////////
 
-  me.ui.Label = me.ui.Clickable.extend({
+  me.ui.Label = me.ui.Component.extend({
     init : function(config) {
       this.parent(config);
 
@@ -661,6 +641,119 @@
     },
 
     onEnter : function() {
+    }
+  });
+
+  ///////////////////////////////////////////////
+  // me.ui.Button
+  //
+  // onClick : Callback function for clicking
+  ///////////////////////////////////////////////
+
+  me.ui.Button = me.ui.Panel.extend({
+    init : function(config) {
+      this.parent(config);
+
+      // Redefine default values
+      this.padding = this.config.padding !== undefined ? this.config.padding : 0;
+      this.xlayout = this.config.xlayout !== undefined ? this.config.xlayout : 'fit';
+      this.ylayout = this.config.ylayout !== undefined ? this.config.ylayout : 'center';
+
+      if (this.config.image) {
+        this.setImage(this.config.image);
+      }
+      if (this.config.text) {
+        this.setText(this.config.text);
+      }
+
+      this.onClick = this.config.onClick || false;
+    },
+
+    onShow : function() {
+      this.parent();
+      me.input.registerPointerEvent('mousedown', this.rect, this._clickPropogator.bind(this), true);
+    },
+
+    onHide : function() {
+      this.parent();
+      me.input.releasePointerEvent('mousedown', this.rect);
+    },
+
+    setImage : function(image) {
+      if (!this.icon) {
+        this.icon = new me.ui.Icon({ image : image, padding : 0 });
+        this.add(this.icon);
+      }
+      else {
+        this.icon.setImage(image);
+      }
+    },
+
+    setText : function(text) {
+      if (!this.label) {
+        this.label = new me.ui.Label({ text : text });
+        this.add(this.label);
+      }
+      else {
+        this.label.setText(text);
+      }
+    },
+
+    _clickPropogator : function() {
+      if (this.onClick) {
+        this.onClick();
+      }
+    }
+  });
+
+  ///////////////////////////////////////////////
+  // me.ui.RadioGroup
+  ///////////////////////////////////////////////
+
+  me.ui.RadioGroup = me.ui.Panel.extend({
+    init : function(config) {
+      this.parent(config);
+
+      this.selectedItem = null;
+    },
+
+    addLabel : function(config) {
+      config.color = 'black';
+      var button = new me.ui.Button(config);
+
+      button.onClick = (function(item) {
+        return function(active) {
+          this.setSelectedItem(item);
+        }
+      })(button).bind(this);
+
+      this.add(button);
+
+      if (this.children.length === 1) {
+        this.setSelectedItem(button);
+      }
+    },
+
+    getSelectedItem : function() {
+      return this.selectedItem;
+    },
+
+    setSelectedItem : function(item) {
+      if (this.selectedItem == item) {
+        return;
+      }
+
+      for (var i = 0; i < this.children.length; i++) {
+        this.children[i].needsUpdate = true;
+        this.children[i].color = 'black';
+      }
+      item.color = 'gray';
+      this.selectedItem = item;
+
+      this.onSelectedItemChange();
+    },
+
+    onSelectedItemChange : function() {
     }
   });
 })(window);

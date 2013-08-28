@@ -2,10 +2,10 @@
   me.menu = me.menu || {};
 
   me.menu.Window = me.ui.Panel.extend({
-    init : function() {
+    init : function(x, y) {
       this.parent({
-        x : 10,
-        y : 10,
+        x : x,
+        y : y,
         xlayout : 'fill',
         ylayout : 'fit',
         color : 'black',
@@ -14,15 +14,55 @@
       });
 
       this.frame = new me.ui.Panel({ padding : 0, xlayout : 'fit', ylayout : 'center' });
-      this.icon = new me.ui.Icon();
+      this.icon = new me.ui.Button();
       this.frame.add(this.icon);
       this.title = new me.ui.Label({ fontSize : 12, fontName : 'verdana' });
       this.frame.add(this.title);
       this.add(this.frame);
 
-      this.pane = new me.ui.Panel({ padding : 0, ylayout : 'fit' });
+      this.pane = new me.ui.Panel({ padding : 0, border : 'white', xlayout : 'fill', ylayout : 'fit' });
       this.add(this.pane);
     },
+  });
+
+  me.menu.StatefulWindow = me.menu.Window.extend({
+    init : function(x, y) {
+      this.parent(x, y);
+
+      this.icon.onClick = this.chooseState.bind(this);
+      this.states = {};
+    },
+
+    addState : function(name, icon, view) {
+      this.states[name] = new me.ui.Toggle({
+        xlayout : 'fit', ylayout : 'center', toggleColor : false, untoggleColor : false, padding : 0,
+        onToggleChange : (function(name) {
+          return function() { this.setState(name); };
+        })(name).bind(this)
+      });
+
+      this.states[name].add(new me.ui.Icon({ image : icon }));
+      this.states[name].add(new me.ui.Label({ text : name }));
+      this.states[name].icon = icon;
+      this.states[name].view = view;
+    },
+
+    chooseState : function() {
+      this.title.setText('');
+      //this.icon.setImage('circle_gray');
+      this.pane.clear();
+
+      for (var state in this.states) {
+        this.pane.add(this.states[state]);
+      }
+    },
+
+    setState : function(name) {
+      this.title.setText(name);
+      this.icon.setImage(this.states[name].icon);
+      this.pane.clear();
+      this.pane.add(this.states[name].view);
+    }
   });
 
   me.menu.FriendsLauncher = me.ui.Toggle.extend({
@@ -55,7 +95,7 @@
 
   me.menu.FriendsWindow = me.menu.Window.extend({
     init : function() {
-      this.parent();
+      this.parent(10, 50);
 
       this.icon.onClick = this.showChooseList.bind(this);
       this.frame.add(new me.ui.Icon({ image : 'plus_gray', onClick : this.showInputWindow.bind(this) }));
@@ -230,87 +270,99 @@
     }
   });
 
-  // me.menu.MessagePanel = me.ui.Scrollable.extend({
-  //   init : function() {
-  //     this.parent({
-  //       x : 0,
-  //       y : me.video.getHeight() - 97,
-  //       width : me.video.getWidth(),
-  //       height : 79,
-  //       color : 'black',
-  //       opacity : .5
-  //     });
-  //     this.GUID = "messagepanel-" + me.utils.createGUID();
-      
-  //     this.messages = [];
-  //     this.opacity = .3;
-  //     this.drawnMessages = 5;
-  //     this.messagePointer = 0;
-  //     this.maxMessages = 25;
+  me.menu.BattleSignupLauncher = me.ui.Toggle.extend({
+    init : function() {
+      this.parent({
+        x : 75,
+        y : 512 - 20,
+        border : 'white',
+        toggleStyle : 'toggle',
+        padding : 0,
+        opacity : .7
+      });
+      this.add(new me.ui.Label({text : 'Battle'}));
 
-  //     this.inputBox = new me.ui.InputBox({
-  //       x : 0, 
-  //       y : this.rect.height, 
-  //       width : me.video.getWidth(),
-  //       opacity : .5,
-  //       focusEvent : 'mousedown',
-  //       onEnter : this.submitMessage.bind(this)
-  //     });
-  //     this.add(this.inputBox);
+      this.battleSignupWindow = new me.menu.BattleSignupWindow();
 
-  //     this.nameFont = new me.Font('courier', 12, 'yellow');
-  //     this.messageFont = new me.Font('courier', 12, 'cyan');
+      game.subscribe('battlesignup', this.battleSignupWindow);
+    },
 
-  //     game.socket.on('message', this.onMessageReceived.bind(this));
-  //   },
+    onToggleChange : function(focus) {
+      if (focus) {
+        this.battleSignupWindow.show();
+      }
+      else {
+        this.battleSignupWindow.hide();
+      }
+    }
+  });
 
-  //   scroll : function(delta) {
-  //     this.messagePointer = Math.min(
-  //       Math.max(this.messagePointer - delta, 0),
-  //       this.messages.length - this.drawnMessages
-  //     );
-      
-  //     me.game.repaint();
-  //   },
+  me.menu.BattleSignupWindow = me.menu.StatefulWindow.extend({
+    init : function() {
+      this.parent(75, 50);
 
-  //   onMessageReceived : function(name, message) {
-  //     this.messages.push({
-  //       "name" : name + ':',
-  //       "message" : message
-  //     });
+      this.frame.add(new me.ui.Icon({ image : 'refresh_gray', onClick : this.refresh }));
 
-  //     if (this.messages.length > this.maxMessages) {
-  //       this.messages.shift();
-  //     }
+      var createView = new me.ui.Panel({ ylayout : 'fit', height : 100, width: 130, padding : 0 });
+      var controls = new me.ui.Panel({ xlayout : 'fit', ylayout : 'center', width : 130});
+      controls.add(new me.ui.Button({ image : 'plus_green', text : 'Team', onClick : this.addTeam.bind(this) }));
+      controls.add(new me.ui.Button({ image : 'plus_green', text : 'Player', onClick : this.addPlayer.bind(this) }));
+      controls.add(new me.ui.Button({ image : 'x_red', text : 'Reset', onClick : this.reset.bind(this) }));
+      createView.add(controls);
+      this.addState('Create Battle', 'circle_green', createView);
 
-  //     this.messagePointer = Math.max(this.messages.length - this.drawnMessages, 0);
+      this.teams = [];
+      this.teamsContainer = new me.ui.Panel({xlayout : 'fit', ylayout : 'fill' });
+      createView.add(this.teamsContainer);
 
-  //     me.game.repaint();
-  //   },
+      this.inputWindow = new me.ui.Panel({ x : 200, y : 200, ylayout : 'fit', border : 'white', color : 'black', opacity : .7 });
+      this.inputWindow.label = new me.ui.Label({ text : 'Enter name' });
+      this.inputWindow.add(this.inputWindow.label);
+      this.inputWindow.inputBox = new me.ui.InputBox({ width : 200, onEnter : this.acceptPlayer.bind(this) });
+      this.inputWindow.add(this.inputWindow.inputBox);
+      this.inputWindow.radio = new me.ui.RadioGroup({ xlayout : 'fit' });
+      this.inputWindow.add(this.inputWindow.radio);
 
-  //   submitMessage : function() {
-  //     game.socket.emit('message', this.inputBox.getText());
-  //     this.inputBox.setText('');
-  //     me.game.repaint();
-  //   },
+      this.setState('Create Battle');
+    },
 
-  //   draw: function(context) {
-  //     this.parent(context);
+    addTeam : function() {
+      var newTeam = new me.ui.Panel({ ylayout : 'fit', padding : 0, width : 25, height : 100, border : 'cyan' });
 
-  //     context.save();
+      this.teams.push(newTeam);
+      this.refresh();
+    },
 
-  //     context.globalAlpha = 1.0;
-  //     var location = this.rect.top;
+    addPlayer : function() {
+      this.inputWindow.show();
+    },
 
-  //     for(var i = 0; i < this.drawnMessages && i + this.messagePointer < this.messages.length; i++) {
-  //       var message = this.messages[i + this.messagePointer];
-  //       var nameWidth = this.nameFont.measureText(context, message.name).width;
-  //       this.nameFont.draw(context, message.name, 3, location);
-  //       this.messageFont.draw(context, message.message, nameWidth + 6, location);
-  //       location += 15;
-  //     }
+    acceptPlayer : function() {
+      var name = this.inputWindow.inputBox.getText().trim();
+      var team = this.inputWindow.radio.indexOf(this.inputWindow.radio.getSelectedItem());
 
-  //     context.restore();
-  //   }
-  // });
+      var teamMember = new me.ui.Label({ text : name });
+      this.teams[team].add(teamMember);
+
+      this.inputWindow.hide();
+    },
+
+    reset : function() {
+      this.teams = [];
+      this.refresh();
+    },
+
+    refresh : function() {
+      this.teamsContainer.clear();
+      this.inputWindow.radio.clear();
+
+      for (var team = 0; team < this.teams.length; team++) {
+        this.teamsContainer.add(this.teams[team]);
+        this.inputWindow.radio.addLabel({ text : 'Team '+ team });
+      }
+    },
+
+    dispatch : function(json) {
+    }
+  });
 })(window);

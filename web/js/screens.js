@@ -62,7 +62,9 @@
         players[json.login] = new me.entityPool.newInstanceOf('player', json);
         players[json.login].setName(json.login);
         me.game.add(players[json.login]);
+
         new me.menu.FriendsLauncher().show();
+        new me.menu.BattleSignupLauncher().show();
       }
       else if (json.add) {
         players[json.add] = me.entityPool.newInstanceOf('trainer', json);

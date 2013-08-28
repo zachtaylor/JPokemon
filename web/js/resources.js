@@ -12,6 +12,7 @@ game.resources = [
   {name: "plus_green", type:'image', src:'resource/img/ui/plus_green.png'},
   {name: "refresh_gray", type:'image', src:'resource/img/ui/refresh_gray.png'},
   {name: "minus_red", type:'image', src:'resource/img/ui/minus_red.png'},
+  {name: "x_red", type:'image', src:'resource/img/ui/x_red.png'},
 
    // Maps
   {name: "indoor_free_tileset", type:'image', src:'resource/img/tile/indoor_free_tileset.png'},

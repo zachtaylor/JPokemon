@@ -7,7 +7,7 @@
     <imagepath> data/image </imagepath>
     <scriptedbattlepath> data/trainer </scriptedbattlepath>
     <databasepath> data/Pokemon.db </databasepath>
-    <mappath> data/map </mappath>
+    <mappath> web/resource/map </mappath>
     <time>
       <timespeed> 1 </timespeed>
     </time>
