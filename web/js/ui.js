@@ -236,6 +236,17 @@
       return this;
     },
 
+    remove : function(child) {
+      this.children.splice(this.indexOf(child), 1);
+      child.needsUpdate = this.needsUpdate = true;
+
+      if (this.visible) {
+        child.onHide();
+      }
+
+      return this;
+    },
+
     indexOf : function(child) {
       for (var index = 0; index < this.children.length; index++) {
         if (this.children[index] === child) {
@@ -747,7 +758,7 @@
         this.children[i].needsUpdate = true;
         this.children[i].color = 'black';
       }
-      item.color = 'gray';
+      item.color = 'CornflowerBlue';
       this.selectedItem = item;
 
       this.onSelectedItemChange();

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.jpokemon.action.CreateBattleAction;
 import org.jpokemon.action.FriendsAction;
 import org.jpokemon.provider.BattleDataProvider;
 import org.jpokemon.provider.FriendsDataProvider;
@@ -96,6 +97,9 @@ public class PlayerManager {
       if (request.has("action") && activity.supportsAction(request.getString("action"))) {
         if ("friends".equals(request.getString("action"))) {
           new FriendsAction(request).execute(player);
+        }
+        else if ("createbattle".equals(request.getString("action"))) {
+          new CreateBattleAction(request).execute(player);
         }
         else {
           throw new ServiceException("Unidentified action: " + request.getString("action"));

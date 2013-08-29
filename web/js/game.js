@@ -23,6 +23,8 @@ var game = (function() {
     dispatch(JSON.parse(message.data));
   };
 
+  game.playerName = null;
+
   game.subscribe = function(action, menu) {
     if (menus[action]) {
       console.error("Cannot redefine menu : "+action);

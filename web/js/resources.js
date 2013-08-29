@@ -13,6 +13,9 @@ game.resources = [
   {name: "refresh_gray", type:'image', src:'resource/img/ui/refresh_gray.png'},
   {name: "minus_red", type:'image', src:'resource/img/ui/minus_red.png'},
   {name: "x_red", type:'image', src:'resource/img/ui/x_red.png'},
+  {name: "check_green", type:'image', src:'resource/img/ui/check_green.png'},
+  {name: "x_gray", type:'image', src:'resource/img/ui/x_gray.png'},
+  {name: "check_gray", type:'image', src:'resource/img/ui/check_gray.png'},
 
    // Maps
   {name: "indoor_free_tileset", type:'image', src:'resource/img/tile/indoor_free_tileset.png'},

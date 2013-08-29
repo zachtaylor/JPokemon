@@ -13,7 +13,7 @@
         opacity : .7
       });
 
-      this.frame = new me.ui.Panel({ padding : 0, xlayout : 'fit', ylayout : 'center' });
+      this.frame = new me.ui.Panel({ xlayout : 'fit', ylayout : 'center' });
       this.icon = new me.ui.Button();
       this.frame.add(this.icon);
       this.title = new me.ui.Label({ fontSize : 12, fontName : 'verdana' });
@@ -49,7 +49,7 @@
 
     chooseState : function() {
       this.title.setText('');
-      //this.icon.setImage('circle_gray');
+      this.icon.setImage('circle_gray');
       this.pane.clear();
 
       for (var state in this.states) {
@@ -297,23 +297,14 @@
     }
   });
 
-  me.menu.BattleSignupWindow = me.menu.StatefulWindow.extend({
+  me.menu.BattleSignupWindow = me.menu.Window.extend({
     init : function() {
       this.parent(75, 50);
 
-      this.frame.add(new me.ui.Icon({ image : 'refresh_gray', onClick : this.refresh }));
-
-      var createView = new me.ui.Panel({ ylayout : 'fit', height : 100, width: 130, padding : 0 });
-      var controls = new me.ui.Panel({ xlayout : 'fit', ylayout : 'center', width : 130});
-      controls.add(new me.ui.Button({ image : 'plus_green', text : 'Team', onClick : this.addTeam.bind(this) }));
-      controls.add(new me.ui.Button({ image : 'plus_green', text : 'Player', onClick : this.addPlayer.bind(this) }));
-      controls.add(new me.ui.Button({ image : 'x_red', text : 'Reset', onClick : this.reset.bind(this) }));
-      createView.add(controls);
-      this.addState('Create Battle', 'circle_green', createView);
-
-      this.teams = [];
-      this.teamsContainer = new me.ui.Panel({xlayout : 'fit', ylayout : 'fill' });
-      createView.add(this.teamsContainer);
+      this.icon.setImage('circle_green');
+      this.title.setText('Create Battle');
+      this.frame.add(new me.ui.Button({ image : 'refresh_gray', onClick : this.reset.bind(this) }));
+      this.frame.add(new me.ui.Button({ image : 'check_gray', onClick : this.send.bind(this) }));
 
       this.inputWindow = new me.ui.Panel({ x : 200, y : 200, ylayout : 'fit', border : 'white', color : 'black', opacity : .7 });
       this.inputWindow.label = new me.ui.Label({ text : 'Enter name' });
@@ -323,33 +314,69 @@
       this.inputWindow.radio = new me.ui.RadioGroup({ xlayout : 'fit' });
       this.inputWindow.add(this.inputWindow.radio);
 
-      this.setState('Create Battle');
+      var createView = new me.ui.Panel({ ylayout : 'fit', height : 100, width: 130, padding : 0 });
+      this.pane.add(createView);
+
+      var controls = new me.ui.Panel({ xlayout : 'fit', ylayout : 'center', width : 130});
+      controls.add(new me.ui.Button({ image : 'plus_green', text : 'Team', onClick : this.addTeam.bind(this) }));
+      controls.add(new me.ui.Button({ image : 'plus_green', text : 'Player', onClick : this.show.bind(this.inputWindow) }));
+      createView.add(controls);
+
+      this.teams = [];
+      this.teamsContainer = new me.ui.Panel({xlayout : 'fit', ylayout : 'fill' });
+      createView.add(this.teamsContainer);
+
+      this.reset();
+    },
+
+    hide : function() {
+      this.parent();
+      this.inputWindow.hide();
     },
 
     addTeam : function() {
-      var newTeam = new me.ui.Panel({ ylayout : 'fit', padding : 0, width : 25, height : 100, border : 'cyan' });
+      var newTeam = new me.ui.Panel({ xlayout : 'fill', ylayout : 'fit', padding : 0, width : 25, height : 100 });
+      newTeam.add(new me.ui.Label({ text : 'Team '+this.teams.length }));
+      newTeam.add(new me.ui.Panel({ border : 'white', opacity : .7 }));
 
       this.teams.push(newTeam);
       this.refresh();
     },
 
-    addPlayer : function() {
-      this.inputWindow.show();
+    addPlayer : function(name, team) {
+      var teamPanel = this.teams[team];
+
+      var teamMember = new me.ui.Button({ 
+        image : 'minus_red', 
+        text : name
+      });
+      teamMember.playerName = name;
+
+      teamMember.onClick = (function() {
+        this.removePlayer(team, teamMember);
+      }).bind(this);
+
+      this.teams[team].add(teamMember);
     },
 
     acceptPlayer : function() {
       var name = this.inputWindow.inputBox.getText().trim();
       var team = this.inputWindow.radio.indexOf(this.inputWindow.radio.getSelectedItem());
 
-      var teamMember = new me.ui.Label({ text : name });
-      this.teams[team].add(teamMember);
+      this.addPlayer(name, team);
+      this.inputWindow.inputBox.setText('');
+    },
 
-      this.inputWindow.hide();
+    removePlayer : function(team, teamMember) {
+      var teamPanel = this.teams[team];
+      teamPanel.remove(teamMember);
+      this.refresh();
     },
 
     reset : function() {
       this.teams = [];
-      this.refresh();
+      this.addTeam();
+      this.addPlayer(game.playerName, 0);
     },
 
     refresh : function() {
@@ -360,6 +387,29 @@
         this.teamsContainer.add(this.teams[team]);
         this.inputWindow.radio.addLabel({ text : 'Team '+ team });
       }
+    },
+
+    send : function() {
+      var team, teams = []; // new JSONObject(); :)
+
+      for (var i = 0; i < this.teams.length; i++) {
+        team = [];
+
+        this.teams[i]._forEachChild(function(child) {
+          if (child.playerName) {
+            team.push(child.playerName);
+          }
+        });
+
+        teams.push(team);
+      }
+
+      game.send({
+        action : 'createbattle',
+        teams : teams
+      });
+
+      this.hide();
     },
 
     dispatch : function(json) {
