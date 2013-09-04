@@ -10,11 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.jpokemon.action.CreateBattleAction;
 import org.jpokemon.action.FriendsAction;
 import org.jpokemon.provider.BattleDataProvider;
 import org.jpokemon.provider.FriendsDataProvider;
-import org.jpokemon.provider.OverworldDataProvider;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.JPokemonWebSocket;
 import org.jpokemon.server.Message;
@@ -62,8 +60,7 @@ public class PlayerManager {
     webSocket.sendJson(json);
   }
 
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException,
-      ServiceException {
+  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
     Player player;
 
     synchronized (players) {
@@ -87,9 +84,6 @@ public class PlayerManager {
       else if ("battle".equals(dataRef)) {
         pushJson(player, BattleDataProvider.generate(player));
       }
-      else if ("overworld".equals(dataRef)) {
-        pushJson(player, OverworldDataProvider.generate(player));
-      }
     }
     else {
       Activity activity = getActivity(player);
@@ -97,9 +91,6 @@ public class PlayerManager {
       if (request.has("action") && activity.supportsAction(request.getString("action"))) {
         if ("friends".equals(request.getString("action"))) {
           new FriendsAction(request).execute(player);
-        }
-        else if ("createbattle".equals(request.getString("action"))) {
-          new CreateBattleAction(request).execute(player);
         }
         else {
           throw new ServiceException("Unidentified action: " + request.getString("action"));

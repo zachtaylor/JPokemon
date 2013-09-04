@@ -1,11 +1,5 @@
 package org.jpokemon.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.activity.ServiceException;
 import org.jpokemon.provider.FriendsDataProvider;
@@ -14,32 +8,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FriendsAction extends Action {
-  private static final Map<String, List<String>> pending = new HashMap<String, List<String>>();
+  private JSONObject json;
 
-  public static List<String> getPending(String player) {
-    if (pending.get(player) == null) { return new ArrayList<String>(); }
-
-    return Collections.unmodifiableList(pending.get(player));
-  }
-
-  public FriendsAction(JSONObject json) {
-    data = json;
+  public FriendsAction(JSONObject j) {
+    json = j;
   }
 
   @Override
   public void execute(Player player) throws ServiceException {
     try {
-      if (data.has("add")) {
+      if (json.has("add")) {
         addFriend(player);
       }
-      else if (data.has("accept")) {
+      else if (json.has("accept")) {
         acceptFriend(player);
       }
-      else if (data.has("block")) {
+      else if (json.has("block")) {
         blockFriend(player);
       }
-    }
-    catch (JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
 
@@ -47,37 +34,30 @@ public class FriendsAction extends Action {
   }
 
   private void addFriend(Player player) throws JSONException {
-    String otherPlayerName = data.getString("add");
+    String otherPlayerName = json.getString("add");
     Player otherPlayer = PlayerManager.getPlayer(otherPlayerName);
 
     if (otherPlayer.getBlocked().contains(player.getName())) { return; }
-    if (pending.get(otherPlayerName) == null) {
-      pending.put(otherPlayerName, new ArrayList<String>());
-    }
 
-    pending.get(otherPlayerName).add(player.getName());
+    FriendsDataProvider.addPendingRequest(player.id(), otherPlayerName);
   }
 
   private void acceptFriend(Player player) throws JSONException {
-    String otherPlayerName = data.getString("accept");
+    String otherPlayerName = json.getString("accept");
     Player otherPlayer = PlayerManager.getPlayer(otherPlayerName);
 
-    if (pending.get(player.getName()) == null) { return; }
-    if (!pending.get(player.getName()).contains(otherPlayerName)) { return; }
+    if (!FriendsDataProvider.hasPendingRequest(player.id(), otherPlayerName)) { return; }
 
     player.addFriend(otherPlayerName);
     otherPlayer.addFriend(player.getName());
-
-    pending.get(player.getName()).remove(otherPlayerName);
+    FriendsDataProvider.removePendingRequest(player.id(), otherPlayerName);
   }
 
   private void blockFriend(Player player) throws JSONException {
-    String otherPlayerName = data.getString("block");
+    String otherPlayerName = json.getString("block");
     Player otherPlayer = PlayerManager.getPlayer(otherPlayerName);
 
     player.addBlocked(otherPlayerName);
     otherPlayer.removeFriend(player.getName());
   }
-
-  private JSONObject data;
 }
