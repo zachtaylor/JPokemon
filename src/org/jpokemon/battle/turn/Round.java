@@ -109,8 +109,8 @@ public class Round {
     for (Slot s : _battle) {
       for (String thing : things) {
         if (s.trainer() instanceof Player) {
-          Message message = new Message("BATTLE", thing, Message.Level.MESSAGE);
-          PlayerManager.pushMessage((Player) s.trainer(), message);
+//          Message message = new Message("BATTLE", thing, Message.Level.MESSAGE);
+//          PlayerManager.pushMessage((Player) s.trainer(), message);
         }
       }
     }

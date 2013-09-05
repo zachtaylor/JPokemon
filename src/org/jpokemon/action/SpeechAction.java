@@ -10,7 +10,7 @@ public class SpeechAction extends Action {
   }
 
   public void execute(Player player) {
-    Message message = new Message("SPEECH", getData(), Message.Level.MESSAGE);
-    PlayerManager.pushMessage(player, message);
+//    Message message = new Message("SPEECH", getData(), Message.Level.MESSAGE);
+//    PlayerManager.pushMessage(player, message);
   }
 }

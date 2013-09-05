@@ -35,7 +35,7 @@ public class Reward {
 
   public Reward(Slot s) {
     _pokemon = s.leader();
-    _faintMessage = new Message("BATTLE", _pokemon.name() + " fainted!", Message.Level.MESSAGE);
+//    _faintMessage = new Message("BATTLE", _pokemon.name() + " fainted!", Message.Level.MESSAGE);
 
     _xp = computeXp(s.trainer(), _pokemon);
 
@@ -44,7 +44,7 @@ public class Reward {
     }
 
     if (s.party().awake() == 0) {
-      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), Message.Level.MESSAGE);
+//      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), Message.Level.MESSAGE);
 
       for (RewardAction actionBinding : RewardAction.get(s.trainer().id())) {
         _actions.addAction(actionBinding.getAction());
@@ -111,8 +111,8 @@ public class Reward {
       earner.addEV(effortValues());
 
       if (s.trainer() instanceof Player) {
-        Message xpMessage = new Message("BATTLE", earner.name() + " received " + xpEach + " experience!", Message.Level.MESSAGE);
-        PlayerManager.pushMessage((Player) s.trainer(), xpMessage);
+//        Message xpMessage = new Message("BATTLE", earner.name() + " received " + xpEach + " experience!", Message.Level.MESSAGE);
+//        PlayerManager.pushMessage((Player) s.trainer(), xpMessage);
       }
 
       s.trainer().notify();

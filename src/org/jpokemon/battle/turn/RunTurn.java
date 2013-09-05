@@ -25,8 +25,8 @@ public class RunTurn extends Turn {
     }
 
     if ((chance / 250.0) > Math.random()) {
-      Message message = new Message("SPEECH", "Got away safely!", Message.Level.MESSAGE);
-      PlayerManager.pushMessage((Player) slot().trainer(), message);
+//      Message message = new Message("SPEECH", "Got away safely!", Message.Level.MESSAGE);
+//      PlayerManager.pushMessage((Player) slot().trainer(), message);
       battle.remove(slot().trainer());
     }
     else

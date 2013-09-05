@@ -488,7 +488,6 @@
       for (var i = this.selectedIndex; i < this.children.length; i++) {
         if (currentHeight + this.children[i].rect.height <= this.rect.height) {
           this.children[i].setTop(this.rect.top + currentHeight);
-          this.children[i].setLeft(this.rect.left + this.padding);
           this.drawnItems.push(this.children[i]);
           currentHeight += this.padding + this.children[i].rect.height;
 
@@ -498,6 +497,8 @@
           break;
         }
       }
+
+      layouts.x[this.xlayout].call(this);
     }
   });
 
@@ -765,6 +766,66 @@
     },
 
     onSelectedItemChange : function() {
+    }
+  });
+
+  me.ui.Timer = me.ui.Label.extend({
+    init : function(config) {
+      config = config || {};
+      this.timer = config.text = (config.timer || 30) + 1;
+      this.parent(config);
+
+      this.running = this.config.running || true;
+      this.count = this.config.count || -1;
+      this.precision = this.config.precison || 1000;
+      this.stop = this.config.stop || 0;
+
+      this.time = new Date().getTime() - this.precision;
+
+      this.onProgress = this.config.onProgress || this.onProgress;
+      this.onComplete = this.config.onComplete || this.onComplete;
+    },
+
+    update : function() {
+      if (this.running) {
+        var timeNow = new Date().getTime();
+
+        if (this.time + this.precision < timeNow) {
+
+          this.time = timeNow;
+          this.timer += this.count;
+          this.setText();
+          this.onProgress.defer();
+          this.needsUpdate = true;
+
+          if (this.timer === this.stop) {
+            this.onComplete.defer();
+          }
+        }
+      }
+
+      return this.parent();
+    },
+
+    onHide : function() {
+      this.running = false;
+      this.parent();
+    },
+
+    setText : function() {
+      if (this.timer < 10) {
+        this.parent('0' + this.timer);
+      }
+      else {
+        this.parent(this.timer);
+      }
+    },
+
+    onProgress : function() {
+    },
+
+    onComplete : function() {
+      this.running = false;
     }
   });
 })(window);

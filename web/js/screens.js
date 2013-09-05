@@ -66,6 +66,7 @@
 
         new me.menu.FriendsLauncher().show();
         new me.menu.BattleSignupLauncher().show();
+        new me.menu.MessagesArea().show();
       }
       else if (json.add) {
         players[json.add] = me.entityPool.newInstanceOf('trainer', json);

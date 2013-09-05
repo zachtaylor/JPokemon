@@ -23,7 +23,13 @@ import org.zachtaylor.jnodalxml.XmlParser;
 
 public class PlayerManager {
   public static Player getPlayer(String name) {
-    return players.get(name);
+    Player player;
+
+    synchronized (players) {
+      player = players.get(name);
+    }
+
+    return player;
   }
 
   public static Activity getActivity(Player player) {

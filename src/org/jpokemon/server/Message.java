@@ -3,40 +3,36 @@ package org.jpokemon.server;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Message {
-  public Message(String s, String m, Message.Level l) {
-    source = s;
-    message = m;
-    level = l;
-  }
-
-  public String getType() {
-    return source;
-  }
-
-  public Message.Level getLevel() {
-    return level;
+public abstract class Message {
+  public Message(String t) {
+    text = t;
   }
 
   public JSONObject toJson() {
-    JSONObject data = new JSONObject();
-
     try {
-      data.put("action", "message");
-      data.put("type", source);
-      data.put("message", message);
-      data.put("level", level.toString().toLowerCase());
-    } catch (JSONException e) {
-      e.printStackTrace();
+      return getJson();
+    }
+    catch (JSONException e) {
     }
 
-    return data;
+    return null;
   }
 
-  private Message.Level level;
-  private String source, message;
+  /* Make things easy for subclasses */
+  protected abstract JSONObject getJson() throws JSONException;
 
-  public enum Level {
-    LOG, MESSAGE, NOTIFICATION;
+  protected String text;
+
+  public static class Notification extends Message {
+    public Notification(String t) {
+      super(t);
+    }
+
+    protected JSONObject getJson() throws JSONException {
+      JSONObject json = new JSONObject();
+      json.put("action", "notification");
+      json.put("text", text);
+      return json;
+    }
   }
 }

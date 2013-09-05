@@ -3,6 +3,7 @@ package org.jpokemon.action;
 import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.activity.ServiceException;
 import org.jpokemon.provider.FriendsDataProvider;
+import org.jpokemon.server.Message;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,8 @@ public class FriendsAction extends Action {
       else if (json.has("block")) {
         blockFriend(player);
       }
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
       e.printStackTrace();
     }
 
@@ -37,6 +39,10 @@ public class FriendsAction extends Action {
     String otherPlayerName = json.getString("add");
     Player otherPlayer = PlayerManager.getPlayer(otherPlayerName);
 
+    if (otherPlayer == null) {
+      PlayerManager.pushMessage(player, new Message.Notification("'" + otherPlayerName + "' not found"));
+      return;
+    }
     if (otherPlayer.getBlocked().contains(player.getName())) { return; }
 
     FriendsDataProvider.addPendingRequest(player.id(), otherPlayerName);
@@ -59,5 +65,7 @@ public class FriendsAction extends Action {
 
     player.addBlocked(otherPlayerName);
     otherPlayer.removeFriend(player.getName());
+
+    PlayerManager.pushMessage(player, new Message.Notification("'" + otherPlayer.getName() + "' blocked"));
   }
 }
