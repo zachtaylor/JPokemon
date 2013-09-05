@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.jpokemon.action.FriendsAction;
+import org.jpokemon.action.LobbyAction;
+import org.jpokemon.battle.lobby.Lobby;
 import org.jpokemon.provider.BattleDataProvider;
 import org.jpokemon.provider.FriendsDataProvider;
 import org.jpokemon.server.JPokemonServer;
@@ -90,6 +92,9 @@ public class PlayerManager {
       else if ("battle".equals(dataRef)) {
         pushJson(player, BattleDataProvider.generate(player));
       }
+      else if ("lobby".equals(dataRef)) {
+        pushJson(player, Lobby.generateJson(player));
+      }
     }
     else {
       Activity activity = getActivity(player);
@@ -97,6 +102,9 @@ public class PlayerManager {
       if (request.has("action") && activity.supportsAction(request.getString("action"))) {
         if ("friends".equals(request.getString("action"))) {
           new FriendsAction(request).execute(player);
+        }
+        else if ("lobby".equals(request.getString("action"))) {
+          new LobbyAction(request).execute(player);
         }
         else {
           throw new ServiceException("Unidentified action: " + request.getString("action"));

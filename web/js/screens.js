@@ -6,7 +6,7 @@
       this.loginPanel = new me.ui.Panel({
         width : 512,
         height : 512,
-        color : 'blue',
+        color : 'darkblue',
         xlayout : 'center',
         ylayout : 'relative'
       });
@@ -65,7 +65,7 @@
         me.game.add(players[json.login]);
 
         new me.menu.FriendsLauncher().show();
-        new me.menu.BattleSignupLauncher().show();
+        new me.menu.BattleLobbyLauncher().show();
         new me.menu.MessagesArea().show();
       }
       else if (json.add) {

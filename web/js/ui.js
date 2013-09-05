@@ -727,6 +727,7 @@
       this.parent(config);
 
       this.selectedItem = null;
+      this.onSelectedItemChange = this.config.onSelectedItemChange || this.onSelectedItemChange;
     },
 
     addLabel : function(config) {
