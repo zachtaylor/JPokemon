@@ -595,7 +595,7 @@
       }));
 
       this.padding = 0;
-      
+
       window.addEventListener('keypress', this.onKeyPress.bind(this));
       window.addEventListener('keydown', this.onKeyDown.bind(this));
 

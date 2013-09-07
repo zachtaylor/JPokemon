@@ -75,7 +75,7 @@
         padding : 0,
         opacity : .7
       });
-      this.add(new me.ui.Label({text : 'Friends'}));
+      this.add(new me.ui.Label({ text : 'Friends' }));
 
       this.friendsWindow = new me.menu.FriendsWindow();
       game.subscribe('friends', this.friendsWindow);
@@ -177,21 +177,19 @@
     },
 
     dispatch : function(json) {
-      this.data = json;
-      
       this.friends.clear();
-      for (var i = 0; i < this.data.friends.length; i++) {
-        this.friends.add(this.friendsNamePanel(this.data.friends[i]));
+      for (var i = 0; i < json.friends.length; i++) {
+        this.friends.add(this.friendsNamePanel(json.friends[i]));
       }
 
       this.blocked.clear();
-      for (var i = 0; i < this.data.blocked.length; i++) {
-        this.blocked.add(this.blockedNamePanel(this.data.blocked[i]));
+      for (var i = 0; i < json.blocked.length; i++) {
+        this.blocked.add(this.blockedNamePanel(json.blocked[i]));
       }
 
       this.pending.clear();
-      for (var i = 0; i < this.data.pending.length; i++) {
-        this.pending.add(this.pendingNamePanel(this.data.pending[i]));
+      for (var i = 0; i < json.pending.length; i++) {
+        this.pending.add(this.pendingNamePanel(json.pending[i]));
       }
     }
   });
@@ -206,13 +204,15 @@
         padding : 0,
         opacity : .7
       });
-      this.add(new me.ui.Label({text : 'Battle'}));
+      this.add(new me.ui.Label({ text : 'Battle' }));
 
       this.lobbyWindow = new me.menu.BattleLobbyWindow();
       game.subscribe('lobby', this.lobbyWindow);
     },
 
     onToggleChange : function(focus) {
+      this.parent();
+
       if (focus) {
         this.lobbyWindow.show();
         this.lobbyWindow.refresh();
@@ -243,7 +243,9 @@
       this.lobbyView.add(this.lobbyView.controls);
 
       this.lobbyView.controls.addTeamButton = new me.ui.Button({ image : 'plus_green', text : 'Team', onClick : this.addTeam.bind(this) });
-      this.lobbyView.controls.addPlayerButton = new me.ui.Button({ image : 'plus_green', text : 'Player', onClick : this.show.bind(this.inputWindow) });
+      this.lobbyView.controls.addPlayerButton = new me.ui.Toggle({ toggleStyle : 'toggle', padding : 0, xlayout : 'fit', ylayout : 'center', untoggleColor : false, onToggleChange : this.toggleInputWindow.bind(this) });
+      this.lobbyView.controls.addPlayerButton.add(new me.ui.Icon({ image : 'plus_green', padding : 0,}));
+      this.lobbyView.controls.addPlayerButton.add(new me.ui.Label({ text : 'Player' }));
       this.lobbyView.controls.closeButton = new me.ui.Button({ image : 'gears_gray', text : 'Configure', onClick : this.closeLobby.bind(this) });
       this.lobbyView.controls.openButton = new me.ui.Button({ image : 'send', text : 'Send', onClick : this.openLobby.bind(this) });
       this.lobbyView.controls.startButton = new me.ui.Button({ image : 'check_green', text : 'Start', onClick : this.startBattle.bind(this) });
@@ -251,7 +253,28 @@
       this.lobbyView.teamsContainer = new me.ui.Panel({xlayout : 'fit', ylayout : 'fill' });
       this.lobbyView.add(this.lobbyView.teamsContainer);
 
-      this.addState('My Lobby', 'circle_blue', this.lobbyView);
+      this.pendingView = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
+      this.pendingView.dispatch = this.dispatchPending.bind(this);
+      game.subscribe('lobbypending', this.pendingView);
+
+      this.lobbies = {};
+      this.currentHostView = null;
+
+      this.requestedView = new me.ui.Panel({ ylayout : 'fit', height : 100, width: 130, padding : 0 });
+
+      this.requestedView.controls = new me.ui.Panel({ xlayout : 'fit', ylayout : 'center', width : 130});
+      this.requestedView.add(this.requestedView.controls);
+
+      this.requestedView.controls.acceptBatleButton = new me.ui.Button({ image : 'check_green', text : 'Accept' });
+      this.requestedView.controls.add(this.requestedView.controls.acceptBatleButton);
+      this.requestedView.controls.rejectBattleButton = new me.ui.Button({ image : 'x_red', text : 'Reject' });
+      this.requestedView.controls.add(this.requestedView.controls.rejectBattleButton);
+
+      this.requestedView.teamsContainer = new me.ui.Panel({ xlayout: 'fit', ylayout : 'fill' });
+      this.requestedView.add(this.requestedView.teamsContainer);
+
+      this.addState('My Lobby', 'circle_green', this.lobbyView);
+      this.addState('Pending List', 'circle_blue', this.pendingView);
 
       this.setState('My Lobby');
     },
@@ -261,12 +284,29 @@
       this.inputWindow.hide();
     },
 
+    toggleInputWindow : function(active) {
+      if (active) {
+        this.inputWindow.show();
+      }
+      else {
+        this.inputWindow.hide();
+      }
+    },
+
+    setState : function(name) {
+      this.parent(name);
+
+      if (name === 'My Lobby') {
+        this.currentHostView = null;
+      }
+    },
+
     addPlayer : function() {
       var name = this.inputWindow.inputBox.getText().trim();
       var team = this.inputWindow.radio.indexOf(this.inputWindow.radio.getSelectedItem());
 
       game.send({
-        action : 'lobby',
+        service : 'lobby',
         configure : 'addplayer',
         name : name,
         team : team,
@@ -275,16 +315,24 @@
       this.inputWindow.inputBox.setText('');
     },
 
+    removePlayer : function(name) {
+      game.send({
+        service : 'lobby',
+        configure : 'removeplayer',
+        name : name
+      });
+    },
+
     addTeam : function() {
       game.send({
-        action : 'lobby',
+        service : 'lobby',
         configure : 'addteam'
       });
     },
 
     closeLobby : function() {
       game.send({
-        action : 'lobby',
+        service : 'lobby',
         configure : 'openstate',
         openstate : false
       });
@@ -292,7 +340,7 @@
 
     openLobby : function() {
       game.send({
-        action : 'lobby',
+        service : 'lobby',
         configure : 'openstate',
         openstate : true
       });
@@ -300,6 +348,41 @@
 
     startBattle : function() {
       console.log("todo");
+    },
+
+    showPendingList : function(name) {
+      this.currentHostView = name;
+      var lobby = this.lobbies[name];
+
+      if (!lobby) {
+        game.send({
+          load : 'lobby',
+          host : name
+        });
+
+        return;
+      }
+
+      this.title.setText(lobby.host + "'s Lobby");
+      this.pane.clear();
+      this.pane.add(this.requestedView);
+
+      this.requestedView.teamsContainer.clear();
+      for (var team = 0; team < lobby.teams.length; team++) {
+        var teamPanel = new me.ui.Panel({ xlayout : 'fill', ylayout : 'fit', padding : 0, width : 25, height : 100 });
+        teamPanel.add(new me.ui.Label({ text : 'Team ' + team }));
+        teamPanel.add(new me.ui.Panel({ border : 'white', opacity : .7 }));
+        this.requestedView.teamsContainer.add(teamPanel);
+
+        for (var name = 0; name < lobby.teams[team].length; name++) {
+          var panel = new me.ui.Button({
+            image : 'x_gray',
+            text : lobby.teams[team]
+          });
+
+          teamPanel.add(panel);
+        }
+      }
     },
 
     refresh : function() {
@@ -331,30 +414,43 @@
         this.inputWindow.radio.addLabel({ text : 'Team '+ team });
 
         for (var name = 0; name < json.teams[team].length; name++) {
-          teamPanel.add(this.buildNamePanel(json.open, json.teams[team][name]));
+          var panel = new me.ui.Button({ 
+            image : 'minus_red', 
+            text : json.teams[team][name]
+          });
+          panel.playerName = json.teams[team][name];
+
+          panel.onClick = (function() {
+            this.removePlayer(json.teams[team][name]);
+          }).bind(this);
+
+          teamPanel.add(panel);
         }
+      }
+
+      this.pendingView.clear();
+      for (var i = 0; i < json.pending.length; i++) {
+        var pendingName = json.pending[i];
+
+        var namePanel = new me.ui.Button({
+          text : pendingName,
+          onClick : (function(pendingName) {
+            return function() {
+              this.showPendingList(pendingName);
+            }
+          })(pendingName).bind(this)
+        });
+
+        this.pendingView.add(namePanel);
       }
     },
 
-    buildNamePanel : function(open, name) {
-      var panel;
+    dispatchPending : function(json) {
+      this.lobbies[json.host] = json;
 
-      if (open) {
-        console.log("oops");
+      if (json.host === this.currentHostView) {
+        this.showPendingList(json.host);
       }
-      else {
-        panel = new me.ui.Button({ 
-          image : 'minus_red', 
-          text : name
-        });
-        panel.playerName = name;
-
-        // panel.onClick = (function() {
-        //   this.removePlayer(team, teamMember);
-        // }).bind(this);
-      }
-
-      return panel;
     }
   });
 

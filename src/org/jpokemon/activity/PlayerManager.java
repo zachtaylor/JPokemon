@@ -10,12 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.jpokemon.action.FriendsAction;
-import org.jpokemon.action.LobbyAction;
-import org.jpokemon.battle.lobby.Lobby;
-import org.jpokemon.provider.BattleDataProvider;
-import org.jpokemon.provider.FriendsDataProvider;
+import org.jpokemon.battle.lobby.LobbyService;
 import org.jpokemon.server.JPokemonServer;
+import org.jpokemon.server.JPokemonService;
 import org.jpokemon.server.JPokemonWebSocket;
 import org.jpokemon.server.Message;
 import org.jpokemon.trainer.Player;
@@ -32,6 +29,11 @@ public class PlayerManager {
     }
 
     return player;
+  }
+
+  public static void bootstrapServices() {
+    services = new HashMap<String, JPokemonService>();
+    services.put("lobby", new LobbyService());
   }
 
   public static Activity getActivity(Player player) {
@@ -83,36 +85,21 @@ public class PlayerManager {
         throw new ServiceException("Missing credentials");
       }
     }
-    else if (request.has("load")) {
-      String dataRef = request.getString("load");
+    else if (request.has("service")) {
+      String serviceName = request.getString("service");
+      JPokemonService service = services.get(serviceName);
 
-      if ("friends".equals(dataRef)) {
-        pushJson(player, FriendsDataProvider.generate(player));
-      }
-      else if ("battle".equals(dataRef)) {
-        pushJson(player, BattleDataProvider.generate(player));
-      }
-      else if ("lobby".equals(dataRef)) {
-        pushJson(player, Lobby.generateJson(player));
-      }
+      service.serve(request, player);
+    }
+    else if (request.has("load")) {
+      String serviceName = request.getString("load");
+      JPokemonService service = services.get(serviceName);
+
+      PlayerManager.pushJson(player, service.load(request, player));
     }
     else {
       Activity activity = getActivity(player);
-
-      if (request.has("action") && activity.supportsAction(request.getString("action"))) {
-        if ("friends".equals(request.getString("action"))) {
-          new FriendsAction(request).execute(player);
-        }
-        else if ("lobby".equals(request.getString("action"))) {
-          new LobbyAction(request).execute(player);
-        }
-        else {
-          throw new ServiceException("Unidentified action: " + request.getString("action"));
-        }
-      }
-      else {
-        activity.handleRequest(player, request);
-      }
+      activity.handleRequest(player, request);
     }
   }
 
@@ -127,8 +114,7 @@ public class PlayerManager {
         Writer writer = new BufferedWriter(new PrintWriter(file));
         writer.write(player.toXml().printToString(0, "\t"));
         writer.close();
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         e.printStackTrace();
       }
 
@@ -154,11 +140,9 @@ public class PlayerManager {
 
     try {
       player.loadXML(XmlParser.parse(file).get(0));
-    }
-    catch (IndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException e) {
       e.printStackTrace();
-    }
-    catch (FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
     }
 
     synchronized (players) {
@@ -177,4 +161,6 @@ public class PlayerManager {
   private static volatile Map<Player, JPokemonWebSocket> reverseConnections = new HashMap<Player, JPokemonWebSocket>();
 
   private static Map<Player, Stack<Activity>> activities = new HashMap<Player, Stack<Activity>>();
+
+  private static Map<String, JPokemonService> services;
 }

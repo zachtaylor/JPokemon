@@ -5,12 +5,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.jpokemon.activity.PlayerManager;
 import org.zachtaylor.myna.Myna;
 
 /**
- * Main server component of the entire project. Contains the server and all of
- * its configuration, and assigns the servlets and filtering, as well as
- * contexts, etc.
+ * Main server component of the entire project. Contains the server and all of its configuration, and assigns the servlets and filtering, as well as contexts,
+ * etc.
  * 
  * @author Graham
  */
@@ -31,6 +31,7 @@ public class JPokemonServer {
 
   public static void main(String[] args) throws Exception {
     BasicConfigurator.configure();
+    PlayerManager.bootstrapServices();
 
     logger.trace("Spinning up servlets");
     ServletContextHandler root = new ServletContextHandler();

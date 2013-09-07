@@ -1,5 +1,5 @@
 <player name="Zach" cash="0" badge="0">
-	<location height="1" width="1" map="house" left="12" top="9" />
+	<location height="1" width="1" map="house" left="13" top="9" />
 	<bag>
 		<item quantity="1" number="5" />
 	</bag>
