@@ -148,13 +148,11 @@ public class LobbyService implements JPokemonService {
         }
 
         List<String> pendingList;
-
         synchronized (pending) {
-          pendingList = pending.get(name);
-
-          if (pendingList == null) {
-            pending.put(name, pendingList = new ArrayList<String>());
+          if (pending.get(name) == null) {
+            pending.put(name, new ArrayList<String>());
           }
+          pendingList = pending.get(name);
         }
 
         synchronized (pendingList) {

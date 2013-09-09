@@ -84,7 +84,7 @@
     onToggleChange : function(visible) {
       if (visible) {
         this.friendsWindow.show();
-        this.friendsWindow.sendLoadRequest();
+        this.friendsWindow.refresh();
       }
       else {
         this.friendsWindow.hide();
@@ -102,7 +102,7 @@
       this.inputWindow = new me.ui.Panel({ x : 200, y : 200, ylayout : 'fit', border : 'white', color : 'black', opacity : .7 });
       this.inputWindowLabel = new me.ui.Label({ text : 'Add Friend' });
       this.inputWindow.add(this.inputWindowLabel);
-      this.inputWindowInputBox = new me.ui.InputBox({ width : 100, onEnter : this.onInputWindowEnter.bind(this) });
+      this.inputWindowInputBox = new me.ui.InputBox({ width : 100, onEnter : this.requestFriend.bind(this) });
       this.inputWindow.add(this.inputWindowInputBox);
 
       this.friends = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
@@ -142,12 +142,11 @@
 
       var acceptButton = new me.ui.Button({
         image : 'plus_green',
-        onClick : function() {
-          game.send({
-            action : 'friends',
-            accept : name
-          });
-        }
+        onClick : (function(name) {
+          return function() {
+            this.acceptFriend(name);
+          };
+        })(name).bind(this)
       });
       namePanel.add(acceptButton);
 
@@ -156,24 +155,33 @@
       return namePanel;
     },
 
-    sendLoadRequest : function() {
+    refresh : function() {
       game.send({
         load : 'friends'
       });
     },
 
-    onInputWindowEnter : function() {
-      var friendName = this.inputWindowInputBox.getText();
-      
-      if (friendName) {
+    requestFriend : function() {
+      var name = this.inputWindowInputBox.getText();
+
+      if (name) {
         game.send({
-          action : 'friends',
-          add : friendName
+          service : 'friends',
+          configure : 'add',
+          name : name
         });
         this.inputWindowInputBox.setText('');
       }
 
       this.inputWindow.hide();
+    },
+
+    acceptFriend : function(name) {
+      game.send({
+        service : 'friends',
+        configure : 'accept',
+        name : name
+      });
     },
 
     dispatch : function(json) {

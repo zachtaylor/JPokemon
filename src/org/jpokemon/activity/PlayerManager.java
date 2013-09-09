@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.jpokemon.battle.lobby.LobbyService;
+import org.jpokemon.extra.FriendsService;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.JPokemonService;
 import org.jpokemon.server.JPokemonWebSocket;
@@ -34,6 +35,7 @@ public class PlayerManager {
   public static void bootstrapServices() {
     services = new HashMap<String, JPokemonService>();
     services.put("lobby", new LobbyService());
+    services.put("friends", new FriendsService());
   }
 
   public static Activity getActivity(Player player) {
