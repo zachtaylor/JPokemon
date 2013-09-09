@@ -24,141 +24,190 @@ public class LobbyService implements JPokemonService {
         configure(request, player);
       }
       else if (request.has("respond")) {
-
+        respond(request, player);
       }
-
-      PlayerManager.pushJson(player, generateJson(player.id()));
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
       e.printStackTrace();
     }
   }
 
-  private void configure(JSONObject json, Player player) throws JSONException {
-    if ("addteam".equals(json.getString("configure"))) {
-      Lobby.get(player.id()).addTeam();
+  private void configure(JSONObject json, Player player) throws JSONException, ServiceException {
+    String configure = json.getString("configure");
+    Lobby lobby = Lobby.get(player.id());
+
+    if (configure.equals("addteam")) {
+      if (lobby.isOpen()) { return; }
+
+      lobby.addTeam();
+      PlayerManager.pushJson(player, load(new JSONObject(), player));
     }
-    else if ("addplayer".equals(json.getString("configure"))) {
+    else if (configure.equals("addplayer")) {
       String otherPlayerName = json.getString("name");
       int team = json.getInt("team");
-      Lobby.get(player.id()).addPlayer(otherPlayerName, team);
+
+      if (lobby.isOpen()) { return; }
+
+      if (PlayerManager.getPlayer(otherPlayerName) == null) {
+        Message message = new Message.Notification("'" + otherPlayerName + "' not found");
+        PlayerManager.pushMessage(player, message);
+        return;
+      }
+
+      lobby.addPlayer(otherPlayerName, team);
+      PlayerManager.pushJson(player, load(new JSONObject(), player));
     }
-    else if ("openstate".equals(json.getString("configure"))) {
+    else if (configure.equals("openstate")) {
       boolean open = json.getBoolean("openstate");
-      Lobby lobby = Lobby.get(player.id());
 
       lobby.setOpen(open);
 
       if (open) {
-        Message message = new Message.Notification("New battle request");
-        JSONObject lobbyJson = generateJson(player.id());
-
-        lobbyJson.put("action", "lobbypending");
-
-        for (List<String> team : lobby.getTeams()) {
-          for (String name : team) {
-            if (name.equals(lobby.getHost())) {
-              continue;
-            }
-            else {
-              Player p = PlayerManager.getPlayer(name);
-              PlayerManager.pushMessage(p, message);
-              PlayerManager.pushJson(p, lobbyJson);
-              LobbyService.addToPending(lobby.getHost(), name);
-            }
-          }
-        }
-
-        message = new Message.Notification("Requests sent");
-        PlayerManager.pushMessage(player, message);
+        buildPending(lobby);
+        pushLobbyToPlayers(lobby, true);
+      }
+      else {
+        clearPending(lobby);
+        PlayerManager.pushJson(player, load(new JSONObject(), player));
       }
     }
   }
 
+  private void respond(JSONObject json, Player player) throws JSONException, ServiceException {
+    String host = json.getString("host");
+    String response = json.getString("respond");
+    Lobby lobby = Lobby.get(host);
+
+    if (!lobby.isOpen() || !lobby.getResponses().keySet().contains(player.id())) { return; }
+
+    if (response.equals("accept")) {
+      lobby.accept(player.id());
+    }
+    else if (response.equals("reject")) {
+      lobby.reject(player.id());
+    }
+
+    pushLobbyToPlayers(lobby, false);
+  }
+
   @Override
-  public JSONObject load(JSONObject request, Player player) throws ServiceException {
+  public JSONObject load(JSONObject request, Player player) {
     String host = player.id();
 
     if (request.has("host")) {
       try {
         host = request.getString("host");
-      } catch (JSONException e) {
+      }
+      catch (JSONException e) {
         e.printStackTrace();
       }
     }
 
-    JSONObject json = generateJson(host);
+    Lobby lobby = Lobby.get(host);
+    JSONObject json = generateJson(lobby);
 
-    if (request.has("host")) {
-      try {
-        json.put("action", "lobbypending");
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    List<String> pendingList;
+    synchronized (pending) {
+      pendingList = pending.get(player.id());
+    }
+    if (pendingList == null) {
+      pendingList = new ArrayList<String>();
+    }
+
+    try {
+      json.put("pending", new JSONArray(pendingList.toString()));
+    }
+    catch (JSONException e) {
+      e.printStackTrace();
     }
 
     return json;
   }
 
-  public static void addToPending(String from, String to) {
-    List<String> pendingList;
-
-    synchronized (pending) {
-      pendingList = pending.get(to);
-
-      if (pendingList == null) {
-        pendingList = new ArrayList<String>();
-        pending.put(to, pendingList);
-      }
-    }
-
-    synchronized (pendingList) {
-      pendingList.add(from);
-    }
-  }
-
-  public static void removeFromPending(String from, String to) {
-    List<String> pendingList;
-
-    synchronized (pending) {
-      pendingList = pending.get(to);
-    }
-
-    if (pendingList == null) { return; }
-
-    synchronized (pendingList) {
-      pendingList.remove(from);
-    }
-  }
-
-  private JSONObject generateJson(String playerId) {
-    Lobby lobby = Lobby.get(playerId);
+  private JSONObject generateJson(Lobby lobby) {
     JSONObject json = new JSONObject();
 
     try {
       json.put("action", "lobby");
       json.put("host", lobby.getHost());
       json.put("open", lobby.isOpen());
-      json.put("teams", new JSONArray(lobby.getTeams().toString())); // sneaky
-
-      if (lobby.isOpen()) {
-        json.put("responses", new JSONObject(lobby.getResponses()));
-      }
-
-      List<String> pendingList;
-
-      synchronized (pending) {
-        pendingList = pending.get(playerId);
-      }
-
-      if (pendingList != null) {
-        json.put("pending", new JSONArray(pendingList.toString()));
-      }
-      else {
-        json.put("pending", new JSONArray());
-      }
-    } catch (JSONException e) {
+      json.put("teams", new JSONArray(lobby.getTeams().toString()));
+      json.put("responses", new JSONObject(lobby.getResponses()));
+    }
+    catch (JSONException e) {
     }
 
     return json;
+  }
+
+  private void buildPending(Lobby lobby) {
+    for (List<String> team : lobby.getTeams()) {
+      for (String name : team) {
+        if (name.equals(lobby.getHost())) {
+          continue;
+        }
+
+        List<String> pendingList;
+
+        synchronized (pending) {
+          pendingList = pending.get(name);
+
+          if (pendingList == null) {
+            pending.put(name, pendingList = new ArrayList<String>());
+          }
+        }
+
+        synchronized (pendingList) {
+          pendingList.add(lobby.getHost());
+        }
+
+        Player player = PlayerManager.getPlayer(name);
+        PlayerManager.pushJson(player, load(new JSONObject(), player));
+      }
+    }
+  }
+
+  private void clearPending(Lobby lobby) {
+    for (List<String> team : lobby.getTeams()) {
+      for (String name : team) {
+        if (name.equals(lobby.getHost())) {
+          continue;
+        }
+
+        List<String> pendingList;
+
+        synchronized (pending) {
+          pendingList = pending.get(name);
+        }
+
+        if (pendingList == null) {
+          continue;
+        }
+
+        synchronized (pendingList) {
+          pendingList.remove(lobby.getHost());
+        }
+
+        Player player = PlayerManager.getPlayer(name);
+        PlayerManager.pushJson(player, load(new JSONObject(), player));
+      }
+    }
+  }
+
+  private void pushLobbyToPlayers(Lobby lobby, boolean sendNewRequestMessage) {
+    Message message = new Message.Notification("New battle request");
+    JSONObject lobbyJson = generateJson(lobby);
+
+    for (List<String> team : lobby.getTeams()) {
+      for (String name : team) {
+        Player player = PlayerManager.getPlayer(name);
+
+        PlayerManager.pushJson(player, lobbyJson);
+
+        if (sendNewRequestMessage) {
+          PlayerManager.pushMessage(player, message);
+        }
+      }
+    }
   }
 }

@@ -17,6 +17,7 @@ game.resources = [
   {name: "check_green", type:'image', src:'resource/img/ui/check_green.png'},
   {name: "check_gray", type:'image', src:'resource/img/ui/check_gray.png'},
   {name: "send", type:'image', src:'resource/img/ui/send.png'},
+  {name: "clock", type:'image', src:'resource/img/ui/clock.png'},
 
    // Maps
   {name: "indoor_free_tileset", type:'image', src:'resource/img/tile/indoor_free_tileset.png'},

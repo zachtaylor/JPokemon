@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.server.Message;
-import org.jpokemon.trainer.Player;
-
 public class Lobby {
   private static final Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
 
@@ -72,9 +68,7 @@ public class Lobby {
   }
 
   public void addTeam() {
-    if (!open) {
-      teams.add(new ArrayList<String>());
-    }
+    teams.add(new ArrayList<String>());
   }
 
   public void removeTeam(int team) {
@@ -84,27 +78,15 @@ public class Lobby {
   }
 
   public void addPlayer(String otherPlayerName, int team) {
-    Player player = PlayerManager.getPlayer(otherPlayerName);
-
-    if (player == null) {
-      Message message = new Message.Notification("'" + otherPlayerName + "' not found");
-      PlayerManager.pushMessage(PlayerManager.getPlayer(host), message);
-      return;
-    }
-
-    if (!open) {
-      teams.get(team).add(otherPlayerName);
-    }
+    teams.get(team).add(otherPlayerName);
   }
 
   public void accept(String otherPlayerName) {
     responses.put(otherPlayerName, "yes");
-    LobbyService.removeFromPending(host, otherPlayerName);
   }
 
   public void reject(String otherPlayerName) {
     responses.put(otherPlayerName, "no");
-    LobbyService.removeFromPending(host, otherPlayerName);
   }
 
   public List<List<String>> getTeams() {
