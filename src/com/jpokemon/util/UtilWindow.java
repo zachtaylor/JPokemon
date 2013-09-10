@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import com.jpokemon.util.mapeditor.MapEditWindow;
-import com.jpokemon.util.savefilegenerator.SaveGeneratorWindow;
+import com.jpokemon.mapeditor.MapEditWindow;
+import com.jpokemon.savefilegenerator.SaveGeneratorWindow;
 
 public class UtilWindow extends JFrame {
   public UtilWindow() {

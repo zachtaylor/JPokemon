@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 import org.jpokemon.action.requirement.Requirement;
 
-import com.jpokemon.util.mapeditor.MapEditComponent;
+import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.util.ui.selector.EventSelector;
 import com.jpokemon.util.ui.selector.RequirementTypeSelector;
 

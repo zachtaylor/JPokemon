@@ -22,10 +22,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jpokemon.GameWindow;
-import com.jpokemon.JPokemonButton;
 import com.jpokemon.JPokemonMenu;
 import com.jpokemon.JPokemonView;
 import com.jpokemon.util.ui.ImageLoader;
+import com.jpokemon.util.ui.button.JPokemonButton;
 
 public class BattleView extends JPokemonView {
   public BattleView(GameWindow parent) {

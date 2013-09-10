@@ -12,9 +12,8 @@ import javax.swing.JTextField;
 import org.jpokemon.action.SqliteActionBinding;
 import org.jpokemon.action.ActionType;
 
-import com.jpokemon.util.mapeditor.MapEditComponent;
+import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.util.ui.selector.ActionTypeSelector;
-import com.jpokemon.util.ui.selector.AreaSelector;
 import com.jpokemon.util.ui.selector.EventSelector;
 import com.jpokemon.util.ui.selector.ItemSelector;
 import com.jpokemon.util.ui.selector.PokemonInfoSelector;
@@ -42,9 +41,6 @@ public class ActionPanel extends JPanel {
     break;
     case EVENT:
       addEventStuff();
-    break;
-    case TRANSPORT:
-      addTransportStuff();
     break;
     case POKEMON:
       addPokemonStuff();
@@ -115,20 +111,6 @@ public class ActionPanel extends JPanel {
       }
     });
     add(eventSelector);
-  }
-
-  private void addTransportStuff() {
-    areaSelector.reload();
-    try {
-      areaSelector.setSelectedIndex(Integer.parseInt(action.getData()) - 1);
-    } catch (NumberFormatException e) {
-    }
-    areaSelector.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        onAreaSelect();
-      }
-    });
-    add(areaSelector);
   }
 
   private void addPokemonStuff() {
@@ -242,11 +224,6 @@ public class ActionPanel extends JPanel {
     onTextFieldEnter();
   }
 
-  private void onAreaSelect() {
-    dataField.setText(areaSelector.getCurrentElement().getNumber() + "");
-    onTextFieldEnter();
-  }
-
   private void onPokemonSelect() {
     String newData = pokemonSelector.getCurrentElement().getNumber() + " ";
     try {
@@ -282,7 +259,6 @@ public class ActionPanel extends JPanel {
   private JLabel dataExplanationLabel;
   private JTextField dataField = new JTextField();
   private ItemSelector itemSelector = new ItemSelector();
-  private AreaSelector areaSelector = new AreaSelector();
   private EventSelector eventSelector = new EventSelector();
   private StoreSelector storeSelector = new StoreSelector();
   private PokemonInfoSelector pokemonSelector = new PokemonInfoSelector();

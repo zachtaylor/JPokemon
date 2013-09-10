@@ -22,13 +22,6 @@ public class PlayerTest extends TestCase {
     assertEquals(name, player.getName());
   }
 
-  public void testArea() {
-    int area = 80;
-    player.setArea(area);
-
-    assertEquals(area, player.getArea());
-  }
-
   public void testBadge() {
     int badge = 2;
     player.setBadgeCount(badge);

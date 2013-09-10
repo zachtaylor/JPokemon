@@ -9,8 +9,6 @@ public abstract class SqliteActionBinding {
       return new EventAction(getData());
     case ITEM:
       return new ItemAction(getData());
-    case TRANSPORT:
-      return new TransportAction(getData());
     case POKEMON:
       return new PokemonAction();
     case BATTLE:

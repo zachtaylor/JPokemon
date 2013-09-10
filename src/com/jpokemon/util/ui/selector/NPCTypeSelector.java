@@ -1,7 +1,5 @@
 package com.jpokemon.util.ui.selector;
 
-import org.jpokemon.overworld.npc.NPCType;
-
 import com.jpokemon.util.ui.JPokemonSelector;
 
 public class NPCTypeSelector extends JPokemonSelector<NPCType> {
