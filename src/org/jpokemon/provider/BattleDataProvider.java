@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;

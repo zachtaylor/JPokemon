@@ -328,16 +328,16 @@
     closeLobby : function() {
       game.send({
         service : 'lobby',
-        configure : 'openstate',
-        openstate : false
+        configure : 'state',
+        state : 'configure'
       });
     },
 
     openLobby : function() {
       game.send({
         service : 'lobby',
-        configure : 'openstate',
-        openstate : true
+        configure : 'state',
+        state : 'wait'
       });
     },
 
@@ -379,11 +379,11 @@
       this.lobbyView.controls.clear();
 
       if (json.host === game.playerName) {
-        if (json.open) {
+        if (json.state === 'wait') {
           this.lobbyView.controls.add(this.lobbyView.controls.closeButton);
           this.lobbyView.controls.add(this.lobbyView.controls.startButton);
         }
-        else {
+        else if (json.state === 'configure') {
           this.lobbyView.controls.add(this.lobbyView.controls.addTeamButton);
           this.lobbyView.controls.add(this.lobbyView.controls.addPlayerButton);
           this.lobbyView.controls.add(this.lobbyView.controls.openButton);

@@ -37,7 +37,7 @@ public class LobbyService implements JPokemonService {
     Lobby lobby = Lobby.get(player.id());
 
     if (configure.equals("addteam")) {
-      if (lobby.isOpen()) { return; }
+      if (!lobby.isConfiguring()) { return; }
 
       lobby.addTeam();
       PlayerManager.pushJson(player, load(new JSONObject(), player));
@@ -46,7 +46,7 @@ public class LobbyService implements JPokemonService {
       String otherPlayerName = json.getString("name");
       int team = json.getInt("team");
 
-      if (lobby.isOpen()) { return; }
+      if (!lobby.isConfiguring()) { return; }
 
       if (PlayerManager.getPlayer(otherPlayerName) == null) {
         Message message = new Message.Notification("'" + otherPlayerName + "' not found");
@@ -57,16 +57,15 @@ public class LobbyService implements JPokemonService {
       lobby.addPlayer(otherPlayerName, team);
       PlayerManager.pushJson(player, load(new JSONObject(), player));
     }
-    else if (configure.equals("openstate")) {
-      boolean open = json.getBoolean("openstate");
+    else if (configure.equals("state")) {
+      String state = json.getString("state");
 
-      lobby.setOpen(open);
-
-      if (open) {
+      if ("configure".equals(state)) {
+        lobby.setConfiguring(true);
         buildPending(lobby);
         pushLobbyToPlayers(lobby, true);
       }
-      else {
+      else if ("wait".equals(state)) {
         clearPending(lobby);
         PlayerManager.pushJson(player, load(new JSONObject(), player));
       }
@@ -78,7 +77,7 @@ public class LobbyService implements JPokemonService {
     String response = json.getString("respond");
     Lobby lobby = Lobby.get(host);
 
-    if (!lobby.isOpen() || !lobby.getResponses().keySet().contains(player.id())) { return; }
+    if (lobby.isConfiguring() || !lobby.getResponses().keySet().contains(player.id())) { return; }
 
     if (response.equals("accept")) {
       lobby.accept(player.id());
@@ -130,7 +129,7 @@ public class LobbyService implements JPokemonService {
     try {
       json.put("action", "lobby");
       json.put("host", lobby.getHost());
-      json.put("open", lobby.isOpen());
+      json.put("state", lobby.isConfiguring() ? "configure" : "wait");
       json.put("teams", new JSONArray(lobby.getTeams().toString()));
       json.put("responses", new JSONObject(lobby.getResponses()));
     }

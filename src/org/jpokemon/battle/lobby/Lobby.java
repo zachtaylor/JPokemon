@@ -10,7 +10,7 @@ public class Lobby {
   private static final Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
 
   private final String host;
-  private boolean open = false;
+  private boolean configuring = true;
   private final List<List<String>> teams = new ArrayList<List<String>>();
   private final Map<String, String> responses = new HashMap<String, String>();
 
@@ -44,14 +44,14 @@ public class Lobby {
     return host;
   }
 
-  public boolean isOpen() {
-    return open;
+  public boolean isConfiguring() {
+    return configuring;
   }
 
-  public void setOpen(boolean state) {
-    open = state;
+  public void setConfiguring(boolean state) {
+    configuring = state;
 
-    if (open) {
+    if (configuring) {
       responses.clear();
 
       for (List<String> team : teams) {
@@ -72,9 +72,7 @@ public class Lobby {
   }
 
   public void removeTeam(int team) {
-    if (!open) {
-      teams.remove(team);
-    }
+    teams.remove(team);
   }
 
   public void addPlayer(String otherPlayerName, int team) {

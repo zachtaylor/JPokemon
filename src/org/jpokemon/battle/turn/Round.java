@@ -7,9 +7,9 @@ import java.util.Queue;
 
 import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
+import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.Reward;
 import org.jpokemon.battle.slot.Slot;
-import org.jpokemon.server.Message;
 import org.jpokemon.trainer.Player;
 
 public class Round {
@@ -82,7 +82,12 @@ public class Round {
       rewardFrom(slotWithNoPokemon);
 
       _turns.remove(slotWithNoPokemon);
-      _battle.remove(slotWithNoPokemon.trainer());
+
+      if (slotWithNoPokemon.trainer() instanceof Player) {
+        Player p = (Player) slotWithNoPokemon.trainer();
+        BattleActivity ba = (BattleActivity) PlayerManager.getActivity(p);
+        PlayerManager.popActivity((Player) slotWithNoPokemon.trainer(), ba);
+      }
     }
     else if (slotWithFaintedLeader != null) {
       rewardFrom(slotWithFaintedLeader);
@@ -109,8 +114,8 @@ public class Round {
     for (Slot s : _battle) {
       for (String thing : things) {
         if (s.trainer() instanceof Player) {
-//          Message message = new Message("BATTLE", thing, Message.Level.MESSAGE);
-//          PlayerManager.pushMessage((Player) s.trainer(), message);
+          // Message message = new Message("BATTLE", thing, Message.Level.MESSAGE);
+          // PlayerManager.pushMessage((Player) s.trainer(), message);
         }
       }
     }

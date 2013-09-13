@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jpokemon.activity.BattleActivity;
+import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Round;
 import org.jpokemon.battle.turn.Turn;
@@ -44,8 +44,7 @@ public class Battle implements Iterable<Slot> {
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
-    if (contains(trainer))
-      throw new IllegalArgumentException("Duplicate trainer: " + trainer);
+    if (contains(trainer)) throw new IllegalArgumentException("Duplicate trainer: " + trainer);
 
     _slots.put(trainer.id(), new Slot(trainer, team));
   }
@@ -65,14 +64,8 @@ public class Battle implements Iterable<Slot> {
   public void remove(PokemonTrainer trainer) {
     Slot slot = _slots.remove(trainer.id());
 
-    if (slot.party().awake() == 0) {
-      if (slot.trainer() instanceof Player) {
-        BattleActivity.removePlayer(this, (Player) trainer);
-        // TODO : Punish player
-      }
-      else if (slot.trainer() instanceof Trainer) {
-        addTrainerToPlayerHistory(slot.trainer().id());
-      }
+    if (slot.party().awake() == 0 && slot.trainer() instanceof Trainer) {
+      addTrainerToPlayerHistory(slot.trainer().id());
     }
 
     verifyTeamCount();
@@ -106,8 +99,7 @@ public class Battle implements Iterable<Slot> {
 
   private void doTrainerAttacks() {
     for (Slot slot : _slots.values()) {
-      if (slot.trainer() instanceof Player)
-        continue;
+      if (slot.trainer() instanceof Player) continue;
 
       Slot randomSlot;
       do {
@@ -123,7 +115,8 @@ public class Battle implements Iterable<Slot> {
         json.put("trainer", slot.trainer().id());
         json.put("target", randomSlot.trainer().id());
         json.put("move", randomMove);
-      } catch (JSONException e) {
+      }
+      catch (JSONException e) {
         e.printStackTrace();
         return;
       }
@@ -151,7 +144,8 @@ public class Battle implements Iterable<Slot> {
         Slot slot = _slots.remove(slotKey);
 
         if (slot.trainer() instanceof Player) {
-          BattleActivity.removePlayer(this, (Player) slot.trainer());
+          Player p = (Player) slot.trainer();
+          PlayerManager.popActivity(p, (BattleActivity) PlayerManager.getActivity(p));
         }
       }
     }
@@ -161,8 +155,7 @@ public class Battle implements Iterable<Slot> {
     Player p;
 
     for (Slot s : this) {
-      if (!(s.trainer() instanceof Player))
-        continue;
+      if (!(s.trainer() instanceof Player)) continue;
 
       p = (Player) s.trainer();
 
@@ -202,16 +195,14 @@ public class Battle implements Iterable<Slot> {
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * E * R * reps;
 
-    if (damage < 1 && E != 0)
-      damage = 1;
+    if (damage < 1 && E != 0) damage = 1;
 
     return (int) damage;
   }
 
   /**
-   * Calculates effectiveness modifications for a Move from a user to a victim.
-   * Includes Same-Type-Attack-Bonus for user and {@link Type} modifications
-   * between the move and victim.
+   * Calculates effectiveness modifications for a Move from a user to a victim. Includes Same-Type-Attack-Bonus for user and {@link Type} modifications between
+   * the move and victim.
    * 
    * @param move Move to calculate with
    * @param user Pokemon using the move
@@ -272,5 +263,4 @@ public class Battle implements Iterable<Slot> {
 
     return (int) ((((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * STAB * E * R);
   }
-
 }

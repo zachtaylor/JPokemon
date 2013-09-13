@@ -1,9 +1,8 @@
-package org.jpokemon.activity;
+package org.jpokemon.battle;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jpokemon.battle.Battle;
+import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.PlayerManager;
+import org.jpokemon.activity.ServiceException;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.battle.turn.TurnFactory;
@@ -14,13 +13,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BattleActivity implements Activity {
-  private Battle battle;
-  private static final Map<Battle, BattleActivity> battles = new HashMap<Battle, BattleActivity>();
+  Battle battle;
 
   public BattleActivity(PokemonTrainer... trainers) throws ServiceException {
     validate(trainers);
-
-    battles.put(battle, this);
 
     battle = new Battle(trainers);
   }
@@ -31,15 +27,7 @@ public class BattleActivity implements Activity {
 
   @Override
   public boolean onAdd(Player player) {
-    int foundBattles = 0;
-
-    for (Battle b : battles.keySet()) {
-      if (b.contains(player)) {
-        foundBattles++;
-      }
-    }
-
-    return foundBattles == 1;
+    return true;
   }
 
   @Override
@@ -47,17 +35,13 @@ public class BattleActivity implements Activity {
     return true;
   }
 
-  public boolean supportsAction(String action) {
-    return false;
+  public Battle getBattle(PokemonTrainer trainer) {
+    return battle;
   }
 
-  public static void removePlayer(Battle battle, Player player) {
-    BattleActivity activity = battles.get(battle);
-    PlayerManager.popActivity(player, activity);
-
-    if (battle.getPlayerCount() < 1) {
-      battles.remove(battle);
-    }
+  @Override
+  public boolean supportsAction(String action) {
+    return false;
   }
 
   @Override

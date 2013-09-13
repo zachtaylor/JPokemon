@@ -3,9 +3,9 @@ package org.jpokemon.action;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.jpokemon.activity.BattleActivity;
 import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.activity.ServiceException;
+import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
