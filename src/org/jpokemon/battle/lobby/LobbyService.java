@@ -15,7 +15,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LobbyService implements JPokemonService {
+  private static final Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
   private static final Map<String, List<String>> pending = new HashMap<String, List<String>>();
+
+  public void login(Player player) {
+    lobbies.put(player.id(), new Lobby(player.id()));
+    pending.put(player.id(), new ArrayList<String>());
+  }
+
+  public void logout(Player player) {
+    lobbies.remove(player.id());
+    pending.remove(player.id());
+  }
 
   @Override
   public void serve(JSONObject request, Player player) throws ServiceException {
@@ -32,9 +43,40 @@ public class LobbyService implements JPokemonService {
     }
   }
 
+  @Override
+  public JSONObject load(JSONObject request, Player player) {
+    String host = player.id();
+
+    if (request.has("host")) {
+      try {
+        host = request.getString("host");
+      }
+      catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    Lobby lobby = lobbies.get(host);
+    JSONObject json = generateJson(lobby);
+
+    List<String> pendingList;
+    synchronized (pending) {
+      pendingList = pending.get(player.id());
+    }
+
+    try {
+      json.put("pending", new JSONArray(pendingList.toString()));
+    }
+    catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    return json;
+  }
+
   private void configure(JSONObject json, Player player) throws JSONException, ServiceException {
     String configure = json.getString("configure");
-    Lobby lobby = Lobby.get(player.id());
+    Lobby lobby = lobbies.get(player.id());
 
     if (configure.equals("addteam")) {
       if (!lobby.isConfiguring()) { return; }
@@ -48,7 +90,7 @@ public class LobbyService implements JPokemonService {
 
       if (!lobby.isConfiguring()) { return; }
 
-      if (PlayerManager.getPlayer(otherPlayerName) == null) {
+      if (!PlayerManager.playerIsLoggedIn(otherPlayerName)) {
         Message message = new Message.Notification("'" + otherPlayerName + "' not found");
         PlayerManager.pushMessage(player, message);
         return;
@@ -75,7 +117,8 @@ public class LobbyService implements JPokemonService {
   private void respond(JSONObject json, Player player) throws JSONException, ServiceException {
     String host = json.getString("host");
     String response = json.getString("respond");
-    Lobby lobby = Lobby.get(host);
+
+    Lobby lobby = lobbies.get(host);
 
     if (lobby.isConfiguring() || !lobby.getResponses().keySet().contains(player.id())) { return; }
 
@@ -87,40 +130,6 @@ public class LobbyService implements JPokemonService {
     }
 
     pushLobbyToPlayers(lobby, false);
-  }
-
-  @Override
-  public JSONObject load(JSONObject request, Player player) {
-    String host = player.id();
-
-    if (request.has("host")) {
-      try {
-        host = request.getString("host");
-      }
-      catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-
-    Lobby lobby = Lobby.get(host);
-    JSONObject json = generateJson(lobby);
-
-    List<String> pendingList;
-    synchronized (pending) {
-      pendingList = pending.get(player.id());
-    }
-    if (pendingList == null) {
-      pendingList = new ArrayList<String>();
-    }
-
-    try {
-      json.put("pending", new JSONArray(pendingList.toString()));
-    }
-    catch (JSONException e) {
-      e.printStackTrace();
-    }
-
-    return json;
   }
 
   private JSONObject generateJson(Lobby lobby) {
@@ -148,12 +157,8 @@ public class LobbyService implements JPokemonService {
 
         List<String> pendingList;
         synchronized (pending) {
-          if (pending.get(name) == null) {
-            pending.put(name, new ArrayList<String>());
-          }
           pendingList = pending.get(name);
         }
-
         synchronized (pendingList) {
           pendingList.add(lobby.getHost());
         }
@@ -172,15 +177,9 @@ public class LobbyService implements JPokemonService {
         }
 
         List<String> pendingList;
-
         synchronized (pending) {
           pendingList = pending.get(name);
         }
-
-        if (pendingList == null) {
-          continue;
-        }
-
         synchronized (pendingList) {
           pendingList.remove(lobby.getHost());
         }

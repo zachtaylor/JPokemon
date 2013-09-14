@@ -22,6 +22,27 @@ import org.json.JSONObject;
 import org.zachtaylor.jnodalxml.XmlParser;
 
 public class PlayerManager {
+  public static boolean playerIsLoggedIn(String name) {
+    boolean result;
+
+    synchronized (players) {
+      result = players.containsKey(name);
+    }
+
+    return result;
+  }
+
+  public static boolean playerExists(String name) {
+    if (playerIsLoggedIn(name)) { return true; }
+
+    String filename = name + ".jpkmn";
+
+    File file = new File(JPokemonServer.savepath, filename);
+    if (!file.exists() || !file.getName().equals(filename)) { return false; }
+
+    return true;
+  }
+
   public static Player getPlayer(String name) {
     Player player;
 
@@ -39,19 +60,19 @@ public class PlayerManager {
   }
 
   public static Activity getActivity(Player player) {
-    Stack<Activity> stack = activities.get(player);
+    Stack<Activity> stack = activities.get(player.id());
     return stack.peek();
   }
 
   public static void addActivity(Player player, Activity a) {
     if (a.onAdd(player)) {
-      activities.get(player).add(a);
+      activities.get(player.id()).add(a);
     }
   }
 
   public static void popActivity(Player player, Activity a) {
-    if (activities.get(player).peek() == a && a.onRemove(player)) {
-      activities.get(player).pop();
+    if (getActivity(player) == a && a.onRemove(player)) {
+      activities.get(player.id()).pop();
     }
     else {
       throw new IllegalStateException("Popped activity is not most recent");
@@ -66,38 +87,36 @@ public class PlayerManager {
     JPokemonWebSocket webSocket;
 
     synchronized (players) {
-      webSocket = reverseConnections.get(player);
+      webSocket = sockets.get(player.id());
     }
 
     webSocket.sendJson(json);
   }
 
-  public static void dispatchRequest(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
-    Player player;
-
+  public static void dispatch(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
+    String playerId;
     synchronized (players) {
-      player = connections.get(socket);
+      playerId = sessions.get(socket);
     }
 
-    if (player == null) {
-      if (request.has("login")) {
-        login(socket, request);
-      }
-      else {
-        throw new ServiceException("Missing credentials");
-      }
+    if (playerId == null) {
+      login(socket, request);
+      return;
+    }
+
+    Player player = getPlayer(playerId);
+
+    if (request.has("load")) {
+      String serviceName = request.getString("load");
+      JPokemonService service = services.get(serviceName);
+
+      PlayerManager.pushJson(player, service.load(request, player));
     }
     else if (request.has("service")) {
       String serviceName = request.getString("service");
       JPokemonService service = services.get(serviceName);
 
       service.serve(request, player);
-    }
-    else if (request.has("load")) {
-      String serviceName = request.getString("load");
-      JPokemonService service = services.get(serviceName);
-
-      PlayerManager.pushJson(player, service.load(request, player));
     }
     else {
       Activity activity = getActivity(player);
@@ -106,63 +125,78 @@ public class PlayerManager {
   }
 
   public static void close(JPokemonWebSocket socket) {
-    synchronized (players) {
-      Player player = connections.get(socket);
-      if (player == null) { return; }
+    String playerId;
+    Player player;
 
-      File file = new File(JPokemonServer.savepath, player.id() + ".jpkmn");
+    synchronized (players) {
+      playerId = sessions.get(socket);
+      if (playerId == null) { return; }
+
+      player = getPlayer(playerId);
+      File file = new File(JPokemonServer.savepath, playerId + ".jpkmn");
 
       try {
         Writer writer = new BufferedWriter(new PrintWriter(file));
         writer.write(player.toXml().printToString(0, "\t"));
         writer.close();
-      } catch (IOException e) {
+      }
+      catch (IOException e) {
         e.printStackTrace();
       }
 
-      connections.remove(socket);
-      reverseConnections.remove(player);
-      players.remove(player.id());
-
-      while (!activities.get(player).isEmpty()) {
-        PlayerManager.popActivity(player, PlayerManager.getActivity(player));
-      }
-      activities.remove(player); // doesn't need synchronous but oh well :)
+      sessions.remove(socket);
+      sockets.remove(playerId);
+      players.remove(playerId);
     }
+
+    for (JPokemonService service : services.values()) {
+      service.logout(player);
+    }
+
+    while (!activities.get(playerId).isEmpty()) {
+      PlayerManager.popActivity(player, PlayerManager.getActivity(player));
+    }
+    activities.remove(playerId);
   }
 
   private static void login(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
+    if (!request.has("login")) { throw new ServiceException("No credentials found"); }
+
     String name = request.getString("login");
 
-    if (players.keySet().contains(name)) { throw new ServiceException("File already loaded"); }
-    File file = new File(JPokemonServer.savepath, name + ".jpkmn");
-    if (!file.exists()) { throw new ServiceException("Save file not found"); }
+    if (playerIsLoggedIn(name)) { throw new ServiceException("File already loaded"); }
+    if (!playerExists(name)) { throw new ServiceException("Save file not found"); }
 
     Player player = new Player(name);
+    String filename = name + ".jpkmn";
+    File file = new File(JPokemonServer.savepath, filename);
 
     try {
       player.loadXML(XmlParser.parse(file).get(0));
-    } catch (IndexOutOfBoundsException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
+    }
+    catch (FileNotFoundException e) {
     }
 
     synchronized (players) {
       players.put(name, player);
-      connections.put(socket, player);
-      reverseConnections.put(player, socket);
+      sockets.put(name, socket);
+      sessions.put(socket, name);
     }
 
-    activities.put(player, new Stack<Activity>());
+    for (JPokemonService service : services.values()) {
+      service.login(player);
+    }
+
+    activities.put(name, new Stack<Activity>());
     addActivity(player, OverworldActivity.getInstance());
   }
 
+  private static Map<String, JPokemonService> services;
+
   /** Lock on players for players, connections, reverseConnections */
   private static volatile Map<String, Player> players = new HashMap<String, Player>();
-  private static volatile Map<JPokemonWebSocket, Player> connections = new HashMap<JPokemonWebSocket, Player>();
-  private static volatile Map<Player, JPokemonWebSocket> reverseConnections = new HashMap<Player, JPokemonWebSocket>();
+  private static volatile Map<String, JPokemonWebSocket> sockets = new HashMap<String, JPokemonWebSocket>();
+  private static volatile Map<JPokemonWebSocket, String> sessions = new HashMap<JPokemonWebSocket, String>();
 
-  private static Map<Player, Stack<Activity>> activities = new HashMap<Player, Stack<Activity>>();
-
-  private static Map<String, JPokemonService> services;
+  private static Map<String, Stack<Activity>> activities = new HashMap<String, Stack<Activity>>();
 }

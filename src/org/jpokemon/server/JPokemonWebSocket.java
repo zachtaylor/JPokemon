@@ -24,7 +24,7 @@ public class JPokemonWebSocket implements WebSocket.OnTextMessage {
   @Override
   public void onMessage(String arg0) {
     try {
-      PlayerManager.dispatchRequest(this, new JSONObject(arg0));
+      PlayerManager.dispatch(this, new JSONObject(arg0));
     }
     catch (JSONException e) {
       e.printStackTrace();

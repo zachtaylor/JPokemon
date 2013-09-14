@@ -17,6 +17,14 @@ import org.json.JSONObject;
 public class FriendsService implements JPokemonService {
   private static final Map<String, List<String>> pending = new HashMap<String, List<String>>();
 
+  public void login(Player player) {
+    pending.put(player.id(), new ArrayList<String>());
+  }
+
+  public void logout(Player player) {
+    pending.remove(player.id());
+  }
+
   @Override
   public void serve(JSONObject json, Player player) throws ServiceException {
     try {
@@ -24,10 +32,16 @@ public class FriendsService implements JPokemonService {
         configure(json, player);
         PlayerManager.pushJson(player, generateJson(player));
       }
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
       e.printStackTrace();
     }
 
+  }
+
+  @Override
+  public JSONObject load(JSONObject request, Player player) {
+    return generateJson(player);
   }
 
   private void configure(JSONObject json, Player player) throws JSONException {
@@ -39,91 +53,76 @@ public class FriendsService implements JPokemonService {
     if (otherPlayer.getBlocked().contains(player.id())) { return; }
 
     if (configure.equals("add")) {
-      List<String> pendingList;
-      synchronized (pending) {
-        if (pending.get(otherPlayerName) == null) {
-          pending.put(otherPlayerName, new ArrayList<String>());
-        }
-        pendingList = pending.get(otherPlayerName);
-      }
-
-      synchronized (pendingList) {
-        pendingList.add(player.id());
-      }
-
-      PlayerManager.pushMessage(player, new Message.Notification("Friend request sent"));
-      PlayerManager.pushMessage(otherPlayer, new Message.Notification("New friend request"));
-      PlayerManager.pushJson(otherPlayer, generateJson(otherPlayer));
+      sendFriendRequest(player, otherPlayer);
     }
     else if (configure.equals("accept")) {
-      List<String> pendingList;
-      synchronized (pending) {
-        pendingList = pending.get(player.id());
-      }
-
-      if (pendingList == null) { return; }
-
-      synchronized (pendingList) {
-        if (!pendingList.contains(otherPlayerName)) { return; }
-
-        player.addFriend(otherPlayerName);
-        otherPlayer.addFriend(player.getName());
-
-        pendingList.remove(otherPlayerName);
-      }
-
-      PlayerManager.pushMessage(player, new Message.Notification("Friend request accepted"));
-      PlayerManager.pushJson(player, generateJson(player));
-      PlayerManager.pushMessage(otherPlayer, new Message.Notification("Friend request accepted"));
-      PlayerManager.pushJson(otherPlayer, generateJson(otherPlayer));
+      acceptFriendRequest(player, otherPlayer);
     }
     else if (configure.equals("block")) {
-      player.addBlocked(otherPlayerName);
-      otherPlayer.removeFriend(player.getName());
-
-      PlayerManager.pushMessage(player, new Message.Notification("Player blocked"));
+      blockOtherPlayer(player, otherPlayer);
     }
   }
 
-  @Override
-  public JSONObject load(JSONObject request, Player player) {
-    return generateJson(player);
+  private void sendFriendRequest(Player player, Player otherPlayer) {
+    List<String> pendingList;
+    synchronized (pending) {
+      pendingList = pending.get(otherPlayer.id());
+    }
+
+    synchronized (pendingList) {
+      pendingList.add(player.id());
+    }
+
+    PlayerManager.pushMessage(player, new Message.Notification("Friend request sent"));
+    PlayerManager.pushMessage(otherPlayer, new Message.Notification("New friend request"));
+    PlayerManager.pushJson(otherPlayer, generateJson(otherPlayer));
+  }
+
+  private void acceptFriendRequest(Player player, Player otherPlayer) {
+    List<String> pendingList;
+    synchronized (pending) {
+      pendingList = pending.get(player.id());
+    }
+
+    synchronized (pendingList) {
+      if (!pendingList.contains(otherPlayer.id())) { return; }
+
+      player.addFriend(otherPlayer.id());
+      otherPlayer.addFriend(player.id());
+
+      pendingList.remove(otherPlayer.id());
+    }
+
+    Message message = new Message.Notification("Friend request accepted");
+    PlayerManager.pushMessage(player, message);
+    PlayerManager.pushMessage(otherPlayer, message);
+    PlayerManager.pushJson(otherPlayer, generateJson(otherPlayer));
+  }
+
+  private void blockOtherPlayer(Player player, Player otherPlayer) {
+    player.addBlocked(otherPlayer.id());
+    otherPlayer.removeFriend(player.id());
+
+    PlayerManager.pushMessage(player, new Message.Notification("Player blocked"));
   }
 
   private JSONObject generateJson(Player player) {
     JSONObject json = new JSONObject();
-    JSONArray friendsArray = new JSONArray();
-    JSONArray blockedArray = new JSONArray();
-    JSONArray pendingArray = new JSONArray();
 
     try {
       json.put("action", "friends");
-
-      for (String friend : player.getFriends()) {
-        friendsArray.put(friend);
-      }
-      json.put("friends", friendsArray);
-
-      for (String blocked : player.getBlocked()) {
-        blockedArray.put(blocked);
-      }
-      json.put("blocked", blockedArray);
+      json.put("friends", new JSONArray(player.getFriends()));
+      json.put("blocked", new JSONArray(player.getBlocked()));
 
       List<String> pendingList;
       synchronized (pending) {
         pendingList = pending.get(player.id());
       }
-      if (pendingList == null) {
-        pendingList = new ArrayList<String>();
-      }
-
       synchronized (pendingList) {
-        for (String pending : pendingList) {
-          pendingArray.put(pending);
-        }
+        json.put("pending", new JSONArray(pendingList));
       }
-      json.put("pending", pendingArray);
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
     }
 
     return json;

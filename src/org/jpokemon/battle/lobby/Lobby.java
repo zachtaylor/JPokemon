@@ -7,37 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Lobby {
-  private static final Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
-
   private final String host;
   private boolean configuring = true;
   private final List<List<String>> teams = new ArrayList<List<String>>();
   private final Map<String, String> responses = new HashMap<String, String>();
 
-  private Lobby(String h) {
+  public Lobby(String h) {
     host = h;
     reset();
-  }
-
-  public static Lobby get(String playerId) {
-    Lobby lobby;
-
-    synchronized (lobbies) {
-      lobby = lobbies.get(playerId);
-
-      if (lobby == null) {
-        lobby = new Lobby(playerId);
-        lobbies.put(playerId, lobby);
-      }
-    }
-
-    return lobby;
-  }
-
-  public static void clear(String playerId) {
-    synchronized (lobbies) {
-      lobbies.remove(playerId);
-    }
   }
 
   public String getHost() {
