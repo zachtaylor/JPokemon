@@ -3,6 +3,7 @@ package org.jpokemon.overworld;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -29,6 +30,8 @@ public class Map {
   private int width, height;
   private Entity[][] entities;
   private List<WildPokemon> wildPokemon = new ArrayList<WildPokemon>();
+  private List<String> players = new ArrayList<String>();
+
   // used internally
   private int tilewidth, tileheight, entityz;
 
@@ -53,7 +56,7 @@ public class Map {
   public int getEntityZ() {
     return entityz;
   }
-  
+
   public Entity getEntityAt(int x, int y) {
     return entities[x][y];
   }
@@ -77,6 +80,18 @@ public class Map {
     }
 
     return null;
+  }
+
+  public void addPlayer(String playerId) {
+    players.add(playerId);
+  }
+
+  public List<String> getPlayers() {
+    return Collections.unmodifiableList(players);
+  }
+
+  public void removePlayer(String playerId) {
+    players.remove(playerId);
   }
 
   public void reload() {
@@ -184,8 +199,9 @@ public class Map {
     // round down
     int x = node.getIntAttribute("x") / tilewidth;
     int y = node.getIntAttribute("y") / tileheight;
-    // round up edge as displayed if it's there
     int w = 1, h = 1;
+
+    // round up edge as displayed if it's there
     if (node.hasAttribute("width")) {
       w += ((node.getIntAttribute("x") - x * tilewidth) + node.getIntAttribute("width")) / tilewidth;
     }
@@ -203,7 +219,7 @@ public class Map {
           continue;
         }
 
-        entities[x + i][y + j] = solidPlaceholder;
+        entities[x + i][y + j] = entity;
       }
     }
   }

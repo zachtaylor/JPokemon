@@ -181,24 +181,28 @@
         if (me.input.isKeyPressed('left')) {
           this.lastInput = new Date().getTime();
           game.send({
+            service : 'overworld',
             move: 'left'
           });
         }
         else if (me.input.isKeyPressed('right')) {
           this.lastInput = new Date().getTime();
           game.send({
+            service : 'overworld',
             move: 'right'
           });
         }
         else if (me.input.isKeyPressed('up')) {
           this.lastInput = new Date().getTime();
           game.send({
+            service : 'overworld',
             move: 'up'
           });
         }
         else if (me.input.isKeyPressed('down')) {
           this.lastInput = new Date().getTime();
           game.send({
+            service : 'overworld',
             move: 'down'
           });
         }

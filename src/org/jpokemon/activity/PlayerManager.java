@@ -12,6 +12,7 @@ import java.util.Stack;
 
 import org.jpokemon.battle.lobby.LobbyService;
 import org.jpokemon.extra.FriendsService;
+import org.jpokemon.overworld.OverworldService;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.JPokemonService;
 import org.jpokemon.server.JPokemonWebSocket;
@@ -55,6 +56,7 @@ public class PlayerManager {
 
   public static void bootstrapServices() {
     services = new HashMap<String, JPokemonService>();
+    services.put("overworld", new OverworldService());
     services.put("lobby", new LobbyService());
     services.put("friends", new FriendsService());
   }
@@ -84,6 +86,8 @@ public class PlayerManager {
   }
 
   public static void pushJson(Player player, JSONObject json) {
+    if (json == null) { return; }
+
     JPokemonWebSocket webSocket;
 
     synchronized (players) {
@@ -188,7 +192,6 @@ public class PlayerManager {
     }
 
     activities.put(name, new Stack<Activity>());
-    addActivity(player, OverworldActivity.getInstance());
   }
 
   private static Map<String, JPokemonService> services;
