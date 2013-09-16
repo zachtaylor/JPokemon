@@ -67,18 +67,21 @@ public class PlayerManager {
   }
 
   public static void addActivity(Player player, Activity a) {
-    if (a.onAdd(player)) {
+    try {
+      a.onAdd(player);
       activities.get(player.id()).add(a);
+    }
+    catch (ServiceException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
   public static void popActivity(Player player, Activity a) {
-    if (getActivity(player) == a && a.onRemove(player)) {
-      activities.get(player.id()).pop();
-    }
-    else {
-      throw new IllegalStateException("Popped activity is not most recent");
-    }
+    if (getActivity(player) != a) { throw new IllegalStateException("Popped activity is not most recent"); }
+
+    activities.get(player.id()).pop();
+    getActivity(player).onReturn(a, player);
   }
 
   public static void pushMessage(Player player, Message message) {
@@ -116,15 +119,16 @@ public class PlayerManager {
 
       PlayerManager.pushJson(player, service.load(request, player));
     }
+    else if (getActivity(player) != null) {
+      Activity a = getActivity(player);
+
+      a.serve(request, player);
+    }
     else if (request.has("service")) {
       String serviceName = request.getString("service");
       JPokemonService service = services.get(serviceName);
 
       service.serve(request, player);
-    }
-    else {
-      Activity activity = getActivity(player);
-      activity.handleRequest(player, request);
     }
   }
 

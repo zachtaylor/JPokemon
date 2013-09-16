@@ -84,8 +84,8 @@ public class Battle implements Iterable<Slot> {
     return _slots.values().iterator();
   }
 
-  public Turn getTurn(Slot slot) {
-    return _round.getTurn(slot);
+  public Turn getTurn(PokemonTrainer trainer) {
+    return _round.getTurn(getSlot(trainer.id()));
   }
 
   private void executeRound() {
