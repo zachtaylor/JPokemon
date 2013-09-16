@@ -1,5 +1,6 @@
 package org.jpokemon.activity;
 
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONObject;
 

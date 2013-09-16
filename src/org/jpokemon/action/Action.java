@@ -1,6 +1,6 @@
 package org.jpokemon.action;
 
-import org.jpokemon.activity.ServiceException;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 
 public abstract class Action {

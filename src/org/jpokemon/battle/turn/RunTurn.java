@@ -1,9 +1,9 @@
 package org.jpokemon.battle.turn;
 
-import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;
 
 public class RunTurn extends Turn {

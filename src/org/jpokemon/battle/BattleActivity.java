@@ -1,8 +1,8 @@
 package org.jpokemon.battle;
 
 import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.ServiceException;
+import org.jpokemon.server.PlayerManager;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONObject;
 

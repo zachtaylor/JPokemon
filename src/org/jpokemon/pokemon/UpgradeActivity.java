@@ -1,52 +1,38 @@
-package org.jpokemon.activity;
+package org.jpokemon.pokemon;
 
-import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.activity.Activity;
 import org.jpokemon.pokemon.stat.StatType;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UpgradeActivity implements Activity {
-  private static UpgradeActivity instance = new UpgradeActivity();
-
-  private UpgradeActivity() {
-  }
-
-  public static UpgradeActivity getInstance() {
-    return instance;
+  @Override
+  public void onAdd(Player player) {
+    // TODO Auto-generated method stub
   }
 
   @Override
-  public boolean onAdd(Player player) {
-    // TODO : Verify location, maybe
-    return true;
+  public void onReturn(Activity activity, Player player) {
+    // TODO Auto-generated method stub
   }
 
   @Override
-  public boolean onRemove(Player player) {
-    return true;
-  }
-
-  @Override
-  public boolean supportsAction(String action) {
-    return false;
-  }
-
-  @Override
-  public void handleRequest(Player player, JSONObject request) throws JSONException, ServiceException {
+  public void serve(JSONObject request, Player player) throws ServiceException {
     Pokemon pokemon = getPokemon(player, request);
 
     try {
       JSONArray stats = request.getJSONArray("stats");
+
       for (int i = 0; i < stats.length(); i++) {
         StatType s = StatType.valueOf(stats.getJSONObject(i).getString("stat"));
         pokemon.statPoints(s, stats.getJSONObject(i).getInt("amount"));
       }
-    } catch (JSONException e) {
     }
-
-    // PlayerManager.clearActivity(player);
+    catch (JSONException e) {
+    }
   }
 
   private static Pokemon getPokemon(Player player, JSONObject request) throws ServiceException {
@@ -55,13 +41,15 @@ public class UpgradeActivity implements Activity {
 
     try {
       pokemonIndex = request.getInt("pokemon");
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
       throw new ServiceException("Pokemon index not provided");
     }
 
     try {
       pokemon = player.party().get(pokemonIndex);
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       throw new ServiceException("Pokemon index " + pokemonIndex + " not found");
     }
 

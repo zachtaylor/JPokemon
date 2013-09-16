@@ -1,8 +1,8 @@
 package org.jpokemon.action;
 
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.StoreActivity;
 import org.jpokemon.item.Store;
+import org.jpokemon.item.StoreActivity;
+import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;
 
 public class StoreAction extends Action {

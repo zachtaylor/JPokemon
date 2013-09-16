@@ -3,8 +3,6 @@ package org.jpokemon.server;
 import java.io.IOException;
 
 import org.eclipse.jetty.websocket.WebSocket;
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.ServiceException;
 import org.json.JSONException;
 import org.json.JSONObject;
 

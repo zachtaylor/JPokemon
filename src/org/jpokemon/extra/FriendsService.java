@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.ServiceException;
 import org.jpokemon.server.JPokemonService;
 import org.jpokemon.server.Message;
+import org.jpokemon.server.PlayerManager;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONArray;
 import org.json.JSONException;

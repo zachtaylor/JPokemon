@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.Reward;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;
 
 public class Round {

@@ -1,4 +1,4 @@
-package org.jpokemon.activity;
+package org.jpokemon.server;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,13 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.jpokemon.activity.Activity;
 import org.jpokemon.battle.lobby.LobbyService;
 import org.jpokemon.extra.FriendsService;
 import org.jpokemon.overworld.OverworldService;
-import org.jpokemon.server.JPokemonServer;
-import org.jpokemon.server.JPokemonService;
-import org.jpokemon.server.JPokemonWebSocket;
-import org.jpokemon.server.Message;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;

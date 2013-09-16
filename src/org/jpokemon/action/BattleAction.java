@@ -3,10 +3,11 @@ package org.jpokemon.action;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.ServiceException;
+import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.server.JPokemonServer;
+import org.jpokemon.server.PlayerManager;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.Trainer;
 import org.zachtaylor.jnodalxml.XmlNode;
@@ -25,7 +26,8 @@ public class BattleAction extends Action {
 
     try {
       trainerData = XmlParser.parse(new File(filePath)).get(0);
-    } catch (FileNotFoundException e) {
+    }
+    catch (FileNotFoundException e) {
       throw new ServiceException("Trainer file not found: " + getData());
     }
 
@@ -33,7 +35,7 @@ public class BattleAction extends Action {
     trainer.loadXml(trainerData);
 
     if (!player.record().getTrainer(trainer.id())) {
-      PlayerManager.addActivity(player, new BattleActivity(player, trainer));
+      PlayerManager.addActivity(player, new BattleActivity(new Battle(player, trainer)));
     }
   }
 }

@@ -1,4 +1,4 @@
-package org.jpokemon.activity;
+package org.jpokemon.server;
 
 public class ServiceException extends Exception {
   public ServiceException(String message) {

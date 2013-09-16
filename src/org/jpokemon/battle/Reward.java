@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.action.ActionSet;
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.ServiceException;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.server.Message;
+import org.jpokemon.server.PlayerManager;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;

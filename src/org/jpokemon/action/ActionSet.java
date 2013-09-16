@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.jpokemon.action.requirement.Requirement;
 import org.jpokemon.action.requirement.RequirementSet;
-import org.jpokemon.activity.ServiceException;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 
 public class ActionSet {

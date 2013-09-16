@@ -1,7 +1,7 @@
 package org.jpokemon.action;
 
-import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.server.Message;
+import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;
 
 public class SpeechAction extends Action {

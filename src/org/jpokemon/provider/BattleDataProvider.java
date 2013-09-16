@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jpokemon.activity.Activity;
-import org.jpokemon.activity.PlayerManager;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
@@ -13,6 +12,7 @@ import org.jpokemon.item.Item;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.storage.PokemonStorageUnit;
+import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.json.JSONArray;

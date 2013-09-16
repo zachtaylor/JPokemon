@@ -2,9 +2,9 @@ package org.jpokemon.overworld;
 
 import java.util.HashMap;
 
-import org.jpokemon.activity.PlayerManager;
-import org.jpokemon.activity.ServiceException;
 import org.jpokemon.server.JPokemonService;
+import org.jpokemon.server.PlayerManager;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
