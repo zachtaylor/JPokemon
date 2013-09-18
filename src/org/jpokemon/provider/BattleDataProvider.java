@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.jpokemon.activity.Activity;
 import org.jpokemon.battle.Battle;
-import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.item.Bag;
 import org.jpokemon.item.Item;
@@ -34,15 +33,17 @@ public class BattleDataProvider extends JPokemonVisitor {
 
     try {
       bdg.visit(bdg.player_context = player);
-    } catch (JSONException e) {
+    }
+    catch (JSONException e) {
     }
 
     return bdg.data;
   }
 
-  /* NB: Call order: BattleServer.BattleServer > ActivityServer.ActivityServer >
-   * BattleServer.visit_player (context_owner set) > ActivityServer.visit_player
-   * etc... > visit_battle etc... */
+  /*
+   * NB: Call order: BattleServer.BattleServer > ActivityServer.ActivityServer > BattleServer.visit_player (context_owner set) > ActivityServer.visit_player
+   * etc... > visit_battle etc...
+   */
   @Override
   public void visit(Player player) throws JSONException {
     trainer_json = new JSONObject();
@@ -57,12 +58,13 @@ public class BattleDataProvider extends JPokemonVisitor {
 
     try {
       super.visit(player);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
     }
 
     if (current_slot == null) {
       Activity activity = PlayerManager.getActivity(player);
-      visit_battle(((BattleActivity) activity).getBattle());
+      visit_battle((Battle) activity);
     }
   }
 
@@ -73,7 +75,8 @@ public class BattleDataProvider extends JPokemonVisitor {
 
       try {
         super.visit(bag);
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
       }
     }
   }
@@ -111,7 +114,8 @@ public class BattleDataProvider extends JPokemonVisitor {
 
     try {
       super.visit_party_leader(pokemon);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
     }
   }
 
@@ -121,7 +125,8 @@ public class BattleDataProvider extends JPokemonVisitor {
 
     try {
       super.visit_party(party);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
     }
 
     trainer_json.put("pokemon", party_json);
@@ -144,7 +149,8 @@ public class BattleDataProvider extends JPokemonVisitor {
 
       try {
         super.visit(pokemon);
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
       }
     }
 

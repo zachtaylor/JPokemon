@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.jpokemon.battle.Battle;
-import org.jpokemon.battle.BattleActivity;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.PlayerManager;
 import org.jpokemon.server.ServiceException;
@@ -35,7 +34,7 @@ public class BattleAction extends Action {
     trainer.loadXml(trainerData);
 
     if (!player.record().getTrainer(trainer.id())) {
-      PlayerManager.addActivity(player, new BattleActivity(new Battle(player, trainer)));
+      PlayerManager.addActivity(player, new Battle(player, trainer));
     }
   }
 }

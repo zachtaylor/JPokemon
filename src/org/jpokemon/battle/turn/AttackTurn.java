@@ -7,36 +7,36 @@ import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
 
 public class AttackTurn extends Turn {
-  public AttackTurn(Slot user, Slot target, Move move) {
-    super(user, target);
+  public AttackTurn(Battle b, Slot user, Slot target, Move move) {
+    super(b, user, target);
     _move = move;
     _executions = 0;
 
-    addMessage(user.leader().name() + " used " + move.name() + "!");
+    battle().log(user.trainer().getName() + "'s " + user.leader().name() + " used " + move.name() + "!");
   }
 
   @Override
-  protected void doExecute() {
+  public void execute() {
     Pokemon leader = slot().leader();
 
     _executions++;
 
     if (_executions == 1) {
       if (!leader.canAttack()) {
-        addMessage(leader.condition());
+        battle().log(leader.condition());
         return;
       }
       else if (!_move.enabled()) {
-        addMessage("Move is not enabled!");
+        battle().log("Move is not enabled!");
         return;
       }
       else if (!_move.use()) {
-        addMessage("It missed.");
+        battle().log("It missed.");
 
         if (_move.hurtUserOnMiss()) {
           int d = Battle.computeDamage(leader, _move, target().leader()) / 8;
           slot().takeDamage(d);
-          addMessage(leader.name() + " took " + d + " recoil damage!");
+          battle().log(leader.name() + " took " + d + " recoil damage!");
         }
 
         return;
@@ -44,29 +44,29 @@ public class AttackTurn extends Turn {
     }
 
     if (_move.style() == MoveStyle.DELAYNEXT && _executions != 1) {
-      addMessage("Resting this turn");
+      battle().log("Resting this turn");
       return;
     }
     if (_move.style() == MoveStyle.DELAYBEFORE && _executions != _move.turns()) {
-      addMessage("Resting this turn");
+      battle().log("Resting this turn");
       return;
     }
     if (_move.style() == MoveStyle.OHKO) {
       int levelDiff = leader.level() - target().leader().level();
 
       if (levelDiff < 0 || (levelDiff + 30.0) / 100.0 <= Math.random()) {
-        addMessage("It missed.");
+        battle().log("It missed.");
         return;
       }
     }
     if (_move.style() == MoveStyle.MISC) { // TODO MoveStyle.MISC execution
-      addMessage("This doesn't work yet. Sorry about that!");
+      battle().log("This doesn't work yet. Sorry about that!");
       return;
     }
 
     if (_move.doesDamage()) {
       calculateDamage();
-      addMessage(target().leader().name() + " took " + _damage + " damage!");
+      battle().log(target().leader().name() + " took " + _damage + " damage!");
       target().takeDamage(_damage);
     }
 
@@ -80,15 +80,7 @@ public class AttackTurn extends Turn {
 
   @Override
   public int compareTo(Turn t) {
-    if (t._needSwap) {
-      if (_needSwap)
-        return 0;
-
-      return 1;
-    }
-
-    if (t instanceof AttackTurn)
-      return t.slot().leader().speed() - slot().leader().speed();
+    if (t instanceof AttackTurn) return t.slot().leader().speed() - slot().leader().speed();
 
     return 1;
   }

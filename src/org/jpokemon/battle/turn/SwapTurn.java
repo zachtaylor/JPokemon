@@ -1,20 +1,34 @@
 package org.jpokemon.battle.turn;
 
+import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 
 public class SwapTurn extends Turn {
-  public SwapTurn(Slot user, Slot target, int swapIndex) {
-    super(user, target);
+  private int _swapIndex;
+
+  public SwapTurn(Battle b, Slot user, Slot target, int swapIndex) {
+    super(b, user, target);
     _swapIndex = swapIndex;
   }
 
+  public static SwapTurn autoSwapTurn(Battle b, Slot user) {
+    if (user.party().awake() == 0) { return null; }
+
+    int autoSwapIndex = 0;
+    while (autoSwapIndex < user.party().size() && !user.party().get(autoSwapIndex).awake()) {
+      autoSwapIndex++;
+    }
+
+    return new SwapTurn(b, user, user, autoSwapIndex);
+  }
+
   @Override
-  public void doExecute() {
+  public void execute() {
     slot().party().swap(0, _swapIndex);
 
     String trainerName = slot().trainer().getName();
     String leaderName = slot().leader().name();
-    addMessage(trainerName + " sent out " + leaderName);
+    battle().log(trainerName + " sent out " + leaderName);
   }
 
   @Override
@@ -24,18 +38,9 @@ public class SwapTurn extends Turn {
 
   @Override
   public int compareTo(Turn turn) {
-    if (turn instanceof RunTurn)
-      return 1;
-    if (turn._needSwap || turn instanceof SwapTurn)
-      return 0;
+    if (turn instanceof RunTurn) return 1;
+    if (turn instanceof SwapTurn) return 0;
 
     return -1;
   }
-
-  @Override
-  public void forceSwap() {
-    // No need for _needSwap. Skipping call to super.changeToSwap
-  }
-
-  private int _swapIndex;
 }
