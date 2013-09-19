@@ -15,6 +15,7 @@ var game = (function() {
     }
     else {
       console.error("No menu defined for action : " + action);
+      console.log(json);
     }
   };
 

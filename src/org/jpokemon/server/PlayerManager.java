@@ -58,6 +58,10 @@ public class PlayerManager {
     services.put("friends", new FriendsService());
   }
 
+  public static boolean hasActivity(Player player) {
+    return !activities.get(player.id()).isEmpty();
+  }
+
   public static Activity getActivity(Player player) {
     Stack<Activity> stack = activities.get(player.id());
     return stack.peek();
@@ -65,8 +69,8 @@ public class PlayerManager {
 
   public static void addActivity(Player player, Activity a) {
     try {
-      a.onAdd(player);
       activities.get(player.id()).add(a);
+      a.onAdd(player);
     }
     catch (ServiceException e) {
       // TODO Auto-generated catch block
@@ -78,7 +82,10 @@ public class PlayerManager {
     if (getActivity(player) != a) { throw new IllegalStateException("Popped activity is not most recent"); }
 
     activities.get(player.id()).pop();
-    getActivity(player).onReturn(a, player);
+
+    if (hasActivity(player)) {
+      getActivity(player).onReturn(a, player);
+    }
   }
 
   public static void pushMessage(Player player, Message message) {
@@ -116,7 +123,7 @@ public class PlayerManager {
 
       PlayerManager.pushJson(player, service.load(request, player));
     }
-    else if (getActivity(player) != null) {
+    else if (hasActivity(player)) {
       Activity a = getActivity(player);
 
       a.serve(request, player);
@@ -158,7 +165,7 @@ public class PlayerManager {
       service.logout(player);
     }
 
-    while (!activities.get(playerId).isEmpty()) {
+    while (hasActivity(player)) {
       PlayerManager.popActivity(player, PlayerManager.getActivity(player));
     }
     activities.remove(playerId);

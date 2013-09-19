@@ -11,8 +11,6 @@ public class AttackTurn extends Turn {
     super(b, user, target);
     _move = move;
     _executions = 0;
-
-    battle().log(user.trainer().getName() + "'s " + user.leader().name() + " used " + move.name() + "!");
   }
 
   @Override
@@ -42,6 +40,8 @@ public class AttackTurn extends Turn {
         return;
       }
     }
+
+    battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " used " + _move.name() + "!");
 
     if (_move.style() == MoveStyle.DELAYNEXT && _executions != 1) {
       battle().log("Resting this turn");

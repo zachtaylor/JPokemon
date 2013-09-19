@@ -28,7 +28,7 @@ public class Lobby {
   public void setConfiguring(boolean state) {
     configuring = state;
 
-    if (configuring) {
+    if (!configuring) {
       responses.clear();
 
       for (List<String> team : teams) {

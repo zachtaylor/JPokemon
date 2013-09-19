@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jpokemon.battle.Battle;
 import org.jpokemon.server.JPokemonService;
 import org.jpokemon.server.Message;
 import org.jpokemon.server.PlayerManager;
@@ -103,13 +104,19 @@ public class LobbyService implements JPokemonService {
       String state = json.getString("state");
 
       if ("configure".equals(state)) {
+        clearPending(lobby);
         lobby.setConfiguring(true);
-        buildPending(lobby);
-        pushLobbyToPlayers(lobby, true);
+        PlayerManager.pushJson(player, load(new JSONObject(), player));
       }
       else if ("wait".equals(state)) {
+        buildPending(lobby);
+        lobby.setConfiguring(false);
+        pushLobbyToPlayers(lobby, true);
+      }
+      else if ("start".equals(state)) {
         clearPending(lobby);
-        PlayerManager.pushJson(player, load(new JSONObject(), player));
+        startBattle(lobby);
+        lobby.reset();
       }
     }
   }
@@ -187,6 +194,29 @@ public class LobbyService implements JPokemonService {
         Player player = PlayerManager.getPlayer(name);
         PlayerManager.pushJson(player, load(new JSONObject(), player));
       }
+    }
+  }
+
+  private void startBattle(Lobby lobby) {
+    Battle battle = new Battle();
+    Map<String, String> responses = lobby.getResponses();
+    List<Player> playersInBattle = new ArrayList<Player>();
+
+    int teamNumber = 0;
+    for (List<String> teamMembers : lobby.getTeams()) {
+      for (String teamMember : teamMembers) {
+        if ("yes".equals(responses.get(teamMember))) {
+          Player player = PlayerManager.getPlayer(teamMember);
+          battle.addTrainer(player, teamNumber);
+          playersInBattle.add(player);
+        }
+      }
+
+      teamNumber++;
+    }
+
+    for (Player player : playersInBattle) {
+      PlayerManager.addActivity(player, battle);
     }
   }
 

@@ -358,7 +358,13 @@
     },
 
     startBattle : function() {
-      console.log("todo");
+      game.send({
+        service : 'lobby',
+        configure : 'state',
+        state : 'start'
+      });
+
+      this.hide();
     },
 
     showLobbyDetail : function(name) {
@@ -408,7 +414,7 @@
           var image;
           var onClick;
 
-          if (json.open) {
+          if (json.state === 'wait') {
             if (json.responses[json.teams[team][name]] === 'yes') {
               image = 'check_green';
             }
@@ -540,4 +546,48 @@
       this.parent();
     }
   });
+
+  me.menu.SelectMoveWindow = me.menu.Window.extend({
+    init : function() {
+      this.parent(205, 165);
+    },
+
+    send : function(moveIndex) {
+      game.send({
+        'moveIndex' : moveIndex
+      });
+      this.hide();
+    },
+
+    dispatch : function(json) {
+      this.show();
+      this.title.setText('Select move for '+json.pokemon);
+
+      this.pane.clear();
+      for (var moveIndex = 0; moveIndex < json.moves.length; moveIndex++) {
+        var move = json.moves[moveIndex];
+
+        var moveButton = new me.ui.Button({
+          xlayout : 'center',
+          ylayout : 'fit',
+          border : 'white',
+          text : move.name
+        });
+
+        moveButton.add(new me.ui.Label({
+          text : 'PP: ' + move.pp + '/' + move.ppMax
+        }));
+
+        moveButton.onClick = (function(moveIndex) {
+          return function() {
+            this.send(moveIndex);
+          }
+        })(moveIndex).bind(this);
+
+        this.pane.add(moveButton);
+      }
+    }
+  });
+
+
 })(window);

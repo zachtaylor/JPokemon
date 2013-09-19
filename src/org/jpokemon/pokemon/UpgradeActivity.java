@@ -15,6 +15,10 @@ public class UpgradeActivity implements Activity {
   }
 
   @Override
+  public void beforeRemove(Player player) {
+  }
+
+  @Override
   public void onReturn(Activity activity, Player player) {
     // TODO Auto-generated method stub
   }

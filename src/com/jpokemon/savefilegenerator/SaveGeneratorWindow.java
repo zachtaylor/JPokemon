@@ -41,6 +41,7 @@ public class SaveGeneratorWindow extends JFrame {
     }
     else {
       player.setName(name);
+      player.getLocation().setMap("house");
     }
   }
 

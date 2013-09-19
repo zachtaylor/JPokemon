@@ -9,6 +9,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.jpokemon.activity.Activity;
+import org.jpokemon.battle.activity.BuildAttackTurnActivity;
+import org.jpokemon.battle.activity.BuildTurnActivity;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.SwapTurn;
 import org.jpokemon.battle.turn.Turn;
@@ -22,6 +24,7 @@ import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 import org.jpokemon.trainer.PokemonTrainer;
 import org.jpokemon.trainer.Trainer;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.zachtaylor.myna.Myna;
@@ -59,6 +62,10 @@ public class Battle implements Activity, Iterable<Slot> {
     return slots.size();
   }
 
+  public Slot getSlot(String trainerId) {
+    return slots.get(trainerId);
+  }
+
   public boolean contains(PokemonTrainer trainer) {
     return slots.get(trainer.id()) != null;
   }
@@ -66,8 +73,17 @@ public class Battle implements Activity, Iterable<Slot> {
   public void remove(PokemonTrainer trainer) {
     Slot slot = slots.remove(trainer.id());
 
-    if (slot.party().awake() == 0 && slot.trainer() instanceof Trainer) {
-      addTrainerToPlayerHistory(slot.trainer().id());
+    if (slot.party().awake() == 0) {
+      if (slot.trainer() instanceof Trainer) {
+        addTrainerToPlayerHistory(slot.trainer().id());
+      }
+      else if (slot.trainer() instanceof Player) {
+        // TODO - punish player
+      }
+    }
+
+    if (slot.trainer() instanceof Player) {
+      PlayerManager.popActivity((Player) slot.trainer(), this);
     }
 
     verifyTeamCount();
@@ -83,15 +99,51 @@ public class Battle implements Activity, Iterable<Slot> {
 
   @Override
   public void onAdd(Player player) throws ServiceException {
-    if (PlayerManager.getActivity(player) != null) { throw new ServiceException("Battle must be root activity"); }
+    PlayerManager.pushJson(player, generateJson(player));
+  }
+
+  @Override
+  public void beforeRemove(Player player) {
+    if (slots.containsKey(player.id())) {
+      // TODO - punish player
+      remove(player);
+    }
   }
 
   @Override
   public void onReturn(Activity activity, Player player) {
+    if (activity instanceof BuildTurnActivity) {
+      BuildTurnActivity bta = (BuildTurnActivity) activity;
+      Turn turn = bta.getTurn(this);
+      addTurn(turn);
+    }
   }
 
   @Override
   public void serve(JSONObject request, Player player) throws ServiceException {
+    if (turns.get(player.id()) != null) { return; }
+
+    try {
+      if (request.has("turn")) {
+        String turn = request.getString("turn");
+
+        if ("attack".equals(turn)) {
+          PlayerManager.addActivity(player, new BuildAttackTurnActivity());
+        }
+        else if ("item".equals(turn)) {
+
+        }
+        else if ("swap".equals(turn)) {
+
+        }
+        else if ("run".equals(turn)) {
+
+        }
+      }
+    }
+    catch (JSONException e) {
+
+    }
   }
 
   public void log(String message) {
@@ -189,7 +241,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
         if (slot.trainer() instanceof Player) {
           Player p = (Player) slot.trainer();
-          PlayerManager.popActivity(p, this);
+          remove(p);
         }
       }
     }
@@ -216,6 +268,37 @@ public class Battle implements Activity, Iterable<Slot> {
       // If the trainer is already recorded, IllegalArgumentException will fire
       p.record().putTrainer(id);
     }
+  }
+
+  private JSONObject generateJson(Player player) {
+    JSONObject json = new JSONObject();
+
+    try {
+      json.put("action", "battle");
+
+      Map<Integer, JSONArray> teams = new HashMap<Integer, JSONArray>();
+      for (Slot slot : this) {
+        if (teams.get(slot.team()) == null) {
+          teams.put(slot.team(), new JSONArray());
+        }
+
+        JSONObject opponent = new JSONObject();
+        opponent.put("id", slot.trainer().id());
+        opponent.put("name", slot.trainer().getName());
+        opponent.put("pokemonName", slot.leader().name());
+        opponent.put("pokemonNumber", slot.leader().number());
+        opponent.put("pokemonHealth", slot.leader().health());
+        opponent.put("pokemonMaxHealth", slot.leader().maxHealth());
+
+        teams.get(slot.team()).put(opponent);
+      }
+
+      json.put("teams", new JSONObject(teams.toString()));
+    }
+    catch (JSONException e) {
+    }
+
+    return json;
   }
 
   public static int computeDamage(Pokemon user, Move move, Pokemon victim) {

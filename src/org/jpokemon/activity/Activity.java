@@ -7,6 +7,8 @@ import org.json.JSONObject;
 public interface Activity {
   public void onAdd(Player player) throws ServiceException;
 
+  public void beforeRemove(Player player);
+
   public void onReturn(Activity activity, Player player);
 
   public void serve(JSONObject request, Player player) throws ServiceException;

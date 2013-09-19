@@ -50,11 +50,15 @@ public class Move {
     return _pp;
   }
 
+  /** Getter for the max pp of this move */
+  public int ppMax() {
+    return _ppMax;
+  }
+
   /**
    * Tells the accuracy of this Move
    * 
-   * @return Number between 0 and 1 which represents the chance that this move
-   *         will be effectively executed
+   * @return Number between 0 and 1 which represents the chance that this move will be effectively executed
    */
   public double accuracy() {
     return _info.getAccuracy();
@@ -84,8 +88,7 @@ public class Move {
    * @return The number of times this move must be reAdded
    */
   public int turns() {
-    if (style() == MoveStyle.DELAYNEXT || style() == MoveStyle.DELAYBEFORE)
-      return 2;
+    if (style() == MoveStyle.DELAYNEXT || style() == MoveStyle.DELAYBEFORE) return 2;
     // TODO : add bide
 
     return 1;
@@ -128,8 +131,7 @@ public class Move {
   }
 
   /**
-   * Restores the PP of this Move to the maximum value, and removes any
-   * disabling effects
+   * Restores the PP of this Move to the maximum value, and removes any disabling effects
    */
   public void restore() {
     _pp = _ppMax;
@@ -144,8 +146,7 @@ public class Move {
   public boolean use() {
     boolean success = enabled() & accuracy() >= Math.random();
 
-    if (success)
-      _pp--;
+    if (success) _pp--;
 
     return success;
   }
@@ -156,8 +157,7 @@ public class Move {
    * This is 1.5 if the move is compatible with the given types, or 1.0 if not
    * 
    * @param p Pokemon to check the types of, for a match
-   * @return Modifier for the strength of the move, given the possibly matched
-   *         types
+   * @return Modifier for the strength of the move, given the possibly matched types
    */
   public double STAB(Pokemon p) {
     return STAB(p.type1(), p.type2());
@@ -170,8 +170,7 @@ public class Move {
    * 
    * @param t1 First type which may match
    * @param t2 Second type which may match
-   * @return Modifier for the strength of the move, given the possibly matched
-   *         types
+   * @return Modifier for the strength of the move, given the possibly matched types
    */
   public double STAB(Type t1, Type t2) {
     Type type = type();
@@ -184,8 +183,7 @@ public class Move {
    * @return Number of times this move strikes simultaneously
    */
   public int reps() {
-    if (style() != MoveStyle.REPEAT)
-      return 1;
+    if (style() != MoveStyle.REPEAT) return 1;
 
     double chance = Math.random();
     if (chance >= 0.9947916667) // 1/192
@@ -245,8 +243,7 @@ public class Move {
   }
 
   public void loadXml(XmlNode node) {
-    if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XmlException("Cannot read node");
+    if (!XML_NODE_NAME.equals(node.getName())) throw new XmlException("Cannot read node");
 
     setNumber(Integer.parseInt(node.getAttribute("number")));
     _ppMax = node.getIntAttribute("ppmax");
@@ -255,8 +252,7 @@ public class Move {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Move))
-      return false;
+    if (!(o instanceof Move)) return false;
 
     Move m = (Move) o;
 
