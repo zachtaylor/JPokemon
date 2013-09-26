@@ -53,7 +53,8 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
-    if (contains(trainer)) throw new IllegalArgumentException("Duplicate trainer: " + trainer);
+    if (contains(trainer))
+      throw new IllegalArgumentException("Duplicate trainer: " + trainer);
 
     slots.put(trainer.id(), new Slot(trainer, team));
   }
@@ -99,7 +100,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
   @Override
   public void onAdd(Player player) throws ServiceException {
-    PlayerManager.pushJson(player, generateJson(player));
+    PlayerManager.pushJson(player, generateJson());
   }
 
   @Override
@@ -116,6 +117,14 @@ public class Battle implements Activity, Iterable<Slot> {
       BuildTurnActivity bta = (BuildTurnActivity) activity;
       Turn turn = bta.getTurn(this);
       addTurn(turn);
+
+      JSONObject json = generateJson();
+      for (Slot slot : this) {
+        if (slot.trainer() instanceof Player) {
+          player = (Player) slot.trainer();
+          PlayerManager.pushJson(player, json);
+        }
+      }
     }
   }
 
@@ -128,7 +137,7 @@ public class Battle implements Activity, Iterable<Slot> {
         String turn = request.getString("turn");
 
         if ("attack".equals(turn)) {
-          PlayerManager.addActivity(player, new BuildAttackTurnActivity());
+          PlayerManager.addActivity(player, new BuildAttackTurnActivity(this));
         }
         else if ("item".equals(turn)) {
 
@@ -147,7 +156,22 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void log(String message) {
-    System.out.println(message); // TODO
+    JSONObject json = new JSONObject();
+
+    try {
+      json.put("action", "battlelog");
+      json.put("text", message);
+    }
+    catch (JSONException e) {
+    }
+
+    for (Slot slot : this) {
+      if (slot.trainer() instanceof Player) {
+        Player player = (Player) slot.trainer();
+
+        PlayerManager.pushJson(player, json);
+      }
+    }
   }
 
   @Override
@@ -195,7 +219,8 @@ public class Battle implements Activity, Iterable<Slot> {
 
   private void doTrainerAttacks() {
     for (Slot slot : slots.values()) {
-      if (slot.trainer() instanceof Player) continue;
+      if (slot.trainer() instanceof Player)
+        continue;
 
       Slot randomSlot;
       do {
@@ -261,7 +286,8 @@ public class Battle implements Activity, Iterable<Slot> {
     Player p;
 
     for (Slot s : this) {
-      if (!(s.trainer() instanceof Player)) continue;
+      if (!(s.trainer() instanceof Player))
+        continue;
 
       p = (Player) s.trainer();
 
@@ -270,7 +296,7 @@ public class Battle implements Activity, Iterable<Slot> {
     }
   }
 
-  private JSONObject generateJson(Player player) {
+  private JSONObject generateJson() {
     JSONObject json = new JSONObject();
 
     try {
@@ -285,6 +311,7 @@ public class Battle implements Activity, Iterable<Slot> {
         JSONObject opponent = new JSONObject();
         opponent.put("id", slot.trainer().id());
         opponent.put("name", slot.trainer().getName());
+        opponent.put("turn", turns.get(slot.trainer().id()) != null ? "ready" : "waiting");
         opponent.put("pokemonName", slot.leader().name());
         opponent.put("pokemonNumber", slot.leader().number());
         opponent.put("pokemonHealth", slot.leader().health());
@@ -293,7 +320,7 @@ public class Battle implements Activity, Iterable<Slot> {
         teams.get(slot.team()).put(opponent);
       }
 
-      json.put("teams", new JSONObject(teams.toString()));
+      json.put("teams", new JSONArray(teams.values()));
     }
     catch (JSONException e) {
     }
@@ -332,7 +359,8 @@ public class Battle implements Activity, Iterable<Slot> {
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * E * R * reps;
 
-    if (damage < 1 && E != 0) damage = 1;
+    if (damage < 1 && E != 0)
+      damage = 1;
 
     return (int) damage;
   }
@@ -359,8 +387,9 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   /**
-   * Calculates effectiveness modifications for a Move from a user to a victim. Includes Same-Type-Attack-Bonus for user and {@link Type} modifications between
-   * the move and victim.
+   * Calculates effectiveness modifications for a Move from a user to a victim.
+   * Includes Same-Type-Attack-Bonus for user and {@link Type} modifications
+   * between the move and victim.
    * 
    * @param move Move to calculate with
    * @param user Pokemon using the move

@@ -829,4 +829,87 @@
       this.running = false;
     }
   });
+
+  me.ui.Sprite = me.ui.Component.extend({
+    init : function(config) {
+      this.parent(config);
+
+      this.spritewidth = this.config.spritewidth;
+      this.spriteheight = this.config.spriteheight;
+      
+      if (this.config.image) {
+        this.setImage(this.config.image);
+      }
+      if (this.config.index !== undefined) {
+        this.setIndex(this.config.index);
+      }
+    },
+
+    setImage : function(src) {
+      this.image = me.loader.getImage(src);
+      this.needsUpdate = true;
+    },
+
+    setIndex : function(index) {
+      this.xoffset = index * this.spritewidth;
+
+      this.yoffset = Math.floor(this.xoffset / this.image.width) * this.spriteheight;
+      this.xoffset = this.xoffset % this.spritewidth;
+    },
+
+    update : function() {
+      if (this.needsUpdate) {
+        this.rect.width = this.spritewidth;
+        this.rect.height = this.spriteheight;
+      }
+
+      return this.parent();
+    },
+
+    draw : function(context) {
+      this.parent(context);
+
+      context.save();
+
+      context.drawImage(this.image, 
+        this.xoffset, this.yoffset,
+        this.spritewidth, this.spriteheight,
+        this.rect.left, this.rect.top,
+        this.spritewidth, this.spriteheight);
+
+      context.restore();
+    }
+  });
+
+  me.ui.Meter = me.ui.Component.extend({
+    init : function(config) {
+      this.parent(config);
+
+      this.max = this.config.max || 100;
+      this.val = this.config.val || this.max;
+      this.padding = this.config.padding || 4;
+      this.fill = this.config.fill || 'white';
+    },
+
+    draw : function(context) {
+      context.save();
+
+      if (this.color) {
+        context.fillStyle = this.color;
+        context.fillRect(this.rect.left, this.rect.top, this.rect.width, this.rect.height);
+      }
+
+      if (this.border) {
+        context.lineWidth = 1;
+        context.strokeStyle = this.border;
+        context.strokeRect(this.rect.left, this.rect.top, this.rect.width, this.rect.height);
+      }
+
+      context.fillStyle = this.fill;
+      var width = ~~((this.val / this.max) * this.rect.width);
+      context.fillRect(this.rect.left, this.rect.top + this.padding, width, this.rect.height - 2 * this.padding);
+
+      context.restore();
+    }
+  });
 })(window);

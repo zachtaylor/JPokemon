@@ -547,6 +547,167 @@
     }
   });
 
+  me.menu.BattleWindow = me.ui.Panel.extend({
+    init : function() {
+      this.parent({
+        x : 25,
+        y : 125,
+        xlayout : 'fill',
+        ylayout : 'fit',
+        color : 'black',
+        border : 'white',
+        opacity : .7
+      });
+
+      this.teamsContainer = new me.ui.Panel({
+        padding : 0,
+        xlayout : 'fit',
+        ylayout : 'fill',
+      });
+      this.add(this.teamsContainer);
+
+      this.buttonsContainer = new me.ui.Panel({
+        xlayout : 'fit',
+        ylayout : 'fill'
+      });
+      this.add(this.buttonsContainer);
+
+      this.attackButton = new me.ui.Button({
+        text : 'Attack',
+        border : 'white',
+        width : 150,
+        height : 20,
+        onClick : this.sendAttackTurn
+      });
+      this.buttonsContainer.add(this.attackButton);
+
+      this.logContainer = new me.ui.Scrollable({
+        height : 72,
+        border : 'white',
+      });
+      this.add(this.logContainer);
+      game.subscribe('battlelog', { // a little hacky...
+        dispatch : this.dispatchFromBattleLog.bind(this)
+      });
+    },
+
+    sendAttackTurn : function() {
+      game.send({
+        turn : 'attack'
+      });
+    },
+
+    dispatchFromBattleLog : function(json) {
+      this.logContainer.add(new me.ui.Label({ text : json.text }));
+    },
+
+    dispatch : function(json) {
+      this.show();
+
+      var team, teamPanel, player, playerPanel, playerInfoPanel, playerNamePanel;
+
+      this.teamsContainer.clear();
+      for (var teamId = 0; teamId < json.teams.length; teamId++) {
+        team = json.teams[teamId];
+
+        teamPanel = new me.ui.Panel({
+          xlayout : 'fill',
+          ylayout : 'fit'
+        });
+        this.teamsContainer.add(teamPanel);
+
+        for (var playerId = 0; playerId < team.length; playerId++) {
+          player = team[playerId];
+
+          playerPanel = new me.ui.Panel({
+            padding : 0,
+            xlayout : 'fit',
+            ylayout : 'center'
+          });
+
+          playerPanel.add(new me.ui.Sprite({
+            image : 'pokemon-sprites',
+            index : (player.pokemonNumber - 1) * 2,
+            spritewidth : 80,
+            spriteheight : 80
+          }));
+
+          playerInfoPanel = new me.ui.Panel({
+            padding : 0,
+            ylayout : 'fit'
+          });
+          playerPanel.add(playerInfoPanel);
+
+          playerInfoPanel.add(this.buildNamePanel(player));
+          playerInfoPanel.add(new me.ui.Label({ text : player.pokemonName }));
+          playerInfoPanel.add(this.buildHealthMeter(player));
+
+          teamPanel.add(playerPanel);
+        }
+      }
+    },
+
+    buildNamePanel : function(json) {
+      var image;
+
+      if (json.turn === 'ready') {
+        image = 'check_green';
+      }
+      else if (json.turn === 'waiting') {
+        image = 'clock';
+      }
+
+      var panel = new me.ui.Panel({
+        padding : 0,
+        xlayout : 'fit',
+        ylayout : 'center'
+      });
+
+      panel.add(new me.ui.Icon({
+        padding : 0,
+        image : image
+      }));
+
+      panel.add(new me.ui.Label({
+        text : json.name
+      }));
+
+      return panel;
+    },
+
+    buildHealthMeter : function(json) {
+      var color;
+      var hpPercentage = json.pokemonHealth / json.pokemonMaxHealth;
+
+      if (hpPercentage > .75) {
+        color = 'green';
+      }
+      else if (hpPercentage > .25) {
+        color = 'yellow';
+      }
+      else {
+        color = 'red';
+      }
+
+      var panel = new me.ui.Panel({
+        xlayout : 'fit',
+        ylayout : 'center'
+      });
+
+      panel.add(new me.ui.Label({ padding : 0, text : 'HP' }));
+
+      panel.add(new me.ui.Meter({
+        height : 10,
+        width : 100,
+        fill : color,
+        val : json.pokemonHealth,
+        max : json.pokemonMaxHealth,
+      }));
+
+      return panel;
+    },
+  });
+
   me.menu.SelectMoveWindow = me.menu.Window.extend({
     init : function() {
       this.parent(205, 165);
@@ -588,6 +749,4 @@
       }
     }
   });
-
-
 })(window);

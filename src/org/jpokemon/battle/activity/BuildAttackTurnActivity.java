@@ -11,8 +11,13 @@ import org.jpokemon.trainer.Player;
 import org.json.JSONObject;
 
 public class BuildAttackTurnActivity implements BuildTurnActivity {
+  private Battle battle;
   private int moveIndex = -1;
   private String slotId, targetId;
+
+  public BuildAttackTurnActivity(Battle b) {
+    battle = b;
+  }
 
   @Override
   public void onAdd(Player player) throws ServiceException {
@@ -31,14 +36,28 @@ public class BuildAttackTurnActivity implements BuildTurnActivity {
 
       moveIndex = smflpa.getMoveIndex();
 
-      String moveName = player.party().get(0).move(moveIndex).name();
-      PlayerManager.addActivity(player, new SelectTargetForMoveActivity(moveName));
+      if (battle.getTrainerCount() == 2) {
+        for (Slot slot : battle) {
+          if (slot.trainer().id().equals(player.id())) {
+            continue;
+          }
+
+          targetId = slot.trainer().id();
+          break;
+        }
+
+        PlayerManager.popActivity(player, this);
+      }
+      else {
+        String moveName = player.party().get(0).move(moveIndex).name();
+        PlayerManager.addActivity(player, new SelectTargetForMoveActivity(moveName));
+      }
     }
     else if (activity instanceof SelectTargetForMoveActivity) {
       SelectTargetForMoveActivity stfma = (SelectTargetForMoveActivity) activity;
 
       targetId = stfma.getTargetId();
-      
+
       PlayerManager.popActivity(player, this);
     }
   }

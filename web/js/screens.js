@@ -68,6 +68,8 @@
         new me.menu.BattleLobbyLauncher().show();
         new me.menu.MessagesArea().show();
         game.subscribe('selectmove', new me.menu.SelectMoveWindow());
+        game.subscribe('battle', new me.menu.BattleWindow());
+
       }
       else if (json.add) {
         players[json.add] = me.entityPool.newInstanceOf('trainer', json);

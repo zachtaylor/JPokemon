@@ -1,0 +1,143 @@
+<player name="Dave" cash="0" badge="0">
+	<location height="0" width="0" map="house" left="12" top="7" />
+	<bag> </bag>
+	<record starter="Dratini">
+		<events> [] </events>
+		<trainers> [] </trainers>
+	</record>
+	<pokedex>
+		<seen> [] </seen>
+		<owned> [137, 16, 7, 92, 58, 125, 147] </owned>
+	</pokedex>
+	<pokemonstorage>
+		<pokemonbox>
+			<pokemon ot="Dave" level="25" xp="0" number="147" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="60" iv="21" cur="60" points="0" type="HEALTH" />
+					<stat ev="0" max="73" iv="24" cur="73" points="0" type="ATTACK" />
+					<stat ev="0" max="66" iv="24" cur="66" points="0" type="SPECATTACK" />
+					<stat ev="0" max="57" iv="0" cur="57" points="0" type="DEFENSE" />
+					<stat ev="0" max="62" iv="11" cur="62" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="63" iv="12" cur="63" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="30" number="74" pp="30" />
+					<move enabled="true" ppmax="20" number="149" pp="20" />
+					<move enabled="true" ppmax="20" number="164" pp="20" />
+					<move enabled="true" ppmax="30" number="4" pp="30" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Dave" level="25" xp="0" number="92" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="52" iv="11" cur="52" points="0" type="HEALTH" />
+					<stat ev="0" max="54" iv="7" cur="54" points="0" type="ATTACK" />
+					<stat ev="0" max="91" iv="25" cur="91" points="0" type="SPECATTACK" />
+					<stat ev="0" max="57" iv="31" cur="57" points="0" type="DEFENSE" />
+					<stat ev="0" max="103" iv="5" cur="103" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="438" iv="2" cur="438" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="30" number="75" pp="30" />
+					<move enabled="true" ppmax="10" number="20" pp="10" />
+					<move enabled="true" ppmax="15" number="88" pp="15" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Dave" level="25" xp="0" number="125" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="71" iv="16" cur="71" points="0" type="HEALTH" />
+					<stat ev="0" max="83" iv="26" cur="83" points="0" type="ATTACK" />
+					<stat ev="0" max="89" iv="29" cur="89" points="0" type="SPECATTACK" />
+					<stat ev="0" max="70" iv="26" cur="70" points="0" type="DEFENSE" />
+					<stat ev="0" max="77" iv="1" cur="77" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="91" iv="15" cur="91" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="30" number="74" pp="30" />
+					<move enabled="true" ppmax="30" number="100" pp="30" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Dave" level="25" xp="0" number="7" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="61" iv="16" cur="61" points="0" type="HEALTH" />
+					<stat ev="0" max="60" iv="4" cur="60" points="0" type="ATTACK" />
+					<stat ev="0" max="63" iv="13" cur="63" points="0" type="SPECATTACK" />
+					<stat ev="0" max="70" iv="12" cur="70" points="0" type="DEFENSE" />
+					<stat ev="0" max="67" iv="0" cur="67" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="60" iv="15" cur="60" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="25" number="159" pp="25" />
+					<move enabled="true" ppmax="30" number="144" pp="30" />
+					<move enabled="true" ppmax="25" number="11" pp="25" />
+					<move enabled="true" ppmax="30" number="16" pp="30" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Dave" level="25" xp="0" number="16" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="57" iv="11" cur="57" points="0" type="HEALTH" />
+					<stat ev="0" max="63" iv="23" cur="63" points="0" type="ATTACK" />
+					<stat ev="0" max="60" iv="31" cur="60" points="0" type="SPECATTACK" />
+					<stat ev="0" max="55" iv="0" cur="55" points="0" type="DEFENSE" />
+					<stat ev="0" max="55" iv="13" cur="55" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="66" iv="12" cur="66" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="20" number="161" pp="20" />
+					<move enabled="true" ppmax="15" number="111" pp="15" />
+					<move enabled="true" ppmax="30" number="100" pp="30" />
+					<move enabled="true" ppmax="35" number="56" pp="35" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Dave" level="25" xp="0" number="58" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="69" iv="26" cur="69" points="0" type="HEALTH" />
+					<stat ev="0" max="70" iv="3" cur="70" points="0" type="ATTACK" />
+					<stat ev="0" max="70" iv="0" cur="70" points="0" type="SPECATTACK" />
+					<stat ev="0" max="62" iv="19" cur="62" points="0" type="DEFENSE" />
+					<stat ev="0" max="67" iv="29" cur="67" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="69" iv="19" cur="69" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="25" number="40" pp="25" />
+					<move enabled="true" ppmax="25" number="11" pp="25" />
+					<move enabled="true" ppmax="30" number="74" pp="30" />
+					<move enabled="true" ppmax="20" number="107" pp="20" />
+				</moves>
+			</pokemon>
+		</pokemonbox>
+		<pokemonbox>
+			<pokemon ot="Dave" level="25" xp="0" number="147" has_original_trainer="true">
+				<condition>  </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="60" iv="18" cur="60" points="0" type="HEALTH" />
+					<stat ev="0" max="70" iv="13" cur="70" points="0" type="ATTACK" />
+					<stat ev="0" max="63" iv="15" cur="63" points="0" type="SPECATTACK" />
+					<stat ev="0" max="58" iv="2" cur="58" points="0" type="DEFENSE" />
+					<stat ev="0" max="65" iv="21" cur="65" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="60" iv="0" cur="60" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="20" number="164" pp="20" />
+					<move enabled="true" ppmax="30" number="4" pp="30" />
+					<move enabled="true" ppmax="30" number="74" pp="30" />
+					<move enabled="true" ppmax="20" number="149" pp="20" />
+				</moves>
+			</pokemon>
+		</pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+	</pokemonstorage>
+	<friends> </friends>
+	<blocked> </blocked>
+</player>
