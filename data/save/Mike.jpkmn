@@ -1,0 +1,128 @@
+<player name="Mike" cash="0" badge="0">
+	<location height="0" width="0" map="house" left="8" top="7" />
+	<bag> </bag>
+	<record starter="Lapras">
+		<events> [] </events>
+		<trainers> [] </trainers>
+	</record>
+	<pokedex>
+		<seen> [] </seen>
+		<owned> [6, 93, 25, 40, 131, 94, 26, 149, 45] </owned>
+	</pokedex>
+	<pokemonstorage>
+		<pokemonbox>
+			<pokemon ot="Mike" level="25" xp="0" number="149" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="84" iv="17" cur="84" points="0" type="HEALTH" />
+					<stat ev="0" max="104" iv="10" cur="104" points="0" type="ATTACK" />
+					<stat ev="0" max="89" iv="19" cur="89" points="0" type="SPECATTACK" />
+					<stat ev="0" max="83" iv="2" cur="83" points="0" type="DEFENSE" />
+					<stat ev="0" max="92" iv="30" cur="92" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="82" iv="28" cur="82" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="5" number="64" pp="5" />
+					<move enabled="true" ppmax="20" number="149" pp="20" />
+					<move enabled="true" ppmax="20" number="120" pp="20" />
+					<move enabled="true" ppmax="10" number="35" pp="10" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Mike" level="25" xp="0" number="131" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="104" iv="18" cur="104" points="0" type="HEALTH" />
+					<stat ev="0" max="83" iv="22" cur="83" points="0" type="ATTACK" />
+					<stat ev="0" max="82" iv="19" cur="82" points="0" type="SPECATTACK" />
+					<stat ev="0" max="77" iv="8" cur="77" points="0" type="DEFENSE" />
+					<stat ev="0" max="87" iv="18" cur="87" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="69" iv="19" cur="69" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="10" number="67" pp="10" />
+					<move enabled="true" ppmax="15" number="13" pp="15" />
+					<move enabled="true" ppmax="5" number="63" pp="5" />
+					<move enabled="true" ppmax="15" number="117" pp="15" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Mike" level="25" xp="0" number="6" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="76" iv="9" cur="76" points="0" type="HEALTH" />
+					<stat ev="0" max="81" iv="19" cur="81" points="0" type="ATTACK" />
+					<stat ev="0" max="93" iv="17" cur="93" points="0" type="SPECATTACK" />
+					<stat ev="0" max="76" iv="10" cur="76" points="0" type="DEFENSE" />
+					<stat ev="0" max="79" iv="6" cur="79" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="91" iv="24" cur="91" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="25" number="40" pp="25" />
+					<move enabled="true" ppmax="15" number="44" pp="15" />
+					<move enabled="true" ppmax="15" number="46" pp="15" />
+					<move enabled="true" ppmax="20" number="121" pp="20" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Mike" level="25" xp="0" number="45" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="74" iv="8" cur="74" points="0" type="HEALTH" />
+					<stat ev="0" max="81" iv="26" cur="81" points="0" type="ATTACK" />
+					<stat ev="0" max="85" iv="1" cur="85" points="0" type="SPECATTACK" />
+					<stat ev="0" max="83" iv="23" cur="83" points="0" type="DEFENSE" />
+					<stat ev="0" max="85" iv="22" cur="85" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="67" iv="30" cur="67" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="30" number="136" pp="30" />
+					<move enabled="true" ppmax="15" number="122" pp="15" />
+					<move enabled="true" ppmax="35" number="95" pp="35" />
+					<move enabled="true" ppmax="30" number="2" pp="30" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Mike" level="25" xp="0" number="25" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="58" iv="24" cur="58" points="0" type="HEALTH" />
+					<stat ev="0" max="68" iv="23" cur="68" points="0" type="ATTACK" />
+					<stat ev="0" max="60" iv="0" cur="60" points="0" type="SPECATTACK" />
+					<stat ev="0" max="51" iv="6" cur="51" points="0" type="DEFENSE" />
+					<stat ev="0" max="59" iv="16" cur="59" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="87" iv="31" cur="87" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="10" number="148" pp="10" />
+					<move enabled="true" ppmax="20" number="149" pp="20" />
+					<move enabled="true" ppmax="20" number="120" pp="20" />
+					<move enabled="true" ppmax="15" number="150" pp="15" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Mike" level="25" xp="0" number="93" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="61" iv="14" cur="61" points="0" type="HEALTH" />
+					<stat ev="0" max="60" iv="0" cur="60" points="0" type="ATTACK" />
+					<stat ev="0" max="95" iv="10" cur="95" points="0" type="SPECATTACK" />
+					<stat ev="0" max="64" iv="26" cur="64" points="0" type="DEFENSE" />
+					<stat ev="0" max="67" iv="20" cur="67" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="89" iv="29" cur="89" points="0" type="SPEED" />
+				</stats>
+				<moves>
+					<move enabled="true" ppmax="20" number="66" pp="20" />
+					<move enabled="true" ppmax="15" number="36" pp="15" />
+					<move enabled="true" ppmax="15" number="88" pp="15" />
+					<move enabled="true" ppmax="10" number="20" pp="10" />
+				</moves>
+			</pokemon>
+		</pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+		<pokemonbox> </pokemonbox>
+	</pokemonstorage>
+	<friends> [Zach] </friends>
+	<blocked> </blocked>
+</player>

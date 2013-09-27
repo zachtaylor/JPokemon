@@ -2,6 +2,7 @@ package org.jpokemon.battle.turn;
 
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.pokemon.move.MoveStyle;
@@ -20,12 +21,15 @@ public class AttackTurn extends Turn {
     _executions++;
 
     if (_executions == 1) {
-      if (!leader.canAttack()) {
-        battle().log(leader.condition());
-        return;
+      for (ConditionEffect conditionEffect : leader.getConditionEffects()) {
+        if (conditionEffect.blocksAttack()) {
+          battle().log(leader.name() + conditionEffect.getPersistanceMessage());
+          return;
+        }
       }
-      else if (!_move.enabled()) {
-        battle().log("Move is not enabled!");
+
+      if (!_move.enabled()) {
+        battle().log(leader.name() + " cannot use " + _move.name() + "! It's not enabled!");
         return;
       }
       else if (!_move.use()) {

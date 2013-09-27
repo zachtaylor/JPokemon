@@ -15,6 +15,7 @@ import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.SwapTurn;
 import org.jpokemon.battle.turn.Turn;
 import org.jpokemon.battle.turn.TurnFactory;
+import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
 import org.jpokemon.pokemon.move.Move;
@@ -53,8 +54,7 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
-    if (contains(trainer))
-      throw new IllegalArgumentException("Duplicate trainer: " + trainer);
+    if (contains(trainer)) throw new IllegalArgumentException("Duplicate trainer: " + trainer);
 
     slots.put(trainer.id(), new Slot(trainer, team));
   }
@@ -203,13 +203,19 @@ public class Battle implements Activity, Iterable<Slot> {
           turnIterator.remove();
         }
       }
-      
+
       for (Slot slot : autoSwapTurnsToAdd) {
         turnQueue.add(SwapTurn.autoSwapTurn(this, slot));
       }
 
       if (turn.reAdd()) {
         addTurn(turn);
+      }
+    }
+
+    for (Slot slot : this) {
+      if (!slot.leader().awake() && slot.party().awake() > 0) {
+        turns.put(slot.trainer().id(), SwapTurn.autoSwapTurn(this, slot));
       }
     }
 
@@ -220,8 +226,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
   private void doTrainerAttacks() {
     for (Slot slot : slots.values()) {
-      if (slot.trainer() instanceof Player)
-        continue;
+      if (slot.trainer() instanceof Player) continue;
 
       Slot randomSlot;
       do {
@@ -276,7 +281,23 @@ public class Battle implements Activity, Iterable<Slot> {
   private void applyEndOfRoundEffects() {
     for (Slot slot : this) {
       // Condition effects
-      slot.leader().applyConditionEffects();
+      for (Iterator<ConditionEffect> conditionEffectIterator = slot.leader().getConditionEffects().iterator(); conditionEffectIterator.hasNext();) {
+        ConditionEffect conditionEffect = conditionEffectIterator.next();
+
+        if (Math.random() <= conditionEffect.persistanceChance()) {
+          log(slot.leader().name() + conditionEffect.getPersistanceMessage());
+
+          if (conditionEffect.damagePercentage() > 0) {
+            int damage = (int) (slot.leader().maxHealth() * conditionEffect.damagePercentage());
+            slot.leader().takeDamage(damage);
+            log(slot.leader().name() + " took " + damage + " damage!");
+          }
+        }
+        else {
+          log(slot.leader().name() + conditionEffect.getDissipationMessage());
+          conditionEffectIterator.remove();
+        }
+      }
 
       // Slot effects
       slot.applySlotEffects();
@@ -287,8 +308,7 @@ public class Battle implements Activity, Iterable<Slot> {
     Player p;
 
     for (Slot s : this) {
-      if (!(s.trainer() instanceof Player))
-        continue;
+      if (!(s.trainer() instanceof Player)) continue;
 
       p = (Player) s.trainer();
 
@@ -360,8 +380,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * E * R * reps;
 
-    if (damage < 1 && E != 0)
-      damage = 1;
+    if (damage < 1 && E != 0) damage = 1;
 
     return (int) damage;
   }
@@ -388,9 +407,8 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   /**
-   * Calculates effectiveness modifications for a Move from a user to a victim.
-   * Includes Same-Type-Attack-Bonus for user and {@link Type} modifications
-   * between the move and victim.
+   * Calculates effectiveness modifications for a Move from a user to a victim. Includes Same-Type-Attack-Bonus for user and {@link Type} modifications between
+   * the move and victim.
    * 
    * @param move Move to calculate with
    * @param user Pokemon using the move

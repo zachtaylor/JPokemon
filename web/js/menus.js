@@ -582,7 +582,7 @@
       this.buttonsContainer.add(this.attackButton);
 
       this.logContainer = new me.ui.Scrollable({
-        height : 72,
+        height : 96,
         border : 'white',
       });
       this.add(this.logContainer);

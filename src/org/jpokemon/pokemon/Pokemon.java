@@ -1,5 +1,6 @@
 package org.jpokemon.pokemon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.pokemon.move.Move;
@@ -15,7 +16,6 @@ public class Pokemon {
 
   public Pokemon(int num) {
     _number = num;
-    _condition = new Condition();
     _moves = new MoveBlock(_number);
     _species = PokemonInfo.get(_number);
     _stats = new StatBlock(_species);
@@ -33,8 +33,7 @@ public class Pokemon {
   }
 
   public String name() {
-    if (_name == null)
-      return species();
+    if (_name == null) return species();
 
     return _name;
   }
@@ -65,7 +64,7 @@ public class Pokemon {
 
     checkNewMoves();
 
-    _condition.reset();
+    conditionEffects = new ArrayList<ConditionEffect>();
   }
 
   public void incLevel() {
@@ -112,8 +111,7 @@ public class Pokemon {
   }
 
   /**
-   * Adds the xp specified to the Pokemon. If the Pokemon has enough, level is
-   * increased
+   * Adds the xp specified to the Pokemon. If the Pokemon has enough, level is increased
    * 
    * @param amount Amount of xp to add
    */
@@ -207,8 +205,7 @@ public class Pokemon {
   }
 
   /**
-   * Takes a specified amount of damage. If damage is greater than available
-   * health, the Pokemon is knocked out.
+   * Takes a specified amount of damage. If damage is greater than available health, the Pokemon is knocked out.
    * 
    * @param damage The amount of damage to be taken
    * @return the awake state of the Pokemon
@@ -218,8 +215,7 @@ public class Pokemon {
   }
 
   /**
-   * Heals specified damage. If healed amount is greater than missing health,
-   * Pokemon is brought to full health.
+   * Heals specified damage. If healed amount is greater than missing health, Pokemon is brought to full health.
    * 
    * @param heal The amount healed by
    */
@@ -231,44 +227,42 @@ public class Pokemon {
     return health() > 0;
   }
 
-  public String condition() {
-    return _condition.toString();
-  }
-
   public void addConditionEffect(ConditionEffect e) {
     _stats.addConditionEffect(e);
-    _condition.add(e);
+
+    if (conditionEffects.contains(e)) {
+      conditionEffects.remove(e);
+    }
+
+    conditionEffects.add(e);
   }
 
   public boolean hasConditionEffect(ConditionEffect e) {
-    return _condition.contains(e);
+    return conditionEffects.contains(e);
+  }
+
+  public List<ConditionEffect> getConditionEffects() {
+    return conditionEffects;
   }
 
   public boolean removeConditionEffect(ConditionEffect e) {
     _stats.removeConditionEffect(e);
-    return _condition.remove(e);
-  }
-
-  public void applyConditionEffects() {
-    _condition.applyEffects(this);
-  }
-
-  public String[] lastConditionMessage() {
-    return _condition.lastMessage();
-  }
-
-  public boolean canAttack() {
-    return _condition.canAttack();
+    return conditionEffects.remove(e);
   }
 
   public double catchBonus() {
-    return _condition.getCatchBonus();
+    double best = 1;
+
+    for (ConditionEffect e : conditionEffects) {
+      best *= e.catchBonus();
+    }
+
+    return Math.min(best, 2.0);
   }
 
   /**
-   * Changes a Pokemon into another one. This can be regular evolution
-   * (Charmander to Charmeleon) or other complicated changes (fire stone changes
-   * Eevee into Flareon).
+   * Changes a Pokemon into another one. This can be regular evolution (Charmander to Charmeleon) or other complicated changes (fire stone changes Eevee into
+   * Flareon).
    */
   public void evolve(int... num) {
     if (num.length != 0)
@@ -297,7 +291,10 @@ public class Pokemon {
     node.setAttribute("ot", _ot);
     node.setAttribute("has_original_trainer", _hasOriginalTrainer);
 
-    node.addChild(_condition.toXml());
+    XmlNode conditionNode = new XmlNode("condition");
+    conditionNode.setValue(conditionEffects.toString());
+    node.addChild(conditionNode);
+
     node.addChild(_stats.toXml());
     node.addChild(_moves.toXml());
 
@@ -305,8 +302,7 @@ public class Pokemon {
   }
 
   public void loadXml(XmlNode node) {
-    if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XmlException("Cannot read node");
+    if (!XML_NODE_NAME.equals(node.getName())) throw new XmlException("Cannot read node");
 
     _name = node.getAttribute("name");
     _number = node.getIntAttribute("number");
@@ -326,12 +322,13 @@ public class Pokemon {
     _moves.loadXml(node.getChildren(MoveBlock.XML_NODE_NAME).get(0));
     _stats.loadXml(node.getChildren(StatBlock.XML_NODE_NAME).get(0));
 
-    _condition.reset();
-    String conditionString = node.getChildren(Condition.XML_NODE_NAME).get(0).getValue();
+    String conditionString = node.getChildren("condition").get(0).getValue();
     if (conditionString != null) {
       for (String ce : conditionString.replace('[', ' ').replace(']', ' ').trim().split(",")) {
-        if (ce.isEmpty())
+        if (ce.isEmpty()) {
           continue;
+        }
+
         addConditionEffect(ConditionEffect.valueOf(ce));
       }
     }
@@ -339,7 +336,7 @@ public class Pokemon {
 
   private void checkNewMoves() {
     if (!_moves.newMoves(level()).isEmpty())
-      ; // TODO : notify of new moves
+    ; // TODO : notify of new moves
   }
 
   private int xpNeededAtLevel() {
@@ -350,19 +347,14 @@ public class Pokemon {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Pokemon))
-      return false;
+    if (!(o instanceof Pokemon)) return false;
 
     Pokemon p = (Pokemon) o;
 
-    if (number() != p.number())
-      return false;
-    if (level() != p.level())
-      return false;
-    if (xp() != p.xp())
-      return false;
-    if (!name().equals(p.name()))
-      return false;
+    if (number() != p.number()) return false;
+    if (level() != p.level()) return false;
+    if (xp() != p.xp()) return false;
+    if (!name().equals(p.name())) return false;
     // Probably good enough...
 
     return true;
@@ -376,8 +368,8 @@ public class Pokemon {
   private MoveBlock _moves;
   private StatBlock _stats;
   private String _name, _ot;
-  private Condition _condition;
   private PokemonInfo _species;
   private int _number, _level, _xp;
   private boolean _hasOriginalTrainer;
+  private List<ConditionEffect> conditionEffects = new ArrayList<ConditionEffect>();
 }

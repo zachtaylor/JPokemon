@@ -22,8 +22,8 @@
 					<stat ev="0" max="80" iv="12" cur="80" points="0" type="SPEED" />
 				</stats>
 				<moves>
-					<move enabled="true" ppmax="5" number="63" pp="2" />
-					<move enabled="true" ppmax="15" number="51" pp="14" />
+					<move enabled="true" ppmax="5" number="63" pp="5" />
+					<move enabled="true" ppmax="15" number="51" pp="15" />
 					<move enabled="true" ppmax="25" number="21" pp="25" />
 					<move enabled="true" ppmax="20" number="29" pp="20" />
 				</moves>
@@ -36,12 +36,12 @@
 					<stat ev="0" max="77" iv="10" cur="77" points="0" type="SPECATTACK" />
 					<stat ev="0" max="69" iv="22" cur="69" points="0" type="DEFENSE" />
 					<stat ev="0" max="72" iv="19" cur="72" points="0" type="SPECDEFENSE" />
-					<stat ev="0" max="80" iv="21" cur="20" points="0" type="SPEED" />
+					<stat ev="0" max="80" iv="21" cur="80" points="0" type="SPEED" />
 				</stats>
 				<moves>
-					<move enabled="true" ppmax="20" number="121" pp="15" />
-					<move enabled="true" ppmax="15" number="46" pp="14" />
-					<move enabled="true" ppmax="30" number="74" pp="29" />
+					<move enabled="true" ppmax="20" number="121" pp="20" />
+					<move enabled="true" ppmax="15" number="46" pp="15" />
+					<move enabled="true" ppmax="30" number="74" pp=30 />
 					<move enabled="true" ppmax="20" number="101" pp="20" />
 				</moves>
 			</pokemon>
