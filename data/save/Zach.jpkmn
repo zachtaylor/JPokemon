@@ -41,7 +41,7 @@
 				<moves>
 					<move enabled="true" ppmax="20" number="121" pp="20" />
 					<move enabled="true" ppmax="15" number="46" pp="15" />
-					<move enabled="true" ppmax="30" number="74" pp=30 />
+					<move enabled="true" ppmax="30" number="74" pp="30" />
 					<move enabled="true" ppmax="20" number="101" pp="20" />
 				</moves>
 			</pokemon>

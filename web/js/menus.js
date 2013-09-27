@@ -310,11 +310,12 @@
       this.inputWindow.inputBox.setText('');
     },
 
-    removePlayer : function(name) {
+    removePlayer : function(name, team) {
       game.send({
         service : 'lobby',
         configure : 'removeplayer',
-        name : name
+        name : name,
+        team : team
       });
     },
 
@@ -427,11 +428,11 @@
           }
           else {
             image = 'minus_red';
-            onClick = (function(name) {
+            onClick = (function(name, team) {
               return function() {
-                this.removePlayer(name);
+                this.removePlayer(name, team);
               }
-            })(json.teams[team][name]).bind(this);
+            })(json.teams[team][name], team).bind(this);
           }
 
           var panel = new me.ui.Button({ 

@@ -56,6 +56,10 @@ public class Lobby {
     teams.get(team).add(otherPlayerName);
   }
 
+  public void removePlayer(String otherPlayerName, int team) {
+    teams.get(team).remove(otherPlayerName);
+  }
+
   public void accept(String otherPlayerName) {
     responses.put(otherPlayerName, "yes");
   }

@@ -100,6 +100,15 @@ public class LobbyService implements JPokemonService {
       lobby.addPlayer(otherPlayerName, team);
       PlayerManager.pushJson(player, load(new JSONObject(), player));
     }
+    else if (configure.equals("removeplayer")) {
+      String otherPlayerName = json.getString("name");
+      int team = json.getInt("team");
+
+      if (!lobby.isConfiguring()) { return; }
+
+      lobby.removePlayer(otherPlayerName, team);
+      PlayerManager.pushJson(player, load(new JSONObject(), player));
+    }
     else if (configure.equals("state")) {
       String state = json.getString("state");
 
