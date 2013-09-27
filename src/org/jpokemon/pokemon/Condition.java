@@ -1,6 +1,7 @@
 package org.jpokemon.pokemon;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.zachtaylor.jnodalxml.XmlNode;
@@ -14,14 +15,12 @@ public class Condition {
   }
 
   /**
-   * Adds a new issue to the Pokemon. If already afflicted, the effect is
-   * refreshed.
+   * Adds a new issue to the Pokemon. If already afflicted, the effect is refreshed.
    * 
    * @param e The issue to be added
    */
   public void add(ConditionEffect e) {
-    if (contains(e))
-      remove(e);
+    if (contains(e)) remove(e);
 
     _effects.add(e);
   }
@@ -42,8 +41,7 @@ public class Condition {
   }
 
   /**
-   * Computes the catch bonus for effects on the Pokemon. 20 if FRZ or SLP, 15
-   * if BRN, PSN, or PAR. 10 normally.
+   * Computes the catch bonus for effects on the Pokemon. 20 if FRZ or SLP, 15 if BRN, PSN, or PAR. 10 normally.
    * 
    * @return the Catch Bonus
    */
@@ -57,38 +55,38 @@ public class Condition {
   }
 
   /**
-   * Checks against the user's effects to see if they can attack. Returns true
-   * if they can.
+   * Checks against the user's effects to see if they can attack. Returns true if they can.
    * 
    * @return true if user can attack
    */
   public boolean canAttack() {
     for (ConditionEffect i : _effects) {
-      if (i.blocksAttack())
-        return false;
+      if (i.blocksAttack()) return false;
     }
 
     return true;
   }
 
   /**
-   * Applies issues. DOTs hurt, Flinch is removed, volatile effects have a
-   * chance to dispel.
+   * Applies issues. DOTs hurt, Flinch is removed, volatile effects have a chance to dispel.
    */
   public void applyEffects(Pokemon p) {
     resetMessage();
 
-    for (ConditionEffect current : _effects) {
+    for (Iterator<ConditionEffect> conditionEffectIterator = _effects.iterator(); conditionEffectIterator.hasNext();) {
+      ConditionEffect current = conditionEffectIterator.next();
+
       boolean persist = Math.random() <= current.persistanceChance();
       String message = current.persistanceMessage(persist);
 
-      if (persist)
+      if (persist) {
         p.takeDamage((int) (p.maxHealth() * current.damagePercentage()));
-      else
-        remove(current);
+      }
+      else {
+        conditionEffectIterator.remove();
+      }
 
-      if (message != null)
-        pushMessage(p.name() + message);
+      if (message != null) pushMessage(p.name() + message);
     }
   }
 
@@ -105,10 +103,8 @@ public class Condition {
   }
 
   public String toString() {
-    if (_effects.isEmpty())
-      return "";
-    if (_effects.size() == 1)
-      return _effects.get(0).toString();
+    if (_effects.isEmpty()) return "";
+    if (_effects.size() == 1) return _effects.get(0).toString();
     return _effects.toString();
   }
 

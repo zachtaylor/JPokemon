@@ -100,7 +100,7 @@ public class OverworldService implements JPokemonService {
     int nextLeft = location.getLeft();
     int nextTop = location.getTop();
 
-    if ("left".equals(direction) && nextTop > 0) {
+    if ("left".equals(direction) && nextLeft > 0) {
       nextLeft--;
     }
     else if ("right".equals(direction) && nextLeft < map.getWidth() - 1) {

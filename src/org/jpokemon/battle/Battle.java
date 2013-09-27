@@ -203,6 +203,7 @@ public class Battle implements Activity, Iterable<Slot> {
           turnIterator.remove();
         }
       }
+      
       for (Slot slot : autoSwapTurnsToAdd) {
         turnQueue.add(SwapTurn.autoSwapTurn(this, slot));
       }
@@ -406,24 +407,32 @@ public class Battle implements Activity, Iterable<Slot> {
       switch (move.type().effectiveness(victim.type1())) {
       case SUPER:
         answer *= typeadvantage;
+        break;
       case NORMAL:
         answer *= 1;
+        break;
       case NOT_VERY:
         answer *= typedisadvantage;
+        break;
       case IMMUNE:
         answer *= 0;
+        break;
       }
     }
     if (victim.type2() != null) {
       switch (move.type().effectiveness(victim.type1())) {
       case SUPER:
         answer *= typeadvantage;
+        break;
       case NORMAL:
         answer *= 1;
+        break;
       case NOT_VERY:
         answer *= typedisadvantage;
+        break;
       case IMMUNE:
         answer *= 0;
+        break;
       }
     }
 
