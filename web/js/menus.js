@@ -582,6 +582,15 @@
       });
       this.buttonsContainer.add(this.attackButton);
 
+      this.runButton = new me.ui.Button({
+        text : 'Run',
+        border : 'white',
+        width : 150,
+        height : 20,
+        onClick : this.sendRunTurn
+      });
+      this.buttonsContainer.add(this.runButton);
+
       this.logContainer = new me.ui.Scrollable({
         height : 96,
         border : 'white',
@@ -595,6 +604,12 @@
     sendAttackTurn : function() {
       game.send({
         turn : 'attack'
+      });
+    },
+
+    sendRunTurn : function() {
+      game.send({
+        turn : 'run'
       });
     },
 

@@ -7,12 +7,12 @@
 	</record>
 	<pokedex>
 		<seen> [] </seen>
-		<owned> [34, 55, 5, 123, 135, 150, 105] </owned>
+		<owned> [34, 55, 5, 123, 150, 135, 105] </owned>
 	</pokedex>
 	<pokemonstorage>
 		<pokemonbox>
 			<pokemon ot="Zach" level="25" name="Bull" xp="0" number="55" has_original_trainer="true">
-				<condition> </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="82" iv="30" cur="82" points="0" type="HEALTH" />
 					<stat ev="0" max="82" iv="24" cur="82" points="0" type="ATTACK" />
@@ -29,7 +29,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Zach" level="25" name="Dorito" xp="0" number="5" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="70" iv="24" cur="70" points="0" type="HEALTH" />
 					<stat ev="0" max="73" iv="25" cur="73" points="0" type="ATTACK" />
@@ -46,7 +46,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Zach" level="25" name="Spazzz" xp="0" number="135" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="67" iv="0" cur="67" points="0" type="HEALTH" />
 					<stat ev="0" max="74" iv="28" cur="74" points="0" type="ATTACK" />
@@ -63,7 +63,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Zach" level="25" name="Muppet" xp="0" number="105" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="72" iv="31" cur="72" points="0" type="HEALTH" />
 					<stat ev="0" max="76" iv="6" cur="76" points="0" type="ATTACK" />
@@ -80,7 +80,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Zach" level="25" xp="0" number="150" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="86" iv="4" cur="86" points="0" type="HEALTH" />
 					<stat ev="0" max="85" iv="3" cur="85" points="0" type="ATTACK" />
@@ -97,7 +97,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Zach" level="25" name="Neat" xp="0" number="123" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="73" iv="13" cur="73" points="0" type="HEALTH" />
 					<stat ev="0" max="91" iv="7" cur="91" points="0" type="ATTACK" />

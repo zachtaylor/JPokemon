@@ -37,7 +37,7 @@ public class SelectTargetForMoveActivity implements Activity {
   }
 
   @Override
-  public void beforeRemove(Player player) {
+  public void logout(Player player) {
   }
 
   @Override

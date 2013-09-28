@@ -1,9 +1,8 @@
-package org.jpokemon.battle.activity;
+package org.jpokemon.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.activity.Activity;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.move.Move;
 import org.jpokemon.server.PlayerManager;
@@ -13,8 +12,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SelectMoveFromLeaderPokemonActivity implements Activity {
+public class SelectMoveFromPokemonActivity implements Activity {
+  private Pokemon pokemon;
   private int moveIndex = -1;
+
+  public SelectMoveFromPokemonActivity(Pokemon p) {
+    pokemon = p;
+  }
 
   public int getMoveIndex() {
     return moveIndex;
@@ -23,7 +27,6 @@ public class SelectMoveFromLeaderPokemonActivity implements Activity {
   @Override
   public void onAdd(Player player) throws ServiceException {
     JSONObject json = new JSONObject();
-    Pokemon pokemon = player.party().get(0);
     List<JSONObject> moves = new ArrayList<JSONObject>();
 
     try {
@@ -50,7 +53,7 @@ public class SelectMoveFromLeaderPokemonActivity implements Activity {
   }
 
   @Override
-  public void beforeRemove(Player player) {
+  public void logout(Player player) {
   }
 
   @Override

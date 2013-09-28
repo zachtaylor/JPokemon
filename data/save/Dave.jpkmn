@@ -7,12 +7,12 @@
 	</record>
 	<pokedex>
 		<seen> [] </seen>
-		<owned> [137, 16, 7, 92, 58, 125, 147] </owned>
+		<owned> [137, 16, 7, 58, 92, 125, 147] </owned>
 	</pokedex>
 	<pokemonstorage>
 		<pokemonbox>
 			<pokemon ot="Dave" level="25" xp="0" number="147" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="60" iv="21" cur="60" points="0" type="HEALTH" />
 					<stat ev="0" max="73" iv="24" cur="73" points="0" type="ATTACK" />
@@ -29,7 +29,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Dave" level="25" xp="0" number="92" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="52" iv="11" cur="52" points="0" type="HEALTH" />
 					<stat ev="0" max="54" iv="7" cur="54" points="0" type="ATTACK" />
@@ -45,7 +45,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Dave" level="25" xp="0" number="125" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="71" iv="16" cur="71" points="0" type="HEALTH" />
 					<stat ev="0" max="83" iv="26" cur="83" points="0" type="ATTACK" />
@@ -60,7 +60,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Dave" level="25" xp="0" number="7" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="61" iv="16" cur="61" points="0" type="HEALTH" />
 					<stat ev="0" max="60" iv="4" cur="60" points="0" type="ATTACK" />
@@ -77,7 +77,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Dave" level="25" xp="0" number="16" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="57" iv="11" cur="57" points="0" type="HEALTH" />
 					<stat ev="0" max="63" iv="23" cur="63" points="0" type="ATTACK" />
@@ -94,7 +94,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Dave" level="25" xp="0" number="58" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="69" iv="26" cur="69" points="0" type="HEALTH" />
 					<stat ev="0" max="70" iv="3" cur="70" points="0" type="ATTACK" />
@@ -113,7 +113,7 @@
 		</pokemonbox>
 		<pokemonbox>
 			<pokemon ot="Dave" level="25" xp="0" number="147" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="60" iv="18" cur="60" points="0" type="HEALTH" />
 					<stat ev="0" max="70" iv="13" cur="70" points="0" type="ATTACK" />

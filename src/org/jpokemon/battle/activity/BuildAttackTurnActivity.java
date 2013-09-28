@@ -1,6 +1,7 @@
 package org.jpokemon.battle.activity;
 
 import org.jpokemon.activity.Activity;
+import org.jpokemon.activity.SelectMoveFromPokemonActivity;
 import org.jpokemon.battle.Battle;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.AttackTurn;
@@ -22,17 +23,17 @@ public class BuildAttackTurnActivity implements BuildTurnActivity {
   @Override
   public void onAdd(Player player) throws ServiceException {
     slotId = player.id();
-    PlayerManager.addActivity(player, new SelectMoveFromLeaderPokemonActivity());
+    PlayerManager.addActivity(player, new SelectMoveFromPokemonActivity(player.party().get(0)));
   }
 
   @Override
-  public void beforeRemove(Player player) {
+  public void logout(Player player) {
   }
 
   @Override
   public void onReturn(Activity activity, Player player) {
-    if (activity instanceof SelectMoveFromLeaderPokemonActivity) {
-      SelectMoveFromLeaderPokemonActivity smflpa = (SelectMoveFromLeaderPokemonActivity) activity;
+    if (activity instanceof SelectMoveFromPokemonActivity) {
+      SelectMoveFromPokemonActivity smflpa = (SelectMoveFromPokemonActivity) activity;
 
       moveIndex = smflpa.getMoveIndex();
 
@@ -68,7 +69,7 @@ public class BuildAttackTurnActivity implements BuildTurnActivity {
   }
 
   @Override
-  public Turn getTurn(Battle battle) {
+  public Turn getTurn() {
     if (moveIndex == -1 || targetId == null) { return null; }
 
     Slot userSlot = battle.getSlot(slotId);

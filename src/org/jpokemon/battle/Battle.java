@@ -10,11 +10,12 @@ import java.util.Queue;
 
 import org.jpokemon.activity.Activity;
 import org.jpokemon.battle.activity.BuildAttackTurnActivity;
+import org.jpokemon.battle.activity.BuildRunTurnActivity;
 import org.jpokemon.battle.activity.BuildTurnActivity;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.battle.turn.AttackTurn;
 import org.jpokemon.battle.turn.SwapTurn;
 import org.jpokemon.battle.turn.Turn;
-import org.jpokemon.battle.turn.TurnFactory;
 import org.jpokemon.pokemon.ConditionEffect;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.pokemon.Type;
@@ -104,18 +105,15 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   @Override
-  public void beforeRemove(Player player) {
-    if (slots.containsKey(player.id())) {
-      // TODO - punish player
-      remove(player);
-    }
+  public void logout(Player player) {
+    // TODO - punish player
   }
 
   @Override
   public void onReturn(Activity activity, Player player) {
     if (activity instanceof BuildTurnActivity) {
       BuildTurnActivity bta = (BuildTurnActivity) activity;
-      Turn turn = bta.getTurn(this);
+      Turn turn = bta.getTurn();
       addTurn(turn);
 
       JSONObject json = generateJson();
@@ -146,12 +144,11 @@ public class Battle implements Activity, Iterable<Slot> {
 
         }
         else if ("run".equals(turn)) {
-
+          PlayerManager.addActivity(player, new BuildRunTurnActivity(this));
         }
       }
     }
     catch (JSONException e) {
-
     }
   }
 
@@ -234,21 +231,10 @@ public class Battle implements Activity, Iterable<Slot> {
         randomSlot = allSlots[(int) (Math.random() * allSlots.length)];
       } while (slot.equals(randomSlot));
 
-      int randomMove = (int) ((Math.random()) * slot.leader().moveCount());
+      int randomMoveIndex = (int) ((Math.random()) * slot.leader().moveCount());
+      Move randomMove = slot.leader().move(randomMoveIndex);
 
-      JSONObject json = new JSONObject();
-      try {
-        json.put("turn", "ATTACK");
-        json.put("trainer", slot.trainer().id());
-        json.put("target", randomSlot.trainer().id());
-        json.put("move", randomMove);
-      }
-      catch (JSONException e) {
-        e.printStackTrace();
-        return;
-      }
-
-      addTurn(TurnFactory.create(json, this, slot, randomSlot));
+      addTurn(new AttackTurn(this, slot, randomSlot, randomMove));
     }
   }
 
@@ -272,7 +258,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
         if (slot.trainer() instanceof Player) {
           Player p = (Player) slot.trainer();
-          remove(p);
+          PlayerManager.popActivity(p, this);
         }
       }
     }

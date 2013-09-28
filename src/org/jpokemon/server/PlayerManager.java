@@ -166,7 +166,7 @@ public class PlayerManager {
     }
 
     while (hasActivity(player)) {
-      PlayerManager.popActivity(player, PlayerManager.getActivity(player));
+      activities.get(player.id()).pop().logout(player);
     }
     activities.remove(playerId);
   }

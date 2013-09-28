@@ -6,8 +6,8 @@ import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;
 
 public class RunTurn extends Turn {
-  public RunTurn(Battle b, Slot user, Slot target) {
-    super(b, user, target);
+  public RunTurn(Battle b, Slot user) {
+    super(b, user, user);
   }
 
   @Override
