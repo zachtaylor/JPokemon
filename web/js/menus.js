@@ -585,6 +585,13 @@
       });
       this.buttonsContainer.add(this.attackButton);
 
+      this.swapButton = new me.ui.Button({
+        text : 'Swap',
+        border : 'white',
+        onClick : this.sendSwapTurn
+      });
+      this.buttonsContainer.add(this.swapButton);
+
       this.runButton = new me.ui.Button({
         text : 'Run',
         border : 'white',
@@ -613,6 +620,12 @@
       });
     },
 
+    sendSwapTurn : function() {
+      game.send({
+        turn : 'swap'
+      });
+    },
+
     sendRunTurn : function() {
       game.send({
         turn : 'run'
@@ -636,6 +649,7 @@
 
       if (json.visible) {
         this.buttonsContainer.add(this.attackButton);
+        this.buttonsContainer.add(this.swapButton);
         this.buttonsContainer.add(this.runButton);
 
         this.show();
@@ -819,6 +833,59 @@
         })(moveIndex).bind(this);
 
         this.pane.add(moveButton);
+      }
+    }
+  });
+
+  me.menu.SelectPokemonWindow = me.menu.Window.extend({
+    init : function() {
+      this.parent(205, 165);
+    },
+
+    send : function(pokemonIndex) {
+      game.send({
+        'pokemonIndex' : pokemonIndex
+      });
+      this.hide();
+    },
+
+    dispatch : function(json) {
+      this.show();
+      this.title.setText('Select a pokemon');
+
+      this.pane.clear();
+      for (var pokemonIndex = 0; pokemonIndex < json.pokemon.length; pokemonIndex++) {
+        var pokemon = json.pokemon[pokemonIndex];
+
+        var pokemonButton = new me.ui.Button({
+          xlayout : 'center',
+          ylayout : 'fit',
+          border : 'white',
+          text : pokemon.name + ' (Lvl.' + pokemon.level + ')'
+        });
+
+        pokemonButton.add(new me.ui.Label({
+          text : 'HP: ' + pokemon.health + '/' + pokemon.healthMax
+        }));
+
+        var conditionPanel = new me.ui.Panel({
+          padding : 0,
+          xlayout : 'fit'
+        });
+
+        for (var i = 0; i < pokemon.condition.length; i++) {
+          conditionPanel.add(new me.ui.Label({
+            text : pokemon.condition[i]
+          }));
+        }
+
+        pokemonButton.onClick = (function(pokemonIndex) {
+          return function() {
+            this.send(pokemonIndex);
+          }
+        })(pokemonIndex).bind(this);
+
+        this.pane.add(pokemonButton);
       }
     }
   });

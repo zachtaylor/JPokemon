@@ -6,8 +6,8 @@ import org.jpokemon.battle.slot.Slot;
 public class SwapTurn extends Turn {
   private int _swapIndex;
 
-  public SwapTurn(Battle b, Slot user, Slot target, int swapIndex) {
-    super(b, user, target);
+  public SwapTurn(Battle b, Slot user, int swapIndex) {
+    super(b, user, user);
     _swapIndex = swapIndex;
   }
 
@@ -19,7 +19,7 @@ public class SwapTurn extends Turn {
       autoSwapIndex++;
     }
 
-    return new SwapTurn(b, user, user, autoSwapIndex);
+    return new SwapTurn(b, user, autoSwapIndex);
   }
 
   @Override

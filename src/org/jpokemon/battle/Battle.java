@@ -11,6 +11,7 @@ import java.util.Queue;
 import org.jpokemon.activity.Activity;
 import org.jpokemon.battle.activity.BuildAttackTurnActivity;
 import org.jpokemon.battle.activity.BuildRunTurnActivity;
+import org.jpokemon.battle.activity.BuildSwapTurnActivity;
 import org.jpokemon.battle.activity.BuildTurnActivity;
 import org.jpokemon.battle.slot.Slot;
 import org.jpokemon.battle.turn.AttackTurn;
@@ -160,7 +161,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
         }
         else if ("swap".equals(turn)) {
-
+          PlayerManager.addActivity(player, new BuildSwapTurnActivity(this));
         }
         else if ("run".equals(turn)) {
           PlayerManager.addActivity(player, new BuildRunTurnActivity(this));
