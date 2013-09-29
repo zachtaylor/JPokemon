@@ -19,8 +19,9 @@ public class PartyEditorPanel extends JPanel {
   public static int defaultlevel = 25;
 
   public PartyEditorPanel(SaveGeneratorWindow sgw) {
+    super(new BorderLayout());
+
     parent = sgw;
-    setLayout(new BorderLayout());
 
     JPanel bodyPanel = new JPanel();
     bodyPanel.setLayout(new BorderLayout());

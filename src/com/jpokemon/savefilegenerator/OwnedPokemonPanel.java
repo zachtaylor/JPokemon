@@ -13,13 +13,12 @@ import com.jpokemon.util.ui.ImageLoader;
 
 public class OwnedPokemonPanel extends JPanel {
   public OwnedPokemonPanel(PartyEditorPanel pep, Pokemon p) {
+    super(new BorderLayout());
+
     parent = pep;
     pokemon = p;
 
-    setLayout(new BorderLayout());
-
     add(new JLabel(ImageLoader.pokemon(p.number() + "")), BorderLayout.WEST);
-
     add(new JLabel(p.name() + " Lvl. " + p.level()), BorderLayout.CENTER);
 
     editButton.addMouseListener(new EditHandler());

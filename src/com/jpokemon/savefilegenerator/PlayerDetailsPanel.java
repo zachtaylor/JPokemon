@@ -12,6 +12,8 @@ import com.jpokemon.util.ui.ImageLoader;
 
 public class PlayerDetailsPanel extends JPanel {
   public PlayerDetailsPanel(SaveGeneratorWindow sgw) {
+    super();
+
     parent = sgw;
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     setPreferredSize(new Dimension(200, 300));

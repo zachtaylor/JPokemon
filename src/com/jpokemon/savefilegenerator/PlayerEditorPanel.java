@@ -11,6 +11,8 @@ import javax.swing.JTextField;
 
 public class PlayerEditorPanel extends JPanel {
   public PlayerEditorPanel(SaveGeneratorWindow sgw) {
+    super();
+
     parent = sgw;
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     setPreferredSize(new Dimension(200, 300));

@@ -23,8 +23,9 @@ import com.jpokemon.util.ui.JPokemonSelector;
 
 public class PokemonDetailsPanel extends JPanel {
   public PokemonDetailsPanel(PartyEditorPanel pep) {
+    super(new BorderLayout());
+
     parent = pep;
-    setLayout(new BorderLayout());
 
     JPanel detailsPanel = new JPanel();
     detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));

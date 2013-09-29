@@ -23,9 +23,10 @@ public class PokemonSearchPanel extends JPanel {
   private static final String nameFieldDefault = "[Search by name]";
 
   public PokemonSearchPanel(PartyEditorPanel pep) {
+    super(new BorderLayout());
+
     parent = pep;
     setPreferredSize(new Dimension(250, 300));
-    setLayout(new BorderLayout());
     setFocusable(true);
 
     searchFieldPanel.setFocusable(true);

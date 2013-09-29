@@ -13,10 +13,10 @@ import com.jpokemon.util.ui.ImageLoader;
 
 public class SelectablePokemonPanel extends JPanel {
   public SelectablePokemonPanel(PokemonSearchPanel psp, PokemonInfo pi) {
+    super(new BorderLayout());
+
     parent = psp;
     pokemonInfo = pi;
-
-    setLayout(new BorderLayout());
 
     add(new JLabel(ImageLoader.pokemon(pi.getNumber() + "")), BorderLayout.WEST);
 

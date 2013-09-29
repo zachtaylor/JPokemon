@@ -16,6 +16,7 @@ import org.zachtaylor.jnodalxml.XmlParser;
 
 public class SaveGeneratorWindow extends JFrame {
   public SaveGeneratorWindow() {
+    super();
     setLayout(new BorderLayout());
 
     add(playerDetailsPanel, BorderLayout.CENTER);
