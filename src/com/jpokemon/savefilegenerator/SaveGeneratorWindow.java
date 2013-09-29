@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.jpokemon.trainer.Player;
 import org.zachtaylor.jnodalxml.XmlParser;
@@ -47,6 +48,13 @@ public class SaveGeneratorWindow extends JFrame {
   }
 
   public void savePlayer() {
+    String playerName = player.getName();
+
+    if (playerName == null || playerName.length() == 0) {
+      JOptionPane.showMessageDialog(this, "You haven't yet provided a name for the player.", "Can't Save Player", JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+
     File file = new File(".", player.getName() + ".jpkmn");
 
     try {
