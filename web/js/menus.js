@@ -567,17 +567,20 @@
       });
       this.add(this.teamsContainer);
 
+      var buttonsContainerParent = new me.ui.Panel({
+        padding : 0,
+        xlayout : 'center'
+      });
       this.buttonsContainer = new me.ui.Panel({
         xlayout : 'fit',
         ylayout : 'fill'
       });
-      this.add(this.buttonsContainer);
+      buttonsContainerParent.add(this.buttonsContainer);
+      this.add(buttonsContainerParent);
 
       this.attackButton = new me.ui.Button({
         text : 'Attack',
         border : 'white',
-        width : 150,
-        height : 20,
         onClick : this.sendAttackTurn
       });
       this.buttonsContainer.add(this.attackButton);
@@ -585,20 +588,23 @@
       this.runButton = new me.ui.Button({
         text : 'Run',
         border : 'white',
-        width : 150,
-        height : 20,
         onClick : this.sendRunTurn
       });
       this.buttonsContainer.add(this.runButton);
+
+      this.closeButton = new me.ui.Button({
+        text : 'Close screen',
+        border : 'white',
+        onClick : this.hide.bind(this)
+      });
 
       this.logContainer = new me.ui.Scrollable({
         height : 96,
         border : 'white',
       });
+      this.logContainer.dispatch = this.dispatchFromBattleLog.bind(this);
+      game.subscribe('battlelog', this.logContainer);
       this.add(this.logContainer);
-      game.subscribe('battlelog', { // a little hacky...
-        dispatch : this.dispatchFromBattleLog.bind(this)
-      });
     },
 
     sendAttackTurn : function() {
@@ -614,11 +620,30 @@
     },
 
     dispatchFromBattleLog : function(json) {
-      this.logContainer.add(new me.ui.Label({ text : json.text }));
+      if (this.clearBattleLog) {
+        this.logContainer.clear();
+      }
+
+      this.clearBattleLog = json.clear;
+
+      for (var i = 0; i < json.logs.length; i++) {
+        this.logContainer.add(new me.ui.Label({ text : json.logs[i] }));
+      }
     },
 
     dispatch : function(json) {
-      this.show();
+      this.buttonsContainer.clear();
+
+      if (json.visible) {
+        this.buttonsContainer.add(this.attackButton);
+        this.buttonsContainer.add(this.runButton);
+
+        this.show();
+      }
+      else {
+        this.buttonsContainer.add(this.closeButton);
+        return;
+      }
 
       var team, teamPanel, player, playerPanel, playerInfoPanel, playerNamePanel;
 
@@ -654,16 +679,17 @@
           });
           playerPanel.add(playerInfoPanel);
 
-          playerInfoPanel.add(this.buildNamePanel(player));
-          playerInfoPanel.add(new me.ui.Label({ text : player.pokemonName }));
+          playerInfoPanel.add(this.buildPlayerNamePanel(player));
+          playerInfoPanel.add(this.buildPokemonNamePanel(player));
           playerInfoPanel.add(this.buildHealthMeter(player));
+          playerInfoPanel.add(this.buildConditionPanel(player));
 
           teamPanel.add(playerPanel);
         }
       }
     },
 
-    buildNamePanel : function(json) {
+    buildPlayerNamePanel : function(json) {
       var image;
 
       if (json.turn === 'ready') {
@@ -686,6 +712,22 @@
 
       panel.add(new me.ui.Label({
         text : json.name
+      }));
+
+      return panel;
+    },
+
+    buildPokemonNamePanel : function(json) {
+      var panel = new me.ui.Panel({
+        padding : 0,
+        xlayout : 'fit',
+        ylayout : 'center'
+      });
+
+      var pokemonNameAndLevel = json.pokemonName + ' (Lvl.' + json.pokemonLevel + ')';
+
+      panel.add(new me.ui.Label({
+        text : pokemonNameAndLevel
       }));
 
       return panel;
@@ -722,6 +764,21 @@
 
       return panel;
     },
+
+    buildConditionPanel : function(json) {
+      var panel = new me.ui.Panel({
+        padding : 0,
+        xlayout : 'fit'
+      });
+
+      for (var i = 0; i < json.pokemonCondition.length; i++) {
+        panel.add(new me.ui.Label({
+          text : json.pokemonCondition[i]
+        }));
+      }
+
+      return panel;
+    }
   });
 
   me.menu.SelectMoveWindow = me.menu.Window.extend({

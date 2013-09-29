@@ -88,5 +88,6 @@ public class Lobby {
     teams.add(new ArrayList<String>());
     teams.get(0).add(host);
     responses.clear();
+    configuring = true;
   }
 }

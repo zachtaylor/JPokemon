@@ -138,27 +138,22 @@ public class PlayerManager {
 
   public static void close(JPokemonWebSocket socket) {
     String playerId;
-    Player player;
-
     synchronized (players) {
       playerId = sessions.get(socket);
-      if (playerId == null) { return; }
+    }
 
-      player = getPlayer(playerId);
-      File file = new File(JPokemonServer.savepath, playerId + ".jpkmn");
+    if (playerId == null) { return; }
 
-      try {
-        Writer writer = new BufferedWriter(new PrintWriter(file));
-        writer.write(player.toXml().printToString(0, "\t"));
-        writer.close();
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
+    Player player = getPlayer(playerId);
+    File file = new File(JPokemonServer.savepath, playerId + ".jpkmn");
 
-      sessions.remove(socket);
-      sockets.remove(playerId);
-      players.remove(playerId);
+    try {
+      Writer writer = new BufferedWriter(new PrintWriter(file));
+      writer.write(player.toXml().printToString(0, "\t"));
+      writer.close();
+    }
+    catch (IOException e) {
+      e.printStackTrace();
     }
 
     for (JPokemonService service : services.values()) {
@@ -169,6 +164,12 @@ public class PlayerManager {
       activities.get(player.id()).pop().logout(player);
     }
     activities.remove(playerId);
+
+    synchronized (players) {
+      sessions.remove(socket);
+      sockets.remove(playerId);
+      players.remove(playerId);
+    }
   }
 
   private static void login(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {

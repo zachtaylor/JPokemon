@@ -40,14 +40,15 @@ public class Battle implements Activity, Iterable<Slot> {
     Myna.configure(Battle.class, "org.jpokemon.battle");
   }
 
+  private List<String> log = new ArrayList<String>();
   private Map<String, Slot> slots = new HashMap<String, Slot>();
   private Map<String, Turn> turns = new HashMap<String, Turn>();
 
   public Battle(PokemonTrainer... trainers) {
-    PokemonTrainer trainer;
+    System.out.println(toString() + " created");
 
     for (int i = 0; i < trainers.length; i++) {
-      trainer = trainers[i];
+      PokemonTrainer trainer = trainers[i];
       addTrainer(trainer, i);
     }
 
@@ -55,9 +56,11 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
-    if (contains(trainer)) throw new IllegalArgumentException("Duplicate trainer: " + trainer);
+    if (contains(trainer))
+      throw new IllegalArgumentException("Duplicate trainer: " + trainer);
 
     slots.put(trainer.id(), new Slot(trainer, team));
+    System.out.println(toString() + " trainer added: " + trainer.id());
   }
 
   public int getTrainerCount() {
@@ -73,26 +76,42 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void remove(PokemonTrainer trainer) {
-    Slot slot = slots.remove(trainer.id());
+    System.out.println(toString() + " remove trainer: " + trainer.id());
 
-    if (slot.party().awake() == 0) {
-      if (slot.trainer() instanceof Trainer) {
-        addTrainerToPlayerHistory(slot.trainer().id());
+    if (trainer.party().awake() == 0) {
+      if (trainer instanceof Trainer) {
+        addTrainerToPlayerHistory(trainer.id());
       }
-      else if (slot.trainer() instanceof Player) {
+      else if (trainer instanceof Player) {
         // TODO - punish player
       }
     }
 
-    if (slot.trainer() instanceof Player) {
-      PlayerManager.popActivity((Player) slot.trainer(), this);
+    if (trainer instanceof Player) {
+      Player player = (Player) trainer;
+
+      pushLog(false);
+
+      JSONObject json = new JSONObject();
+      try {
+        json.put("action", "battle");
+        json.put("visible", false);
+      }
+      catch (JSONException e) {
+      }
+      PlayerManager.pushJson(player, json);
+
+      PlayerManager.popActivity(player, this);
     }
+
+    slots.remove(trainer.id());
 
     verifyTeamCount();
   }
 
   public void addTurn(Turn turn) {
     turns.put(turn.slot().trainer().id(), turn);
+    System.out.println(toString() + " turn set: " + turn.slot().trainer().id() + "\t" + turn.toString());
 
     if (turns.size() == slots.size()) {
       executeRound();
@@ -153,13 +172,19 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void log(String message) {
+    log.add(message);
+  }
+
+  public void pushLog(boolean clear) {
     JSONObject json = new JSONObject();
 
     try {
       json.put("action", "battlelog");
-      json.put("text", message);
+      json.put("logs", new JSONArray(log));
+      json.put("clear", clear);
     }
     catch (JSONException e) {
+      e.printStackTrace();
     }
 
     for (Slot slot : this) {
@@ -178,12 +203,13 @@ public class Battle implements Activity, Iterable<Slot> {
 
   private void executeRound() {
     Queue<Turn> turnQueue = new PriorityQueue<Turn>();
+    Map<String, Turn> currentRoundTurns = turns;
+    turns = new HashMap<String, Turn>();
 
-    for (Turn turn : turns.values()) {
+    // Prepare the turn queue
+    for (Turn turn : currentRoundTurns.values()) {
       turnQueue.add(turn);
     }
-
-    turns.clear();
 
     // MADNESS
     while (!turnQueue.isEmpty()) {
@@ -191,39 +217,50 @@ public class Battle implements Activity, Iterable<Slot> {
 
       turn.execute();
 
-      List<Slot> autoSwapTurnsToAdd = new ArrayList<Slot>();
-      for (Iterator<Turn> turnIterator = turnQueue.iterator(); turnIterator.hasNext();) {
-        Turn t = turnIterator.next();
+      if (!turn.target().leader().awake()) {
+        log(turn.target().trainer().getName() + "'s " + turn.target().leader().name() + " fainted");
+        Turn turnToRemove = currentRoundTurns.get(turn.target().trainer().id());
+        boolean turnWasRemoved = turnQueue.remove(turnToRemove);
 
-        if (!t.slot().leader().awake()) {
-          autoSwapTurnsToAdd.add(t.slot());
-          turnIterator.remove();
+        if (turn.target().party().awake() == 0) {
+          log(turn.target().trainer().getName() + " lost!");
+          remove(turn.target().trainer());
+        }
+        else if (turnWasRemoved) {
+          log(turn.target().trainer().getName() + " will auto-swap to the next available pokemon");
+          turnQueue.add(SwapTurn.autoSwapTurn(this, turn.target()));
         }
       }
 
-      for (Slot slot : autoSwapTurnsToAdd) {
-        turnQueue.add(SwapTurn.autoSwapTurn(this, slot));
+      if (!turn.slot().leader().awake()) {
+        remove(turn.slot().trainer());
       }
-
-      if (turn.reAdd()) {
+      else if (turn.reAdd()) {
         addTurn(turn);
       }
     }
 
+    applyEndOfRoundEffects();
+    doTrainerAttacks();
+
     for (Slot slot : this) {
-      if (!slot.leader().awake() && slot.party().awake() > 0) {
-        turns.put(slot.trainer().id(), SwapTurn.autoSwapTurn(this, slot));
+      if (!slot.leader().awake()) {
+        if (slot.party().awake() > 0) {
+        }
+        else {
+        }
       }
     }
 
-    applyEndOfRoundEffects();
-
-    doTrainerAttacks();
+    System.out.println(toString() + " logs : " + log.toString());
+    pushLog(true);
+    log = new ArrayList<String>();
   }
 
   private void doTrainerAttacks() {
     for (Slot slot : slots.values()) {
-      if (slot.trainer() instanceof Player) continue;
+      if (slot.trainer() instanceof Player)
+        continue;
 
       Slot randomSlot;
       do {
@@ -251,6 +288,14 @@ public class Battle implements Activity, Iterable<Slot> {
       }
     }
 
+    JSONObject json = new JSONObject();
+    try {
+      json.put("action", "battle");
+      json.put("visible", false);
+    }
+    catch (JSONException e) {
+    }
+
     if (onlyOneTeamLeft) {
       while (!slots.isEmpty()) {
         String slotKey = (String) slots.keySet().toArray()[0];
@@ -258,6 +303,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
         if (slot.trainer() instanceof Player) {
           Player p = (Player) slot.trainer();
+          PlayerManager.pushJson(p, json);
           PlayerManager.popActivity(p, this);
         }
       }
@@ -294,7 +340,8 @@ public class Battle implements Activity, Iterable<Slot> {
     Player p;
 
     for (Slot s : this) {
-      if (!(s.trainer() instanceof Player)) continue;
+      if (!(s.trainer() instanceof Player))
+        continue;
 
       p = (Player) s.trainer();
 
@@ -308,6 +355,7 @@ public class Battle implements Activity, Iterable<Slot> {
 
     try {
       json.put("action", "battle");
+      json.put("visible", true);
 
       Map<Integer, JSONArray> teams = new HashMap<Integer, JSONArray>();
       for (Slot slot : this) {
@@ -320,9 +368,16 @@ public class Battle implements Activity, Iterable<Slot> {
         opponent.put("name", slot.trainer().getName());
         opponent.put("turn", turns.get(slot.trainer().id()) != null ? "ready" : "waiting");
         opponent.put("pokemonName", slot.leader().name());
+        opponent.put("pokemonLevel", slot.leader().level());
         opponent.put("pokemonNumber", slot.leader().number());
         opponent.put("pokemonHealth", slot.leader().health());
         opponent.put("pokemonMaxHealth", slot.leader().maxHealth());
+
+        JSONArray conditionArray = new JSONArray();
+        for (ConditionEffect conditionEffect : slot.leader().getConditionEffects()) {
+          conditionArray.put(conditionEffect.name());
+        }
+        opponent.put("pokemonCondition", conditionArray);
 
         teams.get(slot.team()).put(opponent);
       }
@@ -366,7 +421,8 @@ public class Battle implements Activity, Iterable<Slot> {
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * E * R * reps;
 
-    if (damage < 1 && E != 0) damage = 1;
+    if (damage < 1 && E != 0)
+      damage = 1;
 
     return (int) damage;
   }
@@ -393,8 +449,9 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   /**
-   * Calculates effectiveness modifications for a Move from a user to a victim. Includes Same-Type-Attack-Bonus for user and {@link Type} modifications between
-   * the move and victim.
+   * Calculates effectiveness modifications for a Move from a user to a victim.
+   * Includes Same-Type-Attack-Bonus for user and {@link Type} modifications
+   * between the move and victim.
    * 
    * @param move Move to calculate with
    * @param user Pokemon using the move
@@ -411,32 +468,32 @@ public class Battle implements Activity, Iterable<Slot> {
       switch (move.type().effectiveness(victim.type1())) {
       case SUPER:
         answer *= typeadvantage;
-        break;
+      break;
       case NORMAL:
         answer *= 1;
-        break;
+      break;
       case NOT_VERY:
         answer *= typedisadvantage;
-        break;
+      break;
       case IMMUNE:
         answer *= 0;
-        break;
+      break;
       }
     }
     if (victim.type2() != null) {
       switch (move.type().effectiveness(victim.type1())) {
       case SUPER:
         answer *= typeadvantage;
-        break;
+      break;
       case NORMAL:
         answer *= 1;
-        break;
+      break;
       case NOT_VERY:
         answer *= typedisadvantage;
-        break;
+      break;
       case IMMUNE:
         answer *= 0;
-        break;
+      break;
       }
     }
 

@@ -29,48 +29,48 @@ public class AttackTurn extends Turn {
       }
 
       if (!_move.enabled()) {
-        battle().log(leader.name() + " cannot use " + _move.name() + "! It's not enabled!");
+        battle().log(leader.name() + " cannot use " + _move.name() + ". It's not enabled");
         return;
       }
       else if (!_move.use()) {
-        battle().log("It missed.");
+        battle().log(leader.name() + " tried to use " + _move.name() + ", but it missed");
 
         if (_move.hurtUserOnMiss()) {
           int d = Battle.computeDamage(leader, _move, target().leader()) / 8;
           slot().takeDamage(d);
-          battle().log(leader.name() + " took " + d + " recoil damage!");
+          battle().log(leader.name() + " took " + d + " recoil damage");
         }
 
         return;
       }
     }
 
-    battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " used " + _move.name() + "!");
+    battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " used " + _move.name());
 
     if (_move.style() == MoveStyle.DELAYNEXT && _executions != 1) {
-      battle().log("Resting this turn");
+      battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " is resting this turn");
       return;
     }
     if (_move.style() == MoveStyle.DELAYBEFORE && _executions != _move.turns()) {
-      battle().log("Resting this turn");
+      battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " is resting this turn");
       return;
     }
     if (_move.style() == MoveStyle.OHKO) {
       int levelDiff = leader.level() - target().leader().level();
 
       if (levelDiff < 0 || (levelDiff + 30.0) / 100.0 <= Math.random()) {
-        battle().log("It missed.");
+        battle().log(leader.name() + " tried to use " + _move.name() + ", but it missed");
         return;
       }
     }
     if (_move.style() == MoveStyle.MISC) { // TODO MoveStyle.MISC execution
-      battle().log("This doesn't work yet. Sorry about that!");
+      battle().log(_move.name() + " doesn't work yet. Sorry about that!");
       return;
     }
 
     if (_move.doesDamage()) {
       calculateDamage();
-      battle().log(target().leader().name() + " took " + _damage + " damage!");
+      battle().log(target().leader().name() + " took " + _damage + " damage");
       target().takeDamage(_damage);
     }
 
@@ -84,7 +84,8 @@ public class AttackTurn extends Turn {
 
   @Override
   public int compareTo(Turn t) {
-    if (t instanceof AttackTurn) return t.slot().leader().speed() - slot().leader().speed();
+    if (t instanceof AttackTurn)
+      return t.slot().leader().speed() - slot().leader().speed();
 
     return 1;
   }
