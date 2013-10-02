@@ -13,10 +13,10 @@ import com.njkremer.Sqlite.Annotations.PrimaryKey;
 
 public class ItemInfo {
   @PrimaryKey
-  private int number;
+  private int id;
 
   private String name;
-  private int type, data, value;
+  private int type, data;
 
   private static Map<Integer, ItemInfo> cache = new HashMap<Integer, ItemInfo>();
 
@@ -25,11 +25,11 @@ public class ItemInfo {
 
     if (cache.get(number) == null) {
       try {
-        List<ItemInfo> info = SqlStatement.select(ItemInfo.class).where("number").eq(number).getList();
+        List<ItemInfo> info = SqlStatement.select(ItemInfo.class).where("id").eq(number).getList();
 
-        if (!info.isEmpty())
-          cache.put(number, info.get(0));
-      } catch (DataConnectionException e) {
+        if (!info.isEmpty()) cache.put(number, info.get(0));
+      }
+      catch (DataConnectionException e) {
         e.printStackTrace();
       }
     }
@@ -37,15 +37,10 @@ public class ItemInfo {
     return cache.get(number);
   }
 
-  public String toString() {
-    return "Item#" + getNumber() + " " + getName();
-  }
-
   //@preformat
-  public int getNumber() {return number;} public void setNumber(int n) {number = n;}
+  public int getId() { return id; } public void setId(int i) { id = i; }
   public int getType() {return type;} public void setType(int t) {type = t;}
   public int getData() {return data;} public void setData(int d) {data = d;}
-  public int getValue() {return value;} public void setValue(int v) {value = v;}
   public String getName() {return name;} public void setName(String s) {name = s;}
   //@format
 }

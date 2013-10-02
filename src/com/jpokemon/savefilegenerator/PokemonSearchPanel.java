@@ -70,7 +70,7 @@ public class PokemonSearchPanel extends JPanel {
   private void nameFieldSearch() {
     String nameFieldText = nameField.getText().toLowerCase();
 
-    if (nameFieldText.isEmpty() || nameFieldText.equals(nameFieldDefault.toLowerCase())) {
+    if (nameFieldText.equals(nameFieldDefault.toLowerCase())) {
       return;
     }
 

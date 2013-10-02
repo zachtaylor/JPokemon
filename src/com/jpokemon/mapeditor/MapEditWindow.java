@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.jpokemon.mapeditor.storeeditor.StoreEditor;
+
 public class MapEditWindow extends JFrame {
   public MapEditWindow() {
     components.put(WildPokemonEditor.BUTTON_NAME, new WildPokemonEditor());
