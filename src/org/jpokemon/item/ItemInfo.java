@@ -9,11 +9,13 @@ import org.jpokemon.server.JPokemonServer;
 import com.njkremer.Sqlite.DataConnectionException;
 import com.njkremer.Sqlite.DataConnectionManager;
 import com.njkremer.Sqlite.SqlStatement;
+import com.njkremer.Sqlite.Annotations.AutoIncrement;
 import com.njkremer.Sqlite.Annotations.PrimaryKey;
 
 public class ItemInfo {
   @PrimaryKey
-  private int id;
+  @AutoIncrement
+  private int id = -1;
 
   private String name;
   private int type, data;

@@ -26,7 +26,7 @@ public class SwapTurn extends Turn {
   public void execute() {
     slot().party().swap(0, _swapIndex);
 
-    String trainerName = slot().trainer().getName();
+    String trainerName = slot().trainer().id();
     String leaderName = slot().leader().name();
     battle().log(trainerName + " sent out " + leaderName);
   }

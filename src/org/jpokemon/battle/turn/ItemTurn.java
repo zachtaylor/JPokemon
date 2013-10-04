@@ -14,7 +14,7 @@ public class ItemTurn extends Turn {
     _targetIndex = targetIndex;
     _item = item;
 
-    battle().log(slot().trainer().getName() + " used " + item.name());
+    battle().log(slot().trainer().id() + " used " + item.name());
   }
 
   @Override

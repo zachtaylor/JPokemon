@@ -19,7 +19,7 @@ public class StoreActivity implements Activity {
   }
 
   @Override
-  public void beforeRemove(Player player) {
+  public void logout(Player player) {
   }
 
   @Override
@@ -84,7 +84,7 @@ public class StoreActivity implements Activity {
   }
 
   private Inventory findInventory(int itemID, int denomination) {
-    for (Inventory inventory : store) {
+    for (Inventory inventory : store.getInventory()) {
       if (inventory.getItem() == itemID && inventory.getDenomination() == denomination) { return inventory; }
     }
 

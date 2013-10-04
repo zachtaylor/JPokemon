@@ -15,7 +15,7 @@ public class UpgradeActivity implements Activity {
   }
 
   @Override
-  public void beforeRemove(Player player) {
+  public void logout(Player player) {
   }
 
   @Override

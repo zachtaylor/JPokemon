@@ -13,7 +13,7 @@ public class Item {
   }
 
   public int number() {
-    return _info.getNumber();
+    return _info.getId();
   }
 
   public String name() {
@@ -22,10 +22,6 @@ public class Item {
 
   public ItemType type() {
     return _type;
-  }
-
-  public int value() {
-    return _info.getValue();
   }
 
   public Target target() {
@@ -62,7 +58,7 @@ public class Item {
   public XmlNode toXml() {
     XmlNode node = new XmlNode(XML_NODE_NAME);
 
-    node.setAttribute("number", _info.getNumber());
+    node.setAttribute("number", _info.getId());
     node.setAttribute("quantity", _quantity);
     node.setSelfClosing(true);
 
@@ -70,7 +66,7 @@ public class Item {
   }
 
   public String toString() {
-    return _info.getNumber() + "-" + _quantity;
+    return _info.getId() + "-" + _quantity;
   }
 
   private int _quantity;

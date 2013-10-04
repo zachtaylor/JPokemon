@@ -218,16 +218,16 @@ public class Battle implements Activity, Iterable<Slot> {
       turn.execute();
 
       if (!turn.target().leader().awake()) {
-        log(turn.target().trainer().getName() + "'s " + turn.target().leader().name() + " fainted");
+        log(turn.target().trainer().id() + "'s " + turn.target().leader().name() + " fainted");
         Turn turnToRemove = currentRoundTurns.get(turn.target().trainer().id());
         boolean turnWasRemoved = turnQueue.remove(turnToRemove);
 
         if (turn.target().party().awake() == 0) {
-          log(turn.target().trainer().getName() + " lost!");
+          log(turn.target().trainer().id() + " lost!");
           remove(turn.target().trainer());
         }
         else if (turnWasRemoved) {
-          log(turn.target().trainer().getName() + " will auto-swap to the next available pokemon");
+          log(turn.target().trainer().id() + " will auto-swap to the next available pokemon");
           turnQueue.add(SwapTurn.autoSwapTurn(this, turn.target()));
         }
       }
@@ -371,7 +371,6 @@ public class Battle implements Activity, Iterable<Slot> {
 
         JSONObject opponent = new JSONObject();
         opponent.put("id", slot.trainer().id());
-        opponent.put("name", slot.trainer().getName());
         opponent.put("turn", turns.get(slot.trainer().id()) != null ? "ready" : "waiting");
         opponent.put("pokemonName", slot.leader().name());
         opponent.put("pokemonLevel", slot.leader().level());

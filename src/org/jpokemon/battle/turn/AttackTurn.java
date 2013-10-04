@@ -45,14 +45,14 @@ public class AttackTurn extends Turn {
       }
     }
 
-    battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " used " + _move.name());
+    battle().log(slot().trainer().id() + "'s " + slot().leader().name() + " used " + _move.name());
 
     if (_move.style() == MoveStyle.DELAYNEXT && _executions != 1) {
-      battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " is resting this turn");
+      battle().log(slot().trainer().id() + "'s " + slot().leader().name() + " is resting this turn");
       return;
     }
     if (_move.style() == MoveStyle.DELAYBEFORE && _executions != _move.turns()) {
-      battle().log(slot().trainer().getName() + "'s " + slot().leader().name() + " is resting this turn");
+      battle().log(slot().trainer().id() + "'s " + slot().leader().name() + " is resting this turn");
       return;
     }
     if (_move.style() == MoveStyle.OHKO) {

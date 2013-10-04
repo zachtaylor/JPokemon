@@ -36,7 +36,6 @@ public class JPokemonServer {
     ServletContextHandler root = new ServletContextHandler();
     root.setContextPath("/");
     root.addServlet(new ServletHolder(new FileServlet()), "/*");
-    root.addServlet(new ServletHolder(new MapServlet()), "/map/*");
     root.addServlet(new ServletHolder(new JPokemonWebSocketServlet()), "/socket");
 
     // Instantiate the server on the specified port

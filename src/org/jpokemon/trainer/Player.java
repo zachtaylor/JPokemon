@@ -18,8 +18,8 @@ import org.zachtaylor.jnodalxml.XmlNode;
 public class Player implements PokemonTrainer {
   public static final String XML_NODE_NAME = "player";
 
+  private String _id, _avatar;
   private Bag _bag = new Bag();
-  private String _name, _id, _avatar;
   private Pokedex _pokedex = new Pokedex();
   private Record _record = new Record(this);
   private Location location = new Location();
@@ -34,14 +34,6 @@ public class Player implements PokemonTrainer {
 
   public String id() {
     return _id;
-  }
-
-  public String getName() {
-    return _name;
-  }
-
-  public void setName(String name) {
-    _name = name;
   }
 
   public int getCash() {
@@ -187,7 +179,7 @@ public class Player implements PokemonTrainer {
     for (PokemonStorageUnit unit : _storage) {
       if (unit.add(p)) {
         _pokedex.own(p.number());
-        p.setTrainerName(getName());
+        p.setTrainerName(id());
         return true;
       }
     }
@@ -206,7 +198,6 @@ public class Player implements PokemonTrainer {
   public XmlNode toXml() {
     XmlNode node = new XmlNode(XML_NODE_NAME);
 
-    node.setAttribute("name", _name);
     node.setAttribute("cash", _cash);
     node.setAttribute("badge", _badge);
 
@@ -232,7 +223,6 @@ public class Player implements PokemonTrainer {
   }
 
   public void loadXML(XmlNode node) {
-    _name = node.getAttribute("name");
     _cash = node.getIntAttribute("cash");
     _badge = node.getIntAttribute("badge");
 
@@ -267,8 +257,7 @@ public class Player implements PokemonTrainer {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Player))
-      return false;
+    if (!(o instanceof Player)) return false;
     return ((Player) o)._id.equals(_id);
   }
 
