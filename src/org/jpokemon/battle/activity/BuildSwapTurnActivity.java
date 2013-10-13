@@ -39,6 +39,7 @@ public class BuildSwapTurnActivity implements BuildTurnActivity {
         JSONObject pokemonJson = new JSONObject();
 
         pokemonJson.put("name", pokemon.name());
+        pokemonJson.put("pokemonNumber", pokemon.number());
         pokemonJson.put("level", pokemon.level());
         pokemonJson.put("health", pokemon.health());
         pokemonJson.put("healthMax", pokemon.maxHealth());
@@ -71,6 +72,10 @@ public class BuildSwapTurnActivity implements BuildTurnActivity {
     try {
       if (request.has("pokemonIndex")) {
         pokemonIndex = request.getInt("pokemonIndex");
+
+        JSONObject closeJson = new JSONObject();
+        closeJson.put("action", "selectpokemon:close");
+        PlayerManager.pushJson(player, closeJson);
 
         PlayerManager.popActivity(player, this);
         return;

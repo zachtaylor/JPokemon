@@ -46,7 +46,7 @@ public class Battle implements Activity, Iterable<Slot> {
   private Map<String, Turn> turns = new HashMap<String, Turn>();
 
   public Battle(PokemonTrainer... trainers) {
-    System.out.println(toString() + " created");
+    System.out.println(this + " created");
 
     for (int i = 0; i < trainers.length; i++) {
       PokemonTrainer trainer = trainers[i];
@@ -57,10 +57,11 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   public void addTrainer(PokemonTrainer trainer, int team) {
-    if (contains(trainer)) throw new IllegalArgumentException("Duplicate trainer: " + trainer);
+    if (contains(trainer))
+      throw new IllegalArgumentException("Duplicate trainer: " + trainer);
 
     slots.put(trainer.id(), new Slot(trainer, team));
-    System.out.println(toString() + " trainer added: " + trainer.id());
+    System.out.println(this + " trainer added: " + trainer);
   }
 
   public int getTrainerCount() {
@@ -201,6 +202,10 @@ public class Battle implements Activity, Iterable<Slot> {
     return slots.values().iterator();
   }
 
+  public String toString() {
+    return "Battle@" + hashCode();
+  }
+
   private void executeRound() {
     Queue<Turn> turnQueue = new PriorityQueue<Turn>();
     Map<String, Turn> currentRoundTurns = turns;
@@ -267,7 +272,8 @@ public class Battle implements Activity, Iterable<Slot> {
 
   private void doTrainerAttacks() {
     for (Slot slot : slots.values()) {
-      if (slot.trainer() instanceof Player) continue;
+      if (slot.trainer() instanceof Player)
+        continue;
 
       Slot randomSlot;
       do {
@@ -347,7 +353,8 @@ public class Battle implements Activity, Iterable<Slot> {
     Player p;
 
     for (Slot s : this) {
-      if (!(s.trainer() instanceof Player)) continue;
+      if (!(s.trainer() instanceof Player))
+        continue;
 
       p = (Player) s.trainer();
 
@@ -426,7 +433,8 @@ public class Battle implements Activity, Iterable<Slot> {
 
     damage = (((2.0 * L / 5.0 + 2.0) * A * P / D) / 50.0 + 2.0) * E * R * reps;
 
-    if (damage < 1 && E != 0) damage = 1;
+    if (damage < 1 && E != 0)
+      damage = 1;
 
     return (int) damage;
   }
@@ -453,8 +461,9 @@ public class Battle implements Activity, Iterable<Slot> {
   }
 
   /**
-   * Calculates effectiveness modifications for a Move from a user to a victim. Includes Same-Type-Attack-Bonus for user and {@link Type} modifications between
-   * the move and victim.
+   * Calculates effectiveness modifications for a Move from a user to a victim.
+   * Includes Same-Type-Attack-Bonus for user and {@link Type} modifications
+   * between the move and victim.
    * 
    * @param move Move to calculate with
    * @param user Pokemon using the move
@@ -471,32 +480,32 @@ public class Battle implements Activity, Iterable<Slot> {
       switch (move.type().effectiveness(victim.type1())) {
       case SUPER:
         answer *= typeadvantage;
-        break;
+      break;
       case NORMAL:
         answer *= 1;
-        break;
+      break;
       case NOT_VERY:
         answer *= typedisadvantage;
-        break;
+      break;
       case IMMUNE:
         answer *= 0;
-        break;
+      break;
       }
     }
     if (victim.type2() != null) {
       switch (move.type().effectiveness(victim.type1())) {
       case SUPER:
         answer *= typeadvantage;
-        break;
+      break;
       case NORMAL:
         answer *= 1;
-        break;
+      break;
       case NOT_VERY:
         answer *= typedisadvantage;
-        break;
+      break;
       case IMMUNE:
         answer *= 0;
-        break;
+      break;
       }
     }
 

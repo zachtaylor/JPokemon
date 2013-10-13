@@ -69,7 +69,6 @@
         new me.menu.MessagesArea().show();
         game.subscribe('battle', new me.menu.BattleWindow());
         game.subscribe('selectmove', new me.menu.SelectMoveWindow());
-        game.subscribe('selectpokemon', new me.menu.SelectPokemonWindow());
       }
       else if (json.add) {
         players[json.add] = me.entityPool.newInstanceOf('trainer', json);

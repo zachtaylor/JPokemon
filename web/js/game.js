@@ -2,11 +2,13 @@
 var game = (function() {
   var game = {};
   var menus = {};
+  var controllers = {};
 
   var dispatch = function(json) {
     var action = json.action;
 
     if (menus[action]) {
+      // Legacy style
       if (!menus[action].dispatch) {
         menus[action] = new menus[action]();
       }
@@ -14,8 +16,32 @@ var game = (function() {
       menus[action].dispatch(json);
     }
     else {
-      console.error("No menu defined for action : " + action);
-      console.log(json);
+      // This is the new way to do it
+      var method = 'update';
+
+      if (action.indexOf(':') >= 0) {
+        method = action.substr(action.indexOf(':') + 1);
+        action = action.substr(0, action.indexOf(':'));
+      }
+
+      var controller = controllers[action];
+
+      if (controller) {
+        controller[method](json);
+      }
+      else {
+        $.ajax({
+          url : 'control/' + action + '.js',
+          dataType: "script",
+          success : function() {
+            dispatch(json);
+          },
+          error : function(jqXHR, textStatus, e) {
+            console.error("No controller defined for action : " + action);
+            console.log(json);
+          }
+        });
+      }
     }
   };
 
@@ -31,6 +57,26 @@ var game = (function() {
     else {
       menus[action] = menu;
     }
+  };
+
+  game.control = function(name, config) {
+    var constructor = function Controller() {
+      this.name = name;
+      this.view = $(Handlebars.getTemplate(name)()).appendTo('body');
+
+      for (var i = 0; i < config.refs.length; i++) {
+        var ref = config.refs[i];
+        this[ref] = $('#' + name + '-' + ref, this.view);
+      }
+
+      config.api.constructor.apply(this);
+    }
+
+    for (var methodName in config.api) {
+      constructor.prototype[methodName] = config.api[methodName];
+    }
+
+    controllers[name] = new constructor();
   };
 
   game.send = function(json) {
@@ -75,3 +121,20 @@ var game = (function() {
 
   return game;
 })(window);
+
+Handlebars.getTemplate = function(name) {
+  if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
+    $.ajax({
+      url : 'view/' + name + '.handlebars',
+      success : function(data) {
+        if (Handlebars.templates === undefined) {
+          Handlebars.templates = {};
+        }
+        Handlebars.templates[name] = Handlebars.compile(data);
+      },
+      async : false
+    });
+  }
+
+  return Handlebars.templates[name];
+};

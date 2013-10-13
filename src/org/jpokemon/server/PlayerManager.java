@@ -145,6 +145,9 @@ public class PlayerManager {
     if (playerId == null) { return; }
 
     Player player = getPlayer(playerId);
+
+    System.out.println(player + " session closed");
+
     File file = new File(JPokemonServer.savepath, playerId + ".jpkmn");
 
     try {
@@ -181,6 +184,9 @@ public class PlayerManager {
     if (!playerExists(name)) { throw new ServiceException("Save file not found"); }
 
     Player player = new Player(name);
+
+    System.out.println(player + " session opened");
+
     String filename = name + ".jpkmn";
     File file = new File(JPokemonServer.savepath, filename);
 

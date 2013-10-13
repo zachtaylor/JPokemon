@@ -1,6 +1,5 @@
 body {
     background-color: #000;
-    color: #fff;
 
     /* Allow mouse dragging. */
     -moz-user-select: none;
@@ -15,6 +14,17 @@ body {
 
     /* Allow canvas to hit the edges of the browser viewport. */
     margin: 0;
+}
+
+.center {
+    text-align: center;
+}
+
+.pokemon-sprite {
+    width: 80;
+    height: 80;
+    background-image: url('resource/img/pokemon-sprites.png');
+    background-position: '0 0';
 }
 
 #screen canvas {

@@ -1,4 +1,4 @@
-(function($) {
+(function(window) {
   me.menu = me.menu || {};
 
   me.menu.Window = me.ui.Panel.extend({

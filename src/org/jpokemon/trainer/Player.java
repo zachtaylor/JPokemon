@@ -257,12 +257,18 @@ public class Player implements PokemonTrainer {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof Player)) return false;
+    if (!(o instanceof Player))
+      return false;
     return ((Player) o)._id.equals(_id);
   }
 
   @Override
   public int hashCode() {
     return _id.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "Player@" + hashCode() + ":" + _id;
   }
 }
