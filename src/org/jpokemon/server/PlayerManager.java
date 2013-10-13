@@ -13,6 +13,7 @@ import java.util.Stack;
 import org.jpokemon.activity.Activity;
 import org.jpokemon.battle.lobby.LobbyService;
 import org.jpokemon.extra.FriendsService;
+import org.jpokemon.extra.PartyService;
 import org.jpokemon.overworld.OverworldService;
 import org.jpokemon.trainer.Player;
 import org.json.JSONException;
@@ -56,6 +57,7 @@ public class PlayerManager {
     services.put("overworld", new OverworldService());
     services.put("lobby", new LobbyService());
     services.put("friends", new FriendsService());
+    services.put("party", new PartyService());
   }
 
   public static boolean hasActivity(Player player) {

@@ -329,7 +329,7 @@ public class Pokemon {
           continue;
         }
 
-        addConditionEffect(ConditionEffect.valueOf(ce));
+        addConditionEffect(ConditionEffect.valueOf(ce.trim()));
       }
     }
   }

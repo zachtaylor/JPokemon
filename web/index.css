@@ -27,6 +27,26 @@ body {
     background-position: '0 0';
 }
 
+.list-grid {
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0;
+}
+
+.list-grid li {
+    margin: 3px 3px 3px 0; 
+    padding: 1px; 
+    float: left; 
+    width: 100px; 
+    height: 90px; 
+    font-size: 4em; 
+    text-align: center;
+},
+
+.highlighted {
+    border: 5px solid rgb(52, 152, 219);
+}
+
 #screen canvas {
     margin: auto;
 

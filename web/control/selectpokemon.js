@@ -52,7 +52,7 @@ game.control('selectpokemon', {
       if (healthPercentage > 50) {
         healthBarColorClass = 'progress-bar-success';
       }
-      else if (healthPercentage > .25) {
+      else if (healthPercentage > 25) {
         healthBarColorClass = 'progress-bar-warning';
       }
 

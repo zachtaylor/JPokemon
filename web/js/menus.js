@@ -92,6 +92,29 @@
     }
   });
 
+  me.menu.PartyLauncher = me.ui.Toggle.extend({
+    init : function() {
+      this.parent({
+        x : 140,
+        y : 512 - 20,
+        border : 'white',
+        toggleStyle : 'toggle',
+        padding : 0,
+        opacity : .7
+      });
+      this.add(new me.ui.Label({ text : 'Party' }));
+
+    },
+
+    onToggleChange : function(visible) {
+      if (visible) {
+        game.send({
+          load:"party"
+        });
+      }
+    }
+  });
+
   me.menu.FriendsWindow = me.menu.StatefulWindow.extend({
     init : function() {
       this.parent(10, 50);
