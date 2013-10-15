@@ -2,6 +2,7 @@
 var game = (function() {
   var game = {};
   var menus = {};
+  var realmenus = {}; // will replace menus
   var controllers = {};
 
   var dispatch = function(json) {
@@ -24,24 +25,13 @@ var game = (function() {
         action = action.substr(0, action.indexOf(':'));
       }
 
-      var controller = controllers[action];
+      if (!realmenus[action]) {
+        var controller = game.getController(action);
+        realmenus[action] = new controller();
+      }
 
-      if (controller) {
-        controller[method](json);
-      }
-      else {
-        $.ajax({
-          url : 'control/' + action + '.js',
-          dataType: "script",
-          success : function() {
-            dispatch(json);
-          },
-          error : function(jqXHR, textStatus, e) {
-            console.error("No controller defined for action : " + action);
-            console.log(json);
-          }
-        });
-      }
+      realmenus[action].show();
+      realmenus[action][method](json);
     }
   };
 
@@ -66,7 +56,7 @@ var game = (function() {
 
       for (var i = 0; i < config.refs.length; i++) {
         var ref = config.refs[i];
-        this[ref] = $('#' + name + '-' + ref, this.view);
+        this[ref] = $('.' + name + '-' + ref, this.view);
       }
 
       config.api.constructor.apply(this);
@@ -75,9 +65,31 @@ var game = (function() {
     for (var methodName in config.api) {
       constructor.prototype[methodName] = config.api[methodName];
     }
+    constructor.prototype.show = function() {
+      this.view.appendTo('body');
+      this.view.show();
+    };
+    constructor.prototype.hide = function() {
+      this.view.hide();
+    }
 
-    controllers[name] = new constructor();
+    controllers[name] = constructor;
   };
+
+  game.getController = function(name) {
+    if (!controllers[name]) {
+      $.ajax({
+        url : 'control/' + name + '.js',
+        dataType: "script",
+        async: false,
+        error : function(jqXHR, textStatus, e) {
+          console.error("Error loading controller : " + name);
+        }
+      });
+    }
+
+    return controllers[name];
+  }
 
   game.send = function(json) {
     socket.send(JSON.stringify(json));
