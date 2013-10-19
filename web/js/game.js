@@ -58,6 +58,13 @@ var game = (function() {
         var ref = config.refs[i];
         this[ref] = $('.' + name + '-' + ref, this.view);
       }
+      for (var i = 0; i < config.subcontrols.length; i++) {
+        var subcontrol = config.subcontrols[i];
+        var subcontroller = game.getController(subcontrol);
+        this[subcontrol] = new subcontroller();
+
+        $('.controller-' + config.subcontrols[i], this.view).replaceWith(this[subcontrol].view);
+      }
 
       config.api.constructor.apply(this);
     }

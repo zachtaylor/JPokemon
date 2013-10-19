@@ -1,6 +1,8 @@
 game.control('pokemonsprite', {
   refs : [
   ],
+  subcontrols : [
+  ],
   api : {
     constructor : function() {
     },

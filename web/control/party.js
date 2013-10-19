@@ -3,7 +3,9 @@ game.control('party', {
     'box',
     'pokemonName',
     'pokemonLevel',
-    'pokemonConditionEffects',
+    'pokemonConditionEffects'
+  ],
+  subcontrols: [
     'pokemonHealth'
   ],
   api : {
@@ -48,19 +50,10 @@ game.control('party', {
 
     updatePokemonInfo : function(pokemonIndex) {
       var pokemonJson = this.data.pokemon[pokemonIndex];
-      var healthPercentage = pokemonJson.health / pokemonJson.maxhealth * 100;
-      var healthBarColorClass = 'progress-bar-danger';
 
-      if (healthPercentage > 50) {
-        healthBarColorClass = 'progress-bar-success';
-      }
-      else if (healthPercentage > 25) {
-        healthBarColorClass = 'progress-bar-warning';
-      }
-
-      this.pokemonHealth.removeClass('progress-bar-sucess progress-bar-warning progress-bar-danger');
-      this.pokemonHealth.addClass(healthBarColorClass);
-      this.pokemonHealth.css('width', healthPercentage + '%');
+      this.pokemonHealth.update({
+        healthPercent : Math.floor(pokemonJson.health / pokemonJson.maxhealth * 100)
+      });
 
       this.pokemonName.html(pokemonJson.name);
       this.pokemonLevel.html(pokemonJson.level);
@@ -68,12 +61,12 @@ game.control('party', {
     },
 
     onClickPokemon : function(e) {
-      console.log(e);
       if (this.currentPokemonSelected) {
         $(this.currentPokemonSelected).removeClass("highlighted");
       }
       this.currentPokemonSelected = e.currentTarget;
       $(this.currentPokemonSelected).addClass("highlighted");
+
       var pokemonIndex = parseInt(e.currentTarget.getAttribute("pokemonindex"));
       this.updatePokemonInfo(pokemonIndex);
     },
@@ -83,5 +76,3 @@ game.control('party', {
     }
   }
 });
-
-//this.pokemon.css('background-position', '0 -' + (80 * (pokemonJson.pokemonNumber - 1)));
