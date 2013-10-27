@@ -33,6 +33,10 @@ game.control('party', {
             this.pokemonSpriteControllers[pokemonIndex] = new pokemonspriteController();
 
             var listItem = $('<li pokemonIndex="' + pokemonIndex + '" class="panel-body"></li>');
+            listItem.css({
+              'border': '2px solid transparent',
+              'border-radius': '2px'
+            });
             listItem.on('click', this.onClickPokemon.bind(this));
             this.pokemonSpriteControllers[pokemonIndex].view.appendTo(listItem);
             listItem.appendTo(this.box);
@@ -62,10 +66,12 @@ game.control('party', {
 
     onClickPokemon : function(e) {
       if (this.currentPokemonSelected) {
-        $(this.currentPokemonSelected).removeClass("highlighted");
+        $(this.currentPokemonSelected).css('border', '2px solid transparent');
       }
       this.currentPokemonSelected = e.currentTarget;
-      $(this.currentPokemonSelected).addClass("highlighted");
+      $(this.currentPokemonSelected).css({
+        'border': '2px solid black'
+      });
 
       var pokemonIndex = parseInt(e.currentTarget.getAttribute("pokemonindex"));
       this.updatePokemonInfo(pokemonIndex);

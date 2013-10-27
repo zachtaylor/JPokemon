@@ -27,6 +27,11 @@ body {
     background-position: '0 0';
 }
 
+.controller-pokemonHealth {
+    border: 2px solid black;
+    border-radius: 2px;
+}
+
 .list-grid {
     list-style-type: none; 
     margin: 0; 
