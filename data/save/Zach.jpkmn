@@ -1,4 +1,4 @@
-<player name="Zach" cash="500" badge="0">
+<player cash="500" badge="0">
 	<location height="0" width="0" map="house" left="11" top="7" />
 	<bag> </bag>
 	<record starter="Charmeleon">

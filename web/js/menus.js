@@ -76,18 +76,13 @@
         opacity : .7
       });
       this.add(new me.ui.Label({ text : 'Friends' }));
-
-      this.friendsWindow = new me.menu.FriendsWindow();
-      game.subscribe('friends', this.friendsWindow);
     },
 
     onToggleChange : function(visible) {
       if (visible) {
-        this.friendsWindow.show();
-        this.friendsWindow.refresh();
-      }
-      else {
-        this.friendsWindow.hide();
+        game.send({
+          'load': 'friends'
+        });
       }
     }
   });
@@ -103,7 +98,6 @@
         opacity : .7
       });
       this.add(new me.ui.Label({ text : 'Party' }));
-
     },
 
     onToggleChange : function(visible) {
@@ -111,116 +105,6 @@
         game.send({
           load:"party"
         });
-      }
-    }
-  });
-
-  me.menu.FriendsWindow = me.menu.StatefulWindow.extend({
-    init : function() {
-      this.parent(10, 50);
-
-      this.frame.add(new me.ui.Button({ image : 'plus_gray', onClick : this.showInputWindow.bind(this) }));
-      this.frame.add(new me.ui.Button({ image : 'refresh_gray', onClick : this.sendLoadRequest }));
-
-      this.inputWindow = new me.ui.Panel({ x : 200, y : 200, ylayout : 'fit', border : 'white', color : 'black', opacity : .7 });
-      this.inputWindowLabel = new me.ui.Label({ text : 'Add Friend' });
-      this.inputWindow.add(this.inputWindowLabel);
-      this.inputWindowInputBox = new me.ui.InputBox({ width : 100, onEnter : this.requestFriend.bind(this) });
-      this.inputWindow.add(this.inputWindowInputBox);
-
-      this.friends = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
-      this.blocked = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
-      this.pending = new me.ui.Scrollable({ padding : 0, height : 100, width: 130 });
-      
-      this.addState('Friends List', 'circle_green', this.friends);
-      this.addState('Blocked List', 'circle_red', this.blocked);
-      this.addState('Pending List', 'circle_blue', this.pending);
-
-      this.setState('Friends List');
-    },
-
-    hide : function() {
-      this.parent();
-      this.inputWindow.hide();
-    },
-
-    showInputWindow : function() {
-      this.inputWindow.show();
-    },
-
-    friendsNamePanel : function(name) {
-      var namePanel = new me.ui.Panel({ opacity : 0, padding : 0, xlayout:'fill' });
-      namePanel.add(new me.ui.Label({ text : name }));
-      return namePanel;
-    },
-
-    blockedNamePanel : function(name) {
-      var namePanel = new me.ui.Panel({ opacity : 0, padding : 0, xlayout:'fill' });
-      namePanel.add(new me.ui.Label({ text : name }));
-      return namePanel;
-    },
-
-    pendingNamePanel : function(name) {
-      var namePanel = new me.ui.Panel({ opacity : 0, padding : 0, xlayout:'fit', ylayout : 'center' });
-
-      var acceptButton = new me.ui.Button({
-        image : 'plus_green',
-        onClick : (function(name) {
-          return function() {
-            this.acceptFriend(name);
-          };
-        })(name).bind(this)
-      });
-      namePanel.add(acceptButton);
-
-      namePanel.add(new me.ui.Label({ text : name }));
-
-      return namePanel;
-    },
-
-    refresh : function() {
-      game.send({
-        load : 'friends'
-      });
-    },
-
-    requestFriend : function() {
-      var name = this.inputWindowInputBox.getText();
-
-      if (name) {
-        game.send({
-          service : 'friends',
-          configure : 'add',
-          name : name
-        });
-        this.inputWindowInputBox.setText('');
-      }
-
-      this.inputWindow.hide();
-    },
-
-    acceptFriend : function(name) {
-      game.send({
-        service : 'friends',
-        configure : 'accept',
-        name : name
-      });
-    },
-
-    dispatch : function(json) {
-      this.friends.clear();
-      for (var i = 0; i < json.friends.length; i++) {
-        this.friends.add(this.friendsNamePanel(json.friends[i]));
-      }
-
-      this.blocked.clear();
-      for (var i = 0; i < json.blocked.length; i++) {
-        this.blocked.add(this.blockedNamePanel(json.blocked[i]));
-      }
-
-      this.pending.clear();
-      for (var i = 0; i < json.pending.length; i++) {
-        this.pending.add(this.pendingNamePanel(json.pending[i]));
       }
     }
   });

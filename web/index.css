@@ -16,6 +16,23 @@ body {
     margin: 0;
 }
 
+.navbar-collapse .navbar-nav.navbar-left:first-child {
+    margin-left:0px;
+}
+
+.navbar .nav > li:first-child > a {
+    border-radius:0px;
+}
+
+.navbar {
+    min-height: 36px;
+    margin-bottom:0px;
+}
+
+.navbar .nav > li > a {
+    padding: 4px 12px;
+}
+
 .center {
     text-align: center;
 }
@@ -46,10 +63,6 @@ body {
     height: 90px; 
     font-size: 4em; 
     text-align: center;
-},
-
-.highlighted {
-    border: 5px solid rgb(52, 152, 219);
 }
 
 #screen canvas {
