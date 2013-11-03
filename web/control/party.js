@@ -10,7 +10,6 @@ game.control('party', {
   ],
   api : {
     constructor : function() {
-      this.pokemonSpriteControllers = [];
       this.view.draggable();
       this.box.sortable();
 
@@ -23,32 +22,26 @@ game.control('party', {
     },
 
     updateBox : function() {
+      this.box.html('');
       var pokemonspriteController = game.getController('pokemonsprite');
 
-      for (var pokemonIndex = 0; pokemonIndex < this.data.pokemon.length || pokemonIndex < this.pokemonSpriteControllers.length; pokemonIndex++) {
-        if (pokemonIndex < this.data.pokemon.length) {
-          var pokemonJson = this.data.pokemon[pokemonIndex];
+      for (var pokemonIndex = 0; pokemonIndex < this.data.pokemon.length; pokemonIndex++) {
+        var pokemonJson = this.data.pokemon[pokemonIndex];
 
-          if (pokemonIndex == this.pokemonSpriteControllers.length) {
-            this.pokemonSpriteControllers[pokemonIndex] = new pokemonspriteController();
+        var listItem = $('<li pokemonIndex="' + pokemonIndex + '" class="panel-body"></li>');
+        listItem.on('click', this.onClickPokemon.bind(this));
+        listItem.css({
+          'border': '2px solid transparent',
+          'border-radius': '2px'
+        });
+        
+        var subcontrol = new pokemonspriteController();
+        subcontrol.update({
+          pokemonNumber: pokemonJson.number
+        });
 
-            var listItem = $('<li pokemonIndex="' + pokemonIndex + '" class="panel-body"></li>');
-            listItem.css({
-              'border': '2px solid transparent',
-              'border-radius': '2px'
-            });
-            listItem.on('click', this.onClickPokemon.bind(this));
-            this.pokemonSpriteControllers[pokemonIndex].view.appendTo(listItem);
-            listItem.appendTo(this.box);
-          }
-
-          this.pokemonSpriteControllers[pokemonIndex].update({
-            pokemonNumber: pokemonJson.number
-          });
-        }
-        else {
-          this.pokemonSpriteControllers[pokemonIndex].view.hide();
-        }
+        subcontrol.view.appendTo(listItem);
+        listItem.appendTo(this.box);
       }
     },
 
@@ -78,7 +71,44 @@ game.control('party', {
     },
 
     onSortPokemon : function(event, ui) {
-      console.log(event);
+      var seeking = -1,
+          indexOld = -1,
+          indexNew = -1;
+
+      this.box.children().each(function(i) {
+        var expectedIndex = i;
+        var actualIndex = parseInt(this.getAttribute('pokemonIndex'));
+
+        if (seeking >= 0) {
+          if (actualIndex == seeking) {
+            indexOld = actualIndex;
+            indexNew = expectedIndex;
+            return false;
+          }
+          return true;
+        }
+
+        if (actualIndex > expectedIndex + 1) {
+          // Greater than 1 difference detects only slide up
+          indexOld = actualIndex;
+          indexNew = expectedIndex;
+          return false;
+        }
+
+        if (actualIndex == expectedIndex + 1) {
+          // detect slide down or adjacent swap
+          seeking = expectedIndex;
+        }
+      });
+
+      if (indexOld >= 0 && indexNew >= 0) {
+        game.send({
+          'service': 'party',
+          'method': 'slide',
+          'indexOld': indexOld,
+          'indexNew': indexNew,
+        });
+      }
     }
   }
 });

@@ -3,9 +3,14 @@ package org.jpokemon.server;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class Message {
-  public Message(String t) {
-    text = t;
+public class Message {
+  public Message(String messageClass, String text) {
+    this.messageClass = messageClass;
+    this.text = text;
+  }
+
+  public Message(String text) {
+    this("update", text);
   }
 
   public JSONObject toJson() {
@@ -18,21 +23,14 @@ public abstract class Message {
     return null;
   }
 
-  /* Make things easy for subclasses */
-  protected abstract JSONObject getJson() throws JSONException;
-
-  protected String text;
-
-  public static class Notification extends Message {
-    public Notification(String t) {
-      super(t);
-    }
-
-    protected JSONObject getJson() throws JSONException {
-      JSONObject json = new JSONObject();
-      json.put("action", "notification");
-      json.put("text", text);
-      return json;
-    }
+  protected JSONObject getJson() throws JSONException {
+    JSONObject json = new JSONObject();
+    json.put("action", "notification:" + messageClass);
+    json.put("text", text);
+    return json;
   }
+
+  private String text;
+
+  private String messageClass;
 }

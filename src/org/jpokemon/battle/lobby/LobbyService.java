@@ -92,7 +92,7 @@ public class LobbyService implements JPokemonService {
       if (!lobby.isConfiguring()) { return; }
 
       if (!PlayerManager.playerIsLoggedIn(otherPlayerName)) {
-        Message message = new Message.Notification("'" + otherPlayerName + "' not found");
+        Message message = new Message("'" + otherPlayerName + "' not found");
         PlayerManager.pushMessage(player, message);
         return;
       }
@@ -230,13 +230,12 @@ public class LobbyService implements JPokemonService {
   }
 
   private void pushLobbyToPlayers(Lobby lobby, boolean sendNewRequestMessage) {
-    Message message = new Message.Notification("New battle request");
+    Message message = new Message("New battle request");
     JSONObject lobbyJson = generateJson(lobby);
 
     for (List<String> team : lobby.getTeams()) {
       for (String name : team) {
         Player player = PlayerManager.getPlayer(name);
-
         PlayerManager.pushJson(player, lobbyJson);
 
         if (sendNewRequestMessage) {

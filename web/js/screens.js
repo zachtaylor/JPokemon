@@ -53,37 +53,38 @@
 
   me.screen.PlayScreen = me.ScreenObject.extend({
     init : function(config) {
-    },
+      game.subscribe('overworld', {
+        "update" : function(json) {
+          if (json.login) {
+            me.levelDirector.loadLevel(json.map);
 
-    dispatch: function(json) {
-      if (json.login) {
-        me.levelDirector.loadLevel(json.map);
+            players[json.login] = new me.entityPool.newInstanceOf('player', json);
+            players[json.login].setName(json.login);
+            game.playerName = json.login;
+            me.game.add(players[json.login]);
 
-        players[json.login] = new me.entityPool.newInstanceOf('player', json);
-        players[json.login].setName(json.login);
-        game.playerName = json.login;
-        me.game.add(players[json.login]);
-
-        new me.menu.FriendsLauncher().show();
-        new me.menu.BattleLobbyLauncher().show();
-        new me.menu.PartyLauncher().show();
-        new me.menu.MessagesArea().show();
-        game.subscribe('battle', new me.menu.BattleWindow());
-        game.subscribe('selectmove', new me.menu.SelectMoveWindow());
-      }
-      else if (json.add) {
-        players[json.add] = me.entityPool.newInstanceOf('trainer', json);
-        players[json.add].setName(json.add);
-        me.game.add(players[json.add]);
-        me.game.sort();
-      }
-      else if (json.move) {
-        players[json.name]['walk' + json.move](json.x, json.y);
-      }
-      else if (json.leave) {
-        me.game.remove(players[json.leave]);
-        me.entityPool.freeInstance(players[json.leave]);
-      }
+            new me.menu.FriendsLauncher().show();
+            new me.menu.BattleLobbyLauncher().show();
+            new me.menu.PartyLauncher().show();
+            new me.menu.MessagesArea().show();
+            game.subscribe('battle', new me.menu.BattleWindow());
+            game.subscribe('selectmove', new me.menu.SelectMoveWindow());
+          }
+          else if (json.add) {
+            players[json.add] = me.entityPool.newInstanceOf('trainer', json);
+            players[json.add].setName(json.add);
+            me.game.add(players[json.add]);
+            me.game.sort();
+          }
+          else if (json.move) {
+            players[json.name]['walk' + json.move](json.x, json.y);
+          }
+          else if (json.leave) {
+            me.game.remove(players[json.leave]);
+            me.entityPool.freeInstance(players[json.leave]);
+          }
+        }
+      });
     },
 
     onResetEvent: function(config) {
@@ -97,6 +98,4 @@
       friendsLauncher.hide();
     }
   });
-  game.subscribe('overworld', me.screen.PlayScreen);
-
 })(window);

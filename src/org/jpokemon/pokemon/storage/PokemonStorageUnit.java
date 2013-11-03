@@ -36,15 +36,13 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   public Pokemon get(int i) {
-    if (i < 0 || i >= _amount)
-      throw new IllegalArgumentException("Index out of bounds: " + i);
+    if (i < 0 || i >= _amount) throw new IllegalArgumentException("Index out of bounds: " + i);
 
     return _data[i];
   }
 
   public boolean add(Pokemon p) {
-    if (p == null || _amount == _size || contains(p))
-      return false;
+    if (p == null || _amount == _size || contains(p)) return false;
 
     _data[_amount++] = p;
     _version++;
@@ -55,19 +53,31 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   public boolean remove(Pokemon p) {
     int index = indexOf(p);
 
-    if (index < 0)
-      throw new IllegalArgumentException("Not in this unit: " + p);
+    if (index < 0) throw new IllegalArgumentException("Not in this unit: " + p);
 
     _version++;
 
     return remove(index);
   }
 
-  public boolean swap(int p1, int p2) {
-    if (p1 < 0 || p2 < 0 || p1 >= _amount || p2 >= _amount)
+  public boolean slide(int indexOld, int indexNew) {
+    if (indexOld < 0 || indexNew < 0 || indexOld >= _amount || indexNew >= _amount)
       throw new IllegalArgumentException("Index out of bounds");
-    if (p1 == p2)
+    if (indexOld == indexNew)
       throw new IllegalArgumentException("Arguments are equal");
+
+    Pokemon swap = _data[indexOld];
+    int loopUpdateDirection = (indexOld > indexNew) ? -1 : 1;
+    for (int i = indexOld; i != indexNew; i = i + loopUpdateDirection) {
+      _data[i] = _data[i + loopUpdateDirection];
+    }
+    _data[indexNew] = swap;
+    return true;
+  }
+
+  public boolean swap(int p1, int p2) {
+    if (p1 < 0 || p2 < 0 || p1 >= _amount || p2 >= _amount) throw new IllegalArgumentException("Index out of bounds");
+    if (p1 == p2) throw new IllegalArgumentException("Arguments are equal");
 
     Pokemon swap = _data[p1];
     _data[p1] = _data[p2];
@@ -79,9 +89,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
 
   public int indexOf(Pokemon p) {
     for (int i = 0; i < _amount; i++) {
-      if (_data[i].equals(p)) {
-        return i;
-      }
+      if (_data[i].equals(p)) { return i; }
     }
 
     return -1;
@@ -95,8 +103,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     int answer = 0;
 
     for (Pokemon pokemon : this) {
-      if (pokemon.awake())
-        answer++;
+      if (pokemon.awake()) answer++;
     }
 
     return answer;
@@ -113,8 +120,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   public void loadXml(XmlNode node) {
-    if (!XML_NODE_NAME.equals(node.getName()))
-      throw new XmlException("Cannot read node");
+    if (!XML_NODE_NAME.equals(node.getName())) throw new XmlException("Cannot read node");
 
     while (_amount > 0)
       remove(0);
@@ -131,8 +137,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
   }
 
   private boolean remove(int index) {
-    if (index < 0 || index >= _amount)
-      throw new IllegalArgumentException("Index out of bounds");
+    if (index < 0 || index >= _amount) throw new IllegalArgumentException("Index out of bounds");
 
     for (int i = index; i < _amount - 1; i++)
       _data[i] = _data[i + 1];
@@ -167,8 +172,7 @@ public class PokemonStorageUnit implements Iterable<Pokemon> {
     }
 
     private void checkVersion() {
-      if (_version != PokemonStorageUnit.this._version)
-        throw new ConcurrentModificationException();
+      if (_version != PokemonStorageUnit.this._version) throw new ConcurrentModificationException();
     }
 
     private int _index, _version;

@@ -73,8 +73,8 @@ public class FriendsService implements JPokemonService {
       pendingList.add(player.id());
     }
 
-    PlayerManager.pushMessage(player, new Message.Notification("Friend request sent"));
-    PlayerManager.pushMessage(otherPlayer, new Message.Notification("New friend request"));
+    PlayerManager.pushMessage(player, new Message("Friend request sent"));
+    PlayerManager.pushMessage(otherPlayer, new Message("New friend request"));
     PlayerManager.pushJson(otherPlayer, generateJson(otherPlayer));
   }
 
@@ -93,7 +93,7 @@ public class FriendsService implements JPokemonService {
       pendingList.remove(otherPlayer.id());
     }
 
-    Message message = new Message.Notification("Friend request accepted");
+    Message message = new Message("Friend request accepted");
     PlayerManager.pushMessage(player, message);
     PlayerManager.pushMessage(otherPlayer, message);
     PlayerManager.pushJson(otherPlayer, generateJson(otherPlayer));
@@ -103,7 +103,7 @@ public class FriendsService implements JPokemonService {
     player.addBlocked(otherPlayer.id());
     otherPlayer.removeFriend(player.id());
 
-    PlayerManager.pushMessage(player, new Message.Notification("Player blocked"));
+    PlayerManager.pushMessage(player, new Message("Player blocked"));
   }
 
   private JSONObject generateJson(Player player) {

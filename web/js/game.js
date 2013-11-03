@@ -6,32 +6,28 @@ var game = (function() {
   var controllers = {};
 
   var dispatch = function(json) {
-    var action = json.action;
-
-    if (menus[action]) {
-      // Legacy style
-      if (!menus[action].dispatch) {
-        menus[action] = new menus[action]();
-      }
-
-      menus[action].dispatch(json);
+    var action = json.action,
+        method = 'update';
+    if (action.indexOf(':') > 0) {
+      var colonIndex = action.indexOf(':');
+      action = action.substring(0, colonIndex);
+      method = json.action.substring(colonIndex + 1);
     }
-    else {
-      // This is the new way to do it
-      var method = 'update';
 
-      if (action.indexOf(':') >= 0) {
-        method = action.substr(action.indexOf(':') + 1);
-        action = action.substr(0, action.indexOf(':'));
+    var receiver = menus[action];
+    if (!(receiver && receiver[method])) {
+      receiver = realmenus[action];
+    }
+    if (!(receiver && receiver[method])) {
+      var controller = game.getController(action);
+      receiver = realmenus[action] = new controller();
+    }
+
+    if (receiver) {
+      if (receiver.show) {
+        receiver.show();
       }
-
-      if (!realmenus[action]) {
-        var controller = game.getController(action);
-        realmenus[action] = new controller();
-      }
-
-      realmenus[action].show();
-      realmenus[action][method](json);
+      receiver[method](json);
     }
   };
 

@@ -1,6 +1,15 @@
 (function(window) {
   me.menu = me.menu || {};
 
+  game.subscribe('notification', {
+    update: function(stuff) {
+      Messenger().post({
+        'message': stuff.text,
+        'type': 'info',
+      });
+    }
+  });
+
   me.menu.Window = me.ui.Panel.extend({
     init : function(x, y) {
       this.parent({
@@ -178,7 +187,8 @@
       this.addState('My Lobby', 'circle_green', this.lobbyView);
       this.addState('Pending List', 'circle_blue', this.pendingView);
 
-      this.setState('My Lobby');
+      // this.setState('My Lobby');
+      this.currentHostView = game.playerName;
     },
 
     hide : function() {
@@ -360,7 +370,10 @@
       });
     },
 
-    dispatch : function(json) {
+    update : function(json) {
+      if (!json) {
+        return this.parent();
+      }
       this.lobbies[json.host] = json;
 
       if (json.host === this.currentHostView) {
@@ -399,10 +412,10 @@
         color : 'black'
       });
 
-      game.subscribe('notification', this);
+      // game.subscribe('notification', this);
     },
 
-    dispatch : function(json) {
+    update : function(json) {
       var panel = new me.ui.Panel({
         xlayout : 'fit',
         ylayout : 'center',
@@ -516,7 +529,7 @@
         height : 96,
         border : 'white',
       });
-      this.logContainer.dispatch = this.dispatchFromBattleLog.bind(this);
+      this.logContainer.update = this.updateFromBattleLog.bind(this);
       game.subscribe('battlelog', this.logContainer);
       this.add(this.logContainer);
     },
@@ -539,7 +552,7 @@
       });
     },
 
-    dispatchFromBattleLog : function(json) {
+    updateFromBattleLog : function(json) {
       if (this.clearBattleLog) {
         this.logContainer.clear();
       }
@@ -551,7 +564,7 @@
       }
     },
 
-    dispatch : function(json) {
+    update : function(json) {
       this.buttonsContainer.clear();
 
       if (json.visible) {
@@ -714,7 +727,7 @@
       this.hide();
     },
 
-    dispatch : function(json) {
+    update : function(json) {
       this.show();
       this.title.setText('Select move for '+json.pokemon);
 
@@ -756,7 +769,7 @@
       this.hide();
     },
 
-    dispatch : function(json) {
+    update : function(json) {
       this.show();
       this.title.setText('Select a pokemon');
 
