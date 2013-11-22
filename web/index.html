@@ -6,13 +6,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
     <script src="js/handlebarviews.js"></script>
-    <script src="js/messenger.min.js">
-      Messenger = Messenger || {};
-      Messenger.options = {
-        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
-        theme: 'block'
-      }
-    </script>
+    <script src="js/messenger.min.js"></script>
 
     <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/entities.js"></script>
@@ -34,10 +28,20 @@
 
     <!-- Bootstrap & Mobile optimization tricks -->
     <script type="text/javascript">
-      window.onReady(function onReady() {
-        game.onload();
+      Messenger.options = {
+        hideAfter:4,
+        theme: 'block',
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right'
+      }
 
-        // Mobile browser hacks
+      window.onReady(function() {
+        game.dispatch({
+          action:'login'
+        });
+
+        me.loader.onload = game.onload;
+        me.loader.preload(game.resources);
+
         if (me.sys.isMobile && !navigator.isCocoonJS) {
           // Prevent the webview from moving on a swipe
           window.document.addEventListener("touchmove", function (e) {
@@ -62,6 +66,12 @@
               "width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0"
             );
           }
+        }
+        
+        // Initialize the video.
+        if (!me.video.init('screen', 768, 512, true, 1)) {
+            alert('Your browser does not support HTML5 canvas.');
+            return;
         }
       });
     </script>

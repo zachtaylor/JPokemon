@@ -182,8 +182,16 @@ public class PlayerManager {
 
     String name = request.getString("login");
 
-    if (playerIsLoggedIn(name)) { throw new ServiceException("File already loaded"); }
-    if (!playerExists(name)) { throw new ServiceException("Save file not found"); }
+    if (playerIsLoggedIn(name)) {
+      Message message = new Message("error", "Player '" + name + "' is already logged in!");
+      socket.sendJson(message.toJson());
+      return;
+    }
+    if (!playerExists(name)) {
+      Message message = new Message("error", "Player '" + name + "' save not found!");
+      socket.sendJson(message.toJson());
+      return;
+    }
 
     Player player = new Player(name);
 
@@ -209,6 +217,14 @@ public class PlayerManager {
     }
 
     activities.put(name, new Stack<Activity>());
+
+    JSONObject closeLoginJson = new JSONObject();
+    try {
+      closeLoginJson.put("action", "login:close");
+    }
+    catch (JSONException e) {
+    }
+    pushJson(player, closeLoginJson);
   }
 
   private static Map<String, JPokemonService> services;

@@ -172,8 +172,6 @@
       this.parent(config);
 
       this.lastInput = new Date().getTime();
-
-      me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
     },
 
     update: function() {

@@ -27,29 +27,28 @@ public class OverworldService implements JPokemonService {
 
     JSONObject json = new JSONObject();
     try {
-      json.put("action", "overworld");
+      json.put("action", "overworld:login");
       json.put("spriteheight", 56);
       json.put("spritewidth", 48);
       json.put("image", "male_protagonist");
-      json.put("z", map.getEntityZ());
-
+      json.put("name", player.id());
       json.put("x", player.getLocation().getLeft());
       json.put("y", player.getLocation().getTop());
-      json.put("login", player.id());
+      json.put("z", map.getEntityZ());
       json.put("map", mapId);
       PlayerManager.pushJson(player, json);
-      json.remove("login");
+      
+      json.put("action", "overworld:join");
       json.remove("map");
-
       for (String otherPlayerId : map.getPlayers()) {
         Player otherPlayer = PlayerManager.getPlayer(otherPlayerId);
 
-        json.put("add", otherPlayer.id());
+        json.put("name", otherPlayer.id());
         json.put("x", otherPlayer.getLocation().getLeft());
         json.put("y", otherPlayer.getLocation().getTop());
         PlayerManager.pushJson(player, json);
 
-        json.put("add", player.id());
+        json.put("name", player.id());
         json.put("x", player.getLocation().getLeft());
         json.put("y", player.getLocation().getTop());
         PlayerManager.pushJson(otherPlayer, json);
@@ -69,8 +68,8 @@ public class OverworldService implements JPokemonService {
 
     JSONObject signout = new JSONObject();
     try {
-      signout.put("action", "overworld");
-      signout.put("leave", player.id());
+      signout.put("action", "overworld:leave");
+      signout.put("name", player.id());
     }
     catch (JSONException e) {
     }
@@ -126,9 +125,9 @@ public class OverworldService implements JPokemonService {
 
     JSONObject move = new JSONObject();
     try {
-      move.put("action", "overworld");
+      move.put("action", "overworld:move");
       move.put("name", player.id());
-      move.put("move", direction);
+      move.put("direction", direction);
       move.put("x", nextLeft);
       move.put("y", nextTop);
     }

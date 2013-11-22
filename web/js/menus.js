@@ -7,6 +7,12 @@
         'message': stuff.text,
         'type': 'info',
       });
+    },
+    error: function(json) {
+      Messenger().post({
+        message: json.text,
+        type: 'error'
+      });
     }
   });
 

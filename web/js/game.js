@@ -5,9 +5,10 @@ var game = (function() {
   var realmenus = {}; // will replace menus
   var controllers = {};
 
-  var dispatch = function(json) {
+  game.dispatch = function(json) {
     var action = json.action,
         method = 'update';
+
     if (action.indexOf(':') > 0) {
       var colonIndex = action.indexOf(':');
       action = action.substring(0, colonIndex);
@@ -33,7 +34,7 @@ var game = (function() {
 
   var socket = new WebSocket('ws://'+document.location.hostname+':'+document.location.port+'/socket');
   socket.onmessage = function(message) {
-    dispatch(JSON.parse(message.data));
+    game.dispatch(JSON.parse(message.data));
   };
 
   game.subscribe = function(action, menu) {
@@ -100,28 +101,17 @@ var game = (function() {
 
   // Run on page load.
   game.onload = function () {
-    // Initialize the video.
-    if (!me.video.init("screen", 768, 512, true, 1)) {
-        alert("Your browser does not support HTML5 canvas.");
-        return;
+    if (!me.video.init('screen', 768, 512, true, 1)) {
+      alert('Your browser does not support HTML5 canvas.');
+      return;
     }
-
-    me.loader.onload = this.loaded.bind(this);
-    me.audio.init("mp3,ogg");
-    me.loader.preload(game.resources);
-    me.state.change(me.state.LOADING);
-  };
-
-  // Run on game resources loaded.
-  game.loaded = function () {
-    me.state.LOGIN = me.state.USER + 0;
-
-    me.state.set(me.state.PLAY, new me.screen.PlayScreen());
-    me.state.set(me.state.LOGIN, new me.screen.LoginScreen());
 
     // Add the entities
     me.entityPool.add('player', game.PlayerEntity);
     me.entityPool.add('trainer', game.TrainerEntity, true);
+
+    me.state.set(me.state.PLAY, new me.screen.PlayScreen());
+    me.state.change(me.state.PLAY);
 
     // enable the keyboard
     me.sys.gravity = 0;
@@ -130,8 +120,6 @@ var game = (function() {
     me.input.bindKey(me.input.KEY.UP, "up");
     me.input.bindKey(me.input.KEY.DOWN, "down");
     me.input.bindKey(me.input.KEY.ENTER, "enter");
-
-    me.state.change(me.state.LOGIN);
   };
 
   return game;
@@ -152,4 +140,22 @@ Handlebars.getTemplate = function(name) {
   }
 
   return Handlebars.templates[name];
+};
+
+// Courtesy of StackOverflow!
+// http://stackoverflow.com/questions/210717/using-jquery-to-center-a-div-on-the-screen
+jQuery.fn.center = function() {
+  this.css("position","absolute");
+  this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+  this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+}
+jQuery.fn.hcenter = function () {
+  this.css("position","absolute");
+  this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+  return this;
+};
+jQuery.fn.vcenter = function() {
+  this.css("position","absolute");
+  this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+  return this;
 };
