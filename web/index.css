@@ -16,30 +16,6 @@ body {
     margin: 0;
 }
 
-.navbar-collapse .navbar-nav.navbar-left:first-child {
-    margin-left:0px;
-}
-
-.navbar .nav > li:first-child > a {
-    border-radius:0px;
-}
-
-.navbar {
-    min-height: 36px;
-    margin-bottom:0px;
-}
-
-.form-control.flat:hover {
-    border-color: rgb(52, 152, 219);
-}
-.form-control.flat:focus {
-    border-color: rgb(52, 152, 219);
-}
-
-.navbar .nav > li > a {
-    padding: 4px 12px;
-}
-
 .center {
     text-align: center;
 }
