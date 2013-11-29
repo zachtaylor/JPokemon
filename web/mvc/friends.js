@@ -1,4 +1,12 @@
 game.control('friends', {
+  nav: {
+    name: 'Friends',
+    options: {
+      'Friends': 'showFriendsTab',
+      'Pending': 'showPendingTab',
+      'Blocked': 'showBlockedTab'
+    }
+  },
   refs: [
     'title',
     'friendsTab',
@@ -21,8 +29,6 @@ game.control('friends', {
 
       this.currentTab = this.friendsTab;
     },
-
-    // 
 
     showFriendsTab: function() {
       $('a', this.currentTab).css({

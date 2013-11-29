@@ -37,7 +37,7 @@ public class OverworldService implements JPokemonService {
       json.put("z", map.getEntityZ());
       json.put("map", mapId);
       PlayerManager.pushJson(player, json);
-      
+
       json.put("action", "overworld:join");
       json.remove("map");
       for (String otherPlayerId : map.getPlayers()) {
@@ -82,9 +82,13 @@ public class OverworldService implements JPokemonService {
   @Override
   public void serve(JSONObject request, Player player) throws ServiceException {
     try {
-      if (request.has("move")) {
-        String direction = request.getString("move");
-        move(player, direction);
+      String method = request.getString("method");
+
+      if (method.equals("move")) {
+        move(player, request);
+      }
+      else if (method.equals("interact")) {
+        interact(player, request);
       }
     }
     catch (JSONException e) {
@@ -92,7 +96,8 @@ public class OverworldService implements JPokemonService {
     }
   }
 
-  private void move(Player player, String direction) {
+  private void move(Player player, JSONObject request) throws JSONException {
+    String direction = request.getString("direction");
     Location location = player.getLocation();
     Map map = maps.get(location.getMap());
 
@@ -137,6 +142,10 @@ public class OverworldService implements JPokemonService {
     for (String playerId : map.getPlayers()) {
       PlayerManager.pushJson(PlayerManager.getPlayer(playerId), move);
     }
+  }
+
+  public void interact(Player player, JSONObject request) {
+
   }
 
   @Override

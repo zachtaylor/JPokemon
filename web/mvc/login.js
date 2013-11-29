@@ -1,6 +1,7 @@
 game.control('login', {
+  nav: 'Login',
   refs: [
-    'formElement', // flat ui already uses 'login-form' css selector
+    'formElement',
     'usernameInputField',
     'button'
   ],
@@ -11,11 +12,14 @@ game.control('login', {
       this.view.center();
       this.view.draggable();
 
+      this.usernameInputField.keyup(this.onUsernameInputFieldKeyup.bind(this));
       this.formElement.submit(this.onFormSubmit.bind(this));
     },
 
-    close: function() {
-      this.view.hide();
+    onUsernameInputFieldKeyup: function(e) {
+      if (e.keyCode === 13) {
+        this.onFormSubmit(e);
+      }
     },
 
     onFormSubmit: function(e) {
@@ -25,9 +29,6 @@ game.control('login', {
       game.send({
         login: username
       });
-    },
-
-    update: function(json) {
     }
   }
 });

@@ -34,9 +34,7 @@
       }
 
       window.onReady(function() {
-        game.dispatch({
-          action:'login'
-        });
+        game.getController('main');
 
         me.loader.onload = game.onload;
         me.loader.preload(game.resources);

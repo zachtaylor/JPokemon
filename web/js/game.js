@@ -2,8 +2,41 @@
 var game = (function() {
   var game = {};
   var menus = {};
-  var realmenus = {}; // will replace menus
   var controllers = {};
+  var views = {};
+
+  game.getController = function(name) {
+    return controllers[name] || game.loadController(name);
+  };
+
+  game.loadController = function(name) {
+    $.ajax({
+      url : 'mvc/' + name + '.js',
+      dataType: 'script',
+      async: false,
+      error : function(jqXHR, textStatus, e) {
+        console.error(e);
+      }
+    });
+
+    return controllers[name];
+  };
+
+  game.getView = function(name) {
+    return views[name] || game.loadView(name);
+  };
+
+  game.loadView = function(name) {
+    $.ajax({
+      url : 'mvc/' + name + '.html',
+      success : function(data) {
+        views[name] = data;
+      },
+      async : false
+    });
+
+    return views[name];
+  };
 
   game.dispatch = function(json) {
     var action = json.action,
@@ -15,19 +48,10 @@ var game = (function() {
       method = json.action.substring(colonIndex + 1);
     }
 
-    var receiver = menus[action];
-    if (!(receiver && receiver[method])) {
-      receiver = realmenus[action];
-    }
-    if (!(receiver && receiver[method])) {
-      var controller = game.getController(action);
-      receiver = realmenus[action] = new controller();
-    }
+    var receiver = game.getController(action);
 
     if (receiver) {
-      if (receiver.show) {
-        receiver.show();
-      }
+      receiver.show();
       receiver[method](json);
     }
   };
@@ -47,9 +71,9 @@ var game = (function() {
   };
 
   game.control = function(name, config) {
-    var constructor = function Controller() {
+    var constructor = function Controller(view) {
       this.name = name;
-      this.view = $(Handlebars.getTemplate(name)()).appendTo('body');
+      this.view = $(game.getView(name)).appendTo('body');
 
       for (var i = 0; i < config.refs.length; i++) {
         var ref = config.refs[i];
@@ -70,30 +94,21 @@ var game = (function() {
       constructor.prototype[methodName] = config.api[methodName];
     }
     constructor.prototype.show = function() {
-      this.view.appendTo('body');
+      game.getController('main').showController(config.nav);
       this.view.show();
-    };
+    }
     constructor.prototype.hide = function() {
+      game.getController('main').hideController(config.nav);
+      this.view.hide();
+    }
+    constructor.prototype.close = function() {
+      game.getController('main').closeController(config.nav);
       this.view.hide();
     }
 
-    controllers[name] = constructor;
+    controllers[name] = new constructor();
+    game.getController('main').addController(config.nav, controllers[name]);
   };
-
-  game.getController = function(name) {
-    if (!controllers[name]) {
-      $.ajax({
-        url : 'control/' + name + '.js',
-        dataType: "script",
-        async: false,
-        error : function(jqXHR, textStatus, e) {
-          console.error("Error loading controller : " + name);
-        }
-      });
-    }
-
-    return controllers[name];
-  }
 
   game.send = function(json) {
     socket.send(JSON.stringify(json));
@@ -124,23 +139,6 @@ var game = (function() {
 
   return game;
 })(window);
-
-Handlebars.getTemplate = function(name) {
-  if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
-    $.ajax({
-      url : 'view/' + name + '.handlebars',
-      success : function(data) {
-        if (Handlebars.templates === undefined) {
-          Handlebars.templates = {};
-        }
-        Handlebars.templates[name] = Handlebars.compile(data);
-      },
-      async : false
-    });
-  }
-
-  return Handlebars.templates[name];
-};
 
 // Courtesy of StackOverflow!
 // http://stackoverflow.com/questions/210717/using-jquery-to-center-a-div-on-the-screen
