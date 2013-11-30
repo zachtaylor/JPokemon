@@ -38,7 +38,7 @@ game.control('overworld', {
 
     join: function(json) {
       this.players[json.name] = me.entityPool.newInstanceOf('trainer', json);
-      this.players[json.add].setName(json.name);
+      this.players[json.name].setName(json.name);
       this.onResetEvent();
     },
 

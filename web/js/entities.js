@@ -180,28 +180,32 @@
           this.lastInput = new Date().getTime();
           game.send({
             service : 'overworld',
-            move: 'left'
+            method: 'move',
+            direction: 'left'
           });
         }
         else if (me.input.isKeyPressed('right')) {
           this.lastInput = new Date().getTime();
           game.send({
             service : 'overworld',
-            move: 'right'
+            method: 'move',
+            direction: 'right'
           });
         }
         else if (me.input.isKeyPressed('up')) {
           this.lastInput = new Date().getTime();
           game.send({
             service : 'overworld',
-            move: 'up'
+            method: 'move',
+            direction: 'up'
           });
         }
         else if (me.input.isKeyPressed('down')) {
           this.lastInput = new Date().getTime();
           game.send({
             service : 'overworld',
-            move: 'down'
+            method: 'move',
+            direction: 'down'
           });
         }
       }
