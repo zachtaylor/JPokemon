@@ -5,6 +5,14 @@ var game = (function() {
   var controllers = {};
   var views = {};
 
+  game.getMenu = function(name) {
+    if (!menus[name]) {
+      var controller = game.getController(name);
+      menus[name] = new controller();
+    }
+    return menus[name];
+  };
+
   game.getController = function(name) {
     return controllers[name] || game.loadController(name);
   };
@@ -15,11 +23,38 @@ var game = (function() {
       dataType: 'script',
       async: false,
       error : function(jqXHR, textStatus, e) {
-        console.error(e);
+        console.error('Failed to load controller: '+name);
       }
     });
 
     return controllers[name];
+  };
+
+  game.control = function(name, config) {
+    var constructor = function Controller() {
+      this.name = name;
+      this.view = $(game.getView(name)).appendTo('body');
+
+      for (var i = 0; i < config.refs.length; i++) {
+        var ref = config.refs[i];
+        this[ref] = $('.' + name + '-' + ref, this.view);
+      }
+      for (var i = 0; i < config.subcontrols.length; i++) {
+        var subcontrol = config.subcontrols[i];
+        var subcontroller = game.getController(subcontrol);
+        this[subcontrol] = new subcontroller();
+
+        $('.controller-' + config.subcontrols[i], this.view).replaceWith(this[subcontrol].view);
+      }
+
+      config.api.constructor.apply(this, arguments);
+    }
+
+    for (var methodName in config.api) {
+      constructor.prototype[methodName] = config.api[methodName];
+    }
+
+    controllers[name] = constructor;
   };
 
   game.getView = function(name) {
@@ -48,10 +83,12 @@ var game = (function() {
       method = json.action.substring(colonIndex + 1);
     }
 
-    var receiver = game.getController(action);
+    var receiver = game.getMenu(action);
 
     if (receiver) {
-      receiver.show();
+      if (receiver.show) {
+        receiver.show();
+      }
       receiver[method](json);
     }
   };
@@ -68,46 +105,6 @@ var game = (function() {
     else {
       menus[action] = menu;
     }
-  };
-
-  game.control = function(name, config) {
-    var constructor = function Controller(view) {
-      this.name = name;
-      this.view = $(game.getView(name)).appendTo('body');
-
-      for (var i = 0; i < config.refs.length; i++) {
-        var ref = config.refs[i];
-        this[ref] = $('.' + name + '-' + ref, this.view);
-      }
-      for (var i = 0; i < config.subcontrols.length; i++) {
-        var subcontrol = config.subcontrols[i];
-        var subcontroller = game.getController(subcontrol);
-        this[subcontrol] = new subcontroller();
-
-        $('.controller-' + config.subcontrols[i], this.view).replaceWith(this[subcontrol].view);
-      }
-
-      config.api.constructor.apply(this);
-    }
-
-    for (var methodName in config.api) {
-      constructor.prototype[methodName] = config.api[methodName];
-    }
-    constructor.prototype.show = function() {
-      game.getController('main').showController(config.nav);
-      this.view.show();
-    }
-    constructor.prototype.hide = function() {
-      game.getController('main').hideController(config.nav);
-      this.view.hide();
-    }
-    constructor.prototype.close = function() {
-      game.getController('main').closeController(config.nav);
-      this.view.hide();
-    }
-
-    controllers[name] = new constructor();
-    game.getController('main').addController(config.nav, controllers[name]);
   };
 
   game.send = function(json) {

@@ -183,12 +183,12 @@ public class PlayerManager {
     String name = request.getString("login");
 
     if (playerIsLoggedIn(name)) {
-      Message message = new Message("error", "Player '" + name + "' is already logged in!");
+      Message message = new Message("login:error", "Player '" + name + "' is already logged in!");
       socket.sendJson(message.toJson());
       return;
     }
     if (!playerExists(name)) {
-      Message message = new Message("error", "Player '" + name + "' save not found!");
+      Message message = new Message("login:error", "Player '" + name + "' save not found!");
       socket.sendJson(message.toJson());
       return;
     }
@@ -220,7 +220,7 @@ public class PlayerManager {
 
     JSONObject closeLoginJson = new JSONObject();
     try {
-      closeLoginJson.put("action", "login:close");
+      closeLoginJson.put("action", "login:accept");
     }
     catch (JSONException e) {
     }

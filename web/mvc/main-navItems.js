@@ -6,17 +6,16 @@ game.control('main-navItems', {
   subcontrols:[
   ],
   api: {
-    constructor: function() {
-    },
-    configure: function(config, controller) {
+    constructor: function(name, controller, options) {
       this.controller = controller;
 
-      this.link.html(config.name + ' <b class="caret"></b>');
+      this.link.html(name + ' <b class="caret"></b>');
 
-      $.each(config.options, (function(key, methodName) {
-        var link = $('<a href="#">' + key + '</a>');
-        link.click(this.controller[methodName].bind(this.controller));
-        var listItem = $('<li></li>');
+      $.each(options, (function(key, method) {
+        var listItem = $('<li></li>'),
+            link = $('<a href="#">' + key + '</a>');
+
+        link.click(method.bind(controller));
         link.appendTo(listItem);
         listItem.appendTo(this.dropdown);
       }).bind(this));
@@ -28,28 +27,27 @@ game.control('main-navItems', {
       toggleLink.appendTo(toggleLinkListItem);
       toggleLinkListItem.appendTo(this.dropdown);
 
-
       this.dropdown.dropdown();
     },
     onClick : function() {
       if (this.controller.view.is(':visible')) {
-        this.hideController();
+        this.hideMenu();
       }
       else {
-        this.showController();
+        this.showMenu();
       }
     },
-    showController: function() {
+    showMenu: function() {
       this.view.addClass('active');
       this.controller.view.show();
     },
-    hideController: function() {
+    hideMenu: function() {
       this.view.removeClass('active');
       this.controller.view.hide();
     },
-    closeController:function() {
+    closeMenu:function() {
       this.controller.view.hide();
       this.view.remove();
     }
   }
-})
+});

@@ -1,5 +1,4 @@
 game.control('login', {
-  nav: 'Login',
   refs: [
     'formElement',
     'usernameInputField',
@@ -14,6 +13,9 @@ game.control('login', {
 
       this.usernameInputField.keyup(this.onUsernameInputFieldKeyup.bind(this));
       this.formElement.submit(this.onFormSubmit.bind(this));
+
+      game.getMenu('main').addMenu('Login', this);
+      game.getMenu('main').showMenu('Login');
     },
 
     onUsernameInputFieldKeyup: function(e) {
@@ -29,6 +31,13 @@ game.control('login', {
       game.send({
         login: username
       });
+    },
+
+    accept : function() {
+      this.formElement.addClass('has-success');
+      setTimeout(function() {
+        game.getMenu('main').closeMenu('Login');
+      }, 500);
     }
   }
 });

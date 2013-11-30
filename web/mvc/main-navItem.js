@@ -5,9 +5,7 @@ game.control('main-navItem', {
   subcontrols: [
   ],
   api : {
-    constructor: function() {
-    },
-    configure: function(name, controller) {
+    constructor: function(name, controller) {
       this.controller = controller;
 
       this.link.html(name);
@@ -15,21 +13,21 @@ game.control('main-navItem', {
     },
     onClick : function() {
       if (this.controller.view.is(':visible')) {
-        this.hideController();
+        this.hideMenu();
       }
       else {
-        this.showController();
+        this.showMenu();
       }
     },
-    showController: function() {
+    showMenu: function() {
       this.view.addClass('active');
       this.controller.view.show();
     },
-    hideController: function() {
+    hideMenu: function() {
       this.view.removeClass('active');
       this.controller.view.hide();
     },
-    closeController:function() {
+    closeMenu:function() {
       this.controller.view.hide();
       this.view.remove();
     }

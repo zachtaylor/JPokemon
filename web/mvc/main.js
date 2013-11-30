@@ -10,54 +10,34 @@ game.control('main', {
       this.controllers = {};
 
       this.view.insertBefore('#screen');
-      game.dispatch.defer({
-        'action':'login:show'
-      });
+      game.getMenu.defer('login');
     },
 
-    getNameFromConfig: function(config) {
-      if (!config || typeof config === 'string') {
-        return config;
-      }
-      return config.name;
-    },
-
-    addController: function(config, controller) {
-      var name = this.getNameFromConfig(config);
-      if (!name) { return; }
-
+    addMenu: function(name, menu, options) {
       var navItem;
-      if (name === config) {
-        navItem = new game.getController('main-navItem');
+      if (options) {
+        var navItemsController = game.getController('main-navItems');
+        navItem = new navItemsController(name, menu, options);
       }
       else {
-        navItem = new game.getController('main-navItems');
+        var navItemController = game.getController('main-navItem');
+        navItem = new navItemController(name, menu);
       }
-      navItem.configure(config, controller);
 
       this.controllers[name] = navItem;
       navItem.view.appendTo(this.navItems);
     },
 
-    showController: function(config) {
-      var name = this.getNameFromConfig(config);
-      if (!name) { return; }
-
-      this.controllers[name].showController();
+    showMenu: function(name) {
+      this.controllers[name].showMenu();
     },
 
-    hideController : function(config) {
-      var name = this.getNameFromConfig(config);
-      if (!name) { return; }
-
-      this.controllers[name].hideController();
+    hideMenu : function(name) {
+      this.controllers[name].hideMenu();
     },
 
-    closeController : function(config) {
-      var name = this.getNameFromConfig(config);
-      if (!name) { return; }
-
-      this.controllers[name].closeController();
+    closeMenu : function(name) {
+      this.controllers[name].closeMenu();
       delete this.controllers[name];
     }
   }
