@@ -1,5 +1,6 @@
 body {
     background-color: #000;
+    overflow: hidden;
 
     /* Allow mouse dragging. */
     -moz-user-select: none;

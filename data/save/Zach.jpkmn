@@ -7,27 +7,10 @@
 	</record>
 	<pokedex>
 		<seen> [] </seen>
-		<owned> [34, 55, 5, 123, 150, 135, 105] </owned>
+		<owned> [34, 55, 5, 123, 135, 150, 105] </owned>
 	</pokedex>
 	<pokemonstorage>
 		<pokemonbox>
-			<pokemon ot="Zach" level="25" name="Bull" xp="0" number="55" has_original_trainer="true">
-				<condition> [] </condition>
-				<stats points="0" evtotal="0">
-					<stat ev="0" max="82" iv="30" cur="82" points="0" type="HEALTH" />
-					<stat ev="0" max="82" iv="24" cur="82" points="0" type="ATTACK" />
-					<stat ev="0" max="90" iv="31" cur="90" points="0" type="SPECATTACK" />
-					<stat ev="0" max="79" iv="23" cur="79" points="0" type="DEFENSE" />
-					<stat ev="0" max="79" iv="17" cur="79" points="0" type="SPECDEFENSE" />
-					<stat ev="0" max="80" iv="12" cur="80" points="0" type="SPEED" />
-				</stats>
-				<moves>
-					<move enabled="true" ppmax="5" number="63" pp="5" />
-					<move enabled="true" ppmax="15" number="51" pp="15" />
-					<move enabled="true" ppmax="25" number="21" pp="25" />
-					<move enabled="true" ppmax="20" number="29" pp="20" />
-				</moves>
-			</pokemon>
 			<pokemon ot="Zach" level="25" name="Dorito" xp="0" number="5" has_original_trainer="true">
 				<condition> [] </condition>
 				<stats points="0" evtotal="0">
@@ -45,21 +28,21 @@
 					<move enabled="true" ppmax="20" number="101" pp="20" />
 				</moves>
 			</pokemon>
-			<pokemon ot="Zach" level="25" name="Spazzz" xp="0" number="135" has_original_trainer="true">
+			<pokemon ot="Zach" level="25" name="Neat" xp="0" number="123" has_original_trainer="true">
 				<condition> [] </condition>
 				<stats points="0" evtotal="0">
-					<stat ev="0" max="67" iv="0" cur="67" points="0" type="HEALTH" />
-					<stat ev="0" max="74" iv="28" cur="74" points="0" type="ATTACK" />
-					<stat ev="0" max="97" iv="29" cur="97" points="0" type="SPECATTACK" />
-					<stat ev="0" max="71" iv="27" cur="71" points="0" type="DEFENSE" />
-					<stat ev="0" max="83" iv="5" cur="83" points="0" type="SPECDEFENSE" />
-					<stat ev="0" max="100" iv="3" cur="100" points="0" type="SPEED" />
+					<stat ev="0" max="73" iv="13" cur="73" points="0" type="HEALTH" />
+					<stat ev="0" max="91" iv="7" cur="91" points="0" type="ATTACK" />
+					<stat ev="0" max="66" iv="17" cur="66" points="0" type="SPECATTACK" />
+					<stat ev="0" max="75" iv="3" cur="75" points="0" type="DEFENSE" />
+					<stat ev="0" max="78" iv="12" cur="78" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="93" iv="25" cur="93" points="0" type="SPEED" />
 				</stats>
 				<moves>
+					<move enabled="true" ppmax="30" number="4" pp="30" />
+					<move enabled="true" ppmax="35" number="162" pp="35" />
 					<move enabled="true" ppmax="30" number="100" pp="30" />
-					<move enabled="true" ppmax="10" number="148" pp="10" />
-					<move enabled="true" ppmax="20" number="149" pp="20" />
-					<move enabled="true" ppmax="15" number="111" pp="15" />
+					<move enabled="true" ppmax="15" number="32" pp="15" />
 				</moves>
 			</pokemon>
 			<pokemon ot="Zach" level="25" name="Muppet" xp="0" number="105" has_original_trainer="true">
@@ -96,21 +79,38 @@
 					<move enabled="true" ppmax="10" number="154" pp="10" />
 				</moves>
 			</pokemon>
-			<pokemon ot="Zach" level="25" name="Neat" xp="0" number="123" has_original_trainer="true">
+			<pokemon ot="Zach" level="25" name="Bull" xp="0" number="55" has_original_trainer="true">
 				<condition> [] </condition>
 				<stats points="0" evtotal="0">
-					<stat ev="0" max="73" iv="13" cur="73" points="0" type="HEALTH" />
-					<stat ev="0" max="91" iv="7" cur="91" points="0" type="ATTACK" />
-					<stat ev="0" max="66" iv="17" cur="66" points="0" type="SPECATTACK" />
-					<stat ev="0" max="75" iv="3" cur="75" points="0" type="DEFENSE" />
-					<stat ev="0" max="78" iv="12" cur="78" points="0" type="SPECDEFENSE" />
-					<stat ev="0" max="93" iv="25" cur="93" points="0" type="SPEED" />
+					<stat ev="0" max="82" iv="30" cur="82" points="0" type="HEALTH" />
+					<stat ev="0" max="82" iv="24" cur="82" points="0" type="ATTACK" />
+					<stat ev="0" max="90" iv="31" cur="90" points="0" type="SPECATTACK" />
+					<stat ev="0" max="79" iv="23" cur="79" points="0" type="DEFENSE" />
+					<stat ev="0" max="79" iv="17" cur="79" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="80" iv="12" cur="80" points="0" type="SPEED" />
 				</stats>
 				<moves>
-					<move enabled="true" ppmax="30" number="4" pp="30" />
-					<move enabled="true" ppmax="35" number="162" pp="35" />
+					<move enabled="true" ppmax="5" number="63" pp="5" />
+					<move enabled="true" ppmax="15" number="51" pp="15" />
+					<move enabled="true" ppmax="25" number="21" pp="25" />
+					<move enabled="true" ppmax="20" number="29" pp="20" />
+				</moves>
+			</pokemon>
+			<pokemon ot="Zach" level="25" name="Spazzz" xp="0" number="135" has_original_trainer="true">
+				<condition> [] </condition>
+				<stats points="0" evtotal="0">
+					<stat ev="0" max="67" iv="0" cur="67" points="0" type="HEALTH" />
+					<stat ev="0" max="74" iv="28" cur="74" points="0" type="ATTACK" />
+					<stat ev="0" max="97" iv="29" cur="97" points="0" type="SPECATTACK" />
+					<stat ev="0" max="71" iv="27" cur="71" points="0" type="DEFENSE" />
+					<stat ev="0" max="83" iv="5" cur="83" points="0" type="SPECDEFENSE" />
+					<stat ev="0" max="100" iv="3" cur="100" points="0" type="SPEED" />
+				</stats>
+				<moves>
 					<move enabled="true" ppmax="30" number="100" pp="30" />
-					<move enabled="true" ppmax="15" number="32" pp="15" />
+					<move enabled="true" ppmax="10" number="148" pp="10" />
+					<move enabled="true" ppmax="20" number="149" pp="20" />
+					<move enabled="true" ppmax="15" number="111" pp="15" />
 				</moves>
 			</pokemon>
 		</pokemonbox>

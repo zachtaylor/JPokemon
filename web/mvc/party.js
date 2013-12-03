@@ -14,6 +14,9 @@ game.control('party', {
       this.box.sortable();
 
       this.box.on('sortstop', this.onSortPokemon.bind(this));
+
+      game.getMenu('main').addMenu('Party', this);
+      game.getMenu('main').showMenu('Party');
     },
 
     update : function(json) {
