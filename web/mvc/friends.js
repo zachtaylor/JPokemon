@@ -10,6 +10,7 @@ game.control('friends', {
   ],
   api: {
     constructor: function() {
+      this.view.center();
       this.view.draggable();
       this.currentTab = 'friends';
 

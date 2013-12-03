@@ -10,6 +10,7 @@ game.control('party', {
   ],
   api : {
     constructor : function() {
+      this.view.center();
       this.view.draggable();
       this.box.sortable();
 

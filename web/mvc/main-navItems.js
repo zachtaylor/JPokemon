@@ -9,25 +9,36 @@ game.control('main-navItems', {
     constructor: function(name, controller, options) {
       this.controller = controller;
 
-      this.link.html(name + ' <b class="caret"></b>');
+      if (name) {
+        this.setName(name);
+      }
 
-      $.each(options, (function(key, method) {
-        var listItem = $('<li></li>'),
-            link = $('<a href="#">' + key + '</a>');
+      if (options) {
+        $.each(options, (function(key, method) {
+          this.addRow(key, method, controller)
+        }).bind(this));
 
-        link.click(method.bind(controller));
-        link.appendTo(listItem);
-        listItem.appendTo(this.dropdown);
-      }).bind(this));
+        $('<li class="divider"></li>').appendTo(this.dropdown);
+        var toggleLink = $('<a href="#">Show/Hide</a>');
+        toggleLink.click(this.onClick.bind(this));
+        var toggleLinkListItem = $('<li></li>');
 
-      $('<li class="divider"></li>').appendTo(this.dropdown);
-      var toggleLink = $('<a href="#">Show/Hide</a>');
-      toggleLink.click(this.onClick.bind(this));
-      var toggleLinkListItem = $('<li></li>');
-      toggleLink.appendTo(toggleLinkListItem);
-      toggleLinkListItem.appendTo(this.dropdown);
+        toggleLink.appendTo(toggleLinkListItem);
+        toggleLinkListItem.appendTo(this.dropdown);
+      }
 
       this.dropdown.dropdown();
+    },
+    setName : function(name) {
+      this.link.html(name + ' <b class="caret"></b>');
+    },
+    addRow : function(name, callback, scope) {
+      var listItem = $('<li></li>'),
+          link = $('<a href="#">' + name + '</a>');
+
+      link.click(callback.bind(scope));
+      link.appendTo(listItem);
+      listItem.appendTo(this.dropdown);
     },
     onClick : function() {
       if (this.controller.view.is(':visible')) {

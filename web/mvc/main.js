@@ -1,16 +1,32 @@
 game.control('main', {
   refs: [
-    'jpokemonButton',
     'navItems'
   ],
-  subcontrols: [
-  ],
+  subcontrols: {
+    'dropdown' : 'main-navItems'
+  },
   api: {
     constructor: function() {
       this.controllers = {};
 
       this.view.insertBefore('#screen');
       game.getMenu.defer('login');
+
+      var requestableThings = ['friends', 'party', 'lobby'];
+
+      this.dropdown.setName('JPokemon');
+      for (var i = 0; i < requestableThings.length; i++) {
+        var item = requestableThings[i];
+        this['onClick' + item] = (function(item) {
+                                    return function() {
+                                      game.send({
+                                        load : item
+                                      });
+                                    };
+        })(item);
+
+        this.dropdown.addRow(item, this['onClick' + item]);
+      }
     },
 
     addMenu: function(name, menu, options) {

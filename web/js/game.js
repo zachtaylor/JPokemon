@@ -39,6 +39,22 @@ var game = (function() {
         var ref = config.refs[i];
         this[ref] = $('.' + name + '-' + ref, this.view);
       }
+      if (config.subcontrols) {
+        var me = this;
+        $.each(config.subcontrols, (function(key, value) {
+          var subcontrol = null,
+              subcontroller = game.getController(value);
+
+          if (typeof key === 'number') {
+            me[value] = new subcontroller();
+            $('.' + name + '-' + value).replaceWith(me[value].view);
+          }
+          else {
+            me[key] = new subcontroller();
+            $('.' + name + '-' + key).replaceWith(me[key].view);
+          }
+        }).bind(this));
+      }
       for (var i = 0; i < config.subcontrols.length; i++) {
         var subcontrol = config.subcontrols[i];
         var subcontroller = game.getController(subcontrol);
