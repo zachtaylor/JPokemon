@@ -15,13 +15,6 @@ game.control('overworld', {
       this.players[json.name].setName(json.name);
       game.playerName = json.name;
       me.game.add(this.players[json.name]);
-
-      new me.menu.FriendsLauncher().show();
-      new me.menu.BattleLobbyLauncher().show();
-      new me.menu.PartyLauncher().show();
-      new me.menu.MessagesArea().show();
-      game.subscribe('battle', new me.menu.BattleWindow());
-      game.subscribe('selectmove', new me.menu.SelectMoveWindow());
     },
 
     onResetEvent: function() {

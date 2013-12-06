@@ -133,6 +133,21 @@ var game = (function() {
       alert('Your browser does not support HTML5 canvas.');
       return;
     }
+    
+    game.subscribe('notification', {
+      update: function(stuff) {
+        Messenger().post({
+          'message': stuff.text,
+          'type': 'info',
+        });
+      },
+      error: function(json) {
+        Messenger().post({
+          message: json.text,
+          type: 'error'
+        });
+      }
+    });
 
     // Add the entities
     me.entityPool.add('player', game.PlayerEntity);

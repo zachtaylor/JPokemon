@@ -33,6 +33,12 @@ body {
     border-radius: 2px;
 }
 
+.plus-green {
+    width: 16;
+    height: 16;
+    background-image: url('resource/img/ui/plus_green.png');
+}
+
 .list-grid {
     list-style-type: none; 
     margin: 0; 

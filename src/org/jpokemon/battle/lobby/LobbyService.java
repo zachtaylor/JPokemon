@@ -38,6 +38,9 @@ public class LobbyService implements JPokemonService {
       else if (request.has("respond")) {
         respond(request, player);
       }
+      else if (request.has("search")) {
+        search(request, player);
+      }
     }
     catch (JSONException e) {
       e.printStackTrace();
@@ -146,6 +149,31 @@ public class LobbyService implements JPokemonService {
     }
 
     pushLobbyToPlayers(lobby, false);
+  }
+
+  private void search(JSONObject json, Player player) throws JSONException, ServiceException {
+    String searchTerm = json.getString("search").toLowerCase();
+    JSONObject response = new JSONObject();
+    response.put("action", "lobby:fillSearchResults");
+
+    JSONArray names = new JSONArray();
+    response.put("names", names);
+
+    if (!searchTerm.isEmpty()) {
+      for (String name : PlayerManager.getOnlinePlayerNames()) {
+        if (name.equals(player.id())) {
+          continue;
+        }
+        if (name.toLowerCase().contains(searchTerm) || player.getFriends().contains(name)) {
+          names.put(name);
+        }
+        if (names.length() > 9) {
+          break;
+        }
+      }
+    }
+
+    PlayerManager.pushJson(player, response);
   }
 
   private JSONObject generateJson(Lobby lobby) {

@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -50,6 +53,16 @@ public class PlayerManager {
     }
 
     return player;
+  }
+
+  public static List<String> getOnlinePlayerNames() {
+    List<String> playerNames = null;
+
+    synchronized (players) {
+      playerNames = Collections.unmodifiableList(new ArrayList(players.keySet()));
+    }
+
+    return playerNames;
   }
 
   public static void bootstrapServices() {
