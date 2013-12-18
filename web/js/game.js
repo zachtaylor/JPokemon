@@ -18,12 +18,14 @@ var game = (function() {
   };
 
   game.loadController = function(name) {
+    var url = 'mvc/' + name.replace('.', '/') + '.js';
+
     $.ajax({
-      url : 'mvc/' + name + '.js',
+      url : url,
       dataType: 'script',
       async: false,
       error : function(jqXHR, textStatus, e) {
-        console.error('Failed to load controller: '+name);
+        throw e;
       }
     });
 
@@ -33,41 +35,57 @@ var game = (function() {
   game.control = function(name, config) {
     var constructor = function Controller() {
       this.name = name;
-      this.view = $(game.getView(name)).appendTo('body');
 
-      for (var i = 0; i < config.refs.length; i++) {
-        var ref = config.refs[i];
-        this[ref] = $('.' + name + '-' + ref, this.view);
+      var viewTemplate;
+      if (typeof config.view === 'string') {
+        viewTemplate = config.view;
       }
-      if (config.subcontrols) {
-        var me = this;
-        $.each(config.subcontrols, (function(key, value) {
-          var subcontrol = null,
-              subcontroller = game.getController(value);
+      else if (config.view === false) {
+        viewTemplate = null;
+      }
+      else {
+        viewTemplate = name;
+      }
+      
+      if (viewTemplate) {
+        this.view = $(game.getView(viewTemplate)).appendTo('body'); 
+      }
 
-          if (typeof key === 'number') {
-            me[value] = new subcontroller();
-            $('.' + name + '-' + value).replaceWith(me[value].view);
+      $.each(config, (function(key, value) {
+        this[key] = value; // base case is whatever you set it as
+
+        if (typeof value === 'string') {
+          if (value === 'view') {
+            return true; //continue;
           }
-          else {
-            me[key] = new subcontroller();
-            $('.' + name + '-' + key).replaceWith(me[key].view);
+
+          var selection = $(value, this.view);
+
+          if (selection.length > 0) {
+            this[key] = selection;
           }
-        }).bind(this));
-      }
-      for (var i = 0; i < config.subcontrols.length; i++) {
-        var subcontrol = config.subcontrols[i];
-        var subcontroller = game.getController(subcontrol);
-        this[subcontrol] = new subcontroller();
+        }
+        if (typeof value === 'object') {
+          if (value.controller) {
+            var controllerName = value.controller,
+                controller = game.getController(controllerName);
+            
+            this[key] = new controller();
 
-        $('.controller-' + config.subcontrols[i], this.view).replaceWith(this[subcontrol].view);
-      }
+            if (value.selector && this[key].view) {
+              $(value.selector, this.view).replaceWith(this[key].view);
+            }
+          }
+        }
+      }).bind(this));
 
-      config.api.constructor.apply(this, arguments);
+      config.constructor.apply(this, arguments);
     }
 
-    for (var methodName in config.api) {
-      constructor.prototype[methodName] = config.api[methodName];
+    for (var fn in Object.keys(config)) {
+      if (typeof config[fn] === 'function' && fn !== 'constructor') {
+        constructor.prototype[fn] = config[fn];
+      }
     }
 
     controllers[name] = constructor;
@@ -78,10 +96,15 @@ var game = (function() {
   };
 
   game.loadView = function(name) {
+    var url = 'mvc/' + name.replace('.', '/') + '.html';
+
     $.ajax({
-      url : 'mvc/' + name + '.html',
+      url : url,
       success : function(data) {
         views[name] = data;
+      },
+      error: function(jqXHR, textStatus, e) {
+        throw e;
       },
       async : false
     });

@@ -1,6 +1,5 @@
-game.control('friends-friendsListItem', {
+game.control('friends.listItem', {
   refs: [
-    'buttonx',
     'nameLabel'
   ],
   subcontrols: [

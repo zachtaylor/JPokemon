@@ -1,66 +1,60 @@
 game.control('friends', {
-  refs: [
-    'title',
-    'container',
-    'inputGroup',
-    'input',
-    'button'
-  ],
-  subcontrols: [
-  ],
-  api: {
-    constructor: function() {
-      this.view.center();
-      this.view.draggable();
-      this.currentTab = 'friends';
+  'title': '.panel-heading',
+  'container' : '.friends-container',
+  'inputGroup' : '.input-group',
+  'button' : '.btn',
 
-      game.getMenu('main').addMenu('Friends', this, {
-        'Friends List': this.showFriendsTab,
-        'Pending List': this.showPendingTab,
-        'Blocked List': this.showBlockedTab
-      });
-      game.getMenu('main').showMenu('Friends');
-    },
+  constructor: function() {
+    this.view.center();
+    this.view.draggable();
+    this.currentTab = 'friends';
 
-    showFriendsTab: function() {
-      this.title.html('Friends List');
-      this.container.html('');
-      this.inputGroup.show();
-      this.button.html('Add Friend');
+    game.getMenu('main').addMenu('Friends', this, {
+      'Friends List': this.showFriendsTab,
+      'Pending List': this.showPendingTab,
+      'Blocked List': this.showBlockedTab
+    });
+    game.getMenu('main').showMenu('Friends');
+  },
 
-      var friendsListItemController = game.getController('friends-friendsListItem');
-      for (var friendIndex = 0; friendIndex < this.data.friends.length; friendIndex++) {
-        var friendsListItem = new friendsListItemController();
-        friendsListItem.setFriend(this.data.friends[friendIndex]);
-        this.container.append(friendsListItem.view);
-      }
-    },
+  showFriendsTab: function() {
+    this.title.html('Friends List');
+    this.container.html('');
+    this.inputGroup.show();
+    this.button.html('Add Friend');
 
-    showPendingTab: function() {
-      this.title.html('Pending List');
-      this.container.html('');
-      this.inputGroup.hide();
-    },
+    var friendsListItemController = game.getController('friends.listItem');
+    for (var friendIndex = 0; friendIndex < this.data.friends.length; friendIndex++) {
+      var friendsListItem = new friendsListItemController();
+      friendsListItem.setFriend(this.data.friends[friendIndex]);
+      this.container.append(friendsListItem.view);
+    }
+  },
 
-    showBlockedTab: function() {
-      this.title.html('Blocked List');
-      this.container.html('');
-      this.inputGroup.show();
-      this.button.html('Block Player');
-    },
+  showPendingTab: function() {
+    this.title.html('Pending List');
+    this.container.html('');
+    this.inputGroup.hide();
+  },
 
-    update: function(json) {
-      this.data = json;
+  showBlockedTab: function() {
+    this.title.html('Blocked List');
+    this.container.html('');
+    this.inputGroup.show();
+    this.button.html('Block Player');
+  },
 
-      if (this.currentTab === 'friends') {
-        this.showFriendsTab();
-      }
-      else if (this.currentTab === 'pending') {
-        this.showPendingTab();
-      }
-      else if (this.currentTab === 'blocked') {
-        this.showBlockedTab();
-      }
+  update: function(json) {
+    this.data = json;
+
+    if (this.currentTab === 'friends') {
+      this.showFriendsTab();
+    }
+    else if (this.currentTab === 'pending') {
+      this.showPendingTab();
+    }
+    else if (this.currentTab === 'blocked') {
+      this.showBlockedTab();
     }
   }
 });

@@ -1,4 +1,4 @@
-game.control('main-navItems', {
+game.control('main.navItems', {
   refs:[
     'link',
     'dropdown'
