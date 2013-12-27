@@ -1,6 +1,5 @@
 package org.jpokemon.item;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class Store {
   @AutoIncrement
   private int id = -1;
   private String name;
-  private List<Inventory> _inventory = new ArrayList<Inventory>();
+  private List<Inventory> _inventory;
 
   public static Store get(int number) {
     DataConnectionManager.init(JPokemonServer.databasepath);

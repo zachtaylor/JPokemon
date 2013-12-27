@@ -10,6 +10,10 @@ import javax.swing.JList;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class JPokemonSelector<E> extends JComboBox {
+  private DefaultComboBoxModel model = new DefaultComboBoxModel();
+
+  private static final long serialVersionUID = 1L;
+
   public JPokemonSelector() {
     setModel(model);
     setRenderer(new JPokemonCellRenderer());
@@ -45,8 +49,7 @@ public abstract class JPokemonSelector<E> extends JComboBox {
 
   private class JPokemonCellRenderer extends DefaultListCellRenderer {
     @Override
-    public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected,
-        boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected, boolean cellHasFocus) {
       Component c = super.getListCellRendererComponent(list, o, index, isSelected, cellHasFocus);
 
       E element;
@@ -66,8 +69,4 @@ public abstract class JPokemonSelector<E> extends JComboBox {
 
     private static final long serialVersionUID = 1L;
   }
-
-  private DefaultComboBoxModel model = new DefaultComboBoxModel();
-
-  private static final long serialVersionUID = 1L;
 }

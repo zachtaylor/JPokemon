@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import com.jpokemon.mapeditor.MapEditWindow;
 import com.jpokemon.savefilegenerator.SaveGeneratorWindow;
+import com.jpokemon.storeeditor.StoreEditor;
 
 public class UtilWindow extends JFrame {
   public UtilWindow() {
@@ -19,6 +20,10 @@ public class UtilWindow extends JFrame {
     JButton mapEditor = new JButton("Open Map Editor");
     mapEditor.addActionListener(new OpenMapEditorHandler());
     add(mapEditor);
+
+    JButton storeEditor = new JButton("Open Store Editor");
+    storeEditor.addActionListener(new OpenStoreEditorHandler());
+    add(storeEditor);
 
     JButton saveFileEditor = new JButton("Open Save File Editor");
     saveFileEditor.addActionListener(new OpenSaveFileHandler());
@@ -32,6 +37,13 @@ public class UtilWindow extends JFrame {
     @Override
     public void actionPerformed(ActionEvent arg0) {
       new MapEditWindow();
+    }
+  }
+
+  private class OpenStoreEditorHandler implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+      new StoreEditor();
     }
   }
 

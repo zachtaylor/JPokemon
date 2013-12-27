@@ -1,5 +1,6 @@
 package org.jpokemon.item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.server.JPokemonServer;
@@ -26,7 +27,7 @@ public class Inventory {
       e.printStackTrace();
     }
 
-    return null;
+    return new ArrayList<Inventory>();
   }
 
   public void commit() {
