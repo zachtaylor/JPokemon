@@ -45,7 +45,7 @@ public class PlayerDetailsPanel extends JPanel {
   }
 
   public void refresh() {
-    usernameLabel.setText("name: " + parent.getPlayer().getName());
+    usernameLabel.setText("name: " + parent.getPlayer().id());
     cashLabel.setText("cash: " + parent.getPlayer().getCash());
     badgeLabel.setText("badges: " + parent.getPlayer().getBadgeCount());
   }

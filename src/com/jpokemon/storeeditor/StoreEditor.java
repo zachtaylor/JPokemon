@@ -42,6 +42,7 @@ public class StoreEditor extends JFrame {
 
     pack();
     setVisible(true);
+    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     readyToEdit = true;
   }
 
@@ -120,8 +121,7 @@ public class StoreEditor extends JFrame {
     readyToEdit = true;
 
     storeSelector.setSelectedIndex(storeSelector.getModel().getSize() - 1);
-    centerPanel.removeAll();
-    centerPanel.repaint();
+    fillInventory();
   }
 
   protected void onAddInventory() {
@@ -150,5 +150,6 @@ public class StoreEditor extends JFrame {
     }
 
     revalidate();
+    repaint();
   }
 }
