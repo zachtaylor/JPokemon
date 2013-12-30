@@ -1,7 +1,5 @@
 package com.jpokemon.util.ui.selector;
 
-import org.jpokemon.action.ActionType;
-
 import com.jpokemon.util.ui.JPokemonSelector;
 
 public class ActionTypeSelector extends JPokemonSelector<ActionType> {

@@ -8,7 +8,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.action.requirement.Requirement;
+import org.jpokemon.interaction.Requirement;
 
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.util.ui.selector.EventSelector;

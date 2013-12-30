@@ -12,10 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.overworld.npc.NPC;
-
-import com.jpokemon.JPokemonButton;
 import com.jpokemon.util.ui.ImageLoader;
+import com.jpokemon.util.ui.button.JPokemonButton;
 import com.jpokemon.util.ui.selector.NPCSelector;
 import com.jpokemon.util.ui.selector.NPCTypeSelector;
 

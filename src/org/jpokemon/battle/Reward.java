@@ -3,8 +3,8 @@ package org.jpokemon.battle;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jpokemon.action.ActionSet;
 import org.jpokemon.battle.slot.Slot;
+import org.jpokemon.interaction.ActionSet;
 import org.jpokemon.pokemon.EffortValue;
 import org.jpokemon.pokemon.Pokemon;
 import org.jpokemon.server.Message;

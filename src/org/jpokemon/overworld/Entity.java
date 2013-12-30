@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jpokemon.action.ActionSet;
+import org.jpokemon.interaction.ActionSet;
 
 public class Entity {
   private boolean solid;

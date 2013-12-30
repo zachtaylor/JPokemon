@@ -1,5 +1,6 @@
-package org.jpokemon.action;
+package org.jpokemon.interaction.actions;
 
+import org.jpokemon.interaction.Action;
 import org.jpokemon.server.Message;
 import org.jpokemon.server.PlayerManager;
 import org.jpokemon.trainer.Player;

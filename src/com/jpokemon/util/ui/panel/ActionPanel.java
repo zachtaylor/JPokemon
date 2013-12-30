@@ -9,9 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.action.SqliteActionBinding;
-import org.jpokemon.action.ActionType;
-
 import com.jpokemon.mapeditor.MapEditComponent;
 import com.jpokemon.util.ui.selector.ActionTypeSelector;
 import com.jpokemon.util.ui.selector.EventSelector;

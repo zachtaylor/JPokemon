@@ -14,8 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.overworld.npc.NPCType;
-
 import com.jpokemon.util.ui.ImageLoader;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })

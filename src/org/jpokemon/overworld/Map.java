@@ -4,12 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
-import org.jpokemon.action.ActionFactory;
-import org.jpokemon.action.ActionSet;
 import org.jpokemon.pokemon.Pokemon;
 import org.zachtaylor.jnodalxml.XmlNode;
 import org.zachtaylor.jnodalxml.XmlParser;

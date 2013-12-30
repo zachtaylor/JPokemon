@@ -1,9 +1,20 @@
-package org.jpokemon.action;
+package org.jpokemon.interaction.actions;
 
-import org.jpokemon.pokemon.Pokemon;
+import org.jpokemon.interaction.Action;
+import org.jpokemon.interaction.ActionFactory;
+import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
 
-public class PokemonAction extends Action {
+public class PokemonActionFactory implements ActionFactory {
+  @Override
+  public Action buildAction(String options) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+}
+
+class PokemonAction implements Action {
+  @Override
   public void execute(Player player) {
     Pokemon pokemon = null;
     String[] parameters = getData().split(" ");

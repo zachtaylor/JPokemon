@@ -2,7 +2,6 @@ package org.jpokemon.battle;
 
 import java.util.List;
 
-import org.jpokemon.action.SqliteActionBinding;
 import org.jpokemon.server.JPokemonServer;
 
 import com.njkremer.Sqlite.DataConnectionException;

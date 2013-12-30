@@ -11,10 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jpokemon.overworld.npc.NPCAction;
-import org.jpokemon.overworld.npc.NPCActionSetMap;
-import org.jpokemon.overworld.npc.NPCRequirement;
-
 import com.jpokemon.util.ui.panel.ActionPanel;
 import com.jpokemon.util.ui.panel.RequirementPanel;
 import com.jpokemon.util.ui.selector.NPCActionSetSelector;

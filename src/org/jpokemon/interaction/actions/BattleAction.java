@@ -1,9 +1,10 @@
-package org.jpokemon.action;
+package org.jpokemon.interaction.actions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.jpokemon.battle.Battle;
+import org.jpokemon.interaction.Action;
 import org.jpokemon.server.JPokemonServer;
 import org.jpokemon.server.PlayerManager;
 import org.jpokemon.server.ServiceException;
