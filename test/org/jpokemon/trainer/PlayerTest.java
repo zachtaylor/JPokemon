@@ -15,13 +15,6 @@ public class PlayerTest extends TestCase {
     player = new Player("id");
   }
 
-  public void testName() {
-    String name = "hello world";
-    player.setName(name);
-
-    assertEquals(name, player.getName());
-  }
-
   public void testBadge() {
     int badge = 2;
     player.setBadgeCount(badge);

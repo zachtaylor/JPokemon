@@ -1,5 +1,6 @@
 package org.jpokemon.overworld;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jpokemon.pokemon.Pokemon;
@@ -29,7 +30,7 @@ public class WildPokemon {
       e.printStackTrace();
     }
 
-    return null;
+    return new ArrayList<WildPokemon>();
   }
 
   //@preformat

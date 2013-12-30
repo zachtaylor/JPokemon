@@ -1,6 +1,8 @@
 game.resources = [
   // Images
-  {name: "male_protagonist", type:"image", src:"resource/img/male_protagonist.png"},
+  {name: "male-hero-1", type:"image", src:"resource/sprite/male-hero-1.png"},
+  {name: "male-hero-2", type:"image", src:"resource/sprite/male-hero-2.png"},
+  {name: "male-antihero-1", type:"image", src:"resource/sprite/male-antihero-1.png"},
   {name: "pokemon-sprites", type:"image", src:"resource/img/pokemon-sprites.png"},
 	 
   // UI misc
@@ -21,6 +23,7 @@ game.resources = [
   {name: "clock", type:'image', src:'resource/img/ui/clock.png'},
 
    // Maps
-  {name: "indoor_free_tileset", type:'image', src:'resource/img/tile/indoor_free_tileset.png'},
-  {name: "house", type: "tmx", src: "resource/map/house.tmx" }
+  {name: "indoor_free_tileset__by_thegreatblaid-d5x95zt", type:'image', src:'resource/tile/indoor_free_tileset__by_thegreatblaid-d5x95zt.png'},
+  {name: "tileset_three__indoors_by_falsefate-d41f586", type:'image', src:'resource/tile/tileset_three__indoors_by_falsefate-d41f586.png'},
+  {name: "hero-bedroom", type: "tmx", src: "resource/map/hero-bedroom.tmx" }
 ];

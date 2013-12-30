@@ -18,15 +18,10 @@ import org.zachtaylor.myna.Myna;
 
 public class Reward {
   public static double wildxprate = 1.0;
-
   public static double npcxprate = 1.3;
-
   public static double gymxprate = 1.6;
-
   public static double playerxprate = 0.0;
-
   public static double otxprate = 1.0;
-
   public static double nototxprate = 1.5;
 
   static {
@@ -46,9 +41,9 @@ public class Reward {
     if (s.party().awake() == 0) {
 //      _defeatMessage = new Message("BATTLE", " defeated " + s.trainer().getName(), Message.Level.MESSAGE);
 
-      for (RewardAction actionBinding : RewardAction.get(s.trainer().id())) {
-        _actions.addAction(actionBinding.getAction());
-      }
+//      for (RewardAction actionBinding : RewardAction.get(s.trainer().id())) {
+//        _actions.addAction(actionBinding.getAction());
+//      }
     }
   }
 
@@ -122,10 +117,10 @@ public class Reward {
   private void applyDefeat(Player player) {
     PlayerManager.pushMessage(player, _defeatMessage);
 
-    try {
-      _actions.execute(player);
-    } catch (ServiceException e) {
-    }
+//    try {
+//      _actions.execute(player);
+//    } catch (ServiceException e) {
+//    }
   }
 
   /**

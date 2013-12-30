@@ -29,8 +29,8 @@ public class OverworldService implements JPokemonService {
     try {
       json.put("action", "overworld:login");
       json.put("spriteheight", 56);
-      json.put("spritewidth", 48);
-      json.put("image", "male_protagonist");
+      json.put("spritewidth", 42);
+      json.put("image", "male-hero-1");
       json.put("name", player.id());
       json.put("x", player.getLocation().getLeft());
       json.put("y", player.getLocation().getTop());
