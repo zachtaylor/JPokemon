@@ -14,7 +14,7 @@ import com.njkremer.Sqlite.Annotations.PrimaryKey;
 public class RequirementData {
   @PrimaryKey
   @AutoIncrement
-  private int id;
+  private int id = -1;
   private int actionsetId;
   private String requirement, options;
 

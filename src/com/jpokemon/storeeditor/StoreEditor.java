@@ -15,7 +15,6 @@ import org.jpokemon.item.Inventory;
 import org.jpokemon.item.Store;
 
 import com.jpokemon.util.FeedbackInputField;
-import com.jpokemon.util.ui.button.JPokemonButton;
 import com.jpokemon.util.ui.selector.StoreSelector;
 
 public class StoreEditor extends JFrame {
@@ -96,7 +95,7 @@ public class StoreEditor extends JFrame {
   protected void buildSouthPanel() {
     southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.X_AXIS));
 
-    JButton addStore = new JPokemonButton("Add Store");
+    JButton addStore = new JButton("Add Store");
     addStore.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onAddStore();
@@ -104,7 +103,7 @@ public class StoreEditor extends JFrame {
     });
     southPanel.add(addStore);
 
-    JButton addRow = new JPokemonButton("Add Inventory");
+    JButton addRow = new JButton("Add Inventory");
     addRow.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         onAddInventory();

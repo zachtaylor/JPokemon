@@ -21,6 +21,27 @@ public class ActionSet {
   private List<Action> _actions = new ArrayList<Action>();
   private List<Requirement> _requirements = new ArrayList<Requirement>();
 
+  public static List<ActionSet> get(String name) {
+    DataConnectionManager.init(JPokemonServer.databasepath);
+
+    try {
+      List<ActionSet> actionSets = SqlStatement.select(ActionSet.class).where("name").eq(name).getList();
+
+      if (actionSets != null && !actionSets.isEmpty()) {
+        for (ActionSet actionSet : actionSets) {
+          fillActionSet(actionSet);
+        }
+      }
+
+      return actionSets;
+    }
+    catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return new ArrayList<ActionSet>();
+  }
+
   public static List<ActionSet> get(String context, String name) {
     DataConnectionManager.init(JPokemonServer.databasepath);
 
@@ -54,20 +75,45 @@ public class ActionSet {
     }
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public ActionSet setId(int id) {
+    this.id = id;
+    return this;
+  }
+
+  public void commit() {
+    try {
+      if (id < 0) {
+        SqlStatement.insert(this).execute();
+      }
+      else {
+        SqlStatement.update(this).where("id").eq(id).execute();
+      }
+    }
+    catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+  }
+
   public String getContext() {
     return context;
   }
 
-  public void setContext(String s) {
+  public ActionSet setContext(String s) {
     context = s;
+    return this;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String s) {
+  public ActionSet setName(String s) {
     name = s;
+    return this;
   }
 
   public String getOption() {
