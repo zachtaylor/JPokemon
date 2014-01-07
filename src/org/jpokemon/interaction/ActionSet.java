@@ -1,6 +1,7 @@
 package org.jpokemon.interaction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jpokemon.server.JPokemonServer;
@@ -84,7 +85,7 @@ public class ActionSet {
     return this;
   }
 
-  public void commit() {
+  public ActionSet commit() {
     try {
       if (id < 0) {
         SqlStatement.insert(this).execute();
@@ -96,6 +97,8 @@ public class ActionSet {
     catch (DataConnectionException e) {
       e.printStackTrace();
     }
+
+    return this;
   }
 
   public String getContext() {
@@ -120,8 +123,9 @@ public class ActionSet {
     return option;
   }
 
-  public void setOption(String o) {
+  public ActionSet setOption(String o) {
     option = o;
+    return this;
   }
 
   public void execute(Player player) throws ServiceException {
@@ -144,10 +148,18 @@ public class ActionSet {
     return true;
   }
 
+  public List<Action> getActions() {
+    return Collections.unmodifiableList(_actions);
+  }
+  
   public void addAction(Action action) {
     _actions.add(action);
   }
 
+  public List<Requirement> getRequirements() {
+    return Collections.unmodifiableList(_requirements);
+  }
+  
   public void addRequirement(Requirement requirement) {
     _requirements.add(requirement);
   }

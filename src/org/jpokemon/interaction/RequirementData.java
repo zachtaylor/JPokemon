@@ -31,6 +31,22 @@ public class RequirementData {
     return new ArrayList<RequirementData>();
   }
 
+  public RequirementData commit() {
+    try {
+      if (id < 0) {
+        SqlStatement.insert(this).execute();
+      }
+      else {
+        SqlStatement.update(this).where("id").eq(id).execute();
+      }
+    }
+    catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return this;
+  }
+
   public int getId() {
     return id;
   }
@@ -43,16 +59,18 @@ public class RequirementData {
     return actionsetId;
   }
 
-  public void setActionsetId(int actionsetId) {
+  public RequirementData setActionsetId(int actionsetId) {
     this.actionsetId = actionsetId;
+    return this;
   }
 
   public String getRequirement() {
     return requirement;
   }
 
-  public void setRequirement(String requirement) {
+  public RequirementData setRequirement(String requirement) {
     this.requirement = requirement;
+    return this;
   }
 
   public String getOptions() {

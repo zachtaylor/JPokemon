@@ -31,6 +31,22 @@ public class ActionData {
     return new ArrayList<ActionData>();
   }
 
+  public ActionData commit() {
+    try {
+      if (id < 0) {
+        SqlStatement.insert(this).execute();
+      }
+      else {
+        SqlStatement.update(this).where("id").eq(id).execute();
+      }
+    }
+    catch (DataConnectionException e) {
+      e.printStackTrace();
+    }
+
+    return this;
+  }
+
   public int getId() {
     return id;
   }
@@ -39,20 +55,22 @@ public class ActionData {
     this.id = id;
   }
 
-  public int getActionsetid() {
+  public int getActionsetId() {
     return actionsetId;
   }
 
-  public void setActionsetid(int actionsetid) {
-    this.actionsetId = actionsetid;
+  public ActionData setActionsetId(int actionsetId) {
+    this.actionsetId = actionsetId;
+    return this;
   }
 
   public String getAction() {
     return action;
   }
 
-  public void setAction(String action) {
+  public ActionData setAction(String action) {
     this.action = action;
+    return this;
   }
 
   public String getOptions() {

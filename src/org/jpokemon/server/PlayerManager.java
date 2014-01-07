@@ -59,7 +59,7 @@ public class PlayerManager {
     List<String> playerNames = null;
 
     synchronized (players) {
-      playerNames = Collections.unmodifiableList(new ArrayList(players.keySet()));
+      playerNames = Collections.unmodifiableList(new ArrayList<String>(players.keySet()));
     }
 
     return playerNames;
