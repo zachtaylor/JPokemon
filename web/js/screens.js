@@ -8,9 +8,7 @@
 
     onResetEvent: function(config) {
       this.parent(config);
-      game.dispatch({
-        'action':'overworld:onResetEvent'
-      });
+      game.getMenu('overworld');
     },
     
     onDestroyEvent: function() {

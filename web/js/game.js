@@ -173,7 +173,6 @@ var game = (function() {
     });
 
     // Add the entities
-    me.entityPool.add('player', game.PlayerEntity);
     me.entityPool.add('trainer', game.TrainerEntity, true);
 
     me.state.set(me.state.PLAY, new me.screen.PlayScreen());

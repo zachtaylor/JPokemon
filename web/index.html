@@ -35,6 +35,8 @@
       window.onReady(function() {
         game.getMenu('main');
 
+        me.sys.fps = 30;
+        me.sys.pauseOnBlur = false;
         me.loader.onload = game.onload;
         me.loader.preload(game.resources);
 

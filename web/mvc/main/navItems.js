@@ -51,6 +51,7 @@ game.control('main.navItems', {
   hideMenu: function() {
     this.view.removeClass('active');
     this.controller.view.hide();
+    game.getMenu('overworld').onMenuHide();
   },
   closeMenu:function() {
     this.controller.view.hide();
