@@ -8,35 +8,53 @@ import java.util.Map;
 import org.jpokemon.interaction.ActionSet;
 
 public class Entity {
-  private boolean solid;
   protected String name;
+  protected boolean solid = true;
+  protected Location location;
   protected Map<String, List<ActionSet>> actionSets = new HashMap<String, List<ActionSet>>();
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
+  public Entity setName(String name) {
     this.name = name;
+    return this;
   }
 
   public boolean isSolid() {
     return solid;
   }
 
-  public void setSolid(boolean solid) {
+  public Entity setSolid(boolean solid) {
     this.solid = solid;
+    return this;
+  }
+
+  public Location getLocation() {
+    return location;
+  }
+
+  public Entity setLocation(Location location) {
+    this.location = location;
+    return this;
   }
 
   public List<ActionSet> getActionSets(String trigger) {
     return actionSets.get(trigger);
   }
 
-  public void addActionSet(String trigger, ActionSet actionSet) {
-    if (actionSets.get(trigger) == null) {
-      actionSets.put(trigger, new ArrayList<ActionSet>());
+  public Entity setActionSets(String trigger, List<ActionSet> actionSets) {
+    this.actionSets.put(trigger, actionSets);
+    return this;
+  }
+
+  public Entity addAllActionSets(String trigger, List<ActionSet> actionSets) {
+    if (this.actionSets.get(trigger) == null) {
+      this.actionSets.put(trigger, new ArrayList<ActionSet>());
     }
 
-    actionSets.get(trigger).add(actionSet);
+    this.actionSets.get(trigger).addAll(actionSets);
+    return this;
   }
 }

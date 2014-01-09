@@ -22,7 +22,7 @@ public class OverworldService implements JPokemonService {
 
     Map map = maps.get(mapId);
     if (map == null) {
-      maps.put(mapId, map = new Map(mapId));
+      maps.put(mapId, map = TmxMapParser.parse(mapId));
     }
 
     JSONObject json = new JSONObject();
@@ -96,51 +96,48 @@ public class OverworldService implements JPokemonService {
     }
   }
 
-  private void move(Player player, JSONObject request) throws JSONException {
+  public void move(Player player, JSONObject request) throws JSONException {
     String direction = request.getString("direction");
-    Location location = player.getLocation();
+    Location location = player.getLocation().clone();
     Map map = maps.get(location.getMap());
 
-    int nextLeft = location.getLeft();
-    int nextTop = location.getTop();
-
-    if ("left".equals(direction) && nextLeft > 0) {
-      nextLeft--;
+    if ("left".equals(direction) && location.getLeft() > 0) {
+      location.setLeft(location.getLeft() - 1);
     }
-    else if ("right".equals(direction) && nextLeft < map.getWidth() - 1) {
-      nextLeft++;
+    else if ("right".equals(direction) && location.getRight() < map.getWidth()) {
+      location.setLeft(location.getLeft() + 1);
     }
-    else if ("up".equals(direction) && nextTop > 0) {
-      nextTop--;
+    else if ("up".equals(direction) && location.getTop() > 0) {
+      location.setTop(location.getTop() - 1);
     }
-    else if ("down".equals(direction) && nextTop < map.getHeight() - 1) {
-      nextTop++;
+    else if ("down".equals(direction) && location.getBottom() < map.getHeight()) {
+      location.setTop(location.getTop() + 1);
     }
     else {
       return;
     }
 
-    Entity entityAtNext = map.getEntityAt(nextLeft, nextTop);
-    if (entityAtNext != null && entityAtNext.isSolid()) { return; }
-
+    Entity entityAtNext = map.getEntity(location);
+    if (entityAtNext != null && entityAtNext.isSolid()) {
+      return;
+    }
     // TODO - handle regions
 
-    location.setTop(nextTop);
-    location.setLeft(nextLeft);
+    player.setLocation(location);
 
-    JSONObject move = new JSONObject();
+    JSONObject json = new JSONObject();
     try {
-      move.put("action", "overworld:move");
-      move.put("name", player.id());
-      move.put("direction", direction);
-      move.put("x", nextLeft);
-      move.put("y", nextTop);
+      json.put("action", "overworld:move");
+      json.put("name", player.id());
+      json.put("direction", direction);
+      json.put("x", location.getLeft());
+      json.put("y", location.getRight());
     }
     catch (JSONException e) {
     }
 
     for (String playerId : map.getPlayers()) {
-      PlayerManager.pushJson(PlayerManager.getPlayer(playerId), move);
+      PlayerManager.pushJson(PlayerManager.getPlayer(playerId), json);
     }
   }
 

@@ -57,7 +57,9 @@ public class Player implements PokemonTrainer {
   }
 
   public void setAvatar(String name) {
-    if (!_unlockedAvatars.contains(name)) { return; }
+    if (!_unlockedAvatars.contains(name)) {
+      return;
+    }
     _avatar = name;
   }
 
@@ -85,6 +87,11 @@ public class Player implements PokemonTrainer {
     return location;
   }
 
+  public Player setLocation(Location location) {
+    this.location = location;
+    return this;
+  }
+
   public int getX() {
     return _x;
   }
@@ -102,7 +109,9 @@ public class Player implements PokemonTrainer {
   }
 
   public List<String> getFriends() {
-    if (_friends.get("friends") == null) { return new ArrayList<String>(); }
+    if (_friends.get("friends") == null) {
+      return new ArrayList<String>();
+    }
 
     return Collections.unmodifiableList(_friends.get("friends"));
   }
@@ -117,13 +126,17 @@ public class Player implements PokemonTrainer {
   }
 
   public void removeFriend(String name) {
-    if (_friends.get("friends") == null) { return; }
+    if (_friends.get("friends") == null) {
+      return;
+    }
 
     _friends.get("friends").remove(name);
   }
 
   public List<String> getBlocked() {
-    if (_friends.get("blocked") == null) { return new ArrayList<String>(); }
+    if (_friends.get("blocked") == null) {
+      return new ArrayList<String>();
+    }
 
     return Collections.unmodifiableList(_friends.get("blocked"));
   }
@@ -138,7 +151,9 @@ public class Player implements PokemonTrainer {
   }
 
   public void removeBlocked(String name) {
-    if (_friends.get("blocked") == null) { return; }
+    if (_friends.get("blocked") == null) {
+      return;
+    }
 
     _friends.get("blocked").remove(name);
   }

@@ -8,6 +8,20 @@ public class Location {
   private String map;
   private int left, top, width, height;
 
+  public Location() {
+  }
+
+  public Location(int left, int top) {
+    this(left, top, 1, 1);
+  }
+
+  public Location(int left, int top, int width, int height) {
+    this.left = left;
+    this.top = top;
+    this.width = width;
+    this.height = height;
+  }
+
   public Location clone() {
     Location location = new Location();
     location.map = map;
