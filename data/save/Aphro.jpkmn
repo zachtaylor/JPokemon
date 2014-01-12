@@ -1,5 +1,5 @@
-<player name="Aphro" cash="0" badge="0">
-	<location height="0" width="0" map="house" left="11" top="7" />
+<player cash="0" badge="0" avatar="male-hero-1">
+	<location height="1" direction="left" width="1" map="hero-bedroom" left="5" top="6" />
 	<bag> </bag>
 	<record starter="Dragonite">
 		<events> [] </events>
@@ -12,7 +12,7 @@
 	<pokemonstorage>
 		<pokemonbox>
 			<pokemon ot="Aphro" level="25" xp="0" number="149" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="88" iv="31" cur="82" points="0" type="HEALTH" />
 					<stat ev="0" max="105" iv="13" cur="105" points="0" type="ATTACK" />
@@ -29,7 +29,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Aphro" level="25" xp="0" number="82" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="65" iv="20" cur="65" points="0" type="HEALTH" />
 					<stat ev="0" max="71" iv="26" cur="71" points="0" type="ATTACK" />
@@ -45,7 +45,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Aphro" level="25" xp="0" number="103" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="87" iv="20" cur="87" points="0" type="HEALTH" />
 					<stat ev="0" max="83" iv="3" cur="83" points="0" type="ATTACK" />
@@ -60,7 +60,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Aphro" level="25" xp="0" number="38" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="77" iv="24" cur="77" points="0" type="HEALTH" />
 					<stat ev="0" max="74" iv="6" cur="74" points="0" type="ATTACK" />
@@ -77,7 +77,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Aphro" level="25" xp="0" number="131" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="101" iv="5" cur="101" points="0" type="HEALTH" />
 					<stat ev="0" max="78" iv="5" cur="78" points="0" type="ATTACK" />
@@ -94,7 +94,7 @@
 				</moves>
 			</pokemon>
 			<pokemon ot="Aphro" level="25" xp="0" number="143" has_original_trainer="true">
-				<condition>  </condition>
+				<condition> [] </condition>
 				<stats points="0" evtotal="0">
 					<stat ev="0" max="117" iv="9" cur="117" points="0" type="HEALTH" />
 					<stat ev="0" max="97" iv="29" cur="97" points="0" type="ATTACK" />
@@ -121,4 +121,5 @@
 	</pokemonstorage>
 	<friends> </friends>
 	<blocked> </blocked>
+	<avatars> [male-hero-1] </avatars>
 </player>

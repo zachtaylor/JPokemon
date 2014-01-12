@@ -113,6 +113,7 @@ game.control('overworld', {
 
   join: function(json) {
     this.players[json.name] = me.entityPool.newInstanceOf('trainer', json);
+    me.game.add(this.players[json.name]);
     me.game.sort();
   },
 
@@ -126,7 +127,6 @@ game.control('overworld', {
   },
 
   look: function(json) {
-    console.log('look ' + json.direction + ' request for player: '+json.name);
     this.players[json.name]['look' + json.direction]();
   }
 });

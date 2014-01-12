@@ -1,6 +1,7 @@
 game.resources = [
   // Images
   {name: "male-hero-1", type:"image", src:"resource/sprite/male-hero-1.png"},
+  {name: "destro", type:"image", src:"resource/sprite/destro.png"},
   {name: "male-hero-2", type:"image", src:"resource/sprite/male-hero-2.png"},
   {name: "male-antihero-1", type:"image", src:"resource/sprite/male-antihero-1.png"},
   {name: "pokemon-sprites", type:"image", src:"resource/img/pokemon-sprites.png"},

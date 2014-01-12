@@ -60,6 +60,7 @@ public class Player implements PokemonTrainer {
     if (!_unlockedAvatars.contains(name)) {
       return;
     }
+
     _avatar = name;
   }
 
@@ -200,6 +201,10 @@ public class Player implements PokemonTrainer {
     node.setAttribute("cash", _cash);
     node.setAttribute("badge", _badge);
 
+    if (_avatar != null) {
+      node.setAttribute("avatar", _avatar);
+    }
+
     node.addChild(location.toXml());
     node.addChild(_bag.toXml());
     node.addChild(_record.toXml());
@@ -217,6 +222,10 @@ public class Player implements PokemonTrainer {
       blocked.setValue(_friends.get("blocked").toString());
     }
     node.addChild(blocked);
+
+    XmlNode avatars = new XmlNode("avatars");
+    avatars.setValue(_unlockedAvatars.toString());
+    node.addChild(avatars);
 
     return node;
   }
@@ -251,6 +260,24 @@ public class Player implements PokemonTrainer {
 
         addBlocked(f);
       }
+    }
+
+    try {
+      String avatarsString = node.getChildren("avatars").get(0).getValue();
+      for (String avatar : avatarsString.replace('[', ' ').replace(']', ' ').split(",")) {
+        addAvatar(avatar.trim());
+      }
+      if (node.hasAttribute("avatar")) {
+        _avatar = node.getAttribute("avatar");
+      }
+      else {
+        _avatar = "male-hero-1";
+      }
+    }
+    catch (Exception e) {
+      _unlockedAvatars = new ArrayList<String>();
+      _unlockedAvatars.add("male-hero-1");
+      setAvatar("male-hero-1");
     }
   }
 

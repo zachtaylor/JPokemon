@@ -18,9 +18,8 @@ public class OverworldService implements JPokemonService {
   @Override
   public void login(Player player) {
     String mapId = player.getLocation().getMap();
-
     if (mapId == null) {
-      player.getLocation().setMap(mapId = "house");
+      player.getLocation().setMap(mapId = "hero-bedroom");
     }
 
     Map map = maps.get(mapId);
@@ -28,33 +27,38 @@ public class OverworldService implements JPokemonService {
       maps.put(mapId, map = TmxMapParser.parse(mapId));
     }
 
-    JSONObject json = new JSONObject();
     try {
-      json.put("action", "overworld:login");
-      json.put("spriteheight", 56);
-      json.put("spritewidth", 42);
-      json.put("image", "male-hero-1");
-      json.put("name", player.id());
-      json.put("x", player.getLocation().getLeft());
-      json.put("y", player.getLocation().getTop());
-      json.put("z", map.getEntityZ());
-      json.put("map", mapId);
-      PlayerManager.pushJson(player, json);
+      JSONObject newPlayerJson = new JSONObject();
+      newPlayerJson.put("action", "overworld:login");
+      newPlayerJson.put("spriteheight", 56);
+      newPlayerJson.put("spritewidth", 42);
+      newPlayerJson.put("name", player.id());
+      newPlayerJson.put("image", player.getAvatar());
+      newPlayerJson.put("x", player.getLocation().getLeft());
+      newPlayerJson.put("y", player.getLocation().getTop());
+      newPlayerJson.put("z", map.getEntityZ());
+      newPlayerJson.put("map", mapId);
+      PlayerManager.pushJson(player, newPlayerJson);
 
-      json.put("action", "overworld:join");
-      json.remove("map");
+      newPlayerJson.put("action", "overworld:join");
+      newPlayerJson.remove("map");
+
+      JSONObject otherPlayerJson = new JSONObject();
+      otherPlayerJson.put("action", "overworld:join");
+      otherPlayerJson.put("spriteheight", 56);
+      otherPlayerJson.put("spritewidth", 42);
+      newPlayerJson.put("z", map.getEntityZ());
+
       for (String otherPlayerId : map.getPlayers()) {
         Player otherPlayer = PlayerManager.getPlayer(otherPlayerId);
 
-        json.put("name", otherPlayer.id());
-        json.put("x", otherPlayer.getLocation().getLeft());
-        json.put("y", otherPlayer.getLocation().getTop());
-        PlayerManager.pushJson(player, json);
+        otherPlayerJson.put("name", otherPlayer.id());
+        otherPlayerJson.put("image", otherPlayer.getAvatar());
+        otherPlayerJson.put("x", otherPlayer.getLocation().getLeft());
+        otherPlayerJson.put("y", otherPlayer.getLocation().getTop());
 
-        json.put("name", player.id());
-        json.put("x", player.getLocation().getLeft());
-        json.put("y", player.getLocation().getTop());
-        PlayerManager.pushJson(otherPlayer, json);
+        PlayerManager.pushJson(player, otherPlayerJson);
+        PlayerManager.pushJson(otherPlayer, newPlayerJson);
       }
     }
     catch (JSONException e) {
