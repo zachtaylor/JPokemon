@@ -108,4 +108,8 @@ public class Location {
 
     return node;
   }
+
+  public String toString() {
+    return "(" + getLeft() + "+" + getWidth() + "," + getTop() + "+" + getHeight() + ")";
+  }
 }

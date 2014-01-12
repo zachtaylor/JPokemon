@@ -23,7 +23,7 @@ public class TmxMapParser {
 
     parser.parse();
 
-    return null;
+    return parser.map;
   }
 
   protected TmxMapParser(String name) {
@@ -93,10 +93,12 @@ public class TmxMapParser {
 
     // round up edge as displayed if it's there
     if (objectNode.hasAttribute("width")) {
-      location.setWidth((objectNode.getIntAttribute("x") + objectNode.getIntAttribute("width")) / tileWidth + 1);
+      location.setWidth(((objectNode.getIntAttribute("x") + objectNode.getIntAttribute("width")) / tileWidth)
+          - location.getLeft() + 1);
     }
     if (objectNode.hasAttribute("height")) {
-      location.setHeight((objectNode.getIntAttribute("y") + objectNode.getIntAttribute("height")) / tileHeight + 1);
+      location.setHeight(((objectNode.getIntAttribute("y") + objectNode.getIntAttribute("height")) / tileHeight)
+          - location.getTop() + 1);
     }
 
     return location;

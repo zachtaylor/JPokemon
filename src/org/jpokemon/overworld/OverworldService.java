@@ -131,7 +131,7 @@ public class OverworldService implements JPokemonService {
       json.put("name", player.id());
       json.put("direction", direction);
       json.put("x", location.getLeft());
-      json.put("y", location.getRight());
+      json.put("y", location.getTop());
     }
     catch (JSONException e) {
     }
