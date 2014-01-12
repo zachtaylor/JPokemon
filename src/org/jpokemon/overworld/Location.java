@@ -5,8 +5,8 @@ import org.zachtaylor.jnodalxml.XmlNode;
 public class Location {
   public static final String XML_NODE_NAME = "location";
 
-  private String map;
-  private int left, top, width, height;
+  private String map, direction;
+  private int left, top, width = 1, height = 1;
 
   public Location() {
   }
@@ -25,10 +25,34 @@ public class Location {
   public Location clone() {
     Location location = new Location();
     location.map = map;
+    location.direction = direction;
     location.left = left;
     location.height = height;
     location.top = top;
     location.width = width;
+    return location;
+  }
+
+  public Location translate(String direction) {
+    Location location = clone();
+
+    if ("left".equals(direction)) {
+      location.left--;
+    }
+    else if ("up".equals(direction)) {
+      location.top--;
+    }
+    else if ("right".equals(direction)) {
+      location.left++;
+    }
+    else if ("down".equals(direction)) {
+      location.top++;
+    }
+    else {
+      return null;
+    }
+
+    location.setDirection(direction);
     return location;
   }
 
@@ -38,6 +62,14 @@ public class Location {
 
   public void setMap(String map) {
     this.map = map;
+  }
+
+  public String getDirection() {
+    return direction;
+  }
+
+  public void setDirection(String direction) {
+    this.direction = direction;
   }
 
   public int getLeft() {
@@ -95,11 +127,19 @@ public class Location {
   public void loadXml(XmlNode node) {
     setMap(node.getAttribute("map"));
     setBounds(node.getIntAttribute("left"), node.getIntAttribute("width"), node.getIntAttribute("top"), node.getIntAttribute("height"));
+
+    if (node.hasAttribute("direction")) {
+      direction = node.getAttribute("direction");
+    }
+    else {
+      direction = "down";
+    }
   }
 
   public XmlNode toXml() {
     XmlNode node = new XmlNode(XML_NODE_NAME);
     node.setAttribute("map", map);
+    node.setAttribute("direction", direction);
     node.setAttribute("left", getLeft());
     node.setAttribute("top", getTop());
     node.setAttribute("width", getWidth());

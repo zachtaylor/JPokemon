@@ -23,7 +23,7 @@ public class Player implements PokemonTrainer {
   private Pokedex _pokedex = new Pokedex();
   private Record _record = new Record(this);
   private Location location = new Location();
-  private int _badge, _cash, _x, _y, _xp, _level;
+  private int _badge, _cash, _xp, _level;
   private Map<String, List<String>> _friends = new HashMap<String, List<String>>();
   private List<String> _unlockedAvatars = new ArrayList<String>();
   private PokemonStorageBlock _storage = new PokemonStorageBlock();
@@ -90,22 +90,6 @@ public class Player implements PokemonTrainer {
   public Player setLocation(Location location) {
     this.location = location;
     return this;
-  }
-
-  public int getX() {
-    return _x;
-  }
-
-  public void setX(int x) {
-    _x = x;
-  }
-
-  public int getY() {
-    return _y;
-  }
-
-  public void setY(int y) {
-    _y = y;
   }
 
   public List<String> getFriends() {

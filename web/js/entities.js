@@ -21,6 +21,10 @@
       this.font = new me.Font('courier', 12, 'yellow');
 
       // set animations
+      this.renderable.addAnimation('lookdown', [1], 5);
+      this.renderable.addAnimation('lookleft', [4], 5);
+      this.renderable.addAnimation('lookup', [7], 5);
+      this.renderable.addAnimation('lookright', [10], 5);
       this.renderable.addAnimation('walkup', [7,8,7,6], 5);
       this.renderable.addAnimation('walkdown', [1,2,1,0], 5);
       this.renderable.addAnimation('walkleft', [4,5,4,3], 5);
@@ -32,19 +36,12 @@
 
     update: function() {
       if (this.moving) {
-        this.renderable.animationpause = false;
         this.moving();
       }
       else if (this.readyToMove() && this.nextMoves.length > 0) {
         this.moving = this.nextMoves.shift();
-        this.renderable.animationpause = false;
         this.lastMove = new Date().getTime();
         this.moving();
-      }
-      else if (!this.renderable.animationpause) {
-        window.setTimeout((function() {
-          this.animationpause = true;
-        }).bind(this.renderable), 500);
       }
 
       return this.parent();
@@ -90,6 +87,7 @@
         if (percentMoved >= 1) {
           percentMoved = 1;
           this.moving = false;
+          this.lookleft();
         }
 
         this.setCoordinates(x + 1 - percentMoved, y);
@@ -104,6 +102,7 @@
         if (percentMoved >= 1) {
           percentMoved = 1;
           this.moving = false;
+          this.lookright();
         }
 
         this.setCoordinates(x - 1 + percentMoved, y);
@@ -118,6 +117,7 @@
         if (percentMoved >= 1) {
           percentMoved = 1;
           this.moving = false;
+          this.lookup();
         }
 
         
@@ -133,10 +133,43 @@
         if (percentMoved >= 1) {
           percentMoved = 1;
           this.moving = false;
+          this.lookdown();
         }
 
         this.setCoordinates(x, y - 1 + percentMoved);
         this.changeAnimation('walkdown');
+      });
+    },
+
+    lookleft: function() {
+      this.nextMoves.push(function() {
+        this.lastMove -= this.moveSpeed;
+        this.changeAnimation('lookleft');
+        this.moving = false;
+      });
+    },
+
+    lookup: function() {
+      this.nextMoves.push(function() {
+        this.lastMove -= this.moveSpeed;
+        this.changeAnimation('lookup');
+        this.moving = false;
+      });
+    },
+
+    lookright: function() {
+      this.nextMoves.push(function() {
+        this.lastMove -= this.moveSpeed;
+        this.changeAnimation('lookright');
+        this.moving = false;
+      });
+    },
+
+    lookdown: function() {
+      this.nextMoves.push(function() {
+        this.lastMove -= this.moveSpeed;
+        this.changeAnimation('lookdown');
+        this.moving = false;
       });
     },
 

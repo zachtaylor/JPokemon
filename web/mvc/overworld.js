@@ -51,7 +51,13 @@ game.control('overworld', {
     window.clearTimeout(this.waitingKeyTimer);
 
     if (this.waitingKeyIsShortPress) {
-      console.log('detected short press'); // TODO : send short press
+      switch (this.waitingKey) {
+        case 87: this.sendLook('up'); break; //w
+        case 65: this.sendLook('left'); break; //a
+        case 83: this.sendLook('down'); break; //s
+        case 68: this.sendLook('right'); break; //d
+        case 69: this.sendInteract(); break; //e
+      }
     }
 
     this.waitingKey = false;
@@ -82,6 +88,14 @@ game.control('overworld', {
     });
   },
 
+  sendLook: function(direction) {
+    game.send({
+      'service' : 'overworld',
+      'method' : 'look',
+      'direction' : direction
+    });
+  },
+
   sendInteract: function() {
     game.send({
       'service' : 'overworld',
@@ -108,10 +122,11 @@ game.control('overworld', {
   },
 
   move: function(json) {
-    if (json.name === game.playerName) {
-      this.hasPendingMove = false;
-    }
-
     this.players[json.name]['walk' + json.direction](json.x, json.y);
+  },
+
+  look: function(json) {
+    console.log('look ' + json.direction + ' request for player: '+json.name);
+    this.players[json.name]['look' + json.direction]();
   }
 });
