@@ -14,6 +14,8 @@ public class ActionFactoryRegistry {
     registerActionFactory("item", new ItemActionFactory());
     registerActionFactory("store", new StoreActionFactory());
     registerActionFactory("upgrade", new UpgradeActionFactory());
+    registerActionFactory("map", new MapActionFactory());
+    registerActionFactory("grass", new GrassActionFactory());
   }
 
   private ActionFactoryRegistry() {

@@ -73,30 +73,4 @@ public class Map {
   public void removePlayer(String playerId) {
     players.remove(playerId);
   }
-
-  public Pokemon getWildPokemon() {
-    int totalFlex = 0;
-    List<WildPokemon> wildPokemon = WildPokemon.get(name);
-
-    for (WildPokemon wp : wildPokemon) {
-      wildPokemon.add(wp);
-    }
-
-    for (WildPokemon p : wildPokemon) {
-      totalFlex += p.getFlex();
-    }
-
-    totalFlex = (int) (totalFlex * Math.random());
-
-    for (WildPokemon p : wildPokemon) {
-      if (totalFlex < p.getFlex()) {
-        return p.instantiate();
-      }
-      else {
-        totalFlex -= p.getFlex();
-      }
-    }
-
-    return null;
-  }
 }

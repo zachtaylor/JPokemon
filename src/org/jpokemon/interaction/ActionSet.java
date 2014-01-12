@@ -76,6 +76,12 @@ public class ActionSet {
     }
   }
 
+  public static ActionSet withAction(Action action) {
+    ActionSet actionSet = new ActionSet();
+    actionSet.addAction(action);
+    return actionSet;
+  }
+
   public int getId() {
     return id;
   }
@@ -151,7 +157,7 @@ public class ActionSet {
   public List<Action> getActions() {
     return Collections.unmodifiableList(_actions);
   }
-  
+
   public void addAction(Action action) {
     _actions.add(action);
   }
@@ -159,7 +165,7 @@ public class ActionSet {
   public List<Requirement> getRequirements() {
     return Collections.unmodifiableList(_requirements);
   }
-  
+
   public void addRequirement(Requirement requirement) {
     _requirements.add(requirement);
   }

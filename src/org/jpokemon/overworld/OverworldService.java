@@ -1,7 +1,6 @@
 package org.jpokemon.overworld;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.jpokemon.interaction.ActionSet;
 import org.jpokemon.server.JPokemonService;
@@ -122,7 +121,14 @@ public class OverworldService implements JPokemonService {
         return;
       }
 
-      // TODO - handle regions
+      for (ActionSet actionSet : entity.getActionSets("step")) {
+        try {
+          actionSet.execute(player);
+        }
+        catch (ServiceException e) {
+          PlayerManager.pushMessage(player, new Message("error", e.getMessage()));
+        }
+      }
     }
 
     player.setLocation(location);
@@ -162,13 +168,9 @@ public class OverworldService implements JPokemonService {
       return;
     }
 
-    List<ActionSet> actionSets = entity.getActionSets("interact");
-
-    // TODO - handle multiple action sets
-
-    if (actionSets.size() > 0) {
+    for (ActionSet actionSet : entity.getActionSets("interact")) {
       try {
-        actionSets.get(0).execute(player);
+        actionSet.execute(player);
       }
       catch (ServiceException e) {
         PlayerManager.pushMessage(player, new Message("error", e.getMessage()));

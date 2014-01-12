@@ -49,8 +49,17 @@ public class Entity {
     return this;
   }
 
+  public Entity addActionSet(String trigger, ActionSet actionSet) {
+    if (!this.actionSets.containsKey(trigger)) {
+      this.actionSets.put(trigger, new ArrayList<ActionSet>());
+    }
+
+    this.actionSets.get(trigger).add(actionSet);
+    return this;
+  }
+
   public Entity addAllActionSets(String trigger, List<ActionSet> actionSets) {
-    if (this.actionSets.get(trigger) == null) {
+    if (!this.actionSets.containsKey(trigger)) {
       this.actionSets.put(trigger, new ArrayList<ActionSet>());
     }
 

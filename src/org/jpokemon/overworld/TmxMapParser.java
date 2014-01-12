@@ -3,6 +3,7 @@ package org.jpokemon.overworld;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.jpokemon.interaction.ActionFactoryRegistry;
 import org.jpokemon.interaction.ActionSet;
 import org.zachtaylor.jnodalxml.XmlNode;
 import org.zachtaylor.jnodalxml.XmlParser;
@@ -70,15 +71,28 @@ public class TmxMapParser {
   private void parseEntity(XmlNode objectNode) {
     Entity entity = new Entity();
     entity.setLocation(parseLocation(objectNode));
+    String entityName = null, entityType = null;
 
     if (objectNode.hasAttribute("type")) {
-      // String entityType = objectNode.getAttribute("type");
-      // TODO - support things like warp tiles, doors, grass
+      entityType = objectNode.getAttribute("type");
     }
     else if (objectNode.hasAttribute("name")) {
-      String entityName = objectNode.getAttribute("name");
+      entityName = objectNode.getAttribute("name");
       entity.setName(entityName);
+    }
 
+    if ("npc".equals(entityType)) {
+      // TODO - place an NPC entity that can probably walk around and stuff
+    }
+    else if ("door".equals(entityType)) {
+      entity.setSolid(false);
+      entity.addActionSet("step", ActionSet.withAction(ActionFactoryRegistry.get("map", entityName)));
+    }
+    else if ("grass".equals(entityType)) {
+      entity.setSolid(false);
+      entity.addActionSet("step", ActionSet.withAction(ActionFactoryRegistry.get("grass", map.getName())));
+    }
+    else if (entityType == null) {
       entity.addAllActionSets("interact", ActionSet.get("global", entityName));
       entity.addAllActionSets("interact", ActionSet.get(map.getName(), entityName));
     }
