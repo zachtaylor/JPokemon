@@ -1,5 +1,5 @@
 <player cash="500" badge="0" avatar="destro">
-	<location height="1" direction="right" width="1" map="hero-bedroom" left="6" top="5" />
+	<location height="1" direction="up" width="1" map="hero-bedroom" left="4" top="4" />
 	<bag> </bag>
 	<record starter="Charmeleon">
 		<events> [] </events>

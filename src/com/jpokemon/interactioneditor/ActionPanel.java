@@ -70,6 +70,8 @@ public class ActionPanel extends JPanel {
     else if ("store".equals(action)) {
       buildStoreAction();
     }
+    else if ("dresser".equals(action)) { // Do nothing
+    }
 
     repaint();
   }

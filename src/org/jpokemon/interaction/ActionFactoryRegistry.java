@@ -16,6 +16,7 @@ public class ActionFactoryRegistry {
     registerActionFactory("upgrade", new UpgradeActionFactory());
     registerActionFactory("map", new MapActionFactory());
     registerActionFactory("grass", new GrassActionFactory());
+    registerActionFactory("dresser", new DresserActionFactory());
   }
 
   private ActionFactoryRegistry() {

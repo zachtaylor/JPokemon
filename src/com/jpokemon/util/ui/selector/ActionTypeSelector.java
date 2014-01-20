@@ -13,6 +13,7 @@ public class ActionTypeSelector extends JPokemonSelector<String> {
     addItem("heal");
     addItem("item");
     addItem("store");
+    addItem("dresser");
   }
 
   private static final long serialVersionUID = 1L;
