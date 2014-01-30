@@ -1,5 +1,7 @@
-package org.jpokemon.activity;
+package org.jpokemon.extra;
 
+import org.jpokemon.activity.Activity;
+import org.jpokemon.overworld.OverworldService;
 import org.jpokemon.server.PlayerManager;
 import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
@@ -54,6 +56,11 @@ public class DresserActivity implements Activity {
       JSONObject json = new JSONObject();
       json.put("action", "dresser.Dresser:close");
       PlayerManager.pushJson(player, json);
+
+      OverworldService overworldService = (OverworldService) PlayerManager.getService("overworld");
+
+      // This is sort-of a refresh all
+      overworldService.teleportPlayer(player, player.getLocation());
     }
     catch (JSONException e) {
     }

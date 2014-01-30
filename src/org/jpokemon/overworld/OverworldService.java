@@ -8,68 +8,40 @@ import org.jpokemon.server.Message;
 import org.jpokemon.server.PlayerManager;
 import org.jpokemon.server.ServiceException;
 import org.jpokemon.trainer.Player;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class OverworldService implements JPokemonService {
   private HashMap<String, Map> maps = new HashMap<String, Map>();
 
+  public Map getMap(String name) {
+    if (!maps.containsKey(name)) {
+      maps.put(name, TmxMapParser.parse(name));
+    }
+
+    return maps.get(name);
+  }
+
+  public void teleportPlayer(Player player, Location nextLocation) {
+    sendLeave(player);
+    player.setLocation(nextLocation);
+    sendJoin(player);
+  }
+
   @Override
   public void login(Player player) {
-    String mapId = player.getLocation().getMap();
-    if (mapId == null) {
-      player.getLocation().setMap(mapId = "hero-bedroom");
-    }
-
-    Map map = maps.get(mapId);
-    if (map == null) {
-      maps.put(mapId, map = TmxMapParser.parse(mapId));
-    }
-
-    try {
-      JSONObject newPlayerJson = new JSONObject();
-      newPlayerJson.put("action", "overworld:login");
-      newPlayerJson.put("spriteheight", 56);
-      newPlayerJson.put("spritewidth", 42);
-      newPlayerJson.put("name", player.id());
-      newPlayerJson.put("image", player.getAvatar());
-      newPlayerJson.put("x", player.getLocation().getLeft());
-      newPlayerJson.put("y", player.getLocation().getTop());
-      newPlayerJson.put("z", map.getEntityZ());
-      newPlayerJson.put("map", mapId);
-      PlayerManager.pushJson(player, newPlayerJson);
-
-      newPlayerJson.put("action", "overworld:join");
-      newPlayerJson.remove("map");
-
-      JSONObject otherPlayerJson = new JSONObject();
-      otherPlayerJson.put("action", "overworld:join");
-      otherPlayerJson.put("spriteheight", 56);
-      otherPlayerJson.put("spritewidth", 42);
-      newPlayerJson.put("z", map.getEntityZ());
-
-      for (String otherPlayerId : map.getPlayers()) {
-        Player otherPlayer = PlayerManager.getPlayer(otherPlayerId);
-
-        otherPlayerJson.put("name", otherPlayer.id());
-        otherPlayerJson.put("image", otherPlayer.getAvatar());
-        otherPlayerJson.put("x", otherPlayer.getLocation().getLeft());
-        otherPlayerJson.put("y", otherPlayer.getLocation().getTop());
-
-        PlayerManager.pushJson(player, otherPlayerJson);
-        PlayerManager.pushJson(otherPlayer, newPlayerJson);
-      }
-    }
-    catch (JSONException e) {
-    }
-
-    map.addPlayer(player.id());
+    sendJoin(player);
   }
 
   @Override
   public void logout(Player player) {
+    sendLeave(player);
+  }
+
+  private void sendLeave(Player player) {
     String mapId = player.getLocation().getMap();
-    Map map = maps.get(mapId);
+    Map map = getMap(mapId);
     map.removePlayer(player.id());
 
     JSONObject signout = new JSONObject();
@@ -82,6 +54,64 @@ public class OverworldService implements JPokemonService {
 
     for (String otherPlayerId : map.getPlayers()) {
       PlayerManager.pushJson(PlayerManager.getPlayer(otherPlayerId), signout);
+    }
+  }
+
+  private void sendJoin(Player player) {
+    Location location = player.getLocation();
+    String mapId = location.getMap();
+    Map map = getMap(mapId);
+
+    JSONObject sendToOthers = new JSONObject();
+    JSONObject sendToPlayer = new JSONObject();
+    JSONArray otherPlayersArray = new JSONArray();
+
+    try {
+      // Build the stuff to send to others
+      sendToOthers.put("action", "overworld:join");
+      sendToOthers.put("spriteheight", 56);
+      sendToOthers.put("spritewidth", 42);
+      sendToOthers.put("name", player.id());
+      sendToOthers.put("image", player.getAvatar());
+      sendToOthers.put("x", player.getLocation().getLeft());
+      sendToOthers.put("y", player.getLocation().getTop());
+      sendToOthers.put("z", map.getEntityZ());
+      sendToOthers.put("direction", player.getLocation().getDirection());
+
+      // build the stuff we already know about the player
+      sendToPlayer.put("action", "overworld:load");
+      sendToPlayer.put("spriteheight", 56);
+      sendToPlayer.put("spritewidth", 42);
+      sendToPlayer.put("name", player.id());
+      sendToPlayer.put("image", player.getAvatar());
+      sendToPlayer.put("x", player.getLocation().getLeft());
+      sendToPlayer.put("y", player.getLocation().getTop());
+      sendToPlayer.put("z", map.getEntityZ());
+      sendToPlayer.put("direction", player.getLocation().getDirection());
+      sendToPlayer.put("map", mapId);
+      sendToPlayer.put("otherPlayers", otherPlayersArray);
+
+      for (String playerId : map.getPlayers()) {
+        Player otherPlayer = PlayerManager.getPlayer(playerId);
+        PlayerManager.pushJson(otherPlayer, sendToOthers);
+        JSONObject otherPlayerJson = new JSONObject();
+
+        otherPlayerJson.put("name", otherPlayer.id());
+        otherPlayerJson.put("spriteheight", 56);
+        otherPlayerJson.put("spritewidth", 42);
+        otherPlayerJson.put("image", otherPlayer.getAvatar());
+        otherPlayerJson.put("x", otherPlayer.getLocation().getLeft());
+        otherPlayerJson.put("y", otherPlayer.getLocation().getTop());
+        otherPlayerJson.put("z", map.getEntityZ());
+        otherPlayerJson.put("direction", otherPlayer.getLocation().getDirection());
+        otherPlayersArray.put(otherPlayerJson);
+      }
+
+      map.addPlayer(player.id());
+      PlayerManager.pushJson(player, sendToPlayer);
+    }
+    catch (JSONException e) { // this will never happen
+      e.printStackTrace();
     }
   }
 
@@ -113,7 +143,7 @@ public class OverworldService implements JPokemonService {
       return;
     }
 
-    Map map = maps.get(location.getMap());
+    Map map = getMap(location.getMap());
     Entity entity = map.getEntity(location);
 
     if (entity != null) {
@@ -146,6 +176,7 @@ public class OverworldService implements JPokemonService {
   }
 
   public void look(Player player, JSONObject request) throws JSONException {
+    Map map = getMap(player.getLocation().getMap());
     String direction = request.getString("direction");
 
     if ("left".equals(direction) || "up".equals(direction) || "right".equals(direction) || "down".equals(direction)) {
@@ -155,13 +186,15 @@ public class OverworldService implements JPokemonService {
       json.put("name", player.id());
       json.put("direction", direction);
 
-      PlayerManager.pushJson(player, json);
+      for (String playerId : map.getPlayers()) {
+        PlayerManager.pushJson(PlayerManager.getPlayer(playerId), json);
+      }
     }
   }
 
   public void interact(Player player, JSONObject request) {
     Location location = player.getLocation().translate(player.getLocation().getDirection());
-    Map map = maps.get(location.getMap());
+    Map map = getMap(location.getMap());
     Entity entity = map.getEntity(location);
 
     if (entity == null) {

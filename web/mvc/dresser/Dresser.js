@@ -13,6 +13,7 @@ game.control('dresser.Dresser', {
   open: function(json) {
     this.avatars = json.avatars;
     this.avatar = json.avatar;
+    this.avatarsList.html(' ');
 
     for (var i = 0; i < this.avatars.length; i++) {
       var avatar = this.avatars[i],

@@ -103,12 +103,19 @@ game.control('overworld', {
     });
   },
 
-  login: function(json) {
-    me.levelDirector.loadLevel(json.map);
-    this.players[json.name] = new me.entityPool.newInstanceOf('trainer', json);
-    game.playerName = json.name;
-    me.game.add(this.players[json.name]);
-    me.game.viewport.follow(this.players[json.name], me.game.viewport.AXIS.BOTH);
+  load: function(json) {
+    var playerName = json.name;
+        mapId = json.map,
+        otherPlayers = json.otherPlayers,
+
+    me.levelDirector.loadLevel(mapId);
+
+    game.playerName = this._addTrainer(json).name;
+    me.game.viewport.follow(this.players[game.playerName], me.game.viewport.AXIS.BOTH);
+
+    for (var i = 0; i < otherPlayers.length; i++) {
+      this._addTrainer(otherPlayers[i]);
+    }
   },
 
   join: function(json) {
@@ -120,6 +127,16 @@ game.control('overworld', {
   leave: function(json) {
     me.game.remove(this.players[json.name]);
     me.entityPool.freeInstance(this.players[json.name]);
+  },
+
+  _addTrainer: function(json) {
+    var name = json.name,
+        player = this.players[name] = new me.entityPool.newInstanceOf('trainer', json);
+
+    if (false) console.log('player name: ' + player.name + ' expected: ' + name);
+    player.name = name; // bug workaround
+    me.game.add(player);
+    return player;
   },
 
   move: function(json) {

@@ -1,5 +1,5 @@
 <player cash="0" badge="0" avatar="male-hero-1">
-	<location height="1" direction="left" width="1" map="hero-bedroom" left="5" top="6" />
+	<location height="1" direction="right" width="1" map="hero-bedroom" left="5" top="6" />
 	<bag> </bag>
 	<record starter="Dragonite">
 		<events> [] </events>

@@ -1,5 +1,5 @@
-<player name="Dave" cash="0" badge="0">
-	<location height="1" width="1" map="hero-bedroom" left="12" top="7" />
+<player cash="0" badge="0" avatar="male-hero-1">
+	<location height="1" direction="right" width="1" map="hero-bedroom" left="9" top="6" />
 	<bag> </bag>
 	<record starter="Dratini">
 		<events> [] </events>
@@ -140,4 +140,5 @@
 	</pokemonstorage>
 	<friends> </friends>
 	<blocked> </blocked>
+	<avatars> [male-hero-1] </avatars>
 </player>

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jpokemon.pokemon.Pokemon;
-
 public class Map {
   private String name;
   private int width, height, entityZ;
@@ -23,6 +21,16 @@ public class Map {
   public Entity getEntity(Location target) {
     for (Entity entity : entities) {
       if (entity.getLocation().contains(target)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  public Entity getEntity(String entityName) {
+    for (Entity entity : entities) {
+      if (entityName.equals(entity.getName())) {
         return entity;
       }
     }

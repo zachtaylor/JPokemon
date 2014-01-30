@@ -1,6 +1,6 @@
 package org.jpokemon.interaction.actions;
 
-import org.jpokemon.activity.DresserActivity;
+import org.jpokemon.extra.DresserActivity;
 import org.jpokemon.interaction.Action;
 import org.jpokemon.interaction.ActionFactory;
 import org.jpokemon.server.PlayerManager;

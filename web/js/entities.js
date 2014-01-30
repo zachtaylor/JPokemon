@@ -32,6 +32,7 @@
       
       // align to the grid
       this.updateColRect((this.spritewidth - tileSize) / 2, tileSize, this.spriteheight - tileSize, tileSize);
+      this['look' + config.direction]();
     },
 
     update: function() {

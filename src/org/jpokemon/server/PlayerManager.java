@@ -35,12 +35,16 @@ public class PlayerManager {
   }
 
   public static boolean playerExists(String name) {
-    if (playerIsLoggedIn(name)) { return true; }
+    if (playerIsLoggedIn(name)) {
+      return true;
+    }
 
     String filename = name + ".jpkmn";
 
     File file = new File(JPokemonServer.savepath, filename);
-    if (!file.exists() || !file.getName().equals(filename)) { return false; }
+    if (!file.exists() || !file.getName().equals(filename)) {
+      return false;
+    }
 
     return true;
   }
@@ -73,6 +77,10 @@ public class PlayerManager {
     services.put("party", new PartyService());
   }
 
+  public static JPokemonService getService(String name) {
+    return services.get(name);
+  }
+
   public static boolean hasActivity(Player player) {
     return !activities.get(player.id()).isEmpty();
   }
@@ -94,7 +102,9 @@ public class PlayerManager {
   }
 
   public static void popActivity(Player player, Activity a) {
-    if (getActivity(player) != a) { throw new IllegalStateException("Popped activity is not most recent"); }
+    if (getActivity(player) != a) {
+      throw new IllegalStateException("Popped activity is not most recent");
+    }
 
     activities.get(player.id()).pop();
 
@@ -108,7 +118,9 @@ public class PlayerManager {
   }
 
   public static void pushJson(Player player, JSONObject json) {
-    if (json == null) { return; }
+    if (json == null) {
+      return;
+    }
 
     JPokemonWebSocket webSocket;
 
@@ -157,7 +169,9 @@ public class PlayerManager {
       playerId = sessions.get(socket);
     }
 
-    if (playerId == null) { return; }
+    if (playerId == null) {
+      return;
+    }
 
     Player player = getPlayer(playerId);
 
@@ -191,7 +205,9 @@ public class PlayerManager {
   }
 
   private static void login(JPokemonWebSocket socket, JSONObject request) throws JSONException, ServiceException {
-    if (!request.has("login")) { throw new ServiceException("No credentials found"); }
+    if (!request.has("login")) {
+      throw new ServiceException("No credentials found");
+    }
 
     String name = request.getString("login");
 
