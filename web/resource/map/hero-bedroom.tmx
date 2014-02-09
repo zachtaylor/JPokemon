@@ -29,6 +29,7 @@
   <object x="42" y="135" width="49" height="16"/>
   <object name="computer" x="291" y="98" width="26" height="25"/>
   <object name="dresser" x="133" y="100" width="53" height="19"/>
+  <object name="hero-house" type="door" x="362" y="168" width="14" height="46"/>
  </objectgroup>
  <layer name="over" width="12" height="8">
   <data encoding="base64">

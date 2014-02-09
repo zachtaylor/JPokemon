@@ -76,7 +76,7 @@ public class TmxMapParser {
     if (objectNode.hasAttribute("type")) {
       entityType = objectNode.getAttribute("type");
     }
-    else if (objectNode.hasAttribute("name")) {
+    if (objectNode.hasAttribute("name")) {
       entityName = objectNode.getAttribute("name");
       entity.setName(entityName);
     }
@@ -102,6 +102,7 @@ public class TmxMapParser {
 
   private Location parseLocation(XmlNode objectNode) {
     Location location = new Location();
+    location.setMap(map.getName());
     location.setLeft(objectNode.getIntAttribute("x") / tileWidth);
     location.setTop(objectNode.getIntAttribute("y") / tileHeight);
 

@@ -34,8 +34,11 @@ class MapAction implements Action {
     OverworldService overworldService = (OverworldService) PlayerManager.getService("overworld");
     Map nextMap = overworldService.getMap(nextMapId);
     Entity nextDoor = nextMap.getEntity(mapId);
-    Location location = nextDoor.getLocation().clone();
+    Location nextLocation = nextDoor.getLocation().clone();
+    nextLocation.setWidth(1);
+    nextLocation.setHeight(1);
+    nextLocation.setDirection("down");
 
-    overworldService.teleportPlayer(player, location);
+    overworldService.teleportPlayer(player, nextLocation);
   }
 }

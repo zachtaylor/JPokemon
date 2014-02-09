@@ -26,5 +26,6 @@ game.resources = [
    // Maps
   {name: "indoor_free_tileset__by_thegreatblaid-d5x95zt", type:'image', src:'resource/tile/indoor_free_tileset__by_thegreatblaid-d5x95zt.png'},
   {name: "tileset_three__indoors_by_falsefate-d41f586", type:'image', src:'resource/tile/tileset_three__indoors_by_falsefate-d41f586.png'},
-  {name: "hero-bedroom", type: "tmx", src: "resource/map/hero-bedroom.tmx" }
+  {name: "hero-bedroom", type: "tmx", src: "resource/map/hero-bedroom.tmx" },
+  {name: "hero-house", type: "tmx", src: "resource/map/hero-house.tmx" }
 ];
